@@ -10,13 +10,8 @@ const intlMiddleware = createIntlMiddleware(routing);
 // individual paths here.
 const PORTAL_PREFIXES = ["/portal", "/admin", "/api"];
 
-// Auth paths under locale prefixes (e.g. /de/login) — redirect logged-in users away
-const LOCALE_AUTH_SUFFIXES = [
-  "/login",
-  "/register",
-  "/forgot-password",
-  "/reset-password",
-];
+// Non-localized auth pages — bypass intl routing entirely
+const AUTH_PATHS = ["/login", "/register", "/forgot-password", "/reset-password"];
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
@@ -41,20 +36,15 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
-  // ── Marketing / auth: locale routing ─────────────────────────────────────
-
-  // Redirect logged-in users away from locale-prefixed auth pages
-  const isLocaleAuthPath = LOCALE_AUTH_SUFFIXES.some((suffix) =>
-    routing.locales.some(
-      (locale) =>
-        pathname === `/${locale}${suffix}` ||
-        pathname.startsWith(`/${locale}${suffix}/`),
-    ),
-  );
-  if (session && isLocaleAuthPath) {
-    return NextResponse.redirect(new URL(dest, req.url));
+  // ── Non-localized auth pages ─────────────────────────────────────────────
+  // These live at /login, /register etc. — serve directly, skip intl routing.
+  // Redirect already-logged-in users to their dashboard.
+  if (AUTH_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
+    if (session) return NextResponse.redirect(new URL(dest, req.url));
+    return NextResponse.next();
   }
 
+  // ── Marketing site: locale routing ───────────────────────────────────────
   return intlMiddleware(req);
 });
 
