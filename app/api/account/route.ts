@@ -18,7 +18,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { name, email, password } = parsed.data;
+    const { name: rawName, email, password } = parsed.data;
+    // Derive a display name from the email prefix if not provided
+    const name = rawName?.trim() ||
+      email.split("@")[0]
+        .replace(/[._-]+/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+
     const db = getInstance();
 
     const existing = await db.query.users.findFirst({
