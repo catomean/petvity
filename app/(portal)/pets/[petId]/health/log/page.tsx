@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { EMOTIONAL_METRICS, PHYSICAL_METRICS, HEALTH_METRIC_CONFIG } from "@/lib/config/health-metrics";
+import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG } from "@/lib/config/health-metrics";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 export default function LogHealthPage() {
   const router = useRouter();
@@ -14,11 +16,9 @@ export default function LogHealthPage() {
 
   const [form, setForm] = useState({
     date: today,
-    // Physical — stored in raw units (grams, centidegrees, bpm)
     weightKg: "",
     temperatureC: "",
     heartRateBpm: "",
-    // Emotional — 1–5
     energy: "",
     mood: "",
     anxiety: "",
@@ -57,119 +57,101 @@ export default function LogHealthPage() {
     }
   }
 
+  const EMOTIONAL_LABELS: Record<string, string[]> = {
+    energy:       ["Very low",    "Low",    "Moderate", "High",     "Very high"],
+    mood:         ["Very sad",    "Sad",    "Neutral",  "Happy",    "Joyful"],
+    anxiety:      ["Very calm",   "Calm",   "Mild",     "Anxious",  "Very anxious"],
+    socialization:["Avoidant",   "Shy",    "Normal",   "Friendly", "Very social"],
+  };
+
   return (
     <div className="max-w-lg">
-      <h1 className="text-2xl font-semibold text-[var(--ink)] mb-6">
-        Log health metrics
-      </h1>
-
-      {error && (
-        <p className="mb-4 text-sm text-[var(--danger)] bg-red-50 rounded-md px-3 py-2">
-          {error}
-        </p>
-      )}
-
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white rounded-xl border border-[var(--border)] p-6 flex flex-col gap-6"
+      <Link
+        href={`/portal/pets/${petId}/health`}
+        className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
       >
-        <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+        <ChevronLeft className="w-4 h-4" />
+        Health
+      </Link>
+
+      <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">Log health check</h1>
+      <p className="text-sm text-[var(--muted)] mb-6">
+        Track as many or as few metrics as you have data for today.
+      </p>
+
+      {error && <p className="alert-error mb-4">{error}</p>}
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        {/* Date */}
+        <div className="card p-5">
+          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
             Date
           </label>
           <input
             type="date"
             value={form.date}
             onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
+            className="form-input w-auto"
           />
         </div>
 
         {/* Physical */}
-        <div>
-          <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--muted)] mb-3">
-            Physical
+        <div className="card p-5">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
+            Physical measurements
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
-                Weight (kg)
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                value={form.weightKg}
-                onChange={(e) => setForm({ ...form, weightKg: e.target.value })}
-                placeholder="e.g. 8.5"
-                className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
-                Temperature (°C)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                value={form.temperatureC}
-                onChange={(e) => setForm({ ...form, temperatureC: e.target.value })}
-                placeholder="e.g. 38.5"
-                className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
-                Heart rate (bpm)
-              </label>
-              <input
-                type="number"
-                min="0"
-                value={form.heartRateBpm}
-                onChange={(e) => setForm({ ...form, heartRateBpm: e.target.value })}
-                placeholder="e.g. 80"
-                className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
-              />
-            </div>
+            {[
+              { key: "weightKg", label: "Weight", unit: "kg", step: "0.01", placeholder: "e.g. 8.5" },
+              { key: "temperatureC", label: "Temperature", unit: "°C", step: "0.1", placeholder: "e.g. 38.5" },
+              { key: "heartRateBpm", label: "Heart rate", unit: "bpm", step: "1", placeholder: "e.g. 80" },
+            ].map(({ key, label, unit, step, placeholder }) => (
+              <div key={key}>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                  {label}
+                  <span className="text-[var(--muted)] font-normal ms-1">{unit}</span>
+                </label>
+                <input
+                  type="number"
+                  step={step}
+                  min="0"
+                  value={form[key as keyof typeof form]}
+                  onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+                  placeholder={placeholder}
+                  className="form-input"
+                />
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Emotional */}
-        <div>
-          <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--muted)] mb-3">
-            Emotional (1 = low, 5 = high)
+        <div className="card p-5">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
+            Emotional wellbeing
           </h3>
           <div className="grid grid-cols-2 gap-4">
             {EMOTIONAL_METRICS.map((metricId) => {
               const def = HEALTH_METRIC_CONFIG[metricId];
-              const fieldMap: Record<string, string> = {
-                energy: form.energy,
-                mood: form.mood,
-                anxiety: form.anxiety,
-                socialization: form.socialization,
-              };
+              const labels = EMOTIONAL_LABELS[metricId] ?? [];
               return (
                 <div key={metricId}>
-                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                     {def.label}
                   </label>
                   <select
-                    value={fieldMap[metricId]}
-                    onChange={(e) =>
-                      setForm({ ...form, [metricId]: e.target.value })
-                    }
-                    className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
+                    value={form[metricId as keyof typeof form]}
+                    onChange={(e) => setForm({ ...form, [metricId]: e.target.value })}
+                    className="form-input"
                   >
-                    <option value="">–</option>
+                    <option value="">Not logged</option>
                     {[1, 2, 3, 4, 5].map((v) => (
                       <option key={v} value={v}>
-                        {v}
+                        {v} — {labels[v - 1] ?? ""}
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-[var(--muted)] mt-1">
-                    {def.description}
-                  </p>
+                  <p className="text-xs text-[var(--muted)] mt-1">{def.description}</p>
                 </div>
               );
             })}
@@ -177,26 +159,22 @@ export default function LogHealthPage() {
         </div>
 
         {/* Notes */}
-        <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
-            Notes
+        <div className="card p-5">
+          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            Notes <span className="text-[var(--faint)] font-normal">(optional)</span>
           </label>
           <textarea
             rows={3}
             value={form.notes}
             onChange={(e) => setForm({ ...form, notes: e.target.value })}
-            placeholder="Any observations today…"
-            className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)] resize-none"
+            placeholder="Any observations, symptoms, or mood notes…"
+            className="form-input resize-none"
           />
         </div>
 
         <div className="flex gap-3">
-          <button
-            type="submit"
-            disabled={saving}
-            className="btn-primary disabled:opacity-60"
-          >
-            {saving ? "Saving…" : "Save"}
+          <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
+            {saving ? "Saving…" : "Save check-in"}
           </button>
           <button type="button" onClick={() => router.back()} className="btn-outline">
             Cancel

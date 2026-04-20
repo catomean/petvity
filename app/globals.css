@@ -1,27 +1,39 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand */
-  --teal: #2a7a8a;
-  --teal-dark: #1e6672;
-  --teal-light: #e8f4f6;
+  /* Brand – deep forest teal */
+  --teal: #0D6E78;
+  --teal-dark: #0A5860;
+  --teal-light: #E3F4F6;
+  --teal-mid: #B2DDE2;
+
+  /* Accent – warm coral (all primary CTAs) */
+  --accent: #E06B3A;
+  --accent-dark: #C85E30;
+  --accent-light: #FEF0E8;
 
   /* Text */
-  --ink: #1a1a22;
-  --ink2: #3a3a4a;
-  --muted: #888a96;
-  --faint: #c4c0b8;
+  --ink: #1C1917;
+  --ink2: #44403C;
+  --muted: #78716C;
+  --faint: #C4BBB3;
 
   /* Backgrounds */
-  --off: #f8f7f4;
-  --light: #f1ede7;
-  --border: #e5e0d8;
+  --off: #FAF8F5;
+  --light: #F0EBE3;
+  --card: #FFFFFF;
+  --border: #E8E2D9;
 
   /* States */
-  --green: #2e7d32;
-  --warn: #d4820a;
-  --danger: #e05a5a;
-  --gold: #b8960a;
+  --green: #16A34A;
+  --green-bg: #DCFCE7;
+  --warn: #D97706;
+  --warn-bg: #FEF3C7;
+  --danger: #DC2626;
+  --danger-bg: #FEE2E2;
+
+  /* Keep legacy aliases */
+  --off-bg: var(--off);
 }
 
 /* ── Base ───────────────────────────────────────────────────────────────────── */
@@ -33,7 +45,7 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
   color: var(--ink);
-  background: #fff;
+  background: var(--off);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -43,7 +55,7 @@ body {
   transform: scaleX(-1);
 }
 
-/* ── Shared utility classes ─────────────────────────────────────────────────── */
+/* ── Layout helpers ─────────────────────────────────────────────────────────── */
 
 .section-inner {
   max-width: 1100px;
@@ -51,24 +63,40 @@ body {
   padding: 0 24px;
 }
 
+/* ── Cards ──────────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--teal);
+  background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   padding: 10px 22px;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
 }
 
 .btn-primary:hover {
-  background: var(--teal-dark);
+  background: var(--accent-dark);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
 }
 
 .btn-outline {
@@ -76,46 +104,120 @@ body {
   align-items: center;
   gap: 8px;
   background: transparent;
-  color: var(--teal);
-  border: 1.5px solid var(--teal);
-  border-radius: 6px;
+  color: var(--ink2);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
   padding: 10px 22px;
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn-outline:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+  background: var(--teal-light);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.15s;
 }
 
-.btn-outline:hover {
-  background: var(--teal-light);
+.btn-ghost:hover {
+  background: var(--light);
+  color: var(--ink);
+}
+
+/* ── Form inputs ────────────────────────────────────────────────────────────── */
+
+.form-input {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--ink);
+  background: white;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-light);
+}
+
+.form-input::placeholder {
+  color: var(--faint);
 }
 
 /* ── Signal badges ──────────────────────────────────────────────────────────── */
 
 .signal-healthy {
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 2px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--green-bg);
+  color: var(--green);
+  padding: 3px 10px;
   border-radius: 20px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .signal-watch {
-  background: #fff3cd;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--warn-bg);
   color: var(--warn);
-  padding: 2px 10px;
+  padding: 3px 10px;
   border-radius: 20px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .signal-concern {
-  background: #fdecea;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--danger-bg);
   color: var(--danger);
-  padding: 2px 10px;
+  padding: 3px 10px;
   border-radius: 20px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
+}
+
+/* ── Alert / error box ──────────────────────────────────────────────────────── */
+
+.alert-error {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+.alert-success {
+  background: var(--green-bg);
+  color: var(--green);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
 }

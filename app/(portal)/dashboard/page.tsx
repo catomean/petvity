@@ -7,6 +7,19 @@ import { computePetSignal } from "@/lib/domain/pet-signal";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
+import { Plus } from "lucide-react";
+
+const SIGNAL_STRIP: Record<string, string> = {
+  healthy: "bg-[var(--green)]",
+  watch: "bg-[var(--warn)]",
+  concern: "bg-[var(--danger)]",
+};
+
+function greeting(name?: string | null) {
+  const h = new Date().getHours();
+  const time = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+  return `${time}, ${name?.split(" ")[0] ?? "there"} 👋`;
+}
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -24,7 +37,6 @@ export default async function DashboardPage() {
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
-  // Compute signal for each pet
   const petsWithSignals = await Promise.all(
     userPets.map(async (pet) => {
       const recentMetrics = await db.query.healthMetrics.findMany({
@@ -36,7 +48,10 @@ export default async function DashboardPage() {
         where: eq(vaccinations.petId, pet.id),
       });
       const overdueCount = allVacc.filter(
-        (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
+        (v) =>
+          v.nextDueDate &&
+          v.nextDueDate < todayStr &&
+          v.status !== "not_applicable",
       ).length;
 
       const signal = computePetSignal({
@@ -52,25 +67,39 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">
-          Welcome back, {session.user.name?.split(" ")[0]}
-        </h1>
-        <Link href="/portal/pets/new" className="btn-primary text-sm">
-          + Add pet
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-[var(--ink)]">
+            {greeting(session.user.name)}
+          </h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">
+            {userPets.length === 0
+              ? "Add your first pet to get started"
+              : `${userPets.length} pet${userPets.length !== 1 ? "s" : ""} in your family`}
+          </p>
+        </div>
+        <Link href="/portal/pets/new" className="btn-primary">
+          <Plus className="w-4 h-4" />
+          Add pet
         </Link>
       </div>
 
+      {/* Empty state */}
       {petsWithSignals.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[var(--border)] p-12 text-center">
-          <div className="text-5xl mb-4">🐾</div>
-          <h2 className="text-lg font-medium text-[var(--ink)] mb-2">
-            Add your first pet
+        <div className="card p-12 text-center">
+          <div className="w-20 h-20 rounded-3xl bg-[var(--teal-light)] flex items-center justify-center text-4xl mx-auto mb-5">
+            🐾
+          </div>
+          <h2 className="text-lg font-semibold text-[var(--ink)] mb-2">
+            Meet your first pet
           </h2>
-          <p className="text-[var(--muted)] mb-6">
-            Create a profile for your pet and start tracking their health.
+          <p className="text-sm text-[var(--muted)] max-w-xs mx-auto mb-6 leading-relaxed">
+            Create a profile for your pet and start tracking their health,
+            emotions, and wellbeing.
           </p>
           <Link href="/portal/pets/new" className="btn-primary">
+            <Plus className="w-4 h-4" />
             Add a pet
           </Link>
         </div>
@@ -78,15 +107,20 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {petsWithSignals.map((pet) => {
             const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
+            const sig = pet.signal.signal;
             return (
               <Link
                 key={pet.id}
                 href={`/portal/pets/${pet.id}`}
-                className="bg-white rounded-xl border border-[var(--border)] p-5 hover:border-[var(--teal)] hover:shadow-sm transition-all no-underline group"
+                className="card overflow-hidden hover:shadow-md transition-all no-underline group block"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-[var(--teal-light)] flex items-center justify-center text-2xl overflow-hidden">
+                {/* Signal color strip */}
+                <div className={`h-1 ${SIGNAL_STRIP[sig] ?? "bg-[var(--border)]"}`} />
+
+                <div className="p-5">
+                  <div className="flex items-start justify-between mb-4">
+                    {/* Avatar */}
+                    <div className="w-14 h-14 rounded-2xl bg-[var(--light)] flex items-center justify-center text-3xl overflow-hidden flex-shrink-0">
                       {pet.avatarUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -98,32 +132,37 @@ export default async function DashboardPage() {
                         speciesDef?.emoji ?? "🐾"
                       )}
                     </div>
-                    <div>
-                      <div className="font-semibold text-[var(--ink)] group-hover:text-[var(--teal)]">
-                        {pet.name}
-                      </div>
-                      <div className="text-xs text-[var(--muted)]">
-                        {speciesDef?.label ?? pet.species}
-                        {pet.breed ? ` · ${pet.breed}` : ""}
-                      </div>
-                    </div>
+                    {/* Signal badge */}
+                    <span className={SIGNAL_BG_CLASSES[sig as keyof typeof SIGNAL_BG_CLASSES]}>
+                      {SIGNAL_LABELS[sig]}
+                    </span>
                   </div>
-                  <span
-                    className={
-                      SIGNAL_BG_CLASSES[
-                        pet.signal.signal as keyof typeof SIGNAL_BG_CLASSES
-                      ]
-                    }
-                  >
-                    {SIGNAL_LABELS[pet.signal.signal]}
-                  </span>
+
+                  <h3 className="font-semibold text-[var(--ink)] text-base group-hover:text-[var(--teal)] transition-colors mb-0.5">
+                    {pet.name}
+                  </h3>
+                  <p className="text-xs text-[var(--muted)] mb-3">
+                    {speciesDef?.label ?? pet.species}
+                    {pet.breed ? ` · ${pet.breed}` : ""}
+                  </p>
+                  <p className="text-xs text-[var(--muted)] line-clamp-2 leading-relaxed">
+                    {pet.signal.reason}
+                  </p>
                 </div>
-                <p className="text-xs text-[var(--muted)] line-clamp-2">
-                  {pet.signal.reason}
-                </p>
               </Link>
             );
           })}
+
+          {/* Add another pet card */}
+          <Link
+            href="/portal/pets/new"
+            className="card border-dashed p-5 flex flex-col items-center justify-center gap-3 text-[var(--muted)] hover:text-[var(--teal)] hover:border-[var(--teal)] hover:bg-[var(--teal-light)] transition-all no-underline min-h-[168px]"
+          >
+            <div className="w-12 h-12 rounded-2xl border-2 border-dashed border-current flex items-center justify-center">
+              <Plus className="w-5 h-5" />
+            </div>
+            <span className="text-sm font-medium">Add another pet</span>
+          </Link>
         </div>
       )}
     </div>

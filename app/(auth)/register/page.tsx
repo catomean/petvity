@@ -31,7 +31,6 @@ export default function RegisterPage() {
       return;
     }
 
-    // Auto-login after registration
     const signInRes = await signIn("credentials", {
       email,
       password,
@@ -48,20 +47,17 @@ export default function RegisterPage() {
 
   return (
     <>
-      <h1 className="text-xl font-semibold mb-6 text-[var(--ink)]">
-        Create your account
-      </h1>
+      <h1 className="text-xl font-bold mb-1 text-[var(--ink)]">Create your account</h1>
+      <p className="text-sm text-[var(--muted)] mb-6">
+        Free forever · No credit card required
+      </p>
 
-      {error && (
-        <p className="mb-4 text-sm text-[var(--danger)] bg-red-50 rounded-md px-3 py-2">
-          {error}
-        </p>
-      )}
+      {error && <p className="alert-error mb-4">{error}</p>}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
-            Full name
+          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            Your name
           </label>
           <input
             type="text"
@@ -69,12 +65,13 @@ export default function RegisterPage() {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
+            className="form-input"
+            placeholder="Jane Smith"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
             Email
           </label>
           <input
@@ -83,12 +80,13 @@ export default function RegisterPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
+            className="form-input"
+            placeholder="you@example.com"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
             Password
           </label>
           <input
@@ -98,27 +96,29 @@ export default function RegisterPage() {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
+            className="form-input"
+            placeholder="At least 8 characters"
           />
-          <p className="mt-1 text-xs text-[var(--muted)]">
-            Minimum 8 characters
-          </p>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="btn-primary w-full justify-center disabled:opacity-60"
+          className="btn-primary w-full justify-center mt-1 disabled:opacity-60"
         >
-          {loading ? "Creating account…" : "Create account"}
+          {loading ? "Creating account…" : "Create free account"}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-[var(--muted)]">
         Already have an account?{" "}
-        <Link href="/login" className="text-[var(--teal)] hover:underline">
+        <Link href="/login" className="text-[var(--teal)] hover:underline font-medium">
           Log in
         </Link>
+      </p>
+
+      <p className="mt-4 text-center text-xs text-[var(--faint)] leading-relaxed">
+        By creating an account you agree to our Terms of Service and Privacy Policy.
       </p>
     </>
   );

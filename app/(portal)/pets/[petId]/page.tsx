@@ -9,8 +9,28 @@ import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
+import { Activity, Syringe, FileText, Pencil, ChevronLeft, CalendarDays } from "lucide-react";
 
 type Params = { params: Promise<{ petId: string }> };
+
+function ageString(birthDate: string | null): string | null {
+  if (!birthDate) return null;
+  const birth = new Date(birthDate);
+  const now = new Date();
+  const months =
+    (now.getFullYear() - birth.getFullYear()) * 12 +
+    (now.getMonth() - birth.getMonth());
+  if (months < 1) return "< 1 month old";
+  if (months < 12) return `${months} month${months !== 1 ? "s" : ""} old`;
+  const years = Math.floor(months / 12);
+  return `${years} year${years !== 1 ? "s" : ""} old`;
+}
+
+const SIGNAL_HEADER_BG: Record<string, string> = {
+  healthy: "from-[#DCFCE7] to-[var(--off)]",
+  watch: "from-[#FEF3C7] to-[var(--off)]",
+  concern: "from-[#FEE2E2] to-[var(--off)]",
+};
 
 export default async function PetProfilePage({ params }: Params) {
   const session = await auth();
@@ -39,7 +59,10 @@ export default async function PetProfilePage({ params }: Params) {
   ]);
 
   const overdueCount = allVacc.filter(
-    (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
+    (v) =>
+      v.nextDueDate &&
+      v.nextDueDate < todayStr &&
+      v.status !== "not_applicable",
   ).length;
 
   const signalResult = computePetSignal({
@@ -50,80 +73,127 @@ export default async function PetProfilePage({ params }: Params) {
   });
 
   const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
+  const sig = signalResult.signal;
+  const age = ageString(pet.birthDate ?? null);
 
-  const tabs = [
-    { label: "Health", href: `/portal/pets/${pet.id}/health` },
-    { label: "Records", href: `/portal/pets/${pet.id}/records` },
-    { label: "Vaccinations", href: `/portal/pets/${pet.id}/vaccinations` },
+  const tabLinks = [
+    {
+      href: `/portal/pets/${pet.id}/health`,
+      icon: Activity,
+      label: "Health",
+      desc: "Metrics & charts",
+    },
+    {
+      href: `/portal/pets/${pet.id}/records`,
+      icon: FileText,
+      label: "Records",
+      desc: "Vet visits",
+    },
+    {
+      href: `/portal/pets/${pet.id}/vaccinations`,
+      icon: Syringe,
+      label: "Vaccinations",
+      desc: `${allVacc.length} logged`,
+    },
   ];
 
   return (
     <div>
-      {/* Header */}
-      <div className="bg-white rounded-xl border border-[var(--border)] p-6 mb-6">
-        <div className="flex items-start gap-5">
-          <div className="w-20 h-20 rounded-full bg-[var(--teal-light)] flex items-center justify-center text-4xl overflow-hidden flex-shrink-0">
-            {pet.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={pet.avatarUrl}
-                alt={pet.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              speciesDef?.emoji ?? "🐾"
-            )}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-2xl font-semibold text-[var(--ink)]">
-                {pet.name}
-              </h1>
-              <span className={SIGNAL_BG_CLASSES[signalResult.signal]}>
-                {SIGNAL_LABELS[signalResult.signal]}
-              </span>
+      {/* Back */}
+      <Link
+        href="/portal/pets"
+        className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
+      >
+        <ChevronLeft className="w-4 h-4" />
+        My Pets
+      </Link>
+
+      {/* Hero header */}
+      <div
+        className={`card overflow-hidden mb-6 bg-gradient-to-b ${SIGNAL_HEADER_BG[sig] ?? ""}`}
+      >
+        <div className="p-6 lg:p-8">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start gap-5">
+              {/* Avatar */}
+              <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-2xl lg:rounded-3xl bg-white shadow-sm flex items-center justify-center text-4xl lg:text-5xl overflow-hidden flex-shrink-0 border border-[var(--border)]">
+                {pet.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={pet.avatarUrl}
+                    alt={pet.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  speciesDef?.emoji ?? "🐾"
+                )}
+              </div>
+
+              {/* Info */}
+              <div>
+                <div className="flex items-center gap-3 mb-1 flex-wrap">
+                  <h1 className="text-2xl lg:text-3xl font-bold text-[var(--ink)]">
+                    {pet.name}
+                  </h1>
+                  <span className={SIGNAL_BG_CLASSES[sig as keyof typeof SIGNAL_BG_CLASSES]}>
+                    {SIGNAL_LABELS[sig]}
+                  </span>
+                </div>
+
+                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                  {speciesDef?.label ?? pet.species}
+                  {pet.breed ? ` · ${pet.breed}` : ""}
+                  {pet.sex !== "unknown" ? ` · ${pet.sex}` : ""}
+                  {age ? ` · ${age}` : pet.birthDate ? ` · Born ${formatDateShort(pet.birthDate)}` : ""}
+                </p>
+
+                {pet.bio && (
+                  <p className="text-sm text-[var(--ink2)] mt-2 max-w-md">
+                    {pet.bio}
+                  </p>
+                )}
+              </div>
             </div>
-            <p className="text-sm text-[var(--muted)] mb-2">
-              {speciesDef?.label ?? pet.species}
-              {pet.breed ? ` · ${pet.breed}` : ""}
-              {pet.sex !== "unknown" ? ` · ${pet.sex}` : ""}
-              {pet.birthDate
-                ? ` · Born ${formatDateShort(pet.birthDate)}`
-                : ""}
-            </p>
-            {pet.bio && (
-              <p className="text-sm text-[var(--ink2)]">{pet.bio}</p>
-            )}
+
+            {/* Edit button */}
+            <Link
+              href={`/portal/pets/${pet.id}/edit`}
+              className="btn-outline text-sm flex-shrink-0"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              Edit
+            </Link>
           </div>
-          <Link
-            href={`/portal/pets/${pet.id}/edit`}
-            className="btn-outline text-sm"
-          >
-            Edit
-          </Link>
+
+          {/* Signal reason + CTA */}
+          <div className="mt-5 pt-5 border-t border-white/60 flex items-center justify-between gap-4 flex-wrap">
+            <p className="text-sm text-[var(--ink2)] flex-1">
+              {signalResult.reason}
+            </p>
+            <Link
+              href={`/portal/pets/${pet.id}/health/log`}
+              className="btn-primary text-sm flex-shrink-0"
+            >
+              <CalendarDays className="w-4 h-4" />
+              Log today
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Signal reason */}
-      <div className="bg-white rounded-xl border border-[var(--border)] p-4 mb-6 flex items-center justify-between">
-        <span className="text-sm text-[var(--ink2)]">{signalResult.reason}</span>
-        <Link
-          href={`/portal/pets/${pet.id}/health/log`}
-          className="btn-primary text-sm"
-        >
-          Log today
-        </Link>
-      </div>
-
-      {/* Quick nav tabs */}
-      <div className="flex gap-2 flex-wrap">
-        {tabs.map((tab) => (
+      {/* Section tabs */}
+      <div className="grid grid-cols-3 gap-3">
+        {tabLinks.map(({ href, icon: Icon, label, desc }) => (
           <Link
-            key={tab.href}
-            href={tab.href}
-            className="bg-white border border-[var(--border)] rounded-lg px-4 py-2 text-sm text-[var(--ink2)] hover:border-[var(--teal)] hover:text-[var(--teal)] no-underline transition-all"
+            key={href}
+            href={href}
+            className="card p-4 hover:border-[var(--teal)] hover:bg-[var(--teal-light)] transition-all no-underline group"
           >
-            {tab.label}
+            <Icon className="w-5 h-5 text-[var(--teal)] mb-2" />
+            <p className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--teal)]">
+              {label}
+            </p>
+            <p className="text-xs text-[var(--muted)]">{desc}</p>
           </Link>
         ))}
       </div>

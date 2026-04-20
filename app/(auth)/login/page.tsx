@@ -36,17 +36,14 @@ function LoginForm() {
 
   return (
     <>
-      <h1 className="text-xl font-semibold mb-6 text-[var(--ink)]">Log in</h1>
+      <h1 className="text-xl font-bold mb-1 text-[var(--ink)]">Welcome back</h1>
+      <p className="text-sm text-[var(--muted)] mb-6">Log in to your Petvity account</p>
 
-      {error && (
-        <p className="mb-4 text-sm text-[var(--danger)] bg-red-50 rounded-md px-3 py-2">
-          {error}
-        </p>
-      )}
+      {error && <p className="alert-error mb-4">{error}</p>}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
             Email
           </label>
           <input
@@ -55,36 +52,38 @@ function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
+            className="form-input"
+            placeholder="you@example.com"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
-            Password
-          </label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="block text-sm font-medium text-[var(--ink2)]">
+              Password
+            </label>
+            <Link
+              href="/forgot-password"
+              className="text-xs text-[var(--muted)] hover:text-[var(--teal)] no-underline"
+            >
+              Forgot?
+            </Link>
+          </div>
           <input
             type="password"
             autoComplete="current-password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border border-[var(--border)] rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--teal)]"
+            className="form-input"
+            placeholder="••••••••"
           />
-          <div className="mt-1 text-right">
-            <Link
-              href="/forgot-password"
-              className="text-xs text-[var(--muted)] hover:text-[var(--teal)]"
-            >
-              Forgot password?
-            </Link>
-          </div>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="btn-primary w-full justify-center disabled:opacity-60"
+          className="btn-primary w-full justify-center mt-1 disabled:opacity-60"
         >
           {loading ? "Logging in…" : "Log in"}
         </button>
@@ -92,8 +91,8 @@ function LoginForm() {
 
       <p className="mt-6 text-center text-sm text-[var(--muted)]">
         No account?{" "}
-        <Link href="/register" className="text-[var(--teal)] hover:underline">
-          Create one
+        <Link href="/register" className="text-[var(--teal)] hover:underline font-medium">
+          Create one free
         </Link>
       </p>
     </>
