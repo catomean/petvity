@@ -19,6 +19,11 @@ export default auth((req) => {
   const dest =
     session?.user.role === "admin" ? "/admin/users" : "/portal/dashboard";
 
+  // ── NextAuth API routes — always public ──────────────────────────────────
+  if (pathname.startsWith("/api/auth")) {
+    return NextResponse.next();
+  }
+
   // ── Portal / admin / API ──────────────────────────────────────────────────
   if (
     PORTAL_PREFIXES.some(
