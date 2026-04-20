@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "about": "About",
+    "pricing": "Pricing",
+    "login": "Log in",
+    "register": "Get started"
+  },
+  "auth": {
+    "login": "Log in",
+    "register": "Create account",
+    "logout": "Log out",
+    "email": "Email",
+    "password": "Password",
+    "name": "Full name",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset password",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "portal": {
+    "dashboard": "Dashboard",
+    "myPets": "My Pets",
+    "checkin": "Daily Check-in",
+    "settings": "Settings",
+    "addPet": "Add a pet",
+    "noPets": "You haven't added any pets yet.",
+    "noPetsAction": "Add your first pet to get started."
+  },
+  "pets": {
+    "name": "Name",
+    "species": "Species",
+    "breed": "Breed",
+    "birthDate": "Birth date",
+    "sex": "Sex",
+    "weight": "Weight",
+    "bio": "Bio",
+    "male": "Male",
+    "female": "Female",
+    "unknown": "Unknown",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "health": {
+    "physical": "Physical",
+    "emotional": "Emotional",
+    "logMetrics": "Log today's metrics",
+    "history": "History",
+    "records": "Health records",
+    "vaccinations": "Vaccinations",
+    "medications": "Medications",
+    "noMetrics": "No metrics logged yet.",
+    "logFirst": "Log your first check-in to start tracking."
+  },
+  "signal": {
+    "healthy": "Healthy",
+    "watch": "Watch",
+    "concern": "Needs attention"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "success": "Saved successfully."
+  },
+  "home": {
+    "hero": {
+      "title": "Care for your pets like family",
+      "subtitle": "Track health, connect with vets, and give your pets the life they deserve.",
+      "cta": "Get started free"
+    },
+    "features": {
+      "title": "Everything your pet needs",
+      "profiles": "Pet Profiles",
+      "profilesDesc": "Detailed profiles for every pet — photos, history, and personality.",
+      "health": "Health Tracking",
+      "healthDesc": "Monitor physical and emotional well-being with daily check-ins.",
+      "vets": "Vet Network",
+      "vetsDesc": "Find trusted veterinarians and book appointments.",
+      "adoption": "Adoption",
+      "adoptionDesc": "Help pets find loving homes across borders."
+    }
+  }
+}

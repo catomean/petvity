@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand */
+  --teal: #2a7a8a;
+  --teal-dark: #1e6672;
+  --teal-light: #e8f4f6;
+
+  /* Text */
+  --ink: #1a1a22;
+  --ink2: #3a3a4a;
+  --muted: #888a96;
+  --faint: #c4c0b8;
+
+  /* Backgrounds */
+  --off: #f8f7f4;
+  --light: #f1ede7;
+  --border: #e5e0d8;
+
+  /* States */
+  --green: #2e7d32;
+  --warn: #d4820a;
+  --danger: #e05a5a;
+  --gold: #b8960a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ── Base ───────────────────────────────────────────────────────────────────── */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+  color: var(--ink);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── RTL support (Arabic) ───────────────────────────────────────────────────── */
+
+[dir="rtl"] .flip-rtl {
+  transform: scaleX(-1);
+}
+
+/* ── Shared utility classes ─────────────────────────────────────────────────── */
+
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover {
+  background: var(--teal-dark);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--teal);
+  border: 1.5px solid var(--teal);
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.btn-outline:hover {
+  background: var(--teal-light);
+}
+
+/* ── Signal badges ──────────────────────────────────────────────────────────── */
+
+.signal-healthy {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.signal-watch {
+  background: #fff3cd;
+  color: var(--warn);
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.signal-concern {
+  background: #fdecea;
+  color: var(--danger);
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
 }

@@ -1,0 +1,213 @@
+import { auth } from "@/lib/auth";
+import { getInstance } from "@/lib/db";
+import { pets, healthMetrics } from "@/lib/db/schema";
+import { and, eq, gte, desc } from "drizzle-orm";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { HEALTH_METRIC_CONFIG, PHYSICAL_METRICS, EMOTIONAL_METRICS } from "@/lib/config/health-metrics";
+import type { MetricId } from "@/lib/config/health-metrics";
+import type { SpeciesId } from "@/lib/config/species";
+import { getMetricDisplay } from "@/lib/domain/health";
+import { formatDateShort } from "@/lib/utils/format";
+
+type Params = { params: Promise<{ petId: string }> };
+
+export default async function PetHealthPage({ params }: Params) {
+  const session = await auth();
+  if (!session) return null;
+
+  const { petId } = await params;
+  const db = getInstance();
+
+  const pet = await db.query.pets.findFirst({
+    where: and(eq(pets.id, petId), eq(pets.ownerId, session.user.id)),
+  });
+  if (!pet) notFound();
+
+  const since30 = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const metrics = await db.query.healthMetrics.findMany({
+    where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
+    orderBy: [desc(healthMetrics.date)],
+  });
+
+  const latest = metrics[0];
+  const species = pet.species as SpeciesId;
+
+  const metricFieldMap: Record<MetricId, keyof typeof latest> = {
+    weight: "weightGrams",
+    temperature: "temperatureCentidegrees",
+    heart_rate: "heartRateBpm",
+    energy: "energy",
+    mood: "mood",
+    anxiety: "anxiety",
+    socialization: "socialization",
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <Link
+            href={`/portal/pets/${petId}`}
+            className="text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline"
+          >
+            ← {pet.name}
+          </Link>
+          <h1 className="text-2xl font-semibold text-[var(--ink)] mt-1">
+            Health
+          </h1>
+        </div>
+        <Link
+          href={`/portal/pets/${petId}/health/log`}
+          className="btn-primary text-sm"
+        >
+          Log today
+        </Link>
+      </div>
+
+      {!latest ? (
+        <div className="bg-white rounded-xl border border-[var(--border)] p-10 text-center">
+          <div className="text-4xl mb-3">📊</div>
+          <p className="text-[var(--muted)] mb-4">No health data logged yet.</p>
+          <Link href={`/portal/pets/${petId}/health/log`} className="btn-primary">
+            Log first check-in
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {/* Latest reading */}
+          <div className="bg-white rounded-xl border border-[var(--border)] p-5">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-[var(--ink)]">
+                Latest reading
+              </h2>
+              <span className="text-xs text-[var(--muted)]">
+                {formatDateShort(latest.date)}
+              </span>
+            </div>
+
+            <div className="space-y-4">
+              {/* Physical */}
+              <div>
+                <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--muted)] mb-3">
+                  Physical
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {PHYSICAL_METRICS.map((metricId) => {
+                    const field = metricFieldMap[metricId];
+                    const raw = latest[field] as number | null;
+                    if (raw === null) return null;
+                    const display = getMetricDisplay(metricId, raw, species);
+                    const def = HEALTH_METRIC_CONFIG[metricId];
+                    return (
+                      <div
+                        key={metricId}
+                        className={`rounded-lg p-3 ${display.inRange ? "bg-green-50" : "bg-red-50"}`}
+                      >
+                        <div className="text-xs text-[var(--muted)] mb-1">
+                          {def.label}
+                        </div>
+                        <div className="text-lg font-semibold text-[var(--ink)]">
+                          {display.value}
+                          <span className="text-sm font-normal text-[var(--muted)] ms-1">
+                            {display.unit}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Emotional */}
+              <div>
+                <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--muted)] mb-3">
+                  Emotional
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {EMOTIONAL_METRICS.map((metricId) => {
+                    const field = metricFieldMap[metricId];
+                    const raw = latest[field] as number | null;
+                    if (raw === null) return null;
+                    const display = getMetricDisplay(metricId, raw, species);
+                    const def = HEALTH_METRIC_CONFIG[metricId];
+                    return (
+                      <div
+                        key={metricId}
+                        className={`rounded-lg p-3 ${display.inRange ? "bg-green-50" : "bg-red-50"}`}
+                      >
+                        <div className="text-xs text-[var(--muted)] mb-1">
+                          {def.label}
+                        </div>
+                        <div className="text-lg font-semibold text-[var(--ink)]">
+                          {display.value}
+                          <span className="text-sm font-normal text-[var(--muted)] ms-1">
+                            {display.unit}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* History */}
+          <div className="bg-white rounded-xl border border-[var(--border)] p-5">
+            <h2 className="font-semibold text-[var(--ink)] mb-4">
+              History (last 30 days)
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--border)]">
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      Date
+                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      Weight
+                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      Temp
+                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      Energy
+                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      Mood
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {metrics.map((m) => (
+                    <tr
+                      key={m.id}
+                      className="border-b border-[var(--border)] last:border-0"
+                    >
+                      <td className="py-2 px-3 text-[var(--muted)]">
+                        {formatDateShort(m.date)}
+                      </td>
+                      <td className="py-2 px-3">
+                        {m.weightGrams
+                          ? `${(m.weightGrams / 1000).toFixed(1)} kg`
+                          : "–"}
+                      </td>
+                      <td className="py-2 px-3">
+                        {m.temperatureCentidegrees
+                          ? `${(m.temperatureCentidegrees / 100).toFixed(1)}°C`
+                          : "–"}
+                      </td>
+                      <td className="py-2 px-3">{m.energy ?? "–"}</td>
+                      <td className="py-2 px-3">{m.mood ?? "–"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
