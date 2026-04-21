@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
+import { pets, healthMetrics, vaccinations, medications } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG } from "@/lib/config/p
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
-import { Activity, Syringe, FileText, Pencil, ChevronLeft, CalendarDays } from "lucide-react";
+import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays } from "lucide-react";
 
 type Params = { params: Promise<{ petId: string }> };
 
@@ -44,12 +44,15 @@ export default async function PetProfilePage({ params }: Params) {
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
-  const [recentMetrics, allVacc] = await Promise.all([
+  const [recentMetrics, allVacc, activeMeds] = await Promise.all([
     db.query.healthMetrics.findMany({
       where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, sinceStr)),
       orderBy: [desc(healthMetrics.date)],
     }),
     db.query.vaccinations.findMany({ where: eq(vaccinations.petId, pet.id) }),
+    db.query.medications.findMany({
+      where: and(eq(medications.petId, pet.id), eq(medications.status, "active")),
+    }),
   ]);
 
   const overdueCount = allVacc.filter(
@@ -88,6 +91,12 @@ export default async function PetProfilePage({ params }: Params) {
       icon: Syringe,
       label: "Vaccinations",
       desc: `${allVacc.length} logged`,
+    },
+    {
+      href: `/portal/pets/${pet.id}/medications`,
+      icon: Pill,
+      label: "Medications",
+      desc: activeMeds.length > 0 ? `${activeMeds.length} active` : "None active",
     },
   ];
 
@@ -176,7 +185,7 @@ export default async function PetProfilePage({ params }: Params) {
       </div>
 
       {/* Section tabs */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {tabLinks.map(({ href, icon: Icon, label, desc }) => (
           <Link
             key={href}
