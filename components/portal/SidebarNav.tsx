@@ -40,9 +40,11 @@ export default function SidebarNav({ userName, userEmail }: Props) {
         <div className="h-16 flex items-center px-5 border-b border-[var(--border)] flex-shrink-0">
           <Link
             href="/portal/dashboard"
-            className="font-bold text-[var(--teal)] text-lg no-underline flex items-center gap-2"
+            className="font-bold text-[var(--ink)] text-lg no-underline flex items-center gap-2.5"
           >
-            <span className="text-xl">🐾</span>
+            <div className="w-8 h-8 rounded-lg bg-[var(--teal)] flex items-center justify-center flex-shrink-0">
+              <PawPrint className="w-4 h-4 text-white" />
+            </div>
             <span>{APP.name}</span>
           </Link>
         </div>
@@ -109,9 +111,12 @@ export default function SidebarNav({ userName, userEmail }: Props) {
       <header className="lg:hidden fixed top-0 inset-x-0 h-14 bg-white border-b border-[var(--border)] flex items-center justify-between px-4 z-20">
         <Link
           href="/portal/dashboard"
-          className="font-bold text-[var(--teal)] text-lg no-underline flex items-center gap-2"
+          className="font-bold text-[var(--ink)] text-lg no-underline flex items-center gap-2.5"
         >
-          <span>🐾</span> {APP.name}
+          <div className="w-7 h-7 rounded-lg bg-[var(--teal)] flex items-center justify-center flex-shrink-0">
+            <PawPrint className="w-3.5 h-3.5 text-white" />
+          </div>
+          {APP.name}
         </Link>
         <Link
           href="/portal/settings"
