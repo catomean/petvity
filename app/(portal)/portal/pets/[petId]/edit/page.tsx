@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { SPECIES_OPTIONS, getBreedOptions } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import Link from "next/link";
-import { ChevronLeft, Trash2 } from "lucide-react";
+import { ChevronLeft, Trash2, Camera, Loader2 } from "lucide-react";
 
 interface PetData {
   id: string;
@@ -17,17 +17,22 @@ interface PetData {
   bio: string | null;
   isPublic: boolean;
   handle: string | null;
+  avatarUrl: string | null;
 }
 
 export default function EditPetPage() {
   const router = useRouter();
   const { petId } = useParams<{ petId: string }>();
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -46,6 +51,7 @@ export default function EditPetPage() {
       .then((data) => {
         if (data.success) {
           const p: PetData = data.data;
+          setAvatarUrl(p.avatarUrl);
           setForm({
             name: p.name,
             species: p.species as SpeciesId,
@@ -60,6 +66,37 @@ export default function EditPetPage() {
         setLoading(false);
       });
   }, [petId]);
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Preview immediately via object URL
+    const preview = URL.createObjectURL(file);
+    setAvatarUrl(preview);
+    setAvatarError("");
+    setAvatarUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`/api/pets/${petId}/avatar`, {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+    setAvatarUploading(false);
+
+    if (data.success) {
+      URL.revokeObjectURL(preview);
+      setAvatarUrl(data.data.url);
+    } else {
+      setAvatarError(data.error ?? "Upload failed. Try again.");
+      setAvatarUrl(null);
+    }
+    // Reset input so the same file can be re-selected
+    e.target.value = "";
+  }
 
   const breedOptions = form.species
     ? getBreedOptions(form.species as SpeciesId)
@@ -129,6 +166,46 @@ export default function EditPetPage() {
       <h1 className="text-2xl font-bold text-[var(--ink)] mb-6">Edit pet</h1>
 
       {error && <p className="alert-error mb-4">{error}</p>}
+
+      {/* Avatar upload */}
+      <div className="card p-6 mb-5 flex items-center gap-5">
+        <div className="relative flex-shrink-0">
+          <div className="w-20 h-20 rounded-2xl bg-[var(--off)] border border-[var(--border)] overflow-hidden flex items-center justify-center text-3xl">
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={avatarUrl} alt="Pet avatar" className="w-full h-full object-cover" />
+            ) : (
+              SPECIES_OPTIONS.find((s) => s.value === form.species)?.label?.split(" ")[0] ?? "🐾"
+            )}
+          </div>
+          {avatarUploading && (
+            <div className="absolute inset-0 rounded-2xl bg-white/70 flex items-center justify-center">
+              <Loader2 className="w-5 h-5 text-[var(--teal)] animate-spin" />
+            </div>
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-[var(--ink)] mb-1">Pet photo</p>
+          <p className="text-xs text-[var(--muted)] mb-3">JPG, PNG or WebP · max 4 MB</p>
+          {avatarError && <p className="text-xs text-[var(--danger)] mb-2">{avatarError}</p>}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="sr-only"
+            onChange={handleAvatarChange}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={avatarUploading}
+            className="btn-outline text-sm py-1.5 px-3 flex items-center gap-1.5 disabled:opacity-60"
+          >
+            <Camera className="w-3.5 h-3.5" />
+            {avatarUrl ? "Change photo" : "Upload photo"}
+          </button>
+        </div>
+      </div>
 
       <form
         onSubmit={handleSubmit}
