@@ -253,13 +253,15 @@ export default function HomePage() {
 
                 {/* Visual */}
                 <div className={flip ? "lg:[direction:ltr]" : ""}>
-                  {"metrics" in visual ? (
+                  {"metrics" in visual && visual.metrics ? (
                     <div className="card shadow-[var(--shadow-md)] p-5">
                       <div className="flex items-center justify-between mb-4">
                         <p className="text-sm font-semibold text-[var(--ink)]">{visual.heading}</p>
-                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${visual.badge.cls}`}>
-                          {visual.badge.label}
-                        </span>
+                        {visual.badge && (
+                          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${visual.badge.cls}`}>
+                            {visual.badge.label}
+                          </span>
+                        )}
                       </div>
                       <div className="grid grid-cols-3 gap-2.5">
                         {visual.metrics.map(({ label, value, ok }) => (
