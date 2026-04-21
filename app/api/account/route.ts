@@ -1,13 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 import { getInstance } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { registerSchema, resolveRole } from "@/lib/domain/auth";
 import { enqueueWelcomeSequence } from "@/lib/domain/email-queue";
-import { BCRYPT_SALT_ROUNDS } from "@/lib/config/auth";
+import { BCRYPT_SALT_ROUNDS, PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { sendEmail } from "@/lib/email";
 import { ownerWelcome } from "@/lib/email/templates";
+import { requireSession } from "@/lib/auth/guards";
+
+const updateAccountSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  currentPassword: z.string().optional(),
+  newPassword: z.string().min(PASSWORD_MIN_LENGTH).optional(),
+}).refine(
+  (d) => !(d.newPassword && !d.currentPassword),
+  { message: "Current password is required to set a new password", path: ["currentPassword"] },
+);
 
 export async function POST(req: NextRequest) {
   try {
@@ -62,5 +73,59 @@ export async function POST(req: NextRequest) {
       { success: false, error: "Registration failed" },
       { status: 500 },
     );
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  const { session, error } = await requireSession();
+  if (error) return error;
+
+  try {
+    const body = await req.json();
+    const parsed = updateAccountSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, error: "Invalid input", details: parsed.error.flatten() },
+        { status: 400 },
+      );
+    }
+
+    const db = getInstance();
+    const user = await db.query.users.findFirst({ where: eq(users.id, session.user.id) });
+    if (!user) {
+      return NextResponse.json({ success: false, error: "Account not found" }, { status: 404 });
+    }
+
+    const updates: Partial<typeof user> = {};
+
+    if (parsed.data.name) {
+      updates.name = parsed.data.name.trim();
+    }
+
+    if (parsed.data.newPassword) {
+      if (!user.password) {
+        return NextResponse.json(
+          { success: false, error: "Password change is not available for OAuth accounts" },
+          { status: 400 },
+        );
+      }
+      const valid = await bcrypt.compare(parsed.data.currentPassword!, user.password);
+      if (!valid) {
+        return NextResponse.json(
+          { success: false, error: "Current password is incorrect" },
+          { status: 400 },
+        );
+      }
+      updates.password = await bcrypt.hash(parsed.data.newPassword, BCRYPT_SALT_ROUNDS);
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ success: false, error: "Nothing to update" }, { status: 400 });
+    }
+
+    await db.update(users).set(updates).where(eq(users.id, session.user.id));
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ success: false, error: "Update failed" }, { status: 500 });
   }
 }
