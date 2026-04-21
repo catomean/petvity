@@ -4,6 +4,7 @@ import { pets, healthMetrics } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { BarChart3, ChevronLeft } from "lucide-react";
 import {
   HEALTH_METRIC_CONFIG,
   PHYSICAL_METRICS,
@@ -77,9 +78,10 @@ export default async function PetHealthPage({ params }: Params) {
         <div>
           <Link
             href={`/portal/pets/${petId}`}
-            className="text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline"
+            className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline"
           >
-            ← {pet.name}
+            <ChevronLeft className="w-3.5 h-3.5" />
+            {pet.name}
           </Link>
           <h1 className="text-2xl font-semibold text-[var(--ink)] mt-1">
             Health
@@ -95,7 +97,9 @@ export default async function PetHealthPage({ params }: Params) {
 
       {!latest ? (
         <div className="card p-10 text-center">
-          <div className="text-4xl mb-3">📊</div>
+          <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
+            <BarChart3 className="w-7 h-7 text-[var(--teal)]" />
+          </div>
           <p className="text-[var(--muted)] mb-4">No health data logged yet.</p>
           <Link href={`/portal/pets/${petId}/health/log`} className="btn-primary">
             Log first check-in
@@ -128,7 +132,7 @@ export default async function PetHealthPage({ params }: Params) {
                     return (
                       <div
                         key={metricId}
-                        className={`rounded-lg p-3 ${display.inRange ? "bg-green-50" : "bg-red-50"}`}
+                        className={`rounded-lg p-3 ${display.inRange ? "bg-[var(--green-bg)]" : "bg-[var(--danger-bg)]"}`}
                       >
                         <div className="text-xs text-[var(--muted)] mb-1">{def.label}</div>
                         <div className="text-lg font-semibold text-[var(--ink)]">
@@ -158,7 +162,7 @@ export default async function PetHealthPage({ params }: Params) {
                     return (
                       <div
                         key={metricId}
-                        className={`rounded-lg p-3 ${display.inRange ? "bg-green-50" : "bg-red-50"}`}
+                        className={`rounded-lg p-3 ${display.inRange ? "bg-[var(--green-bg)]" : "bg-[var(--danger-bg)]"}`}
                       >
                         <div className="text-xs text-[var(--muted)] mb-1">{def.label}</div>
                         <div className="text-lg font-semibold text-[var(--ink)]">
