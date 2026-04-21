@@ -8,14 +8,14 @@ import { formatDateShort, formatRelativeDate } from "@/lib/utils/format";
 
 type Params = { params: Promise<{ petId: string }> };
 
-const STATUS_CLASSES = {
-  up_to_date: "bg-green-100 text-green-800",
-  due_soon: "bg-amber-100 text-amber-800",
-  overdue: "bg-red-100 text-red-800",
-  not_applicable: "bg-gray-100 text-gray-600",
+const STATUS_CLASSES: Record<string, string> = {
+  up_to_date: "signal-healthy",
+  due_soon: "signal-watch",
+  overdue: "signal-concern",
+  not_applicable: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full",
 };
 
-const STATUS_LABELS = {
+const STATUS_LABELS: Record<string, string> = {
   up_to_date: "Up to date",
   due_soon: "Due soon",
   overdue: "Overdue",
@@ -55,7 +55,7 @@ export default async function VaccinationsPage({ params }: Params) {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-[var(--border)] overflow-hidden">
+      <div className="card overflow-hidden">
         {rows.length === 0 ? (
           <div className="p-10 text-center text-[var(--muted)]">
             No vaccinations recorded yet.
@@ -105,9 +105,7 @@ export default async function VaccinationsPage({ params }: Params) {
                     )}
                   </td>
                   <td className="py-3 px-4">
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${STATUS_CLASSES[v.status]}`}
-                    >
+                    <span className={STATUS_CLASSES[v.status] ?? "signal-healthy"}>
                       {STATUS_LABELS[v.status]}
                     </span>
                   </td>

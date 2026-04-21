@@ -4,11 +4,17 @@ import { pets, healthMetrics } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { HEALTH_METRIC_CONFIG, PHYSICAL_METRICS, EMOTIONAL_METRICS } from "@/lib/config/health-metrics";
+import {
+  HEALTH_METRIC_CONFIG,
+  PHYSICAL_METRICS,
+  EMOTIONAL_METRICS,
+  getNormalRange,
+} from "@/lib/config/health-metrics";
 import type { MetricId } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
 import { getMetricDisplay } from "@/lib/domain/health";
 import { formatDateShort } from "@/lib/utils/format";
+import { HealthTrendChart } from "@/components/portal/HealthTrendChart";
 
 type Params = { params: Promise<{ petId: string }> };
 
@@ -42,6 +48,28 @@ export default async function PetHealthPage({ params }: Params) {
     anxiety: "anxiety",
     socialization: "socialization",
   };
+
+  // Chart data: ascending by date, values converted to display units
+  const chartData = metrics
+    .slice()
+    .reverse()
+    .map((m) => ({
+      date: formatDateShort(m.date),
+      weight: m.weightGrams != null ? HEALTH_METRIC_CONFIG.weight.toDisplay(m.weightGrams) : null,
+      temperature: m.temperatureCentidegrees != null
+        ? HEALTH_METRIC_CONFIG.temperature.toDisplay(m.temperatureCentidegrees)
+        : null,
+      heart_rate: m.heartRateBpm ?? null,
+      energy: m.energy ?? null,
+      mood: m.mood ?? null,
+      anxiety: m.anxiety ?? null,
+      socialization: m.socialization ?? null,
+    }));
+
+  // Species-specific normal ranges (display units)
+  const weightRange = getNormalRange("weight", species);
+  const tempRange = getNormalRange("temperature", species);
+  const hrRange = getNormalRange("heart_rate", species);
 
   return (
     <div>
@@ -78,9 +106,7 @@ export default async function PetHealthPage({ params }: Params) {
           {/* Latest reading */}
           <div className="card p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-[var(--ink)]">
-                Latest reading
-              </h2>
+              <h2 className="font-semibold text-[var(--ink)]">Latest reading</h2>
               <span className="text-xs text-[var(--muted)]">
                 {formatDateShort(latest.date)}
               </span>
@@ -104,9 +130,7 @@ export default async function PetHealthPage({ params }: Params) {
                         key={metricId}
                         className={`rounded-lg p-3 ${display.inRange ? "bg-green-50" : "bg-red-50"}`}
                       >
-                        <div className="text-xs text-[var(--muted)] mb-1">
-                          {def.label}
-                        </div>
+                        <div className="text-xs text-[var(--muted)] mb-1">{def.label}</div>
                         <div className="text-lg font-semibold text-[var(--ink)]">
                           {display.value}
                           <span className="text-sm font-normal text-[var(--muted)] ms-1">
@@ -136,9 +160,7 @@ export default async function PetHealthPage({ params }: Params) {
                         key={metricId}
                         className={`rounded-lg p-3 ${display.inRange ? "bg-green-50" : "bg-red-50"}`}
                       >
-                        <div className="text-xs text-[var(--muted)] mb-1">
-                          {def.label}
-                        </div>
+                        <div className="text-xs text-[var(--muted)] mb-1">{def.label}</div>
                         <div className="text-lg font-semibold text-[var(--ink)]">
                           {display.value}
                           <span className="text-sm font-normal text-[var(--muted)] ms-1">
@@ -153,7 +175,54 @@ export default async function PetHealthPage({ params }: Params) {
             </div>
           </div>
 
-          {/* History */}
+          {/* Trend charts — only show if ≥2 data points */}
+          {metrics.length >= 2 && (
+            <>
+              <h2 className="font-semibold text-[var(--ink)] -mb-2">
+                30-day trends
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <HealthTrendChart
+                  data={chartData}
+                  lines={[{ dataKey: "weight", name: "Weight", color: HEALTH_METRIC_CONFIG.weight.chartColor }]}
+                  unit=" kg"
+                  title="Weight"
+                  normalMin={HEALTH_METRIC_CONFIG.weight.toDisplay(weightRange.min)}
+                  normalMax={HEALTH_METRIC_CONFIG.weight.toDisplay(weightRange.max)}
+                />
+                <HealthTrendChart
+                  data={chartData}
+                  lines={[{ dataKey: "temperature", name: "Temp", color: HEALTH_METRIC_CONFIG.temperature.chartColor }]}
+                  unit="°C"
+                  title="Temperature"
+                  normalMin={HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRange.min)}
+                  normalMax={HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRange.max)}
+                />
+                <HealthTrendChart
+                  data={chartData}
+                  lines={[{ dataKey: "heart_rate", name: "HR", color: HEALTH_METRIC_CONFIG.heart_rate.chartColor }]}
+                  unit=" bpm"
+                  title="Heart Rate"
+                  normalMin={hrRange.min}
+                  normalMax={hrRange.max}
+                />
+              </div>
+
+              <HealthTrendChart
+                data={chartData}
+                lines={EMOTIONAL_METRICS.map((id) => ({
+                  dataKey: id,
+                  name: HEALTH_METRIC_CONFIG[id].label,
+                  color: HEALTH_METRIC_CONFIG[id].chartColor,
+                }))}
+                unit="/5"
+                title="Emotional wellbeing"
+                integerScale
+              />
+            </>
+          )}
+
+          {/* History table */}
           <div className="card p-5">
             <h2 className="font-semibold text-[var(--ink)] mb-4">
               History (last 30 days)
@@ -162,32 +231,17 @@ export default async function PetHealthPage({ params }: Params) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-[var(--border)]">
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
-                      Date
-                    </th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
-                      Weight
-                    </th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
-                      Temp
-                    </th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
-                      Energy
-                    </th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
-                      Mood
-                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Date</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Weight</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Temp</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Energy</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Mood</th>
                   </tr>
                 </thead>
                 <tbody>
                   {metrics.map((m) => (
-                    <tr
-                      key={m.id}
-                      className="border-b border-[var(--border)] last:border-0"
-                    >
-                      <td className="py-2 px-3 text-[var(--muted)]">
-                        {formatDateShort(m.date)}
-                      </td>
+                    <tr key={m.id} className="border-b border-[var(--border)] last:border-0">
+                      <td className="py-2 px-3 text-[var(--muted)]">{formatDateShort(m.date)}</td>
                       <td className="py-2 px-3">
                         {m.weightGrams != null
                           ? `${HEALTH_METRIC_CONFIG.weight.toDisplay(m.weightGrams)} kg`
