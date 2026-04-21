@@ -12,6 +12,7 @@ export default function RegisterPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,8 +21,13 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
+    if (password !== confirm) {
+      setError("Passwords don't match.");
+      return;
+    }
+
+    setLoading(true);
     const res = await fetch("/api/account", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -88,6 +94,19 @@ export default function RegisterPage() {
             required
             minLength={PASSWORD_MIN_LENGTH}
             placeholder="At least 8 characters"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            Confirm password
+          </label>
+          <PasswordInput
+            value={confirm}
+            onChange={setConfirm}
+            autoComplete="new-password"
+            required
+            placeholder="Repeat your password"
           />
         </div>
 

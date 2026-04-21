@@ -6,6 +6,8 @@ import { users } from "@/lib/db/schema";
 import { registerSchema, resolveRole } from "@/lib/domain/auth";
 import { enqueueWelcomeSequence } from "@/lib/domain/email-queue";
 import { BCRYPT_SALT_ROUNDS } from "@/lib/config/auth";
+import { sendEmail } from "@/lib/email";
+import { ownerWelcome } from "@/lib/email/templates";
 
 export async function POST(req: NextRequest) {
   try {
@@ -45,7 +47,14 @@ export async function POST(req: NextRequest) {
       .values({ name, email: email.toLowerCase(), password: hashed, role })
       .returning({ id: users.id });
 
+    // Queue the full welcome sequence (day 1, 3, 7 follow-ups)
     await enqueueWelcomeSequence(user.id, { name, email: email.toLowerCase() });
+
+    // Send the welcome email immediately (don't wait for cron)
+    const welcome = ownerWelcome({ name });
+    await sendEmail({ to: email.toLowerCase(), ...welcome }).catch((err) =>
+      console.error("[account] Welcome email failed:", err),
+    );
 
     return NextResponse.json({ success: true, data: { id: user.id } }, { status: 201 });
   } catch {
