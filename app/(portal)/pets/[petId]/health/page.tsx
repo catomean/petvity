@@ -66,7 +66,7 @@ export default async function PetHealthPage({ params }: Params) {
       </div>
 
       {!latest ? (
-        <div className="bg-white rounded-xl border border-[var(--border)] p-10 text-center">
+        <div className="card p-10 text-center">
           <div className="text-4xl mb-3">📊</div>
           <p className="text-[var(--muted)] mb-4">No health data logged yet.</p>
           <Link href={`/portal/pets/${petId}/health/log`} className="btn-primary">
@@ -76,7 +76,7 @@ export default async function PetHealthPage({ params }: Params) {
       ) : (
         <div className="space-y-6">
           {/* Latest reading */}
-          <div className="bg-white rounded-xl border border-[var(--border)] p-5">
+          <div className="card p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-semibold text-[var(--ink)]">
                 Latest reading
@@ -154,7 +154,7 @@ export default async function PetHealthPage({ params }: Params) {
           </div>
 
           {/* History */}
-          <div className="bg-white rounded-xl border border-[var(--border)] p-5">
+          <div className="card p-5">
             <h2 className="font-semibold text-[var(--ink)] mb-4">
               History (last 30 days)
             </h2>
@@ -189,13 +189,13 @@ export default async function PetHealthPage({ params }: Params) {
                         {formatDateShort(m.date)}
                       </td>
                       <td className="py-2 px-3">
-                        {m.weightGrams
-                          ? `${(m.weightGrams / 1000).toFixed(1)} kg`
+                        {m.weightGrams != null
+                          ? `${HEALTH_METRIC_CONFIG.weight.toDisplay(m.weightGrams)} kg`
                           : "–"}
                       </td>
                       <td className="py-2 px-3">
-                        {m.temperatureCentidegrees
-                          ? `${(m.temperatureCentidegrees / 100).toFixed(1)}°C`
+                        {m.temperatureCentidegrees != null
+                          ? `${HEALTH_METRIC_CONFIG.temperature.toDisplay(m.temperatureCentidegrees)}°C`
                           : "–"}
                       </td>
                       <td className="py-2 px-3">{m.energy ?? "–"}</td>

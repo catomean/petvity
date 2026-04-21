@@ -26,7 +26,7 @@ export default async function CheckinPage() {
       </p>
 
       {userPets.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[var(--border)] p-10 text-center">
+        <div className="card p-10 text-center">
           <p className="text-[var(--muted)] mb-4">No pets yet.</p>
           <Link href="/portal/pets/new" className="btn-primary">
             Add a pet
@@ -40,7 +40,7 @@ export default async function CheckinPage() {
               <Link
                 key={pet.id}
                 href={`/portal/pets/${pet.id}/health/log`}
-                className="bg-white rounded-xl border border-[var(--border)] p-4 flex items-center gap-4 hover:border-[var(--teal)] hover:shadow-sm transition-all no-underline"
+                className="card p-4 flex items-center gap-4 hover:border-[var(--teal)] hover:shadow-sm transition-all no-underline"
               >
                 <div className="w-12 h-12 rounded-full bg-[var(--teal-light)] flex items-center justify-center text-2xl flex-shrink-0">
                   {speciesDef?.emoji ?? "🐾"}

@@ -5,7 +5,7 @@ import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
@@ -25,12 +25,6 @@ function ageString(birthDate: string | null): string | null {
   const years = Math.floor(months / 12);
   return `${years} year${years !== 1 ? "s" : ""} old`;
 }
-
-const SIGNAL_HEADER_BG: Record<string, string> = {
-  healthy: "from-[#DCFCE7] to-[var(--off)]",
-  watch: "from-[#FEF3C7] to-[var(--off)]",
-  concern: "from-[#FEE2E2] to-[var(--off)]",
-};
 
 export default async function PetProfilePage({ params }: Params) {
   const session = await auth();
@@ -110,7 +104,7 @@ export default async function PetProfilePage({ params }: Params) {
 
       {/* Hero header */}
       <div
-        className={`card overflow-hidden mb-6 bg-gradient-to-b ${SIGNAL_HEADER_BG[sig] ?? ""}`}
+        className={`card overflow-hidden mb-6 bg-gradient-to-b ${SIGNAL_HERO_BG[sig as keyof typeof SIGNAL_HERO_BG] ?? ""}`}
       >
         <div className="p-6 lg:p-8">
           <div className="flex items-start justify-between gap-4">

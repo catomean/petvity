@@ -35,8 +35,23 @@ export const SIGNAL_COLORS: Record<PetWellnessSignal, string> = {
   healthy: "var(--green)",
 };
 
+/** Pill badge classes — maps to .signal-* utility classes in globals.css */
 export const SIGNAL_BG_CLASSES: Record<PetWellnessSignal, string> = {
-  concern: "bg-red-100 text-red-800",
-  watch: "bg-amber-100 text-amber-800",
-  healthy: "bg-green-100 text-green-800",
+  concern: "signal-concern",
+  watch: "signal-watch",
+  healthy: "signal-healthy",
+};
+
+/** Thin top-strip color for pet cards on the dashboard */
+export const SIGNAL_STRIP_CLASSES: Record<PetWellnessSignal, string> = {
+  healthy: "bg-[var(--green)]",
+  watch: "bg-[var(--warn)]",
+  concern: "bg-[var(--danger)]",
+};
+
+/** Gradient background for the pet profile hero header */
+export const SIGNAL_HERO_BG: Record<PetWellnessSignal, string> = {
+  healthy: "from-[var(--green-bg)] to-[var(--off)]",
+  watch: "from-[var(--warn-bg)] to-[var(--off)]",
+  concern: "from-[var(--danger-bg)] to-[var(--off)]",
 };

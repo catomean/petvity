@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG } from "@/lib/config/health-metrics";
+import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG, EMOTIONAL_SCALE_LABELS } from "@/lib/config/health-metrics";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
@@ -56,13 +56,6 @@ export default function LogHealthPage() {
       router.push(`/portal/pets/${petId}/health`);
     }
   }
-
-  const EMOTIONAL_LABELS: Record<string, string[]> = {
-    energy:       ["Very low",    "Low",    "Moderate", "High",     "Very high"],
-    mood:         ["Very sad",    "Sad",    "Neutral",  "Happy",    "Joyful"],
-    anxiety:      ["Very calm",   "Calm",   "Mild",     "Anxious",  "Very anxious"],
-    socialization:["Avoidant",   "Shy",    "Normal",   "Friendly", "Very social"],
-  };
 
   return (
     <div className="max-w-lg">
@@ -133,7 +126,7 @@ export default function LogHealthPage() {
           <div className="grid grid-cols-2 gap-4">
             {EMOTIONAL_METRICS.map((metricId) => {
               const def = HEALTH_METRIC_CONFIG[metricId];
-              const labels = EMOTIONAL_LABELS[metricId] ?? [];
+              const labels = EMOTIONAL_SCALE_LABELS[metricId] ?? [];
               return (
                 <div key={metricId}>
                   <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">

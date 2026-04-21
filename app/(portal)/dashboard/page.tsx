@@ -4,16 +4,10 @@ import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
 import { eq, gte, desc } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { Plus } from "lucide-react";
-
-const SIGNAL_STRIP: Record<string, string> = {
-  healthy: "bg-[var(--green)]",
-  watch: "bg-[var(--warn)]",
-  concern: "bg-[var(--danger)]",
-};
 
 function greeting(name?: string | null) {
   const h = new Date().getHours();
@@ -115,7 +109,7 @@ export default async function DashboardPage() {
                 className="card overflow-hidden hover:shadow-md transition-all no-underline group block"
               >
                 {/* Signal color strip */}
-                <div className={`h-1 ${SIGNAL_STRIP[sig] ?? "bg-[var(--border)]"}`} />
+                <div className={`h-1 ${SIGNAL_STRIP_CLASSES[sig as keyof typeof SIGNAL_STRIP_CLASSES] ?? "bg-[var(--border)]"}`} />
 
                 <div className="p-5">
                   <div className="flex items-start justify-between mb-4">

@@ -4,14 +4,14 @@ import { useState, useRef, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
+import { PasswordInput } from "@/components/portal/PasswordInput";
 
 export default function RegisterPage() {
   const router = useRouter();
   const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -81,26 +81,14 @@ export default function RegisterPage() {
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
             Password
           </label>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              autoComplete="new-password"
-              required
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-input pe-11"
-              placeholder="At least 8 characters"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((v) => !v)}
-              className="absolute inset-y-0 end-0 flex items-center px-3 text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
-              tabIndex={-1}
-            >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
-          </div>
+          <PasswordInput
+            value={password}
+            onChange={setPassword}
+            autoComplete="new-password"
+            required
+            minLength={PASSWORD_MIN_LENGTH}
+            placeholder="At least 8 characters"
+          />
         </div>
 
         <button
