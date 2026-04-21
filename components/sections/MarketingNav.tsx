@@ -147,13 +147,13 @@ export default function MarketingNav() {
           </div>
 
           <Link
-            href="#how-it-works"
+            href="/#how-it-works"
             className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] hover:bg-[var(--off)] transition-colors no-underline"
           >
             How it works
           </Link>
           <Link
-            href="#pricing"
+            href="/pricing"
             className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] hover:bg-[var(--off)] transition-colors no-underline"
           >
             Pricing
