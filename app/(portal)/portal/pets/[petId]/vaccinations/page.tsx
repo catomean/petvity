@@ -1,116 +1,385 @@
-import { auth } from "@/lib/auth";
-import { getInstance } from "@/lib/db";
-import { pets, vaccinations } from "@/lib/db/schema";
-import { and, eq } from "drizzle-orm";
-import { notFound } from "next/navigation";
+"use client";
+
+import { useState, useEffect, useTransition } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { Plus, Syringe, ChevronLeft, X, Check, AlertTriangle, Clock } from "lucide-react";
 import { formatDateShort, formatRelativeDate } from "@/lib/utils/format";
 
-type Params = { params: Promise<{ petId: string }> };
+/* ── SSOT: status config ─────────────────────────────────────────────────── */
+const STATUS_CONFIG = {
+  up_to_date: {
+    label: "Up to date",
+    className: "signal-healthy",
+    icon: Check,
+  },
+  due_soon: {
+    label: "Due soon",
+    className: "signal-watch",
+    icon: Clock,
+  },
+  overdue: {
+    label: "Overdue",
+    className: "signal-concern",
+    icon: AlertTriangle,
+  },
+  not_applicable: {
+    label: "N/A",
+    className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium",
+    icon: null,
+  },
+} as const;
 
-const STATUS_CLASSES: Record<string, string> = {
-  up_to_date: "signal-healthy",
-  due_soon: "signal-watch",
-  overdue: "signal-concern",
-  not_applicable: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full",
+type VaccinationStatus = keyof typeof STATUS_CONFIG;
+
+interface Vaccination {
+  id: string;
+  name: string;
+  administeredDate: string;
+  nextDueDate: string | null;
+  status: VaccinationStatus;
+  vetName: string | null;
+  batchNumber: string | null;
+  notes: string | null;
+}
+
+interface FormState {
+  name: string;
+  administeredDate: string;
+  nextDueDate: string;
+  vetName: string;
+  batchNumber: string;
+  status: VaccinationStatus;
+}
+
+const EMPTY_FORM: FormState = {
+  name: "",
+  administeredDate: new Date().toISOString().slice(0, 10),
+  nextDueDate: "",
+  vetName: "",
+  batchNumber: "",
+  status: "up_to_date",
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  up_to_date: "Up to date",
-  due_soon: "Due soon",
-  overdue: "Overdue",
-  not_applicable: "N/A",
-};
+export default function VaccinationsPage() {
+  const { petId } = useParams<{ petId: string }>();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-export default async function VaccinationsPage({ params }: Params) {
-  const session = await auth();
-  if (!session) return null;
+  const [petName, setPetName] = useState<string>("");
+  const [rows, setRows] = useState<Vaccination[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  const { petId } = await params;
-  const db = getInstance();
+  /* ── fetch pet + vaccinations ────────────────────────────────────────── */
+  useEffect(() => {
+    async function load() {
+      const [petRes, vacRes] = await Promise.all([
+        fetch(`/api/pets/${petId}`),
+        fetch(`/api/vaccinations?petId=${petId}`),
+      ]);
+      if (petRes.ok) {
+        const { data } = await petRes.json();
+        setPetName(data.name);
+      }
+      if (vacRes.ok) {
+        const { data } = await vacRes.json();
+        setRows(data ?? []);
+      }
+      setLoading(false);
+    }
+    load();
+  }, [petId]);
 
-  const pet = await db.query.pets.findFirst({
-    where: and(eq(pets.id, petId), eq(pets.ownerId, session.user.id)),
-  });
-  if (!pet) notFound();
+  /* ── submit form ─────────────────────────────────────────────────────── */
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setSaving(true);
 
-  const rows = await db.query.vaccinations.findMany({
-    where: eq(vaccinations.petId, petId),
-    orderBy: (t, { desc }) => [desc(t.administeredDate)],
-  });
+    const body = {
+      petId,
+      name: form.name.trim(),
+      administeredDate: form.administeredDate,
+      ...(form.nextDueDate ? { nextDueDate: form.nextDueDate } : {}),
+      ...(form.vetName.trim() ? { vetName: form.vetName.trim() } : {}),
+      ...(form.batchNumber.trim() ? { batchNumber: form.batchNumber.trim() } : {}),
+      status: form.status,
+    };
+
+    const res = await fetch("/api/vaccinations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    setSaving(false);
+
+    if (!data.success) {
+      setError(data.error ?? "Failed to save.");
+      return;
+    }
+
+    setRows((prev) => [data.data, ...prev]);
+    setShowForm(false);
+    setForm(EMPTY_FORM);
+
+    // refresh server-side pet signal
+    startTransition(() => router.refresh());
+  }
+
+  function field(key: keyof FormState, value: string) {
+    setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  /* ── render ──────────────────────────────────────────────────────────── */
+  if (loading) {
+    return (
+      <div className="animate-pulse">
+        <div className="h-8 bg-[var(--off)] rounded w-40 mb-2" />
+        <div className="h-6 bg-[var(--off)] rounded w-28 mb-8" />
+        <div className="card h-64" />
+      </div>
+    );
+  }
 
   return (
     <div>
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <Link
             href={`/portal/pets/${petId}`}
-            className="text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline"
+            className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-1 transition-colors"
           >
-            ← {pet.name}
+            <ChevronLeft className="w-3.5 h-3.5" />
+            {petName || "Pet"}
           </Link>
-          <h1 className="text-2xl font-semibold text-[var(--ink)] mt-1">
-            Vaccinations
-          </h1>
+          <h1 className="text-2xl font-semibold text-[var(--ink)]">Vaccinations</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">
+            Track immunisations and upcoming boosters
+          </p>
         </div>
+        {!showForm && (
+          <button
+            onClick={() => setShowForm(true)}
+            className="btn-primary flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Add
+          </button>
+        )}
       </div>
 
+      {/* Add form */}
+      {showForm && (
+        <div className="card p-6 mb-6 border-2 border-[var(--teal-light)]">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
+                <Syringe className="w-4 h-4 text-[var(--teal)]" />
+              </div>
+              <h2 className="font-semibold text-[var(--ink)]">New vaccination</h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setError(""); }}
+              className="btn-ghost p-1 rounded-lg"
+            >
+              <X className="w-4 h-4 text-[var(--muted)]" />
+            </button>
+          </div>
+
+          {error && <p className="alert-error mb-4">{error}</p>}
+
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Vaccine name */}
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                Vaccine name <span className="text-[var(--danger)]">*</span>
+              </label>
+              <input
+                className="form-input"
+                placeholder="e.g. Rabies, DHPP, Bordetella"
+                required
+                value={form.name}
+                onChange={(e) => field("name", e.target.value)}
+              />
+            </div>
+
+            {/* Administered date */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                Date administered <span className="text-[var(--danger)]">*</span>
+              </label>
+              <input
+                type="date"
+                className="form-input"
+                required
+                value={form.administeredDate}
+                onChange={(e) => field("administeredDate", e.target.value)}
+              />
+            </div>
+
+            {/* Next due date */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                Next due date
+                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+              </label>
+              <input
+                type="date"
+                className="form-input"
+                value={form.nextDueDate}
+                onChange={(e) => field("nextDueDate", e.target.value)}
+              />
+            </div>
+
+            {/* Status */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                Status
+              </label>
+              <select
+                className="form-input"
+                value={form.status}
+                onChange={(e) => field("status", e.target.value as VaccinationStatus)}
+              >
+                {(Object.entries(STATUS_CONFIG) as [VaccinationStatus, typeof STATUS_CONFIG[VaccinationStatus]][]).map(
+                  ([val, cfg]) => (
+                    <option key={val} value={val}>
+                      {cfg.label}
+                    </option>
+                  )
+                )}
+              </select>
+            </div>
+
+            {/* Vet name */}
+            <div>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                Administered by
+                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+              </label>
+              <input
+                className="form-input"
+                placeholder="Vet or clinic name"
+                value={form.vetName}
+                onChange={(e) => field("vetName", e.target.value)}
+              />
+            </div>
+
+            {/* Batch number */}
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                Batch / lot number
+                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+              </label>
+              <input
+                className="form-input"
+                placeholder="For your records"
+                value={form.batchNumber}
+                onChange={(e) => field("batchNumber", e.target.value)}
+              />
+            </div>
+
+            {/* Actions */}
+            <div className="sm:col-span-2 flex gap-3 pt-1">
+              <button
+                type="submit"
+                disabled={saving || isPending}
+                className="btn-primary disabled:opacity-60"
+              >
+                {saving ? "Saving…" : "Save vaccination"}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setError(""); }}
+                className="btn-outline"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Vaccinations list */}
       <div className="card overflow-hidden">
         {rows.length === 0 ? (
-          <div className="p-10 text-center text-[var(--muted)]">
-            No vaccinations recorded yet.
+          <div className="py-16 text-center">
+            <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
+              <Syringe className="w-6 h-6 text-[var(--teal)]" />
+            </div>
+            <p className="font-medium text-[var(--ink)] mb-1">No vaccinations yet</p>
+            <p className="text-sm text-[var(--muted)] mb-5">
+              Keep track of immunisations and upcoming boosters.
+            </p>
+            {!showForm && (
+              <button onClick={() => setShowForm(true)} className="btn-primary">
+                <Plus className="w-4 h-4" />
+                Add first vaccination
+              </button>
+            )}
           </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
               <tr>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)]">
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
                   Vaccine
                 </th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)]">
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">
                   Given
                 </th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)]">
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">
                   Next due
                 </th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)]">
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
                   Status
                 </th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((v) => (
-                <tr
-                  key={v.id}
-                  className="border-t border-[var(--border)]"
-                >
-                  <td className="py-3 px-4 font-medium text-[var(--ink)]">
-                    {v.name}
-                    {v.vetName && (
-                      <div className="text-xs text-[var(--muted)] font-normal">
-                        {v.vetName}
-                      </div>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 text-[var(--muted)]">
-                    {formatDateShort(v.administeredDate)}
-                  </td>
-                  <td className="py-3 px-4 text-[var(--muted)]">
-                    {v.nextDueDate ? (
-                      <span title={formatDateShort(v.nextDueDate)}>
-                        {formatRelativeDate(v.nextDueDate)}
+              {rows.map((v) => {
+                const status = STATUS_CONFIG[v.status] ?? STATUS_CONFIG.up_to_date;
+                const StatusIcon = status.icon;
+                return (
+                  <tr key={v.id} className="border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">
+                    <td className="py-3 px-4">
+                      <p className="font-medium text-[var(--ink)]">{v.name}</p>
+                      {v.vetName && (
+                        <p className="text-xs text-[var(--muted)] mt-0.5">{v.vetName}</p>
+                      )}
+                      {/* Mobile: show date inline */}
+                      <p className="text-xs text-[var(--muted)] mt-0.5 sm:hidden">
+                        {formatDateShort(v.administeredDate)}
+                      </p>
+                    </td>
+                    <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell">
+                      {formatDateShort(v.administeredDate)}
+                    </td>
+                    <td className="py-3 px-4 text-[var(--muted)] hidden md:table-cell">
+                      {v.nextDueDate ? (
+                        <span title={formatDateShort(v.nextDueDate)}>
+                          {formatRelativeDate(v.nextDueDate)}
+                        </span>
+                      ) : (
+                        <span className="text-[var(--faint)]">–</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`inline-flex items-center gap-1 ${status.className}`}>
+                        {StatusIcon && <StatusIcon className="w-3 h-3" />}
+                        {status.label}
                       </span>
-                    ) : (
-                      "–"
-                    )}
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className={STATUS_CLASSES[v.status] ?? "signal-healthy"}>
-                      {STATUS_LABELS[v.status]}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
