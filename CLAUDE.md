@@ -138,18 +138,26 @@ lib/
 
 ```
 1. /api/auth/*          → ALWAYS pass through (NextAuth must be public)
-2. /portal, /admin, /api → Auth-guard only, no locale routing
-   - Unauthenticated → /login?returnTo=<path>
-   - Non-admin at /admin → /portal/dashboard
+2. /portal, /admin (PORTAL_PREFIXES)
+   + /api/pets, /api/health, /api/vaccinations, /api/medications,
+     /api/cron, /api/admin (PRIVATE_API_PREFIXES)
+                        → Auth-guard only, no locale routing
+                        → Unauthenticated → /login?returnTo=<path>
+                        → Non-admin at /admin → /portal/dashboard
 3. /login, /register, /forgot-password, /reset-password
                         → Bypass intl routing (serve non-localized)
                         → Already-logged-in → redirect to dashboard
-4. Everything else      → next-intl locale routing (marketing site)
+4. /api/* (catch-all)   → Pass through, no locale routing (public API routes)
+   Public routes: /api/account (registration), /api/public/* (public profiles),
+                  /api/auth/forgot-password, /api/auth/reset-password
+5. Everything else      → next-intl locale routing (marketing site)
 ```
 
-**CRITICAL:** All portal routes MUST be under `/portal/`. Do NOT add individual paths to PORTAL_PREFIXES — it's intentionally a single prefix.
+**CRITICAL:** All portal routes MUST be under `/portal/`. Do NOT add individual paths to PORTAL_PREFIXES.
 
-**CRITICAL:** `/api/auth` must remain before the PORTAL_PREFIXES check or NextAuth breaks.
+**CRITICAL:** `/api/auth` must remain before ALL other checks or NextAuth breaks.
+
+**CRITICAL:** Adding a new private API route? Add its prefix to `PRIVATE_API_PREFIXES` in proxy.ts. Do NOT add `/api` as a blanket prefix — that would block public endpoints like registration.
 
 ---
 
