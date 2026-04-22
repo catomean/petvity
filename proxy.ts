@@ -21,6 +21,7 @@ const PRIVATE_API_PREFIXES = [
   "/api/vets",
   "/api/sitters",
   "/api/bookings",
+  "/api/reviews",
   "/api/cron",
   "/api/admin",
 ];

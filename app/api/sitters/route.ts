@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and } from "drizzle-orm";
+import { eq, and, avg, count, inArray } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { sitterProfiles, users } from "@/lib/db/schema";
+import { sitterProfiles, users, reviews } from "@/lib/db/schema";
 
 export async function GET(req: NextRequest) {
   const { error } = await requireSession();
@@ -40,5 +40,34 @@ export async function GET(req: NextRequest) {
     ? rows.filter((r) => r.city?.toLowerCase().includes(city.toLowerCase()))
     : rows;
 
-  return NextResponse.json({ success: true, data: filtered });
+  if (filtered.length === 0) {
+    return NextResponse.json({ success: true, data: [] });
+  }
+
+  // Fetch review aggregates for all returned professionals in one query
+  const professionalIds = filtered.map((r) => r.userId);
+  const ratingRows = await db
+    .select({
+      professionalId: reviews.professionalId,
+      avgRating: avg(reviews.rating),
+      reviewCount: count(reviews.id),
+    })
+    .from(reviews)
+    .where(inArray(reviews.professionalId, professionalIds))
+    .groupBy(reviews.professionalId);
+
+  const ratingMap = new Map(
+    ratingRows.map((r) => [
+      r.professionalId,
+      { avgRating: r.avgRating ? Number(Number(r.avgRating).toFixed(1)) : null, reviewCount: r.reviewCount },
+    ])
+  );
+
+  const data = filtered.map((r) => ({
+    ...r,
+    avgRating: ratingMap.get(r.userId)?.avgRating ?? null,
+    reviewCount: ratingMap.get(r.userId)?.reviewCount ?? 0,
+  }));
+
+  return NextResponse.json({ success: true, data });
 }

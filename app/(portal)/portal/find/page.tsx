@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X } from "lucide-react";
+import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -17,6 +17,8 @@ interface VetRow {
   phone: string | null;
   isAcceptingClients: boolean;
   isVerified: boolean;
+  avgRating: number | null;
+  reviewCount: number;
 }
 
 interface SitterRow {
@@ -31,6 +33,8 @@ interface SitterRow {
   phone: string | null;
   isAcceptingClients: boolean;
   isVerified: boolean;
+  avgRating: number | null;
+  reviewCount: number;
 }
 
 interface PetOption {
@@ -74,6 +78,17 @@ function formatServices(services: string | null): string {
       s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
     )
     .join(" · ");
+}
+
+function StarRating({ avg, count }: { avg: number | null; count: number }) {
+  if (avg === null || count === 0) return null;
+  return (
+    <span className="inline-flex items-center gap-1 text-xs text-[var(--warn)]">
+      <Star className="w-3 h-3 fill-current" />
+      <span className="font-medium">{avg.toFixed(1)}</span>
+      <span className="text-[var(--muted)]">({count})</span>
+    </span>
+  );
 }
 
 /* ─── Component ──────────────────────────────────────────────────────────── */
@@ -178,6 +193,7 @@ export default function FindPage() {
                         <p className="font-semibold text-[var(--ink)]">{vet.name ?? "Veterinarian"}</p>
                         {vet.isVerified && <VerifiedBadge />}
                         <AcceptingBadge accepting={vet.isAcceptingClients} />
+                        <StarRating avg={vet.avgRating} count={vet.reviewCount} />
                       </div>
                       {vet.specialty && (
                         <p className="text-sm text-[var(--teal)] mt-0.5">{vet.specialty}</p>
@@ -236,6 +252,7 @@ export default function FindPage() {
                         <p className="font-semibold text-[var(--ink)]">{sitter.name ?? "Pet Sitter"}</p>
                         {sitter.isVerified && <VerifiedBadge />}
                         <AcceptingBadge accepting={sitter.isAcceptingClients} />
+                        <StarRating avg={sitter.avgRating} count={sitter.reviewCount} />
                       </div>
                       {sitter.pricePerDay != null && (
                         <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">

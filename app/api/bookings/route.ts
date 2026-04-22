@@ -3,7 +3,7 @@ import { eq, or, and } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { bookings, bookingStatusEnum, pets, users } from "@/lib/db/schema";
+import { bookings, bookingStatusEnum, pets, users, reviews } from "@/lib/db/schema";
 
 const createBookingSchema = z.object({
   petId: z.string().uuid(),
@@ -35,10 +35,12 @@ export async function GET(_req: NextRequest) {
       notes: bookings.notes,
       status: bookings.status,
       createdAt: bookings.createdAt,
+      reviewId: reviews.id,
     })
     .from(bookings)
     .innerJoin(pets, eq(pets.id, bookings.petId))
     .innerJoin(users, eq(users.id, bookings.ownerId))
+    .leftJoin(reviews, eq(reviews.bookingId, bookings.id))
     .where(
       or(
         eq(bookings.ownerId, userId),

@@ -341,3 +341,26 @@ export const bookings = pgTable("bookings", {
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
+
+// ─── Reviews ───────────────────────────────────────────────────────────────────
+
+export const reviews = pgTable("reviews", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  /** One review per completed booking */
+  bookingId: uuid("booking_id")
+    .notNull()
+    .unique()
+    .references(() => bookings.id, { onDelete: "cascade" }),
+  /** The pet owner who wrote the review */
+  reviewerId: uuid("reviewer_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  /** The vet or sitter being reviewed */
+  professionalId: uuid("professional_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  /** 1–5 star rating */
+  rating: integer("rating").notNull(),
+  comment: text("comment"),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+});

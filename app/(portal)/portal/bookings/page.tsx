@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
-import { CalendarCheck, Clock, CheckCircle, XCircle, ChevronDown } from "lucide-react";
+import { CalendarCheck, Clock, CheckCircle, XCircle, ChevronDown, Star, X } from "lucide-react";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -17,16 +17,17 @@ interface BookingRow {
   endDate: string;
   notes: string | null;
   status: "pending" | "confirmed" | "cancelled" | "completed";
+  reviewId: string | null;
   createdAt: string;
 }
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
 const STATUS_CONFIG = {
-  pending:   { label: "Pending",   color: "bg-[var(--warn-bg)] text-[var(--warn)]",     icon: Clock },
-  confirmed: { label: "Confirmed", color: "bg-[var(--green-bg)] text-[var(--green)]",   icon: CheckCircle },
-  cancelled: { label: "Cancelled", color: "bg-[var(--off)] text-[var(--muted)]",        icon: XCircle },
-  completed: { label: "Completed", color: "bg-[var(--teal-light)] text-[var(--teal)]",  icon: CheckCircle },
+  pending:   { label: "Pending",   color: "bg-[var(--warn-bg)] text-[var(--warn)]",    icon: Clock },
+  confirmed: { label: "Confirmed", color: "bg-[var(--green-bg)] text-[var(--green)]",  icon: CheckCircle },
+  cancelled: { label: "Cancelled", color: "bg-[var(--off)] text-[var(--muted)]",       icon: XCircle },
+  completed: { label: "Completed", color: "bg-[var(--teal-light)] text-[var(--teal)]", icon: CheckCircle },
 } as const;
 
 function StatusBadge({ status }: { status: BookingRow["status"] }) {
@@ -51,6 +52,7 @@ function formatDate(iso: string) {
 export default function BookingsPage() {
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [reviewTarget, setReviewTarget] = useState<BookingRow | null>(null);
   const [, startTransition] = useTransition();
 
   async function load() {
@@ -71,16 +73,12 @@ export default function BookingsPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
-    if (res.ok) {
-      startTransition(() => load());
-    }
+    if (res.ok) startTransition(() => load());
   }
 
   async function deleteBooking(bookingId: string) {
     const res = await fetch(`/api/bookings/${bookingId}`, { method: "DELETE" });
-    if (res.ok) {
-      startTransition(() => load());
-    }
+    if (res.ok) startTransition(() => load());
   }
 
   const upcoming = bookings.filter((b) => b.status === "pending" || b.status === "confirmed");
@@ -121,7 +119,13 @@ export default function BookingsPage() {
               </h2>
               <div className="space-y-3">
                 {upcoming.map((b) => (
-                  <BookingCard key={b.id} booking={b} onUpdateStatus={updateStatus} onDelete={deleteBooking} />
+                  <BookingCard
+                    key={b.id}
+                    booking={b}
+                    onUpdateStatus={updateStatus}
+                    onDelete={deleteBooking}
+                    onReview={setReviewTarget}
+                  />
                 ))}
               </div>
             </section>
@@ -133,12 +137,26 @@ export default function BookingsPage() {
               </h2>
               <div className="space-y-3">
                 {past.map((b) => (
-                  <BookingCard key={b.id} booking={b} onUpdateStatus={updateStatus} onDelete={deleteBooking} />
+                  <BookingCard
+                    key={b.id}
+                    booking={b}
+                    onUpdateStatus={updateStatus}
+                    onDelete={deleteBooking}
+                    onReview={setReviewTarget}
+                  />
                 ))}
               </div>
             </section>
           )}
         </div>
+      )}
+
+      {reviewTarget && (
+        <ReviewModal
+          booking={reviewTarget}
+          onClose={() => setReviewTarget(null)}
+          onSubmitted={() => { setReviewTarget(null); startTransition(() => load()); }}
+        />
       )}
     </div>
   );
@@ -148,14 +166,16 @@ function BookingCard({
   booking: b,
   onUpdateStatus,
   onDelete,
+  onReview,
 }: {
   booking: BookingRow;
   onUpdateStatus: (id: string, status: BookingRow["status"]) => void;
   onDelete: (id: string) => void;
+  onReview: (b: BookingRow) => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
-
-  const isProfessional = b.professionalRole === "veterinarian" ? "Veterinarian" : "Pet Sitter";
+  const roleLabel = b.professionalRole === "veterinarian" ? "Veterinarian" : "Pet Sitter";
+  const canReview = b.status === "completed" && !b.reviewId;
 
   return (
     <div className="card p-5">
@@ -163,9 +183,15 @@ function BookingCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <p className="font-semibold text-[var(--ink)]">
-              {b.petName ?? "Pet"} · {isProfessional}
+              {b.petName ?? "Pet"} · {roleLabel}
             </p>
             <StatusBadge status={b.status} />
+            {b.reviewId && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[var(--teal-light)] text-[var(--teal)]">
+                <Star className="w-3 h-3 fill-current" />
+                Reviewed
+              </span>
+            )}
           </div>
           <p className="text-sm text-[var(--muted)]">
             {formatDate(b.startDate)}
@@ -179,51 +205,165 @@ function BookingCard({
           )}
         </div>
 
-        {/* Actions */}
-        {(b.status === "pending" || b.status === "confirmed") && (
-          <div className="relative flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {canReview && (
             <button
-              onClick={() => setActionsOpen((o) => !o)}
+              onClick={() => onReview(b)}
               className="btn-outline text-sm flex items-center gap-1.5 px-3 py-1.5"
             >
-              Actions <ChevronDown className="w-3.5 h-3.5" />
+              <Star className="w-3.5 h-3.5" />
+              Review
             </button>
-            {actionsOpen && (
-              <div className="absolute end-0 top-full mt-1 w-44 bg-white border border-[var(--border)] rounded-xl shadow-lg z-10 py-1">
-                {b.status === "pending" && (
+          )}
+
+          {(b.status === "pending" || b.status === "confirmed") && (
+            <div className="relative">
+              <button
+                onClick={() => setActionsOpen((o) => !o)}
+                className="btn-outline text-sm flex items-center gap-1.5 px-3 py-1.5"
+              >
+                Actions <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+              {actionsOpen && (
+                <div className="absolute end-0 top-full mt-1 w-44 bg-white border border-[var(--border)] rounded-xl shadow-lg z-10 py-1">
+                  {b.status === "pending" && (
+                    <button
+                      className="w-full text-start px-3 py-2 text-sm text-[var(--green)] hover:bg-[var(--green-bg)] transition-colors"
+                      onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "confirmed"); }}
+                    >
+                      Confirm booking
+                    </button>
+                  )}
+                  {b.status === "confirmed" && (
+                    <button
+                      className="w-full text-start px-3 py-2 text-sm text-[var(--teal)] hover:bg-[var(--teal-light)] transition-colors"
+                      onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "completed"); }}
+                    >
+                      Mark completed
+                    </button>
+                  )}
                   <button
-                    className="w-full text-start px-3 py-2 text-sm text-[var(--green)] hover:bg-[var(--green-bg)] transition-colors"
-                    onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "confirmed"); }}
+                    className="w-full text-start px-3 py-2 text-sm text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors"
+                    onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "cancelled"); }}
                   >
-                    Confirm booking
+                    Cancel booking
                   </button>
-                )}
-                {b.status === "confirmed" && (
-                  <button
-                    className="w-full text-start px-3 py-2 text-sm text-[var(--teal)] hover:bg-[var(--teal-light)] transition-colors"
-                    onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "completed"); }}
-                  >
-                    Mark completed
-                  </button>
-                )}
-                <button
-                  className="w-full text-start px-3 py-2 text-sm text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors"
-                  onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "cancelled"); }}
-                >
-                  Cancel booking
-                </button>
-                {b.status === "pending" && (
-                  <button
-                    className="w-full text-start px-3 py-2 text-sm text-[var(--muted)] hover:bg-[var(--off)] transition-colors"
-                    onClick={() => { setActionsOpen(false); onDelete(b.id); }}
-                  >
-                    Delete
-                  </button>
-                )}
-              </div>
-            )}
+                  {b.status === "pending" && (
+                    <button
+                      className="w-full text-start px-3 py-2 text-sm text-[var(--muted)] hover:bg-[var(--off)] transition-colors"
+                      onClick={() => { setActionsOpen(false); onDelete(b.id); }}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Review Modal ───────────────────────────────────────────────────────── */
+
+function StarPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const [hover, setHover] = useState(0);
+  return (
+    <div className="flex gap-1">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <button
+          key={n}
+          type="button"
+          onClick={() => onChange(n)}
+          onMouseEnter={() => setHover(n)}
+          onMouseLeave={() => setHover(0)}
+          className="text-[var(--warn)] transition-transform hover:scale-110"
+        >
+          <Star
+            className="w-7 h-7"
+            fill={(hover || value) >= n ? "currentColor" : "none"}
+          />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ReviewModal({
+  booking: b,
+  onClose,
+  onSubmitted,
+}: {
+  booking: BookingRow;
+  onClose: () => void;
+  onSubmitted: () => void;
+}) {
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (rating === 0) { setError("Please select a rating."); return; }
+    setSaving(true);
+    setError("");
+    const res = await fetch("/api/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookingId: b.id, rating, comment: comment.trim() || undefined }),
+    });
+    const data = await res.json();
+    setSaving(false);
+    if (data.success) onSubmitted();
+    else setError(data.error ?? "Failed to submit review.");
+  }
+
+  const roleLabel = b.professionalRole === "veterinarian" ? "Veterinarian" : "Pet Sitter";
+
+  return (
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--border)]">
+          <div>
+            <h2 className="font-semibold text-[var(--ink)]">Leave a Review</h2>
+            <p className="text-xs text-[var(--muted)] mt-0.5">
+              {b.petName ?? "Pet"} · {roleLabel}
+            </p>
           </div>
-        )}
+          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="px-5 py-4 space-y-4">
+          {error && <p className="alert-error">{error}</p>}
+
+          <div>
+            <label className="block text-sm font-medium text-[var(--ink2)] mb-2">Rating *</label>
+            <StarPicker value={rating} onChange={setRating} />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Comment</label>
+            <textarea
+              className="form-input min-h-[88px] resize-none"
+              placeholder="Share your experience…"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              maxLength={1000}
+            />
+          </div>
+
+          <div className="flex gap-3 pb-1">
+            <button type="button" onClick={onClose} className="btn-outline flex-1">Cancel</button>
+            <button type="submit" disabled={saving || rating === 0} className="btn-primary flex-1 disabled:opacity-60">
+              {saving ? "Submitting…" : "Submit review"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
