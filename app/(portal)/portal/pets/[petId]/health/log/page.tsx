@@ -1,61 +1,50 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG, EMOTIONAL_SCALE_LABELS } from "@/lib/config/health-metrics";
+import { auth } from "@/lib/auth";
+import { getInstance } from "@/lib/db";
+import { pets } from "@/lib/db/schema";
+import { and, eq } from "drizzle-orm";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { HEALTH_METRIC_CONFIG, getNormalRange } from "@/lib/config/health-metrics";
+import type { SpeciesId } from "@/lib/config/species";
+import { HealthLogForm } from "@/components/portal/HealthLogForm";
 
-export default function LogHealthPage() {
-  const router = useRouter();
-  const { petId } = useParams<{ petId: string }>();
+type Params = { params: Promise<{ petId: string }> };
 
-  const today = new Date().toISOString().slice(0, 10);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+export default async function LogHealthPage({ params }: Params) {
+  const session = await auth();
+  if (!session) return null;
 
-  const [form, setForm] = useState({
-    date: today,
-    weightKg: "",
-    temperatureC: "",
-    heartRateBpm: "",
-    energy: "",
-    mood: "",
-    anxiety: "",
-    socialization: "",
-    notes: "",
+  const { petId } = await params;
+  const db = getInstance();
+
+  const pet = await db.query.pets.findFirst({
+    where: and(eq(pets.id, petId), eq(pets.ownerId, session.user.id)),
   });
+  if (!pet) notFound();
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    setError("");
+  const species = pet.species as SpeciesId;
 
-    const payload: Record<string, unknown> = { date: form.date };
+  // Compute species-specific normal ranges in display units
+  const weightRaw = getNormalRange("weight", species);
+  const tempRaw = getNormalRange("temperature", species);
+  const hrRaw = getNormalRange("heart_rate", species);
 
-    if (form.weightKg) payload.weightGrams = Math.round(parseFloat(form.weightKg) * 1000);
-    if (form.temperatureC) payload.temperatureCentidegrees = Math.round(parseFloat(form.temperatureC) * 100);
-    if (form.heartRateBpm) payload.heartRateBpm = parseInt(form.heartRateBpm);
-    if (form.energy) payload.energy = parseInt(form.energy);
-    if (form.mood) payload.mood = parseInt(form.mood);
-    if (form.anxiety) payload.anxiety = parseInt(form.anxiety);
-    if (form.socialization) payload.socialization = parseInt(form.socialization);
-    if (form.notes) payload.notes = form.notes;
-
-    const res = await fetch(`/api/health/metrics/${petId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    const data = await res.json();
-    setSaving(false);
-
-    if (!data.success) {
-      setError(data.error ?? "Failed to save.");
-    } else {
-      router.push(`/portal/pets/${petId}/health`);
-    }
-  }
+  const weightHint = {
+    min: HEALTH_METRIC_CONFIG.weight.toDisplay(weightRaw.min),
+    max: HEALTH_METRIC_CONFIG.weight.toDisplay(weightRaw.max),
+    unit: "kg",
+  };
+  const tempHint = {
+    min: HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRaw.min),
+    max: HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRaw.max),
+    unit: "°C",
+  };
+  const hrHint = {
+    min: hrRaw.min,
+    max: hrRaw.max,
+    unit: "bpm",
+  };
 
   return (
     <div className="max-w-lg">
@@ -67,113 +56,21 @@ export default function LogHealthPage() {
         Health
       </Link>
 
-      <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">Log health check</h1>
+      <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">
+        Log health check
+      </h1>
       <p className="text-sm text-[var(--muted)] mb-6">
         Track as many or as few metrics as you have data for today.
       </p>
 
-      {error && <p className="alert-error mb-4">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        {/* Date */}
-        <div className="card p-5">
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Date
-          </label>
-          <input
-            type="date"
-            value={form.date}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="form-input w-auto"
-          />
-        </div>
-
-        {/* Physical */}
-        <div className="card p-5">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
-            Physical measurements
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { key: "weightKg", label: "Weight", unit: "kg", step: "0.01", placeholder: "e.g. 8.5" },
-              { key: "temperatureC", label: "Temperature", unit: "°C", step: "0.1", placeholder: "e.g. 38.5" },
-              { key: "heartRateBpm", label: "Heart rate", unit: "bpm", step: "1", placeholder: "e.g. 80" },
-            ].map(({ key, label, unit, step, placeholder }) => (
-              <div key={key}>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                  {label}
-                  <span className="text-[var(--muted)] font-normal ms-1">{unit}</span>
-                </label>
-                <input
-                  type="number"
-                  step={step}
-                  min="0"
-                  value={form[key as keyof typeof form]}
-                  onChange={(e) => setForm({ ...form, [key]: e.target.value })}
-                  placeholder={placeholder}
-                  className="form-input"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Emotional */}
-        <div className="card p-5">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
-            Emotional wellbeing
-          </h3>
-          <div className="grid grid-cols-2 gap-4">
-            {EMOTIONAL_METRICS.map((metricId) => {
-              const def = HEALTH_METRIC_CONFIG[metricId];
-              const labels = EMOTIONAL_SCALE_LABELS[metricId] ?? [];
-              return (
-                <div key={metricId}>
-                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                    {def.label}
-                  </label>
-                  <select
-                    value={form[metricId as keyof typeof form]}
-                    onChange={(e) => setForm({ ...form, [metricId]: e.target.value })}
-                    className="form-input"
-                  >
-                    <option value="">Not logged</option>
-                    {[1, 2, 3, 4, 5].map((v) => (
-                      <option key={v} value={v}>
-                        {v} — {labels[v - 1] ?? ""}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-xs text-[var(--muted)] mt-1">{def.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Notes */}
-        <div className="card p-5">
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Notes <span className="text-[var(--faint)] font-normal">(optional)</span>
-          </label>
-          <textarea
-            rows={3}
-            value={form.notes}
-            onChange={(e) => setForm({ ...form, notes: e.target.value })}
-            placeholder="Any observations, symptoms, or mood notes…"
-            className="form-input resize-none"
-          />
-        </div>
-
-        <div className="flex gap-3">
-          <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
-            {saving ? "Saving…" : "Save check-in"}
-          </button>
-          <button type="button" onClick={() => router.back()} className="btn-outline">
-            Cancel
-          </button>
-        </div>
-      </form>
+      <HealthLogForm
+        petId={petId}
+        petName={pet.name}
+        species={species}
+        weightHint={weightHint}
+        tempHint={tempHint}
+        hrHint={hrHint}
+      />
     </div>
   );
 }
