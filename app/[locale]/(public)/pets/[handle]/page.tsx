@@ -4,14 +4,16 @@ import { pets } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { APP } from "@/lib/config/app";
 import { SPECIES_CONFIG } from "@/lib/config/species";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
+import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { formatDateShort } from "@/lib/utils/format";
 import Link from "next/link";
 
 type Params = { params: Promise<{ handle: string; locale: string }> };
 
 export default async function PublicPetPage({ params }: Params) {
-  const { handle } = await params;
+  const { handle, locale } = await params;
   const db = getInstance();
 
   const pet = await db.query.pets.findFirst({
@@ -20,12 +22,13 @@ export default async function PublicPetPage({ params }: Params) {
   if (!pet) notFound();
 
   const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
+  const signal = (pet.lastKnownSignal ?? "healthy") as PetWellnessSignal;
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between">
-        <Link href="/en" className="font-bold text-[var(--teal)] text-lg no-underline">
+        <Link href={`/${locale}`} className="font-bold text-[var(--teal)] text-lg no-underline">
           {APP.name}
         </Link>
         <Link href="/register" className="btn-primary text-sm py-2 px-4">
@@ -58,6 +61,9 @@ export default async function PublicPetPage({ params }: Params) {
             {pet.handle && (
               <p className="text-sm text-[var(--muted)] mb-2">@{pet.handle}</p>
             )}
+            <span className={`${SIGNAL_BG_CLASSES[signal]} mt-1 mb-2`}>
+              {SIGNAL_LABELS[signal]}
+            </span>
             <p className="text-sm text-[var(--muted)]">
               {speciesDef?.label ?? pet.species}
               {pet.breed ? ` · ${pet.breed}` : ""}
