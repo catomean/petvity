@@ -99,7 +99,7 @@ export default function HomePage() {
             <div>
               <div className="inline-flex items-center gap-2 bg-[var(--teal-light)] text-[var(--teal)] text-xs font-semibold px-3 py-1.5 rounded-full mb-7 border border-[var(--teal-mid)]">
                 <Zap className="w-3 h-3" />
-                10 species · 7 health metrics · Free to start
+                Dogs, cats, horses & more · 7 health metrics · Free to start
               </div>
 
               <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
@@ -411,7 +411,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
             {[
               { n: "01", title: "Create your free account", desc: "Email and password. 30 seconds." },
-              { n: "02", title: "Add your pet", desc: "Name, species, breed, birthdate, photo. 10 species supported." },
+              { n: "02", title: "Add your pet", desc: "Name, species, breed, birthdate, photo. Dogs, cats, horses, and more." },
               { n: "03", title: "Log your first check-in", desc: "Record vitals and mood. The wellness signal updates instantly." },
             ].map(({ n, title, desc }, i) => (
               <div key={n} className="text-center relative">

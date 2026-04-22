@@ -34,7 +34,7 @@ const VALUES = [
 ];
 
 const STATS = [
-  { value: "10", label: "Species supported" },
+  { value: "4+", label: "Species supported" },
   { value: "7", label: "Health metrics tracked" },
   { value: "9", label: "Languages available" },
   { value: "Free", label: "For individual owners — forever" },
