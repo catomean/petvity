@@ -1,4 +1,14 @@
-export type SpeciesId = "dog" | "cat" | "horse" | "other";
+export type SpeciesId =
+  | "dog"
+  | "cat"
+  | "horse"
+  | "bird"
+  | "rabbit"
+  | "guinea_pig"
+  | "hamster"
+  | "reptile"
+  | "fish"
+  | "other";
 
 export type SpeciesDef = {
   id: SpeciesId;
@@ -84,6 +94,132 @@ export const SPECIES_CONFIG: Record<SpeciesId, SpeciesDef> = {
     temperatureNormal: { min: 3750, max: 3850 },
     heartRateNormal: { min: 28, max: 44 },
     weightNormal: { min: 380000, max: 1200000 },
+  },
+  bird: {
+    id: "bird",
+    label: "Bird",
+    emoji: "🐦",
+    typicalLifespanYears: { min: 5, max: 30 },
+    commonBreeds: [
+      "Budgerigar / Parakeet",
+      "Cockatiel",
+      "Lovebird",
+      "Conure",
+      "African Grey Parrot",
+      "Cockatoo",
+      "Amazon Parrot",
+      "Macaw",
+      "Canary",
+      "Finch / Zebra Finch",
+      "Eclectus Parrot",
+      "Other",
+    ],
+    temperatureNormal: { min: 4100, max: 4300 },
+    heartRateNormal: { min: 150, max: 500 },
+    weightNormal: { min: 15, max: 1500 },
+  },
+  rabbit: {
+    id: "rabbit",
+    label: "Rabbit",
+    emoji: "🐇",
+    typicalLifespanYears: { min: 8, max: 12 },
+    commonBreeds: [
+      "Holland Lop",
+      "Mini Rex",
+      "Netherland Dwarf",
+      "Dutch",
+      "Lionhead",
+      "Flemish Giant",
+      "Angora",
+      "Rex",
+      "Mini Lop",
+      "Mixed / Other",
+    ],
+    temperatureNormal: { min: 3850, max: 4000 },
+    heartRateNormal: { min: 130, max: 325 },
+    weightNormal: { min: 1000, max: 8000 },
+  },
+  guinea_pig: {
+    id: "guinea_pig",
+    label: "Guinea Pig",
+    emoji: "🐹",
+    typicalLifespanYears: { min: 4, max: 8 },
+    commonBreeds: [
+      "American",
+      "Abyssinian",
+      "Peruvian",
+      "Silkie",
+      "Teddy",
+      "Rex",
+      "Crested",
+      "Mixed / Other",
+    ],
+    temperatureNormal: { min: 3720, max: 3950 },
+    heartRateNormal: { min: 230, max: 380 },
+    weightNormal: { min: 700, max: 1200 },
+  },
+  hamster: {
+    id: "hamster",
+    label: "Hamster",
+    emoji: "🐹",
+    typicalLifespanYears: { min: 2, max: 4 },
+    commonBreeds: [
+      "Syrian / Golden",
+      "Dwarf Campbell Russian",
+      "Dwarf Winter White Russian",
+      "Chinese",
+      "Roborovski",
+      "Mixed / Other",
+    ],
+    temperatureNormal: { min: 3700, max: 3850 },
+    heartRateNormal: { min: 300, max: 600 },
+    weightNormal: { min: 25, max: 200 },
+  },
+  reptile: {
+    id: "reptile",
+    label: "Reptile",
+    emoji: "🦎",
+    typicalLifespanYears: { min: 5, max: 40 },
+    commonBreeds: [
+      "Bearded Dragon",
+      "Leopard Gecko",
+      "Crested Gecko",
+      "Ball Python",
+      "Corn Snake",
+      "Blue-Tongued Skink",
+      "Chameleon",
+      "Tortoise",
+      "Red-Eared Slider",
+      "Iguana",
+      "Other",
+    ],
+    // Reptiles are ectotherms — monitor enclosure/cloacal temp; wide range
+    temperatureNormal: { min: 2500, max: 3800 },
+    heartRateNormal: { min: 30, max: 150 },
+    weightNormal: { min: 10, max: 60000 },
+  },
+  fish: {
+    id: "fish",
+    label: "Fish",
+    emoji: "🐟",
+    typicalLifespanYears: { min: 2, max: 20 },
+    commonBreeds: [
+      "Betta",
+      "Goldfish",
+      "Guppy",
+      "Neon Tetra",
+      "Cichlid",
+      "Koi",
+      "Tropical Community Fish",
+      "Pleco",
+      "Molly",
+      "Angelfish",
+      "Other",
+    ],
+    // Tracks water temperature for fish
+    temperatureNormal: { min: 1800, max: 2800 },
+    heartRateNormal: { min: 20, max: 150 },
+    weightNormal: { min: 5, max: 10000 },
   },
   other: {
     id: "other",

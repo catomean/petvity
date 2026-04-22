@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { pets } from "@/lib/db/schema";
+import { pets, sexEnum } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 
 const updatePetSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   breed: z.string().max(100).optional(),
   birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  sex: z.enum(["male", "female", "unknown"]).optional(),
+  sex: z.enum(sexEnum.enumValues).optional(),
   weightGrams: z.number().int().positive().optional(),
   bio: z.string().max(500).optional(),
   isPublic: z.boolean().optional(),
