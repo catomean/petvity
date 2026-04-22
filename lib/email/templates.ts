@@ -142,6 +142,55 @@ export function vaccinationReminder(data: {
   };
 }
 
+// ─── Booking notifications ────────────────────────────────────────────────────
+
+export function bookingRequestReceived(data: {
+  professionalName: string;
+  ownerName: string;
+  petName: string;
+  startDate: string;
+  endDate: string;
+  notes?: string | null;
+}) {
+  return {
+    subject: `New booking request from ${data.ownerName} for ${data.petName}`,
+    html: base(`
+      <h2>New booking request</h2>
+      <p>Hi ${data.professionalName},</p>
+      <p><strong>${data.ownerName}</strong> has requested a booking for <strong>${data.petName}</strong>.</p>
+      <p style="background:#f0faf8;padding:12px 16px;border-radius:6px;border-left:4px solid #0D6E78;">
+        <strong>Dates:</strong> ${data.startDate}${data.startDate !== data.endDate ? ` – ${data.endDate}` : ""}<br/>
+        ${data.notes ? `<strong>Notes:</strong> ${data.notes}` : ""}
+      </p>
+      <a class="btn" href="${APP_URL}/portal/bookings">Review booking</a>
+      <p>Please confirm or decline this request.</p>
+    `),
+  };
+}
+
+export function bookingStatusChanged(data: {
+  ownerName: string;
+  petName: string;
+  status: "confirmed" | "cancelled" | "completed";
+  startDate: string;
+}) {
+  const messages = {
+    confirmed: { heading: "Booking confirmed!", body: `Your appointment for <strong>${data.petName}</strong> on <strong>${data.startDate}</strong> has been confirmed.` },
+    cancelled:  { heading: "Booking cancelled", body: `Your booking for <strong>${data.petName}</strong> on <strong>${data.startDate}</strong> has been cancelled.` },
+    completed:  { heading: "Session completed", body: `Your session for <strong>${data.petName}</strong> on <strong>${data.startDate}</strong> has been marked as completed. Leave a review to share your experience!` },
+  };
+  const { heading, body } = messages[data.status];
+  return {
+    subject: `${APP.name}: ${heading}`,
+    html: base(`
+      <h2>${heading}</h2>
+      <p>Hi ${data.ownerName},</p>
+      <p>${body}</p>
+      <a class="btn" href="${APP_URL}/portal/bookings">View my bookings</a>
+    `),
+  };
+}
+
 // ─── Template key → function map ─────────────────────────────────────────────
 
 export type TemplateKey =

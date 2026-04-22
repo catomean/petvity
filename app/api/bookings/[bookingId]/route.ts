@@ -3,17 +3,18 @@ import { eq, and, or } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { bookings, bookingStatusEnum } from "@/lib/db/schema";
+import { bookings, bookingStatusEnum, pets, users } from "@/lib/db/schema";
+import { sendEmail } from "@/lib/email";
+import { bookingStatusChanged } from "@/lib/email/templates";
 
 const updateSchema = z.object({
   status: z.enum(bookingStatusEnum.enumValues),
 });
 
+type Params = { params: Promise<{ bookingId: string }> };
+
 /** PATCH /api/bookings/[bookingId] — update booking status */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ bookingId: string }> },
-) {
+export async function PATCH(req: NextRequest, { params }: Params) {
   const { session, error } = await requireSession();
   if (error) return error;
 
@@ -68,14 +69,36 @@ export async function PATCH(
     .where(eq(bookings.id, bookingId))
     .returning();
 
+  // Notify the owner when the professional changes status — fire-and-forget
+  const shouldNotifyOwner =
+    isProfessional &&
+    (status === "confirmed" || status === "cancelled" || status === "completed");
+
+  if (shouldNotifyOwner) {
+    Promise.all([
+      db.select({ email: users.email, name: users.name }).from(users).where(eq(users.id, booking.ownerId)).limit(1),
+      db.select({ name: pets.name }).from(pets).where(eq(pets.id, booking.petId)).limit(1),
+    ]).then(([[owner], [petRow]]) => {
+      if (!owner) return;
+      const formatDate = (d: Date) =>
+        d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+      sendEmail({
+        to: owner.email,
+        ...bookingStatusChanged({
+          ownerName: owner.name ?? "there",
+          petName: petRow?.name ?? "your pet",
+          status: status as "confirmed" | "cancelled" | "completed",
+          startDate: formatDate(booking.startDate),
+        }),
+      }).catch(() => {/* email failure must not affect response */});
+    }).catch(() => {/* lookup failure must not affect response */});
+  }
+
   return NextResponse.json({ success: true, data: updated });
 }
 
 /** DELETE /api/bookings/[bookingId] — owner can delete a pending booking */
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ bookingId: string }> },
-) {
+export async function DELETE(_req: NextRequest, { params }: Params) {
   const { session, error } = await requireSession();
   if (error) return error;
 

@@ -4,6 +4,8 @@ import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { bookings, bookingStatusEnum, pets, users, reviews } from "@/lib/db/schema";
+import { sendEmail } from "@/lib/email";
+import { bookingRequestReceived } from "@/lib/email/templates";
 
 const createBookingSchema = z.object({
   petId: z.string().uuid(),
@@ -79,9 +81,9 @@ export async function POST(req: NextRequest) {
 
   const db = getInstance();
 
-  // Verify the pet belongs to the current user
+  // Verify the pet belongs to the current user and fetch name for email
   const [pet] = await db
-    .select({ id: pets.id })
+    .select({ id: pets.id, name: pets.name })
     .from(pets)
     .where(and(eq(pets.id, petId), eq(pets.ownerId, userId)))
     .limit(1);
@@ -92,9 +94,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Resolve the professional's role
+  // Resolve the professional's role + contact info for notification
   const [professional] = await db
-    .select({ role: users.role })
+    .select({ role: users.role, email: users.email, name: users.name })
     .from(users)
     .where(eq(users.id, professionalId))
     .limit(1);
@@ -117,6 +119,22 @@ export async function POST(req: NextRequest) {
       notes: notes ?? null,
     })
     .returning();
+
+  // Notify the professional — fire-and-forget, never fail the booking creation
+  const formatDate = (d: string) =>
+    new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+
+  sendEmail({
+    to: professional.email,
+    ...bookingRequestReceived({
+      professionalName: professional.name ?? "there",
+      ownerName: session.user.name ?? session.user.email ?? "A pet owner",
+      petName: pet.name ?? "a pet",
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
+      notes,
+    }),
+  }).catch(() => {/* email failure must not break booking creation */});
 
   return NextResponse.json({ success: true, data: booking }, { status: 201 });
 }
