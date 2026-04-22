@@ -296,27 +296,29 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 ## Phase Status
 
 ### Phase 1 — Complete ✓
-- User auth (register/login/logout, credentials + Google OAuth shell)
-- 10-species pet profiles with breeds
-- Health metrics logging (daily, upsert)
-- Pet wellness signal (healthy/watch/concern)
-- Vaccination tracking (view)
-- Email queue (welcome sequence)
-- Cron jobs (health alerts, vaccination reminders)
+- User auth (register/login/logout, forgot/reset password, credentials + Google OAuth shell)
+- Species: dog, cat, horse, other — with breeds
+- Health metrics logging (daily, upsert, with species-specific range hints)
+- Pet wellness signal (healthy/watch/concern), cached to `lastKnownSignal` on log POST
+- Digital Twin: emotional state (Thriving/Content/Attention/Struggling) with trend analysis
+- Health charts (Recharts — 30-day trends for all 7 metrics, per-species normal range lines)
+- Vaccination tracking (add + status badge)
+- Health records (add, list with type icons)
+- Medications (add, list with active/completed/discontinued status)
+- Account settings (edit name, change password)
+- Pet avatar upload (UI + API — needs BLOB_READ_WRITE_TOKEN in Vercel Dashboard)
+- Email queue (welcome sequence) + cron jobs (health alerts, vaccination reminders)
 - Public pet profiles (`/[locale]/pets/[handle]`)
 - 9-language i18n with RTL Arabic
-- Portal UI (dashboard, pets CRUD, health log, check-in)
-- Sidebar nav + mobile bottom nav
+- Portal UI (dashboard with twin mini-bars, pets CRUD, health log, check-in)
+- Marketing site (homepage, /features, /about, /pricing)
+- Species guides (`/[locale]/species/[dog|cat|horse]`)
+- Sidebar nav + mobile bottom nav + admin panel
 
 ### Phase 1 — Still Needed
-- [ ] Forgot/reset password pages (routes exist, UI is stub)
-- [ ] Pet avatar upload (Vercel Blob — needs BLOB_READ_WRITE_TOKEN)
-- [ ] Health records UI (API exists, page is stub)
-- [ ] Add/edit vaccinations UI (view-only currently)
-- [ ] Medications UI (API exists, no UI)
-- [ ] Account settings (edit name, change password)
-- [ ] Health charts with Recharts (data exists, no visualization)
-- [ ] Marketing site pages (features, about, pricing, species guides)
+- [ ] Pet avatar upload: set `BLOB_READ_WRITE_TOKEN` in Vercel Dashboard (user action)
+- [ ] `ADMIN_EMAILS` env var not set in Vercel Dashboard (user action)
+- [ ] Google OAuth: needs `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` (user action)
 
 ### Phase 2 — Not started
 - Vet profiles, sitter profiles, bookings, reviews
@@ -325,7 +327,7 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - Products, orders (marketplace)
 
 ### Phase 4 — Not started
-- Adoption listings, applications, digital twins
+- Adoption listings, applications
 
 ---
 

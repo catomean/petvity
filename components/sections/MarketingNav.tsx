@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  Activity, Syringe, FileText, Pill, Globe, Zap,
+  Activity, Syringe, FileText, Pill, Globe, Zap, Brain,
   PawPrint, Menu, X, ChevronDown,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
@@ -13,38 +13,44 @@ const FEATURES_MENU = [
     icon: Activity,
     label: "Health Tracking",
     desc: "Daily vitals, mood, energy — all in one place.",
-    href: "/portal/pets",
+    href: "/features",
+  },
+  {
+    icon: Brain,
+    label: "Digital Twin",
+    desc: "Living emotional portrait: Thriving, Content, Struggling.",
+    href: "/features",
   },
   {
     icon: Zap,
     label: "Wellness Signals",
     desc: "Auto healthy / watch / concern scoring.",
-    href: "/portal/dashboard",
+    href: "/features",
   },
   {
     icon: Syringe,
     label: "Vaccinations",
     desc: "Stay ahead of boosters and immunity gaps.",
-    href: "/portal/pets",
+    href: "/features",
   },
   {
     icon: FileText,
     label: "Health Records",
     desc: "Vet visits, lab results, surgery history.",
-    href: "/portal/pets",
-  },
-  {
-    icon: Pill,
-    label: "Medications",
-    desc: "Prescriptions, dosages, and refill tracking.",
-    href: "/portal/pets",
+    href: "/features",
   },
   {
     icon: Globe,
     label: "Public Profiles",
     desc: "Shareable pet pages — your pet, the influencer.",
-    href: "/portal/pets",
+    href: "/features",
   },
+];
+
+const GUIDES_MENU = [
+  { emoji: "🐕", label: "Dogs",   href: "/species/dog" },
+  { emoji: "🐈", label: "Cats",   href: "/species/cat" },
+  { emoji: "🐴", label: "Horses", href: "/species/horse" },
 ];
 
 export default function MarketingNav() {
@@ -132,15 +138,23 @@ export default function MarketingNav() {
                     </Link>
                   ))}
                 </div>
-                <div className="mt-4 pt-4 border-t border-[var(--border)] flex items-center justify-between">
-                  <p className="text-xs text-[var(--muted)]">Vet network & marketplace coming soon</p>
-                  <Link
-                    href="/register"
-                    onClick={() => setFeaturesOpen(false)}
-                    className="text-xs font-semibold text-[var(--teal)] hover:underline"
-                  >
-                    Start free →
-                  </Link>
+                <div className="mt-4 pt-4 border-t border-[var(--border)]">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] mb-3">
+                    Species guides
+                  </p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {GUIDES_MENU.map(({ emoji, label, href }) => (
+                      <Link
+                        key={label}
+                        href={href}
+                        onClick={() => setFeaturesOpen(false)}
+                        className="flex items-center gap-1.5 text-xs font-medium text-[var(--ink2)] bg-[var(--off)] hover:bg-[var(--teal-light)] hover:text-[var(--teal)] px-3 py-1.5 rounded-full no-underline transition-colors"
+                      >
+                        <span>{emoji}</span>{label}
+                      </Link>
+                    ))}
+                    <span className="text-xs text-[var(--muted)] ms-auto">Vet network coming soon</span>
+                  </div>
                 </div>
               </div>
             )}
@@ -206,7 +220,24 @@ export default function MarketingNav() {
                 </div>
               </Link>
             ))}
-            <div className="border-t border-[var(--border)] mt-3 pt-3 flex flex-col gap-2">
+            <div className="border-t border-[var(--border)] mt-3 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] px-3 pb-2">
+                Species guides
+              </p>
+              <div className="flex gap-2 px-3 pb-3 flex-wrap">
+                {GUIDES_MENU.map(({ emoji, label, href }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-1 text-sm font-medium text-[var(--ink2)] bg-[var(--off)] px-3 py-1.5 rounded-full no-underline"
+                  >
+                    <span>{emoji}</span>{label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="border-t border-[var(--border)] pt-3 flex flex-col gap-2">
               <Link
                 href="/login"
                 onClick={() => setMenuOpen(false)}

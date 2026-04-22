@@ -9,8 +9,13 @@ const LINKS = {
     { label: "Pricing", href: "/pricing" },
     { label: "Changelog", href: "#" },
   ],
-  Company: [
+  Guides: [
+    { label: "🐕 Dog health", href: "/species/dog" },
+    { label: "🐈 Cat health", href: "/species/cat" },
+    { label: "🐴 Horse health", href: "/species/horse" },
     { label: "About", href: "/about" },
+  ],
+  Company: [
     { label: "Blog", href: "#" },
     { label: "Careers", href: "#" },
     { label: "Press", href: "#" },
