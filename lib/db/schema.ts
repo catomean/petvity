@@ -342,6 +342,66 @@ export const bookings = pgTable("bookings", {
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
 
+// ─── Marketplace ──────────────────────────────────────────────────────────────
+
+export const productCategoryEnum = pgEnum("product_category", [
+  "food",
+  "toys",
+  "health",
+  "accessories",
+  "grooming",
+  "other",
+]);
+
+export const orderStatusEnum = pgEnum("order_status", [
+  "pending",
+  "confirmed",
+  "shipped",
+  "delivered",
+  "cancelled",
+]);
+
+export const products = pgTable("products", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 200 }).notNull(),
+  description: text("description"),
+  /** Price in integer cents (e.g. 1999 = $19.99) */
+  priceCents: integer("price_cents").notNull(),
+  imageUrl: text("image_url"),
+  category: productCategoryEnum("category").notNull().default("other"),
+  /** Inventory count; null = unlimited */
+  stock: integer("stock"),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const orders = pgTable("orders", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  status: orderStatusEnum("status").notNull().default("pending"),
+  /** Snapshot of total at order time (sum of line items) */
+  totalCents: integer("total_cents").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const orderItems = pgTable("order_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orderId: uuid("order_id")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
+  productId: uuid("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "restrict" }),
+  quantity: integer("quantity").notNull(),
+  /** Price snapshot at order time */
+  priceCents: integer("price_cents").notNull(),
+});
+
 // ─── Reviews ───────────────────────────────────────────────────────────────────
 
 export const reviews = pgTable("reviews", {

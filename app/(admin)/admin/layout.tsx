@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { PawPrint, Users, LogOut } from "lucide-react";
+import { PawPrint, Users, LogOut, Package } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
 export default async function AdminLayout({
@@ -35,6 +35,13 @@ export default async function AdminLayout({
           >
             <Users className="w-4 h-4 flex-shrink-0" />
             Users
+          </Link>
+          <Link
+            href="/admin/products"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-colors no-underline"
+          >
+            <Package className="w-4 h-4 flex-shrink-0" />
+            Products
           </Link>
         </nav>
 

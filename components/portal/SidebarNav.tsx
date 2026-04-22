@@ -12,6 +12,8 @@ import {
   Search,
   Stethoscope,
   CalendarCheck,
+  ShoppingBag,
+  ShoppingCart,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
@@ -21,6 +23,8 @@ const NAV_ITEMS = [
   { href: "/portal/checkin", icon: CalendarDays, label: "Check-in" },
   { href: "/portal/find", icon: Search, label: "Find a Pro" },
   { href: "/portal/bookings", icon: CalendarCheck, label: "Bookings" },
+  { href: "/portal/shop", icon: ShoppingCart, label: "Shop" },
+  { href: "/portal/orders", icon: ShoppingBag, label: "Orders" },
 ];
 
 function isActive(pathname: string, href: string): boolean {
