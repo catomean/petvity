@@ -1,32 +1,46 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search } from "lucide-react";
+import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X } from "lucide-react";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
 interface VetRow {
   id: string;
+  userId: string;
   name: string | null;
   specialty: string | null;
   clinicName: string | null;
   city: string | null;
   country: string | null;
   bio: string | null;
+  phone: string | null;
   isAcceptingClients: boolean;
   isVerified: boolean;
 }
 
 interface SitterRow {
   id: string;
+  userId: string;
   name: string | null;
   bio: string | null;
   services: string | null;
   pricePerDay: number | null;
   city: string | null;
   country: string | null;
+  phone: string | null;
   isAcceptingClients: boolean;
   isVerified: boolean;
+}
+
+interface PetOption {
+  id: string;
+  name: string | null;
+}
+
+interface BookingTarget {
+  professionalId: string;
+  name: string | null;
 }
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
@@ -70,18 +84,22 @@ export default function FindPage() {
   const [tab, setTab] = useState<Tab>("vets");
   const [vets, setVets] = useState<VetRow[]>([]);
   const [sitters, setSitters] = useState<SitterRow[]>([]);
+  const [pets, setPets] = useState<PetOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [cityFilter, setCityFilter] = useState("");
+  const [bookingTarget, setBookingTarget] = useState<BookingTarget | null>(null);
 
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const [vetRes, sitterRes] = await Promise.all([
+      const [vetRes, sitterRes, petRes] = await Promise.all([
         fetch("/api/vets"),
         fetch("/api/sitters"),
+        fetch("/api/pets"),
       ]);
       if (vetRes.ok) setVets((await vetRes.json()).data ?? []);
       if (sitterRes.ok) setSitters((await sitterRes.json()).data ?? []);
+      if (petRes.ok) setPets((await petRes.json()).data ?? []);
       setLoading(false);
     }
     load();
@@ -166,6 +184,15 @@ export default function FindPage() {
                       )}
                     </div>
                   </div>
+                  {vet.isAcceptingClients && (
+                    <button
+                      onClick={() => setBookingTarget({ professionalId: vet.userId, name: vet.name })}
+                      className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
+                    >
+                      <CalendarPlus className="w-3.5 h-3.5" />
+                      Book
+                    </button>
+                  )}
                 </div>
                 {(vet.clinicName || vet.city) && (
                   <div className="flex items-center gap-1.5 mt-3 text-sm text-[var(--muted)]">
@@ -177,6 +204,12 @@ export default function FindPage() {
                 )}
                 {vet.bio && (
                   <p className="text-sm text-[var(--ink2)] mt-2 line-clamp-2">{vet.bio}</p>
+                )}
+                {vet.phone && (
+                  <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
+                    <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+                    <a href={`tel:${vet.phone}`} className="hover:text-[var(--teal)] transition-colors">{vet.phone}</a>
+                  </div>
                 )}
               </div>
             ))}
@@ -211,6 +244,15 @@ export default function FindPage() {
                       )}
                     </div>
                   </div>
+                  {sitter.isAcceptingClients && (
+                    <button
+                      onClick={() => setBookingTarget({ professionalId: sitter.userId, name: sitter.name })}
+                      className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
+                    >
+                      <CalendarPlus className="w-3.5 h-3.5" />
+                      Book
+                    </button>
+                  )}
                 </div>
                 {sitter.services && (
                   <p className="text-sm text-[var(--muted)] mt-2">{formatServices(sitter.services)}</p>
@@ -224,11 +266,163 @@ export default function FindPage() {
                 {sitter.bio && (
                   <p className="text-sm text-[var(--ink2)] mt-2 line-clamp-2">{sitter.bio}</p>
                 )}
+                {sitter.phone && (
+                  <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
+                    <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+                    <a href={`tel:${sitter.phone}`} className="hover:text-[var(--teal)] transition-colors">{sitter.phone}</a>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         )
       )}
+
+      {bookingTarget && (
+        <BookingModal
+          target={bookingTarget}
+          pets={pets}
+          onClose={() => setBookingTarget(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function BookingModal({
+  target,
+  pets,
+  onClose,
+}: {
+  target: BookingTarget;
+  pets: PetOption[];
+  onClose: () => void;
+}) {
+  const [petId, setPetId] = useState(pets[0]?.id ?? "");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [notes, setNotes] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!petId || !startDate || !endDate) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    const res = await fetch("/api/bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        petId,
+        professionalId: target.professionalId,
+        startDate: new Date(startDate).toISOString(),
+        endDate: new Date(endDate).toISOString(),
+        notes: notes.trim() || undefined,
+      }),
+    });
+    const data = await res.json();
+    setSaving(false);
+    if (data.success) {
+      setSuccess(true);
+    } else {
+      setError(data.error ?? "Failed to create booking.");
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--border)]">
+          <h2 className="font-semibold text-[var(--ink)]">
+            Book {target.name ?? "Professional"}
+          </h2>
+          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {success ? (
+          <div className="px-5 py-8 text-center">
+            <div className="w-12 h-12 rounded-full bg-[var(--green-bg)] flex items-center justify-center mx-auto mb-3">
+              <CalendarPlus className="w-6 h-6 text-[var(--green)]" />
+            </div>
+            <p className="font-medium text-[var(--ink)] mb-1">Booking requested!</p>
+            <p className="text-sm text-[var(--muted)] mb-4">
+              The professional will confirm your appointment.
+            </p>
+            <button onClick={onClose} className="btn-primary w-full">Done</button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="px-5 py-4 space-y-4">
+            {error && <p className="alert-error">{error}</p>}
+
+            <div>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Pet *</label>
+              {pets.length === 0 ? (
+                <p className="text-sm text-[var(--muted)]">
+                  No pets found. <a href="/portal/pets/new" className="text-[var(--teal)] hover:underline">Add a pet first.</a>
+                </p>
+              ) : (
+                <select
+                  className="form-input"
+                  value={petId}
+                  onChange={(e) => setPetId(e.target.value)}
+                  required
+                >
+                  {pets.map((p) => (
+                    <option key={p.id} value={p.id}>{p.name ?? "Unnamed pet"}</option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Start date *</label>
+                <input
+                  type="datetime-local"
+                  className="form-input"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">End date *</label>
+                <input
+                  type="datetime-local"
+                  className="form-input"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Notes</label>
+              <textarea
+                className="form-input min-h-[72px] resize-none"
+                placeholder="Any special requirements or information…"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              />
+            </div>
+
+            <div className="flex gap-3 pb-1">
+              <button type="button" onClick={onClose} className="btn-outline flex-1">Cancel</button>
+              <button type="submit" disabled={saving || pets.length === 0} className="btn-primary flex-1 disabled:opacity-60">
+                {saving ? "Booking…" : "Request booking"}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

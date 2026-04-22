@@ -11,6 +11,7 @@ import {
   LogOut,
   Search,
   Stethoscope,
+  CalendarCheck,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { href: "/portal/pets", icon: PawPrint, label: "My Pets" },
   { href: "/portal/checkin", icon: CalendarDays, label: "Check-in" },
   { href: "/portal/find", icon: Search, label: "Find a Pro" },
+  { href: "/portal/bookings", icon: CalendarCheck, label: "Bookings" },
 ];
 
 function isActive(pathname: string, href: string): boolean {

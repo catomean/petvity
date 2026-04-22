@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
       pricePerDay: sitterProfiles.pricePerDay,
       city: sitterProfiles.city,
       country: sitterProfiles.country,
+      phone: sitterProfiles.phone,
       isAcceptingClients: sitterProfiles.isAcceptingClients,
       isVerified: sitterProfiles.isVerified,
     })

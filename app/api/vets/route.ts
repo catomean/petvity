@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
       city: vetProfiles.city,
       country: vetProfiles.country,
       bio: vetProfiles.bio,
+      phone: vetProfiles.phone,
       isAcceptingClients: vetProfiles.isAcceptingClients,
       isVerified: vetProfiles.isVerified,
     })

@@ -65,6 +65,13 @@ export const emailQueueStatusEnum = pgEnum("email_queue_status", [
   "failed",
 ]);
 
+export const bookingStatusEnum = pgEnum("booking_status", [
+  "pending",
+  "confirmed",
+  "cancelled",
+  "completed",
+]);
+
 // ─── NextAuth tables ──────────────────────────────────────────────────────────
 
 export const users = pgTable("users", {
@@ -305,6 +312,32 @@ export const sitterProfiles = pgTable("sitter_profiles", {
   isAcceptingClients: boolean("is_accepting_clients").notNull().default(true),
   /** Set by admin after credential verification */
   isVerified: boolean("is_verified").notNull().default(false),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ─── Bookings ──────────────────────────────────────────────────────────────────
+
+export const bookings = pgTable("bookings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  /** The pet owner making the booking */
+  ownerId: uuid("owner_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  /** Pet being brought / cared for */
+  petId: uuid("pet_id")
+    .notNull()
+    .references(() => pets.id, { onDelete: "cascade" }),
+  /** The vet or sitter being booked */
+  professionalId: uuid("professional_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  /** Whether this is a vet appointment or sitter booking */
+  professionalRole: userRoleEnum("professional_role").notNull(),
+  startDate: timestamp("start_date", { mode: "date" }).notNull(),
+  endDate: timestamp("end_date", { mode: "date" }).notNull(),
+  notes: text("notes"),
+  status: bookingStatusEnum("status").notNull().default("pending"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
