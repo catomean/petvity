@@ -5,11 +5,13 @@ import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
+import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
 import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays } from "lucide-react";
+import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 
 type Params = { params: Promise<{ petId: string }> };
 
@@ -72,6 +74,8 @@ export default async function PetProfilePage({ params }: Params) {
   const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
   const sig = signalResult.signal;
   const age = ageString(pet.birthDate ?? null);
+
+  const twin = computeDigitalTwin(recentMetrics[0] ?? null, now);
 
   const tabLinks = [
     {
@@ -183,6 +187,9 @@ export default async function PetProfilePage({ params }: Params) {
           </div>
         </div>
       </div>
+
+      {/* Digital Twin */}
+      <DigitalTwinCard twin={twin} petId={pet.id} petName={pet.name} />
 
       {/* Section tabs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
