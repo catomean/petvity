@@ -90,7 +90,6 @@ export default function AdminUsersPage() {
     }
   }
 
-  const admins    = rows.filter((r) => r.role === "admin").length;
   const vets      = rows.filter((r) => r.role === "veterinarian").length;
   const verified  = rows.filter((r) => r.isVerified === true).length;
   const totalPets = rows.reduce((sum, r) => sum + r.petCount, 0);

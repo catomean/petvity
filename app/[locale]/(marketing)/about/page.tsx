@@ -66,7 +66,7 @@ export default function AboutPage() {
             <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed">
               {APP.name} was born out of a frustrating pattern: noticing something was
               off with a pet, not being able to articulate exactly what, and arriving at
-              the vet with a vague "he just seems a bit off." We wanted data. So we built it.
+              the vet with a vague &quot;he just seems a bit off.&quot; We wanted data. So we built it.
             </p>
           </div>
         </div>

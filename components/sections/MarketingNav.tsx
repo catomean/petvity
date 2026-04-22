@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  Activity, Syringe, FileText, Pill, Globe, Zap, Brain,
+  Activity, Syringe, FileText, Globe, Zap, Brain,
   PawPrint, Menu, X, ChevronDown,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";

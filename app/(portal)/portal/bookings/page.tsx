@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
+import Link from "next/link";
 import { CalendarCheck, Clock, CheckCircle, XCircle, ChevronDown, Star, X } from "lucide-react";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -55,17 +56,20 @@ export default function BookingsPage() {
   const [reviewTarget, setReviewTarget] = useState<BookingRow | null>(null);
   const [, startTransition] = useTransition();
 
+  useEffect(() => {
+    fetch("/api/bookings")
+      .then((r) => r.json())
+      .then(({ data }) => { setBookings(data ?? []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
   async function load() {
-    setLoading(true);
     const res = await fetch("/api/bookings");
     if (res.ok) {
       const { data } = await res.json();
       setBookings(data ?? []);
     }
-    setLoading(false);
   }
-
-  useEffect(() => { load(); }, []);
 
   async function updateStatus(bookingId: string, status: BookingRow["status"]) {
     const res = await fetch(`/api/bookings/${bookingId}`, {
@@ -107,7 +111,7 @@ export default function BookingsPage() {
           <p className="font-medium text-[var(--ink)] mb-1">No bookings yet</p>
           <p className="text-sm text-[var(--muted)]">
             Book a vet or pet sitter from the{" "}
-            <a href="/portal/find" className="text-[var(--teal)] hover:underline">Find a Pro</a> page.
+            <Link href="/portal/find" className="text-[var(--teal)] hover:underline">Find a Pro</Link> page.
           </p>
         </div>
       ) : (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -402,7 +403,7 @@ function BookingModal({
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Pet *</label>
               {pets.length === 0 ? (
                 <p className="text-sm text-[var(--muted)]">
-                  No pets found. <a href="/portal/pets/new" className="text-[var(--teal)] hover:underline">Add a pet first.</a>
+                  No pets found. <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">Add a pet first.</Link>
                 </p>
               ) : (
                 <select

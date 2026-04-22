@@ -89,7 +89,7 @@ export default async function PublicPetPage({ params }: Params) {
         {/* CTA */}
         <div className="mt-6 text-center">
           <p className="text-sm text-[var(--muted)] mb-3">
-            Track your own pet's health on {APP.name}
+            Track your own pet&apos;s health on {APP.name}
           </p>
           <Link href="/register" className="btn-primary">
             Get started free

@@ -3,7 +3,7 @@ import { eq, or, and } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { bookings, bookingStatusEnum, pets, users, reviews } from "@/lib/db/schema";
+import { bookings, pets, users, reviews } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { bookingRequestReceived } from "@/lib/email/templates";
 
@@ -16,7 +16,7 @@ const createBookingSchema = z.object({
 });
 
 /** GET /api/bookings — list bookings for the current user (as owner or professional) */
-export async function GET(_req: NextRequest) {
+export async function GET() {
   const { session, error } = await requireSession();
   if (error) return error;
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
-import { vaccinations, pets, users } from "@/lib/db/schema";
+import { pets, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { vaccinationReminder } from "@/lib/email/templates";
 import { APP_URL } from "@/lib/config/app";

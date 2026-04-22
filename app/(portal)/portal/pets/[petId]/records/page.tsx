@@ -351,13 +351,48 @@ export default function HealthRecordsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
-                    <div>
+                    <div className="min-w-0">
                       <p className="font-medium text-[var(--ink)] leading-snug">{r.title}</p>
                       <p className="text-xs text-[var(--muted)] mt-0.5">
                         {cfg.label} · {formatDateShort(r.date)}
                         {r.vetName && ` · ${r.vetName}`}
                         {r.clinic && ` @ ${r.clinic}`}
                       </p>
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      {deletingId === r.id ? (
+                        <>
+                          <button
+                            onClick={() => handleDelete(r.id)}
+                            className="text-xs font-medium text-[var(--danger)] hover:underline"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            onClick={() => setDeletingId(null)}
+                            className="text-xs text-[var(--muted)] hover:underline ms-1"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => openEdit(r)}
+                            className="p-1.5 rounded-lg hover:bg-[var(--teal-light)] text-[var(--muted)] hover:text-[var(--teal)] transition-colors"
+                            title="Edit"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => setDeletingId(r.id)}
+                            className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger)] transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                   {r.notes && (

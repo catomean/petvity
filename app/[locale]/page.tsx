@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  Activity, Syringe, FileText, Pill,
+  Activity, Syringe, Pill,
   CalendarDays, CheckCircle, TrendingUp,
   ArrowRight, Zap, Star,
 } from "lucide-react";
@@ -103,7 +103,7 @@ export default function HomePage() {
               </div>
 
               <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
-                Your pet's health,
+                Your pet&apos;s health,
                 <br />
                 <span className="text-[var(--teal)]">understood</span>
               </h1>
@@ -111,7 +111,7 @@ export default function HomePage() {
               <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed mb-9 max-w-lg">
                 Track vitals, vaccinations, and vet records in one place.
                 Petvity tells you when something needs attention —
-                <strong className="text-[var(--ink2)] font-medium"> before it's urgent.</strong>
+                <strong className="text-[var(--ink2)] font-medium"> before it&apos;s urgent.</strong>
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-10">
@@ -304,11 +304,11 @@ export default function HomePage() {
                 Intelligent scoring
               </p>
               <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-6 leading-tight">
-                Know your pet's
+                Know your pet&apos;s
                 <br />status at a glance
               </h2>
               <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">
-                Every day, Petvity compares your pet's metrics against
+                Every day, Petvity compares your pet&apos;s metrics against
                 species-specific normal ranges. Three states. No guesswork.
                 One clear signal.
               </p>

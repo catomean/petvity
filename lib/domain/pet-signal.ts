@@ -6,7 +6,6 @@ import {
 } from "@/lib/config/health-metrics";
 import {
   NO_METRIC_LOG_ALERT_DAYS,
-  VACCINATION_DUE_SOON_DAYS,
   type PetWellnessSignal,
 } from "@/lib/config/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";

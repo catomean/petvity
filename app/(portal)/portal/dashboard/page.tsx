@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
 import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
-import { eq, gte, desc } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";

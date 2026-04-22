@@ -332,7 +332,7 @@ export default function VaccinationsPage() {
                 const StatusIcon = status.icon;
                 const isDeleting = deletingId === v.id;
                 return (
-                  <tr key={v.id} className="border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">
+                  <tr key={v.id} className="group border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">
                     <td className="py-3 px-4">
                       <p className="font-medium text-[var(--ink)]">{v.name}</p>
                       {v.vetName && <p className="text-xs text-[var(--muted)] mt-0.5">{v.vetName}</p>}

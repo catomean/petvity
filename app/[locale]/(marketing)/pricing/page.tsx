@@ -235,7 +235,7 @@ export default function PricingPage() {
       <section className="py-20 bg-[var(--teal)]">
         <div className="section-inner text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4">
-            Start tracking your pet's health today
+            Start tracking your pet&apos;s health today
           </h2>
           <p className="text-white/70 text-lg mb-8">Free forever. No credit card required.</p>
           <Link href="/register" className="inline-flex items-center gap-2 bg-white text-[var(--teal)] font-bold px-8 py-4 rounded-xl text-base hover:bg-[var(--teal-light)] transition-colors">

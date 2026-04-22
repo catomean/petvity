@@ -31,6 +31,7 @@ export default async function PetHealthPage({ params }: Params) {
   });
   if (!pet) notFound();
 
+  // eslint-disable-next-line react-hooks/purity
   const since30 = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
   const metrics = await db.query.healthMetrics.findMany({
     where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),

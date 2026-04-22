@@ -7,7 +7,6 @@ const TODAY     = "2026-01-15";
 const YESTERDAY = "2026-01-14";
 const DAY2      = "2026-01-13";
 const DAY3      = "2026-01-12";
-const DAY4      = "2026-01-11";
 
 function row(date: string, overrides: Partial<Pick<HealthMetricRow, "mood" | "energy" | "anxiety" | "socialization">> = {}): HealthMetricRow {
   return {
