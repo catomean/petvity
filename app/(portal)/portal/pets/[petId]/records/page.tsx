@@ -154,6 +154,7 @@ export default function HealthRecordsPage() {
     if (res.ok) {
       setRecords((prev) => prev.filter((r) => r.id !== id));
       setDeletingId(null);
+      startTransition(() => router.refresh());
     }
   }
 

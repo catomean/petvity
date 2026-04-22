@@ -44,9 +44,9 @@ export async function POST(req: NextRequest) {
 
     const resetUrl = `${APP_URL}/reset-password?token=${token}`;
 
-    // Log in dev so you can test without Resend configured
-    if (!process.env.RESEND_API_KEY) {
-      console.log(`[forgot-password] Reset URL for ${normalised}: ${resetUrl}`);
+    // In dev without Resend, print only to server stderr (never to browser/Vercel logs)
+    if (process.env.NODE_ENV !== "production" && !process.env.RESEND_API_KEY) {
+      process.stderr.write(`[forgot-password] Reset URL: ${resetUrl}\n`);
     }
 
     const { subject, html } = passwordReset({ resetUrl });

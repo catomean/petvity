@@ -32,7 +32,9 @@ export async function sendEmail({
 }: SendEmailOptions): Promise<{ sent: boolean }> {
   const resend = getResend();
   if (!resend) {
-    console.warn(`[email] RESEND_API_KEY not set — skipping email "${subject}" to ${to}`);
+    if (process.env.NODE_ENV !== "production") {
+      process.stderr.write(`[email] RESEND_API_KEY not set — skipping "${subject}"\n`);
+    }
     return { sent: false };
   }
   const { error } = await resend.emails.send({ from: FROM, to, subject, html });

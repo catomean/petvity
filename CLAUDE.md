@@ -113,7 +113,7 @@ lib/
   auth/guards.ts       → requireSession() / requireRole() / requireAdmin()
   auth/types.ts        → Session type augmentation (adds id, role, emailVerified)
   config/
-    species.ts         → SSOT: 10 species, breeds, emoji, lifespan, normal ranges
+    species.ts         → SSOT: 4 species (dog, cat, horse, other), breeds, emoji, lifespan, normal ranges
     health-metrics.ts  → SSOT: 7 KPIs, units, toDisplay/toStorage converters, normal ranges
     pet-signal.ts      → SSOT: signal thresholds, labels, Tailwind bg classes
     locales.ts         → SSOT: 9 locales, RTL_LOCALES list
