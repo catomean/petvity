@@ -7,6 +7,7 @@ import {
   Plus, ChevronLeft, X, FileText,
   Stethoscope, Syringe, Pill, Scissors, FlaskConical,
   Smile, Sparkles, MoreHorizontal,
+  Pencil, Trash2,
 } from "lucide-react";
 import { formatDateShort } from "@/lib/utils/format";
 
@@ -61,6 +62,8 @@ export default function HealthRecordsPage() {
   const [records, setRecords] = useState<HealthRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -78,23 +81,57 @@ export default function HealthRecordsPage() {
     load();
   }, [petId]);
 
+  function openAdd() {
+    setEditingId(null);
+    setDeletingId(null);
+    setForm(EMPTY_FORM);
+    setError("");
+    setShowForm(true);
+  }
+
+  function openEdit(r: HealthRecord) {
+    setEditingId(r.id);
+    setDeletingId(null);
+    setForm({
+      type: r.type,
+      title: r.title,
+      date: r.date,
+      vetName: r.vetName ?? "",
+      clinic: r.clinic ?? "",
+      notes: r.notes ?? "",
+    });
+    setError("");
+    setShowForm(true);
+  }
+
+  function closeForm() {
+    setShowForm(false);
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setError("");
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setSaving(true);
 
+    const isEdit = editingId !== null;
+    const url = isEdit ? `/api/health/records/${editingId}` : "/api/health/records";
+    const method = isEdit ? "PATCH" : "POST";
+
     const body = {
-      petId,
+      ...(isEdit ? {} : { petId }),
       type: form.type,
       title: form.title.trim(),
       date: form.date,
-      ...(form.vetName.trim() ? { vetName: form.vetName.trim() } : {}),
-      ...(form.clinic.trim() ? { clinic: form.clinic.trim() } : {}),
-      ...(form.notes.trim() ? { notes: form.notes.trim() } : {}),
+      vetName: form.vetName.trim() || null,
+      clinic: form.clinic.trim() || null,
+      notes: form.notes.trim() || null,
     };
 
-    const res = await fetch("/api/health/records", {
-      method: "POST",
+    const res = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
@@ -103,10 +140,21 @@ export default function HealthRecordsPage() {
 
     if (!data.success) { setError(data.error ?? "Failed to save."); return; }
 
-    setRecords((prev) => [data.data, ...prev]);
-    setShowForm(false);
-    setForm(EMPTY_FORM);
+    if (isEdit) {
+      setRecords((prev) => prev.map((r) => (r.id === editingId ? data.data : r)));
+    } else {
+      setRecords((prev) => [data.data, ...prev]);
+    }
+    closeForm();
     startTransition(() => router.refresh());
+  }
+
+  async function handleDelete(id: string) {
+    const res = await fetch(`/api/health/records/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      setRecords((prev) => prev.filter((r) => r.id !== id));
+      setDeletingId(null);
+    }
   }
 
   function field(key: keyof FormState, value: string) {
@@ -141,7 +189,7 @@ export default function HealthRecordsPage() {
           </p>
         </div>
         {!showForm && (
-          <button onClick={() => setShowForm(true)} className="btn-primary flex items-center gap-2">
+          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Add record
           </button>
@@ -156,11 +204,13 @@ export default function HealthRecordsPage() {
               <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
                 <FileText className="w-4 h-4 text-[var(--teal)]" />
               </div>
-              <h2 className="font-semibold text-[var(--ink)]">New health record</h2>
+              <h2 className="font-semibold text-[var(--ink)]">
+                {editingId ? "Edit health record" : "New health record"}
+              </h2>
             </div>
             <button
               type="button"
-              onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setError(""); }}
+              onClick={closeForm}
               className="btn-ghost p-1 rounded-lg"
             >
               <X className="w-4 h-4 text-[var(--muted)]" />
@@ -261,13 +311,9 @@ export default function HealthRecordsPage() {
             {/* Actions */}
             <div className="sm:col-span-2 flex gap-3 pt-1">
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
-                {saving ? "Saving…" : "Save record"}
+                {saving ? "Saving…" : editingId ? "Update record" : "Save record"}
               </button>
-              <button
-                type="button"
-                onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setError(""); }}
-                className="btn-outline"
-              >
+              <button type="button" onClick={closeForm} className="btn-outline">
                 Cancel
               </button>
             </div>
@@ -286,7 +332,7 @@ export default function HealthRecordsPage() {
             Log vet visits, treatments, and lab results to build a complete health history.
           </p>
           {!showForm && (
-            <button onClick={() => setShowForm(true)} className="btn-primary">
+            <button onClick={openAdd} className="btn-primary">
               <Plus className="w-4 h-4" />
               Add first record
             </button>

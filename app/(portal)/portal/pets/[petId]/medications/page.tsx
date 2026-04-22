@@ -3,26 +3,18 @@
 import { useState, useEffect, useTransition } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, Pill, ChevronLeft, X, Check, Clock, Ban } from "lucide-react";
+import {
+  Plus, Pill, ChevronLeft, X,
+  Check, Clock, Ban,
+  Pencil, Trash2,
+} from "lucide-react";
 import { formatDateShort } from "@/lib/utils/format";
 
 /* ── SSOT: status config ─────────────────────────────────────────────────── */
 const STATUS_CONFIG = {
-  active: {
-    label: "Active",
-    className: "signal-healthy",
-    icon: Check,
-  },
-  completed: {
-    label: "Completed",
-    className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium",
-    icon: Clock,
-  },
-  discontinued: {
-    label: "Discontinued",
-    className: "bg-[var(--danger-bg)] text-[var(--danger)] text-xs px-2 py-0.5 rounded-full font-medium",
-    icon: Ban,
-  },
+  active:       { label: "Active",       className: "signal-healthy", icon: Check },
+  completed:    { label: "Completed",    className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium", icon: Clock },
+  discontinued: { label: "Discontinued", className: "bg-[var(--danger-bg)] text-[var(--danger)] text-xs px-2 py-0.5 rounded-full font-medium", icon: Ban },
 } as const;
 
 type MedicationStatus = keyof typeof STATUS_CONFIG;
@@ -70,6 +62,8 @@ export default function MedicationsPage() {
   const [rows, setRows] = useState<Medication[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -87,25 +81,61 @@ export default function MedicationsPage() {
     load();
   }, [petId]);
 
+  function openAdd() {
+    setEditingId(null);
+    setDeletingId(null);
+    setForm(EMPTY_FORM);
+    setError("");
+    setShowForm(true);
+  }
+
+  function openEdit(m: Medication) {
+    setEditingId(m.id);
+    setDeletingId(null);
+    setForm({
+      name: m.name,
+      dosage: m.dosage ?? "",
+      frequency: m.frequency ?? "",
+      startDate: m.startDate,
+      endDate: m.endDate ?? "",
+      prescribedBy: m.prescribedBy ?? "",
+      status: m.status,
+      notes: m.notes ?? "",
+    });
+    setError("");
+    setShowForm(true);
+  }
+
+  function closeForm() {
+    setShowForm(false);
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setError("");
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setSaving(true);
 
+    const isEdit = editingId !== null;
+    const url = isEdit ? `/api/medications/${editingId}` : "/api/medications";
+    const method = isEdit ? "PATCH" : "POST";
+
     const body = {
-      petId,
+      ...(isEdit ? {} : { petId }),
       name: form.name.trim(),
       startDate: form.startDate,
       status: form.status,
-      ...(form.dosage.trim() ? { dosage: form.dosage.trim() } : {}),
-      ...(form.frequency.trim() ? { frequency: form.frequency.trim() } : {}),
-      ...(form.endDate ? { endDate: form.endDate } : {}),
-      ...(form.prescribedBy.trim() ? { prescribedBy: form.prescribedBy.trim() } : {}),
-      ...(form.notes.trim() ? { notes: form.notes.trim() } : {}),
+      dosage: form.dosage.trim() || null,
+      frequency: form.frequency.trim() || null,
+      endDate: form.endDate || null,
+      prescribedBy: form.prescribedBy.trim() || null,
+      notes: form.notes.trim() || null,
     };
 
-    const res = await fetch("/api/medications", {
-      method: "POST",
+    const res = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
@@ -114,20 +144,26 @@ export default function MedicationsPage() {
 
     if (!data.success) { setError(data.error ?? "Failed to save."); return; }
 
-    setRows((prev) => [data.data, ...prev]);
-    setShowForm(false);
-    setForm(EMPTY_FORM);
+    if (isEdit) {
+      setRows((prev) => prev.map((r) => (r.id === editingId ? data.data : r)));
+    } else {
+      setRows((prev) => [data.data, ...prev]);
+    }
+    closeForm();
     startTransition(() => router.refresh());
+  }
+
+  async function handleDelete(id: string) {
+    const res = await fetch(`/api/medications/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      setRows((prev) => prev.filter((r) => r.id !== id));
+      setDeletingId(null);
+      startTransition(() => router.refresh());
+    }
   }
 
   function field(key: keyof FormState, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  function closeForm() {
-    setShowForm(false);
-    setForm(EMPTY_FORM);
-    setError("");
   }
 
   if (loading) {
@@ -153,19 +189,17 @@ export default function MedicationsPage() {
             {petName || "Pet"}
           </Link>
           <h1 className="text-2xl font-semibold text-[var(--ink)]">Medications</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">
-            Track prescriptions, dosages, and treatment history
-          </p>
+          <p className="text-sm text-[var(--muted)] mt-0.5">Track prescriptions, dosages, and treatment history</p>
         </div>
         {!showForm && (
-          <button onClick={() => setShowForm(true)} className="btn-primary flex items-center gap-2">
+          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Add
           </button>
         )}
       </div>
 
-      {/* Add form */}
+      {/* Form (add / edit) */}
       {showForm && (
         <div className="card p-6 mb-6 border-2 border-[var(--teal-light)]">
           <div className="flex items-center justify-between mb-5">
@@ -173,7 +207,9 @@ export default function MedicationsPage() {
               <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
                 <Pill className="w-4 h-4 text-[var(--teal)]" />
               </div>
-              <h2 className="font-semibold text-[var(--ink)]">New medication</h2>
+              <h2 className="font-semibold text-[var(--ink)]">
+                {editingId ? "Edit medication" : "New medication"}
+              </h2>
             </div>
             <button type="button" onClick={closeForm} className="btn-ghost p-1 rounded-lg">
               <X className="w-4 h-4 text-[var(--muted)]" />
@@ -183,7 +219,6 @@ export default function MedicationsPage() {
           {error && <p className="alert-error mb-4">{error}</p>}
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Name */}
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                 Medication name <span className="text-[var(--danger)]">*</span>
@@ -197,11 +232,9 @@ export default function MedicationsPage() {
               />
             </div>
 
-            {/* Dosage */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Dosage
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                Dosage <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
               </label>
               <input
                 className="form-input"
@@ -211,11 +244,9 @@ export default function MedicationsPage() {
               />
             </div>
 
-            {/* Frequency */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Frequency
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                Frequency <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
               </label>
               <input
                 className="form-input"
@@ -225,7 +256,6 @@ export default function MedicationsPage() {
               />
             </div>
 
-            {/* Start date */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                 Start date <span className="text-[var(--danger)]">*</span>
@@ -239,11 +269,9 @@ export default function MedicationsPage() {
               />
             </div>
 
-            {/* End date */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                End date
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                End date <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
               </label>
               <input
                 type="date"
@@ -253,29 +281,22 @@ export default function MedicationsPage() {
               />
             </div>
 
-            {/* Status */}
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Status
-              </label>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Status</label>
               <select
                 className="form-input"
                 value={form.status}
                 onChange={(e) => field("status", e.target.value as MedicationStatus)}
               >
                 {(Object.entries(STATUS_CONFIG) as [MedicationStatus, typeof STATUS_CONFIG[MedicationStatus]][]).map(
-                  ([val, cfg]) => (
-                    <option key={val} value={val}>{cfg.label}</option>
-                  )
+                  ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
                 )}
               </select>
             </div>
 
-            {/* Prescribed by */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Prescribed by
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                Prescribed by <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
               </label>
               <input
                 className="form-input"
@@ -285,11 +306,9 @@ export default function MedicationsPage() {
               />
             </div>
 
-            {/* Notes */}
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Notes
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                Notes <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
               </label>
               <textarea
                 className="form-input min-h-[80px] resize-y"
@@ -299,20 +318,17 @@ export default function MedicationsPage() {
               />
             </div>
 
-            {/* Actions */}
             <div className="sm:col-span-2 flex gap-3 pt-1">
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
-                {saving ? "Saving…" : "Save medication"}
+                {saving ? "Saving…" : editingId ? "Update medication" : "Save medication"}
               </button>
-              <button type="button" onClick={closeForm} className="btn-outline">
-                Cancel
-              </button>
+              <button type="button" onClick={closeForm} className="btn-outline">Cancel</button>
             </div>
           </form>
         </div>
       )}
 
-      {/* Medications list */}
+      {/* List */}
       <div className="card overflow-hidden">
         {rows.length === 0 ? (
           <div className="py-16 text-center">
@@ -320,11 +336,9 @@ export default function MedicationsPage() {
               <Pill className="w-6 h-6 text-[var(--teal)]" />
             </div>
             <p className="font-medium text-[var(--ink)] mb-1">No medications logged</p>
-            <p className="text-sm text-[var(--muted)] mb-5">
-              Track prescriptions and treatments to keep your pet&apos;s history complete.
-            </p>
+            <p className="text-sm text-[var(--muted)] mb-5">Track prescriptions and treatments to keep your pet&apos;s history complete.</p>
             {!showForm && (
-              <button onClick={() => setShowForm(true)} className="btn-primary">
+              <button onClick={openAdd} className="btn-primary">
                 <Plus className="w-4 h-4" />
                 Add first medication
               </button>
@@ -334,32 +348,23 @@ export default function MedicationsPage() {
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
               <tr>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
-                  Medication
-                </th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">
-                  Dosage / Frequency
-                </th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">
-                  Duration
-                </th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
-                  Status
-                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Medication</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">Dosage / Frequency</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">Duration</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Status</th>
+                <th className="py-3 px-4 w-20" />
               </tr>
             </thead>
             <tbody>
               {rows.map((m) => {
                 const status = STATUS_CONFIG[m.status] ?? STATUS_CONFIG.active;
                 const StatusIcon = status.icon;
+                const isDeleting = deletingId === m.id;
                 return (
                   <tr key={m.id} className="border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">
                     <td className="py-3 px-4">
                       <p className="font-medium text-[var(--ink)]">{m.name}</p>
-                      {m.prescribedBy && (
-                        <p className="text-xs text-[var(--muted)] mt-0.5">{m.prescribedBy}</p>
-                      )}
-                      {/* Mobile: dosage inline */}
+                      {m.prescribedBy && <p className="text-xs text-[var(--muted)] mt-0.5">{m.prescribedBy}</p>}
                       {(m.dosage || m.frequency) && (
                         <p className="text-xs text-[var(--muted)] mt-0.5 sm:hidden">
                           {[m.dosage, m.frequency].filter(Boolean).join(" · ")}
@@ -367,23 +372,54 @@ export default function MedicationsPage() {
                       )}
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell">
-                      {m.dosage || m.frequency ? (
-                        <span>{[m.dosage, m.frequency].filter(Boolean).join(" · ")}</span>
-                      ) : (
-                        <span className="text-[var(--faint)]">–</span>
-                      )}
+                      {m.dosage || m.frequency
+                        ? <span>{[m.dosage, m.frequency].filter(Boolean).join(" · ")}</span>
+                        : <span className="text-[var(--faint)]">–</span>}
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden md:table-cell">
-                      <span>
-                        {formatDateShort(m.startDate)}
-                        {m.endDate ? ` → ${formatDateShort(m.endDate)}` : " → ongoing"}
-                      </span>
+                      {formatDateShort(m.startDate)}
+                      {m.endDate ? ` → ${formatDateShort(m.endDate)}` : " → ongoing"}
                     </td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center gap-1 ${status.className}`}>
                         <StatusIcon className="w-3 h-3" />
                         {status.label}
                       </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      {isDeleting ? (
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => handleDelete(m.id)}
+                            className="text-xs font-medium text-[var(--danger)] hover:underline"
+                          >
+                            Confirm
+                          </button>
+                          <button
+                            onClick={() => setDeletingId(null)}
+                            className="text-xs text-[var(--muted)] hover:underline ms-1"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => openEdit(m)}
+                            className="p-1.5 rounded-lg hover:bg-[var(--teal-light)] text-[var(--muted)] hover:text-[var(--teal)] transition-colors"
+                            title="Edit"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => setDeletingId(m.id)}
+                            className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger)] transition-colors"
+                            title="Delete"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 );
