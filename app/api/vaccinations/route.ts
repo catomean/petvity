@@ -5,11 +5,14 @@ import { getInstance } from "@/lib/db";
 import { vaccinations, pets } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 
+const VACCINATION_STATUSES = ["up_to_date", "due_soon", "overdue", "not_applicable"] as const;
+
 const createVaccinationSchema = z.object({
   petId: z.string().uuid(),
   name: z.string().min(1).max(150),
   administeredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   nextDueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  status: z.enum(VACCINATION_STATUSES).default("up_to_date"),
   batchNumber: z.string().max(100).optional(),
   vetName: z.string().max(150).optional(),
   notes: z.string().max(500).optional(),
