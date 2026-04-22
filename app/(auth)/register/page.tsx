@@ -9,14 +9,15 @@ import { PasswordInput } from "@/components/portal/PasswordInput";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const emailRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { emailRef.current?.focus(); }, []);
+  useEffect(() => { nameRef.current?.focus(); }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,7 +32,7 @@ export default function RegisterPage() {
     const res = await fetch("/api/account", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ name: name.trim() || undefined, email, password }),
     });
     const data = await res.json();
 
@@ -69,10 +70,24 @@ export default function RegisterPage() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            Your name
+          </label>
+          <input
+            ref={nameRef}
+            type="text"
+            autoComplete="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="form-input"
+            placeholder="George"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
             Email
           </label>
           <input
-            ref={emailRef}
             type="email"
             autoComplete="email"
             required

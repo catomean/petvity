@@ -61,7 +61,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
       }),
     ],
     callbacks: {
-      async jwt({ token, user }) {
+      async jwt({ token, user, trigger }) {
         if (user) {
           token.id = user.id;
           token.emailVerified =
@@ -79,6 +79,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
           }
           token.role = correctRole;
         }
+
+        // Re-read name from DB on any update trigger so settings changes take effect immediately
+        if (trigger === "update" && token.id) {
+          const fresh = await db.query.users.findFirst({
+            where: eq(users.id, token.id as string),
+            columns: { name: true },
+          });
+          if (fresh) token.name = fresh.name;
+        }
+
         return token;
       },
       session({ session, token }) {
@@ -86,6 +96,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
         session.user.role = token.role as UserRole;
         session.user.emailVerified =
           (token.emailVerified as Date | null | undefined) ?? null;
+        // Propagate name from token (updated via trigger="update" when settings are saved)
+        if (token.name !== undefined) session.user.name = token.name as string | null;
         return session;
       },
     },
