@@ -2,15 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { healthRecords, pets } from "@/lib/db/schema";
+import { healthRecords, pets, healthRecordTypeEnum } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 
 const createRecordSchema = z.object({
   petId: z.string().uuid(),
-  type: z.enum([
-    "vet_visit", "vaccination", "medication", "surgery",
-    "lab_result", "dental", "grooming", "other",
-  ]),
+  type: z.enum(healthRecordTypeEnum.enumValues),
   title: z.string().min(1).max(200),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   vetName: z.string().max(150).optional(),

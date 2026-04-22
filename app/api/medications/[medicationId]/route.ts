@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { medications, pets } from "@/lib/db/schema";
+import { medications, medicationStatusEnum } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
-
-const MEDICATION_STATUSES = ["active", "completed", "discontinued"] as const;
+import { getMedicationForOwner } from "@/lib/api/ownership";
 
 const patchSchema = z.object({
   name: z.string().min(1).max(150).optional(),
@@ -14,30 +13,18 @@ const patchSchema = z.object({
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
   prescribedBy: z.string().max(150).nullable().optional(),
-  status: z.enum(MEDICATION_STATUSES).optional(),
+  status: z.enum(medicationStatusEnum.enumValues).optional(),
   notes: z.string().max(500).nullable().optional(),
 });
 
 type Params = { params: Promise<{ medicationId: string }> };
-
-async function verifyOwnership(medicationId: string, userId: string) {
-  const db = getInstance();
-  const row = await db.query.medications.findFirst({
-    where: eq(medications.id, medicationId),
-  });
-  if (!row) return null;
-  const pet = await db.query.pets.findFirst({
-    where: and(eq(pets.id, row.petId), eq(pets.ownerId, userId)),
-  });
-  return pet ? row : null;
-}
 
 export async function PATCH(req: NextRequest, { params }: Params) {
   const { session, error } = await requireSession();
   if (error) return error;
 
   const { medicationId } = await params;
-  const existing = await verifyOwnership(medicationId, session.user.id);
+  const existing = await getMedicationForOwner(medicationId, session.user.id);
   if (!existing) {
     return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
   }
@@ -66,7 +53,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   if (error) return error;
 
   const { medicationId } = await params;
-  const existing = await verifyOwnership(medicationId, session.user.id);
+  const existing = await getMedicationForOwner(medicationId, session.user.id);
   if (!existing) {
     return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
   }

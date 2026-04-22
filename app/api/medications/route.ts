@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { medications, pets } from "@/lib/db/schema";
+import { medications, pets, medicationStatusEnum } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 
 const createMedicationSchema = z.object({
@@ -13,6 +13,7 @@ const createMedicationSchema = z.object({
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   prescribedBy: z.string().max(150).optional(),
+  status: z.enum(medicationStatusEnum.enumValues).default("active"),
   notes: z.string().max(500).optional(),
 });
 

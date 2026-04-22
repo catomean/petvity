@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { healthRecords, pets } from "@/lib/db/schema";
+import { healthRecords, healthRecordTypeEnum } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
+import { getHealthRecordForOwner } from "@/lib/api/ownership";
 
 const patchSchema = z.object({
-  type: z.enum([
-    "vet_visit", "vaccination", "medication", "surgery",
-    "lab_result", "dental", "grooming", "other",
-  ]).optional(),
+  type: z.enum(healthRecordTypeEnum.enumValues).optional(),
   title: z.string().min(1).max(200).optional(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   vetName: z.string().max(150).nullable().optional(),
@@ -19,24 +17,12 @@ const patchSchema = z.object({
 
 type Params = { params: Promise<{ recordId: string }> };
 
-async function verifyOwnership(recordId: string, userId: string) {
-  const db = getInstance();
-  const row = await db.query.healthRecords.findFirst({
-    where: eq(healthRecords.id, recordId),
-  });
-  if (!row) return null;
-  const pet = await db.query.pets.findFirst({
-    where: and(eq(pets.id, row.petId), eq(pets.ownerId, userId)),
-  });
-  return pet ? row : null;
-}
-
 export async function PATCH(req: NextRequest, { params }: Params) {
   const { session, error } = await requireSession();
   if (error) return error;
 
   const { recordId } = await params;
-  const existing = await verifyOwnership(recordId, session.user.id);
+  const existing = await getHealthRecordForOwner(recordId, session.user.id);
   if (!existing) {
     return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
   }
@@ -65,7 +51,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   if (error) return error;
 
   const { recordId } = await params;
-  const existing = await verifyOwnership(recordId, session.user.id);
+  const existing = await getHealthRecordForOwner(recordId, session.user.id);
   if (!existing) {
     return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
   }
