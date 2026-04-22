@@ -9,6 +9,8 @@ import {
   CalendarDays,
   Settings,
   LogOut,
+  Search,
+  Stethoscope,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
@@ -16,6 +18,7 @@ const NAV_ITEMS = [
   { href: "/portal/dashboard", icon: Home, label: "Dashboard" },
   { href: "/portal/pets", icon: PawPrint, label: "My Pets" },
   { href: "/portal/checkin", icon: CalendarDays, label: "Check-in" },
+  { href: "/portal/find", icon: Search, label: "Find a Pro" },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -26,11 +29,13 @@ function isActive(pathname: string, href: string): boolean {
 interface Props {
   userName?: string | null;
   userEmail?: string | null;
+  userRole?: string | null;
 }
 
-export default function SidebarNav({ userName, userEmail }: Props) {
+export default function SidebarNav({ userName, userEmail, userRole }: Props) {
   const pathname = usePathname();
   const initials = userName?.[0]?.toUpperCase() ?? "?";
+  const isProfessional = userRole === "veterinarian" || userRole === "pet_sitter";
 
   return (
     <>
@@ -65,6 +70,19 @@ export default function SidebarNav({ userName, userEmail }: Props) {
               {label}
             </Link>
           ))}
+          {isProfessional && (
+            <Link
+              href="/portal/professional-profile"
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium no-underline transition-colors ${
+                isActive(pathname, "/portal/professional-profile")
+                  ? "bg-[var(--teal-light)] text-[var(--teal)]"
+                  : "text-[var(--ink2)] hover:bg-[var(--light)] hover:text-[var(--ink)]"
+              }`}
+            >
+              <Stethoscope className="w-4 h-4 flex-shrink-0" />
+              My Profile
+            </Link>
+          )}
         </nav>
 
         {/* Bottom section */}
@@ -130,6 +148,7 @@ export default function SidebarNav({ userName, userEmail }: Props) {
       <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-[var(--border)] flex safe-area-inset-bottom z-20">
         {[
           ...NAV_ITEMS,
+          ...(isProfessional ? [{ href: "/portal/professional-profile", icon: Stethoscope, label: "My Profile" }] : []),
           { href: "/portal/settings", icon: Settings, label: "Settings" },
         ].map(({ href, icon: Icon, label }) => (
           <Link

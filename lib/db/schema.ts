@@ -263,3 +263,48 @@ export const emailQueue = pgTable("email_queue", {
   payload: jsonb("payload").notNull().default({}),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 });
+
+// ─── Veterinarian profiles ─────────────────────────────────────────────────
+
+export const vetProfiles = pgTable("vet_profiles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+  bio: text("bio"),
+  specialty: varchar("specialty", { length: 200 }),
+  clinicName: varchar("clinic_name", { length: 200 }),
+  clinicAddress: text("clinic_address"),
+  city: varchar("city", { length: 100 }),
+  country: varchar("country", { length: 2 }),
+  phone: varchar("phone", { length: 50 }),
+  isAcceptingClients: boolean("is_accepting_clients").notNull().default(true),
+  /** Set by admin after credential verification */
+  isVerified: boolean("is_verified").notNull().default(false),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+// ─── Pet sitter profiles ────────────────────────────────────────────────────
+
+export const sitterProfiles = pgTable("sitter_profiles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+  bio: text("bio"),
+  /** Comma-separated: boarding,daycare,walking,house_sitting,drop_in */
+  services: text("services"),
+  /** Daily rate in cents (e.g. 5000 = $50.00) */
+  pricePerDay: integer("price_per_day"),
+  city: varchar("city", { length: 100 }),
+  country: varchar("country", { length: 2 }),
+  phone: varchar("phone", { length: 50 }),
+  isAcceptingClients: boolean("is_accepting_clients").notNull().default(true),
+  /** Set by admin after credential verification */
+  isVerified: boolean("is_verified").notNull().default(false),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});

@@ -15,6 +15,7 @@ export default async function PortalLayout({
       <SidebarNav
         userName={session.user.name}
         userEmail={session.user.email}
+        userRole={session.user.role}
       />
       {/* Offset for desktop sidebar (w-60) and mobile top/bottom bars */}
       <div className="lg:ps-60">

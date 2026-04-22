@@ -18,6 +18,8 @@ const PRIVATE_API_PREFIXES = [
   "/api/health",
   "/api/vaccinations",
   "/api/medications",
+  "/api/vets",
+  "/api/sitters",
   "/api/cron",
   "/api/admin",
 ];
