@@ -20,7 +20,7 @@ const STATUS_CONFIG = {
   },
   discontinued: {
     label: "Discontinued",
-    className: "bg-red-50 text-[var(--danger)] text-xs px-2 py-0.5 rounded-full font-medium",
+    className: "bg-[var(--danger-bg)] text-[var(--danger)] text-xs px-2 py-0.5 rounded-full font-medium",
     icon: Ban,
   },
 } as const;

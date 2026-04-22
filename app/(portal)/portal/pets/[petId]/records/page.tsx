@@ -14,11 +14,11 @@ import { formatDateShort } from "@/lib/utils/format";
 const RECORD_TYPE_CONFIG = {
   vet_visit:   { label: "Vet visit",    icon: Stethoscope, color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
   vaccination: { label: "Vaccination",  icon: Syringe,     color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
-  medication:  { label: "Medication",   icon: Pill,        color: "text-[var(--warn)]",   bg: "bg-amber-50" },
-  surgery:     { label: "Surgery",      icon: Scissors,    color: "text-[var(--danger)]", bg: "bg-red-50" },
-  lab_result:  { label: "Lab result",   icon: FlaskConical,color: "text-purple-600",      bg: "bg-purple-50" },
-  dental:      { label: "Dental",       icon: Smile,       color: "text-blue-600",        bg: "bg-blue-50" },
-  grooming:    { label: "Grooming",     icon: Sparkles,    color: "text-pink-600",        bg: "bg-pink-50" },
+  medication:  { label: "Medication",   icon: Pill,        color: "text-[var(--warn)]",   bg: "bg-[var(--warn-bg)]" },
+  surgery:     { label: "Surgery",      icon: Scissors,    color: "text-[var(--danger)]", bg: "bg-[var(--danger-bg)]" },
+  lab_result:  { label: "Lab result",   icon: FlaskConical,color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
+  dental:      { label: "Dental",       icon: Smile,       color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
+  grooming:    { label: "Grooming",     icon: Sparkles,    color: "text-[var(--accent)]", bg: "bg-[var(--accent-light)]" },
   other:       { label: "Other",        icon: MoreHorizontal, color: "text-[var(--muted)]", bg: "bg-[var(--off)]" },
 } as const;
 
