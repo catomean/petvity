@@ -13,7 +13,7 @@ import {
 } from "@/lib/config/health-metrics";
 import type { MetricId } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
-import { getMetricDisplay } from "@/lib/domain/health";
+import { getMetricDisplay, computeWellnessScore } from "@/lib/domain/health";
 import { formatDateShort } from "@/lib/utils/format";
 import { HealthTrendChart } from "@/components/portal/HealthTrendChart";
 
@@ -49,6 +49,22 @@ export default async function PetHealthPage({ params }: Params) {
     anxiety: "anxiety",
     socialization: "socialization",
   };
+
+  // Overall wellness score from latest reading
+  const wellnessScore = latest
+    ? computeWellnessScore(
+        {
+          weight: latest.weightGrams ?? undefined,
+          temperature: latest.temperatureCentidegrees ?? undefined,
+          heart_rate: latest.heartRateBpm ?? undefined,
+          energy: latest.energy ?? undefined,
+          mood: latest.mood ?? undefined,
+          anxiety: latest.anxiety ?? undefined,
+          socialization: latest.socialization ?? undefined,
+        },
+        species,
+      )
+    : null;
 
   // Chart data: ascending by date, values converted to display units
   const chartData = metrics
@@ -110,7 +126,22 @@ export default async function PetHealthPage({ params }: Params) {
           {/* Latest reading */}
           <div className="card p-5">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-[var(--ink)]">Latest reading</h2>
+              <div className="flex items-center gap-3">
+                <h2 className="font-semibold text-[var(--ink)]">Latest reading</h2>
+                {wellnessScore !== null && (
+                  <span
+                    className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                      wellnessScore >= 80
+                        ? "bg-[var(--green-bg)] text-[var(--green)]"
+                        : wellnessScore >= 60
+                          ? "bg-[var(--warn-bg)] text-[var(--warn)]"
+                          : "bg-[var(--danger-bg)] text-[var(--danger)]"
+                    }`}
+                  >
+                    Wellness {wellnessScore}%
+                  </span>
+                )}
+              </div>
               <span className="text-xs text-[var(--muted)]">
                 {formatDateShort(latest.date)}
               </span>
