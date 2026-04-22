@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Mail } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -36,8 +36,8 @@ export default function ForgotPasswordPage() {
   if (submitted) {
     return (
       <>
-        <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center text-2xl mx-auto mb-5">
-          📬
+        <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
+          <Mail className="w-7 h-7 text-[var(--teal)]" />
         </div>
         <h1 className="text-2xl font-bold mb-2 text-[var(--ink)] text-center">Check your inbox</h1>
         <p className="text-sm text-[var(--muted)] text-center mb-7 leading-relaxed">
