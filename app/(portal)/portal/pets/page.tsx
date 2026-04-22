@@ -5,7 +5,7 @@ import { eq, desc } from "drizzle-orm";
 import Link from "next/link";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { Plus, ChevronRight } from "lucide-react";
+import { Plus, ChevronRight, PawPrint } from "lucide-react";
 
 export default async function PetsPage() {
   const session = await auth();
@@ -36,8 +36,8 @@ export default async function PetsPage() {
 
       {userPets.length === 0 ? (
         <div className="card p-12 text-center">
-          <div className="w-20 h-20 rounded-3xl bg-[var(--teal-light)] flex items-center justify-center text-4xl mx-auto mb-5">
-            🐾
+          <div className="w-20 h-20 rounded-3xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
+            <PawPrint className="w-9 h-9 text-[var(--teal)]" />
           </div>
           <h2 className="text-lg font-semibold text-[var(--ink)] mb-2">
             No pets yet
