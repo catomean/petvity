@@ -83,7 +83,7 @@ const FAQ = [
   },
   {
     q: "Which species are supported?",
-    a: "Dogs, cats, horses, birds, rabbits, guinea pigs, hamsters, reptiles, fish, and other. Each species has its own normal ranges for health metrics — a horse's normal temperature is different from a cat's.",
+    a: "Dogs, cats, horses, and any other animal via the 'Other' category. Each species has its own normal ranges for health metrics — a horse's normal temperature is different from a cat's.",
   },
   {
     q: "When will Pro and Clinic plans launch?",

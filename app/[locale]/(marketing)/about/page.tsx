@@ -94,8 +94,8 @@ export default function AboutPage() {
                 observation — not a vague feeling.
               </p>
               <p className="text-[var(--muted)] leading-relaxed">
-                We support dogs, cats, horses, birds, rabbits, guinea pigs, hamsters, reptiles,
-                fish, and more — because the need for good data isn&apos;t species-specific.
+                We support dogs, cats, horses, and any other species — because the need for
+                good data isn&apos;t species-specific.
               </p>
             </div>
 
