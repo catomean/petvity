@@ -75,7 +75,7 @@ export default async function PetProfilePage({ params }: Params) {
   const sig = signalResult.signal;
   const age = ageString(pet.birthDate ?? null);
 
-  const twin = computeDigitalTwin(recentMetrics[0] ?? null, now);
+  const twin = computeDigitalTwin(recentMetrics, now);
 
   const tabLinks = [
     {
