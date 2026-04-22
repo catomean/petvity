@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { healthMetrics, pets } from "@/lib/db/schema";
+import { healthMetrics, pets, vaccinations } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
+import { computePetSignal } from "@/lib/domain/pet-signal";
+import type { SpeciesId } from "@/lib/config/species";
 
 const logMetricsSchema = z.object({
   petId: z.string().uuid(),
@@ -95,6 +97,32 @@ export async function POST(req: NextRequest, { params }: Params) {
       },
     })
     .returning();
+
+  // Recompute and cache the wellness signal immediately
+  const now = new Date();
+  const sinceStr = new Date(now.getTime() - 7 * 86400000).toISOString().slice(0, 10);
+  const todayStr = now.toISOString().slice(0, 10);
+
+  const [recentMetrics, allVacc] = await Promise.all([
+    db.query.healthMetrics.findMany({
+      where: and(eq(healthMetrics.petId, petId), gte(healthMetrics.date, sinceStr)),
+      orderBy: [desc(healthMetrics.date)],
+    }),
+    db.query.vaccinations.findMany({ where: eq(vaccinations.petId, petId) }),
+  ]);
+
+  const overdueCount = allVacc.filter(
+    (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
+  ).length;
+
+  const signal = computePetSignal({
+    species: pet.species as SpeciesId,
+    recentMetrics,
+    overdueVaccinations: overdueCount,
+    now,
+  });
+
+  await db.update(pets).set({ lastKnownSignal: signal.signal }).where(eq(pets.id, petId));
 
   return NextResponse.json({ success: true, data: row }, { status: 201 });
 }
