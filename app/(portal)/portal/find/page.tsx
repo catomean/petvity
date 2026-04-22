@@ -227,6 +227,16 @@ export default function FindPage() {
                     <a href={`tel:${vet.phone}`} className="hover:text-[var(--teal)] transition-colors">{vet.phone}</a>
                   </div>
                 )}
+                <div className="mt-2">
+                  <a
+                    href={`/en/pros/${vet.userId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[var(--teal)] hover:underline"
+                  >
+                    View full profile →
+                  </a>
+                </div>
               </div>
             ))}
           </div>
@@ -289,6 +299,16 @@ export default function FindPage() {
                     <a href={`tel:${sitter.phone}`} className="hover:text-[var(--teal)] transition-colors">{sitter.phone}</a>
                   </div>
                 )}
+                <div className="mt-2">
+                  <a
+                    href={`/en/pros/${sitter.userId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[var(--teal)] hover:underline"
+                  >
+                    View full profile →
+                  </a>
+                </div>
               </div>
             ))}
           </div>
