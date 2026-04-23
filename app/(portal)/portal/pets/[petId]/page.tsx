@@ -10,7 +10,7 @@ import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG } from "@/lib/config/p
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
-import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart } from "lucide-react";
+import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 
 type Params = { params: Promise<{ petId: string }> };
@@ -172,18 +172,30 @@ export default async function PetProfilePage({ params }: Params) {
             </Link>
           </div>
 
-          {/* Signal reason + CTA */}
+          {/* Signal reason + CTAs */}
           <div className="mt-5 pt-5 border-t border-white/60 flex items-center justify-between gap-4 flex-wrap">
             <p className="text-sm text-[var(--ink2)] flex-1">
               {signalResult.reason}
             </p>
-            <Link
-              href={`/portal/pets/${pet.id}/health/log`}
-              className="btn-primary text-sm flex-shrink-0"
-            >
-              <CalendarDays className="w-4 h-4" />
-              Log today
-            </Link>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {/* When signal is watch or concern, surface a direct path to book a vet */}
+              {sig !== "healthy" && (
+                <Link
+                  href="/portal/find"
+                  className="btn-outline text-sm"
+                >
+                  <Stethoscope className="w-4 h-4" />
+                  Find a vet
+                </Link>
+              )}
+              <Link
+                href={`/portal/pets/${pet.id}/health/log`}
+                className="btn-primary text-sm"
+              >
+                <CalendarDays className="w-4 h-4" />
+                Log today
+              </Link>
+            </div>
           </div>
         </div>
       </div>
