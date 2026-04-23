@@ -3,6 +3,8 @@
 import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { CalendarCheck, Clock, CheckCircle, XCircle, ChevronDown, Star, X } from "lucide-react";
+import { BOOKING_STATUS_CONFIG } from "@/lib/config/orders";
+import type { BookingStatusId } from "@/lib/config/orders";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -24,12 +26,20 @@ interface BookingRow {
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
-const STATUS_CONFIG = {
-  pending:   { label: "Pending",   color: "bg-[var(--warn-bg)] text-[var(--warn)]",    icon: Clock },
-  confirmed: { label: "Confirmed", color: "bg-[var(--green-bg)] text-[var(--green)]",  icon: CheckCircle },
-  cancelled: { label: "Cancelled", color: "bg-[var(--off)] text-[var(--muted)]",       icon: XCircle },
-  completed: { label: "Completed", color: "bg-[var(--teal-light)] text-[var(--teal)]", icon: CheckCircle },
-} as const;
+// Icons are UI-layer; labels/colors sourced from lib/config/orders SSOT
+const STATUS_ICONS: Record<BookingStatusId, React.ElementType> = {
+  pending:   Clock,
+  confirmed: CheckCircle,
+  cancelled: XCircle,
+  completed: CheckCircle,
+};
+
+const STATUS_CONFIG: Record<BookingStatusId, { label: string; color: string; icon: React.ElementType }> = {
+  pending:   { ...BOOKING_STATUS_CONFIG.pending,   color: `${BOOKING_STATUS_CONFIG.pending.bg}   ${BOOKING_STATUS_CONFIG.pending.color}`,   icon: STATUS_ICONS.pending },
+  confirmed: { ...BOOKING_STATUS_CONFIG.confirmed, color: `${BOOKING_STATUS_CONFIG.confirmed.bg} ${BOOKING_STATUS_CONFIG.confirmed.color}`, icon: STATUS_ICONS.confirmed },
+  cancelled: { ...BOOKING_STATUS_CONFIG.cancelled, color: `${BOOKING_STATUS_CONFIG.cancelled.bg} ${BOOKING_STATUS_CONFIG.cancelled.color}`, icon: STATUS_ICONS.cancelled },
+  completed: { ...BOOKING_STATUS_CONFIG.completed, color: `${BOOKING_STATUS_CONFIG.completed.bg} ${BOOKING_STATUS_CONFIG.completed.color}`, icon: STATUS_ICONS.completed },
+};
 
 function StatusBadge({ status }: { status: BookingRow["status"] }) {
   const cfg = STATUS_CONFIG[status];

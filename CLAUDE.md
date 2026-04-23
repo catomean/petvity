@@ -161,6 +161,7 @@ lib/
     health-metrics.ts  → SSOT: 7 KPIs, units, toDisplay/toStorage converters, normal ranges
     pet-signal.ts      → SSOT: signal thresholds, labels, Tailwind bg classes
     products.ts        → SSOT: 6 product categories, labels, PRODUCT_CATEGORY_OPTIONS
+    orders.ts          → SSOT: order status + booking status labels and color classes
     locales.ts         → SSOT: 9 locales, RTL_LOCALES list
     app.ts             → APP name, emails, URL (NEXT_PUBLIC_APP_URL)
     auth.ts            → BCRYPT_SALT_ROUNDS, PASSWORD_MIN_LENGTH
@@ -331,6 +332,7 @@ Algorithm:
 | Health KPI defs, units, ranges | `lib/config/health-metrics.ts` | Component |
 | Signal thresholds, labels, colors | `lib/config/pet-signal.ts` | Cron route, component |
 | Product category labels, options | `lib/config/products.ts` | Component |
+| Order/booking status labels, colors | `lib/config/orders.ts` | Component |
 | Locales, RTL flag | `lib/config/locales.ts` | next-intl config |
 | App name, email, URL | `lib/config/app.ts` | Component |
 | Auth guards | `lib/auth/guards.ts` | Page component |

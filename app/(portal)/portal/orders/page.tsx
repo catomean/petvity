@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingBag, Package, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
+import type { OrderStatusId } from "@/lib/config/orders";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -26,13 +28,14 @@ interface Order {
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
-const STATUS_CONFIG = {
-  pending:   { label: "Pending",   icon: Clock,         color: "bg-[var(--warn-bg)] text-[var(--warn)]" },
-  confirmed: { label: "Confirmed", icon: CheckCircle,   color: "bg-[var(--green-bg)] text-[var(--green)]" },
-  shipped:   { label: "Shipped",   icon: Truck,         color: "bg-[var(--teal-light)] text-[var(--teal)]" },
-  delivered: { label: "Delivered", icon: ShoppingBag,   color: "bg-[var(--teal-light)] text-[var(--teal)]" },
-  cancelled: { label: "Cancelled", icon: XCircle,       color: "bg-[var(--off)] text-[var(--muted)]" },
-} as const;
+// Icons are UI-layer; labels/colors sourced from lib/config/orders SSOT
+const STATUS_CONFIG: Record<OrderStatusId, { label: string; color: string; icon: React.ElementType }> = {
+  pending:   { ...ORDER_STATUS_CONFIG.pending,   color: `${ORDER_STATUS_CONFIG.pending.bg}   ${ORDER_STATUS_CONFIG.pending.color}`,   icon: Clock },
+  confirmed: { ...ORDER_STATUS_CONFIG.confirmed, color: `${ORDER_STATUS_CONFIG.confirmed.bg} ${ORDER_STATUS_CONFIG.confirmed.color}`, icon: CheckCircle },
+  shipped:   { ...ORDER_STATUS_CONFIG.shipped,   color: `${ORDER_STATUS_CONFIG.shipped.bg}   ${ORDER_STATUS_CONFIG.shipped.color}`,   icon: Truck },
+  delivered: { ...ORDER_STATUS_CONFIG.delivered, color: `${ORDER_STATUS_CONFIG.delivered.bg} ${ORDER_STATUS_CONFIG.delivered.color}`, icon: ShoppingBag },
+  cancelled: { ...ORDER_STATUS_CONFIG.cancelled, color: `${ORDER_STATUS_CONFIG.cancelled.bg} ${ORDER_STATUS_CONFIG.cancelled.color}`, icon: XCircle },
+};
 
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;

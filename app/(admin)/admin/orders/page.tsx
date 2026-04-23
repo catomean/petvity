@@ -5,10 +5,12 @@ import {
   ShoppingBag, Clock, CheckCircle, Truck, Package, XCircle,
   ChevronDown, ChevronUp, User,
 } from "lucide-react";
+import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
+import type { OrderStatusId } from "@/lib/config/orders";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
-type OrderStatus = "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+type OrderStatus = OrderStatusId;
 
 interface OrderItem {
   id: string;
@@ -33,12 +35,21 @@ interface Order {
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
+// Icons are UI-layer; labels/colors sourced from lib/config/orders SSOT
+const STATUS_ICONS: Record<OrderStatus, React.ElementType> = {
+  pending:   Clock,
+  confirmed: CheckCircle,
+  shipped:   Truck,
+  delivered: ShoppingBag,
+  cancelled: XCircle,
+};
+
 const STATUS_CONFIG: Record<OrderStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
-  pending:   { label: "Pending",   icon: Clock,         color: "text-[var(--warn)]",   bg: "bg-[var(--warn-bg)]" },
-  confirmed: { label: "Confirmed", icon: CheckCircle,   color: "text-[var(--green)]",  bg: "bg-[var(--green-bg)]" },
-  shipped:   { label: "Shipped",   icon: Truck,         color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
-  delivered: { label: "Delivered", icon: ShoppingBag,   color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
-  cancelled: { label: "Cancelled", icon: XCircle,       color: "text-[var(--muted)]",  bg: "bg-[var(--off)]" },
+  pending:   { ...ORDER_STATUS_CONFIG.pending,   icon: STATUS_ICONS.pending },
+  confirmed: { ...ORDER_STATUS_CONFIG.confirmed, icon: STATUS_ICONS.confirmed },
+  shipped:   { ...ORDER_STATUS_CONFIG.shipped,   icon: STATUS_ICONS.shipped },
+  delivered: { ...ORDER_STATUS_CONFIG.delivered, icon: STATUS_ICONS.delivered },
+  cancelled: { ...ORDER_STATUS_CONFIG.cancelled, icon: STATUS_ICONS.cancelled },
 };
 
 const STATUS_FLOW: Record<OrderStatus, OrderStatus[]> = {
@@ -50,12 +61,8 @@ const STATUS_FLOW: Record<OrderStatus, OrderStatus[]> = {
 };
 
 const STATUS_FILTER_OPTIONS: { value: string; label: string }[] = [
-  { value: "all",       label: "All orders" },
-  { value: "pending",   label: "Pending" },
-  { value: "confirmed", label: "Confirmed" },
-  { value: "shipped",   label: "Shipped" },
-  { value: "delivered", label: "Delivered" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: "all", label: "All orders" },
+  ...Object.entries(ORDER_STATUS_CONFIG).map(([value, { label }]) => ({ value, label })),
 ];
 
 function formatPrice(cents: number) {
