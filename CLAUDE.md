@@ -1,5 +1,9 @@
 @~/.claude/CLAUDE.md
 
+## Mission
+
+Petvity gives pet owners a single place to monitor their pet's daily wellness, connect with local vets and sitters, and manage the full care journey — from health logs and vaccinations to marketplace orders and cross-border adoption. Success means any owner can check their pet's signal in seconds, understand why it changed, and take immediate action without leaving the platform.
+
 # Petvity — Project Standards & Agentic Runbook
 
 **What this is:** Global pet care platform. Owners manage multi-species pet profiles, track physical + emotional health KPIs, connect with vets/sitters (Phase 2), access a marketplace (Phase 3), and list pets for cross-border adoption (Phase 4). Pets can have public "influencer profiles." Long-term vision: digital twins (IoT sensors, cameras, emotional state). Part of the same ecosystem as VitaReBa and Surf Your Life.
@@ -164,7 +168,7 @@ lib/
     pet-signal.ts      → computePetSignal() — pure, injected, unit-tested
     pet-signal.test.ts → 9 vitest tests
     health.ts          → isMetricInRange(), computeWellnessScore()
-    pets.ts            → createPetSlug(), validateSpeciesBreed()
+    pets.ts            → createPetHandle(), validateSpeciesBreed()
     email-queue.ts     → enqueueWelcomeSequence()
   email/
     index.ts           → sendEmail() via Resend

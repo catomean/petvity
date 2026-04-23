@@ -117,6 +117,7 @@ export function petHealthAlert(data: {
         ${data.reason}
       </p>
       <a class="btn" href="${data.petUrl}">View ${data.petName}'s health</a>
+      <p style="margin-top:8px;">If you'd like a professional opinion, you can <a href="${APP_URL}/portal/find" style="color:#2a7a8a;">find a vet or sitter near you</a> directly on Petvity.</p>
     `),
   };
 }
