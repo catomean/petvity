@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Package, Pencil, X, Eye, EyeOff } from "lucide-react";
+import { PRODUCT_CATEGORY_OPTIONS } from "@/lib/config/products";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -16,14 +17,8 @@ interface Product {
   isActive: boolean;
 }
 
-const CATEGORIES = [
-  { value: "food",        label: "Food" },
-  { value: "toys",        label: "Toys" },
-  { value: "health",      label: "Health" },
-  { value: "accessories", label: "Accessories" },
-  { value: "grooming",    label: "Grooming" },
-  { value: "other",       label: "Other" },
-];
+// Sourced from lib/config/products — SSOT for category labels
+const CATEGORIES = PRODUCT_CATEGORY_OPTIONS;
 
 interface FormState {
   name: string;

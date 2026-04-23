@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X } from "lucide-react";
+import { productCategoryLabel } from "@/lib/config/products";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -20,17 +21,6 @@ interface CartItem {
   product: Product;
   quantity: number;
 }
-
-/* ─── Config ─────────────────────────────────────────────────────────────── */
-
-const CATEGORY_LABELS: Record<string, string> = {
-  food: "Food",
-  toys: "Toys",
-  health: "Health",
-  accessories: "Accessories",
-  grooming: "Grooming",
-  other: "Other",
-};
 
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -263,7 +253,7 @@ export default function ShopPage() {
                   : "border-[var(--border)] text-[var(--ink2)] hover:border-[var(--teal)] hover:text-[var(--teal)]"
               }`}
             >
-              {cat === "all" ? "All" : CATEGORY_LABELS[cat] ?? cat}
+              {cat === "all" ? "All" : productCategoryLabel(cat)}
             </button>
           ))}
         </div>
@@ -304,7 +294,7 @@ export default function ShopPage() {
                 </div>
                 <div className="p-3 flex flex-col flex-1">
                   <span className="text-xs text-[var(--muted)] mb-0.5">
-                    {CATEGORY_LABELS[product.category] ?? product.category}
+                    {productCategoryLabel(product.category)}
                   </span>
                   <p className="font-medium text-[var(--ink)] text-sm leading-snug mb-1 flex-1">
                     {product.name}
