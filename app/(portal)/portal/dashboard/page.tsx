@@ -137,11 +137,20 @@ export default async function DashboardPage() {
             const trendColor = TWIN_TREND_CONFIG[twin.trend].color;
 
             return (
-              <Link
+              /* Overlay-link pattern: outer div is the card; absolute <Link> covers the whole
+                 card for the primary navigation; secondary links sit relative/z-10 above it.
+                 This avoids nested <a> tags (invalid HTML) while keeping the whole card clickable. */
+              <div
                 key={pet.id}
-                href={`/portal/pets/${pet.id}`}
-                className="card overflow-hidden hover:shadow-md transition-all no-underline group block"
+                className="card overflow-hidden hover:shadow-md transition-all group relative"
               >
+                {/* Primary card link — covers the full card */}
+                <Link
+                  href={`/portal/pets/${pet.id}`}
+                  className="absolute inset-0 z-0"
+                  aria-label={`View ${pet.name}`}
+                />
+
                 {/* Signal strip */}
                 <div className={`h-1 ${SIGNAL_STRIP_CLASSES[sig as keyof typeof SIGNAL_STRIP_CLASSES] ?? "bg-[var(--border)]"}`} />
 
@@ -170,12 +179,15 @@ export default async function DashboardPage() {
                     {pet.breed ? ` · ${pet.breed}` : ""}
                   </p>
 
-                  {/* Row 3: digital twin mini-bar */}
+                  {/* Row 3: twin mini-bar OR "Log today" shortcut */}
                   {needsCheckin ? (
-                    <div className="flex items-center gap-1.5 text-xs text-[var(--faint)]">
+                    <Link
+                      href={`/portal/pets/${pet.id}/health/log`}
+                      className="relative z-10 inline-flex items-center gap-1.5 text-xs font-medium text-[var(--accent)] hover:text-[var(--accent-dark)] transition-colors no-underline"
+                    >
                       <CalendarDays className="w-3 h-3" />
-                      <span>No check-in yet today</span>
-                    </div>
+                      Log today
+                    </Link>
                   ) : (
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
@@ -208,7 +220,7 @@ export default async function DashboardPage() {
                     </div>
                   )}
                 </div>
-              </Link>
+              </div>
             );
           })}
 
