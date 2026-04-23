@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
+import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG, listingStatusClass, applicationStatusClass } from "@/lib/config/adoptions";
+import type { ListingStatusId, ApplicationStatusId } from "@/lib/config/adoptions";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -34,19 +36,14 @@ interface AdoptionListing {
 
 /* ─── Status badges ──────────────────────────────────────────────────────── */
 
-const LISTING_STATUS: Record<string, { label: string; className: string }> = {
-  available:  { label: "Available",  className: "bg-[var(--green-bg)] text-[var(--green)]" },
-  on_hold:    { label: "On hold",    className: "bg-[var(--warn-bg)] text-[var(--warn)]" },
-  adopted:    { label: "Adopted",    className: "bg-[var(--teal-light)] text-[var(--teal)]" },
-  withdrawn:  { label: "Withdrawn",  className: "bg-[var(--off)] text-[var(--muted)]" },
-};
+// Labels/colors sourced from lib/config/adoptions SSOT
+const LISTING_STATUS = Object.fromEntries(
+  Object.entries(LISTING_STATUS_CONFIG).map(([k, v]) => [k, { label: v.label, className: listingStatusClass(k) }]),
+) as Record<ListingStatusId, { label: string; className: string }>;
 
-const APP_STATUS: Record<string, { label: string; className: string }> = {
-  pending:   { label: "Pending",   className: "bg-[var(--warn-bg)] text-[var(--warn)]" },
-  approved:  { label: "Approved",  className: "bg-[var(--green-bg)] text-[var(--green)]" },
-  rejected:  { label: "Rejected",  className: "bg-[var(--off)] text-[var(--muted)]" },
-  withdrawn: { label: "Withdrawn", className: "bg-[var(--off)] text-[var(--muted)]" },
-};
+const APP_STATUS = Object.fromEntries(
+  Object.entries(APPLICATION_STATUS_CONFIG).map(([k, v]) => [k, { label: v.label, className: applicationStatusClass(k) }]),
+) as Record<ApplicationStatusId, { label: string; className: string }>;
 
 /* ─── Application row ─────────────────────────────────────────────────────── */
 

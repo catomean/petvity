@@ -7,10 +7,12 @@ import {
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
+import { LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
+import type { ListingStatusId } from "@/lib/config/adoptions";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
-type ListingStatus = "available" | "on_hold" | "adopted" | "withdrawn";
+type ListingStatus = ListingStatusId;
 
 interface Listing {
   id: string;
@@ -28,19 +30,24 @@ interface Listing {
 
 /* ─── Config ─────────────────────────────────────────────────────────────── */
 
+// Icons are UI-layer; labels/colors sourced from lib/config/adoptions SSOT
+const STATUS_ICONS: Record<ListingStatus, React.ElementType> = {
+  available: CheckCircle,
+  on_hold:   PauseCircle,
+  adopted:   Heart,
+  withdrawn: XCircle,
+};
+
 const STATUS_CONFIG: Record<ListingStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
-  available:  { label: "Available",  icon: CheckCircle,  color: "text-[var(--green)]",  bg: "bg-[var(--green-bg)]" },
-  on_hold:    { label: "On hold",    icon: PauseCircle,  color: "text-[var(--warn)]",   bg: "bg-[var(--warn-bg)]" },
-  adopted:    { label: "Adopted",    icon: Heart,        color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
-  withdrawn:  { label: "Withdrawn",  icon: XCircle,      color: "text-[var(--muted)]",  bg: "bg-[var(--off)]" },
+  available: { ...LISTING_STATUS_CONFIG.available, icon: STATUS_ICONS.available },
+  on_hold:   { ...LISTING_STATUS_CONFIG.on_hold,   icon: STATUS_ICONS.on_hold },
+  adopted:   { ...LISTING_STATUS_CONFIG.adopted,   icon: STATUS_ICONS.adopted },
+  withdrawn: { ...LISTING_STATUS_CONFIG.withdrawn, icon: STATUS_ICONS.withdrawn },
 };
 
 const STATUS_FILTER_OPTIONS: { value: string; label: string }[] = [
-  { value: "all",        label: "All listings" },
-  { value: "available",  label: "Available" },
-  { value: "on_hold",    label: "On hold" },
-  { value: "adopted",    label: "Adopted" },
-  { value: "withdrawn",  label: "Withdrawn" },
+  { value: "all", label: "All listings" },
+  ...Object.entries(LISTING_STATUS_CONFIG).map(([value, { label }]) => ({ value, label })),
 ];
 
 /* ─── Row component ──────────────────────────────────────────────────────── */
