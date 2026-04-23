@@ -1,17 +1,18 @@
 /**
  * Factory for a chainable, thenable Drizzle ORM mock.
  *
- * Drizzle builders are awaitable at any point in the chain (with or without .limit()).
- * This mock makes each chain object a real thenable so both patterns work:
+ * Drizzle builders are awaitable at any point. This mock makes each chain
+ * object a real thenable so both patterns work:
  *   await db.select().from(t).where(c)          // no .limit()
  *   await db.select().from(t).where(c).limit(1) // with .limit()
+ *   await db.delete(t).where(c)                 // no .returning()
+ *   await db.delete(t).where(c).returning(cols) // with .returning()
  *
- * Usage:
- *   const db = makeMockDb();
- *   db._queueSelectResult([row1]);  // first select resolves to [row1]
- *   db._queueSelectResult([]);      // second select resolves to []
- *   db._insertReturning.mockResolvedValueOnce([newRow]);
- *   db._updateReturning.mockResolvedValueOnce([updatedRow]);
+ * Queue API:
+ *   db._queueSelectResult([row1])  → next select resolves to [row1]
+ *   db._insertReturning.mockResolvedValueOnce([newRow])
+ *   db._updateReturning.mockResolvedValueOnce([updatedRow])
+ *   db._deleteReturning.mockResolvedValueOnce([{ id }])
  */
 import { vi } from "vitest";
 
@@ -27,7 +28,6 @@ export function makeMockDb() {
       catch:   p.catch.bind(p),
       finally: p.finally.bind(p),
     };
-    // All further chain methods return the same thenable chain
     for (const m of ["from", "innerJoin", "leftJoin", "where", "orderBy", "groupBy", "offset", "limit"]) {
       chain[m] = vi.fn().mockReturnValue(chain);
     }
@@ -36,7 +36,22 @@ export function makeMockDb() {
 
   const _insertReturning = vi.fn().mockResolvedValue([]);
   const _updateReturning = vi.fn().mockResolvedValue([]);
-  const _deleteWhere = vi.fn().mockResolvedValue([]);
+  const _deleteReturning = vi.fn().mockResolvedValue([]);
+
+  /**
+   * Delete where() returns a thenable chain (for direct await) that also
+   * exposes .returning() — supports both Drizzle usage patterns.
+   */
+  function makeDeleteWhereChain() {
+    // Direct await resolves to undefined (routes that don't use .returning())
+    const p = Promise.resolve(undefined as unknown);
+    return {
+      then:      p.then.bind(p),
+      catch:     p.catch.bind(p),
+      finally:   p.finally.bind(p),
+      returning: _deleteReturning,
+    };
+  }
 
   const db = {
     // SELECT — each call creates a fresh thenable resolved from the queue
@@ -58,14 +73,16 @@ export function makeMockDb() {
       }),
     }),
 
-    // DELETE — db.delete(table).where(...)
-    delete: vi.fn().mockReturnValue({ where: _deleteWhere }),
+    // DELETE — supports both:
+    //   await db.delete(t).where(c)
+    //   const [row] = await db.delete(t).where(c).returning(cols)
+    delete: vi.fn().mockReturnValue({ where: vi.fn().mockImplementation(makeDeleteWhereChain) }),
 
     // ── Helpers exposed to tests ──────────────────────────────────────────
     _queueSelectResult: (result: unknown[]) => selectQueue.push(result),
     _insertReturning,
     _updateReturning,
-    _deleteWhere,
+    _deleteReturning,
   };
 
   return db;

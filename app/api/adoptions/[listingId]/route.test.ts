@@ -158,7 +158,7 @@ describe("DELETE /api/adoptions/[listingId]", () => {
   it("returns 200 when owner deletes their own listing", async () => {
     vi.mocked(requireSession).mockResolvedValue({ session: OWNER_SESSION as any, error: null });
     db._queueSelectResult([MOCK_LISTING]);
-    db._deleteWhere.mockResolvedValueOnce([]);
+    db._deleteReturning.mockResolvedValueOnce([]);
     const res = await DELETE(makeDeleteRequest(), ROUTE_CONTEXT);
     expect(res.status).toBe(200);
     const body = await res.json();
@@ -168,7 +168,7 @@ describe("DELETE /api/adoptions/[listingId]", () => {
   it("allows admin to delete any listing", async () => {
     vi.mocked(requireSession).mockResolvedValue({ session: ADMIN_SESSION as any, error: null });
     db._queueSelectResult([MOCK_LISTING]);
-    db._deleteWhere.mockResolvedValueOnce([]);
+    db._deleteReturning.mockResolvedValueOnce([]);
     const res = await DELETE(makeDeleteRequest(), ROUTE_CONTEXT);
     expect(res.status).toBe(200);
   });
