@@ -92,7 +92,114 @@ function StarRating({ avg, count }: { avg: number | null; count: number }) {
   );
 }
 
-/* ─── Component ──────────────────────────────────────────────────────────── */
+/* ─── Card components ────────────────────────────────────────────────────── */
+
+function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => void }) {
+  return (
+    <div className="card p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-[var(--teal-light)] flex items-center justify-center text-[var(--teal)] font-bold text-sm flex-shrink-0">
+            {(vet.name ?? "V")[0].toUpperCase()}
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="font-semibold text-[var(--ink)]">{vet.name ?? "Veterinarian"}</p>
+              {vet.isVerified && <VerifiedBadge />}
+              <AcceptingBadge accepting={vet.isAcceptingClients} />
+              <StarRating avg={vet.avgRating} count={vet.reviewCount} />
+            </div>
+            {vet.specialty && <p className="text-sm text-[var(--teal)] mt-0.5">{vet.specialty}</p>}
+          </div>
+        </div>
+        {vet.isAcceptingClients && (
+          <button
+            onClick={() => onBook({ professionalId: vet.userId, name: vet.name })}
+            className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
+          >
+            <CalendarPlus className="w-3.5 h-3.5" />
+            Book
+          </button>
+        )}
+      </div>
+      {(vet.clinicName || vet.city) && (
+        <div className="flex items-center gap-1.5 mt-3 text-sm text-[var(--muted)]">
+          <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+          <span>{[vet.clinicName, vet.city, vet.country].filter(Boolean).join(" · ")}</span>
+        </div>
+      )}
+      {vet.bio && <p className="text-sm text-[var(--ink2)] mt-2 line-clamp-2">{vet.bio}</p>}
+      {vet.phone && (
+        <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
+          <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+          <a href={`tel:${vet.phone}`} className="hover:text-[var(--teal)] transition-colors">{vet.phone}</a>
+        </div>
+      )}
+      <div className="mt-2">
+        <a href={`/en/pros/${vet.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
+          View full profile →
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: BookingTarget) => void }) {
+  return (
+    <div className="card p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-[var(--accent-light)] flex items-center justify-center text-[var(--accent)] font-bold text-sm flex-shrink-0">
+            {(sitter.name ?? "S")[0].toUpperCase()}
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="font-semibold text-[var(--ink)]">{sitter.name ?? "Pet Sitter"}</p>
+              {sitter.isVerified && <VerifiedBadge />}
+              <AcceptingBadge accepting={sitter.isAcceptingClients} />
+              <StarRating avg={sitter.avgRating} count={sitter.reviewCount} />
+            </div>
+            {sitter.pricePerDay != null && (
+              <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">
+                ${(sitter.pricePerDay / 100).toFixed(0)}/day
+              </p>
+            )}
+          </div>
+        </div>
+        {sitter.isAcceptingClients && (
+          <button
+            onClick={() => onBook({ professionalId: sitter.userId, name: sitter.name })}
+            className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
+          >
+            <CalendarPlus className="w-3.5 h-3.5" />
+            Book
+          </button>
+        )}
+      </div>
+      {sitter.services && <p className="text-sm text-[var(--muted)] mt-2">{formatServices(sitter.services)}</p>}
+      {(sitter.city || sitter.country) && (
+        <div className="flex items-center gap-1.5 mt-1 text-sm text-[var(--muted)]">
+          <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+          <span>{[sitter.city, sitter.country].filter(Boolean).join(", ")}</span>
+        </div>
+      )}
+      {sitter.bio && <p className="text-sm text-[var(--ink2)] mt-2 line-clamp-2">{sitter.bio}</p>}
+      {sitter.phone && (
+        <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
+          <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+          <a href={`tel:${sitter.phone}`} className="hover:text-[var(--teal)] transition-colors">{sitter.phone}</a>
+        </div>
+      )}
+      <div className="mt-2">
+        <a href={`/en/pros/${sitter.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
+          View full profile →
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Page ───────────────────────────────────────────────────────────────── */
 
 type Tab = "vets" | "sitters";
 
@@ -183,62 +290,7 @@ export default function FindPage() {
         ) : (
           <div className="space-y-3">
             {filteredVets.map((vet) => (
-              <div key={vet.id} className="card p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[var(--teal-light)] flex items-center justify-center text-[var(--teal)] font-bold text-sm flex-shrink-0">
-                      {(vet.name ?? "V")[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-semibold text-[var(--ink)]">{vet.name ?? "Veterinarian"}</p>
-                        {vet.isVerified && <VerifiedBadge />}
-                        <AcceptingBadge accepting={vet.isAcceptingClients} />
-                        <StarRating avg={vet.avgRating} count={vet.reviewCount} />
-                      </div>
-                      {vet.specialty && (
-                        <p className="text-sm text-[var(--teal)] mt-0.5">{vet.specialty}</p>
-                      )}
-                    </div>
-                  </div>
-                  {vet.isAcceptingClients && (
-                    <button
-                      onClick={() => setBookingTarget({ professionalId: vet.userId, name: vet.name })}
-                      className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
-                    >
-                      <CalendarPlus className="w-3.5 h-3.5" />
-                      Book
-                    </button>
-                  )}
-                </div>
-                {(vet.clinicName || vet.city) && (
-                  <div className="flex items-center gap-1.5 mt-3 text-sm text-[var(--muted)]">
-                    <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>
-                      {[vet.clinicName, vet.city, vet.country].filter(Boolean).join(" · ")}
-                    </span>
-                  </div>
-                )}
-                {vet.bio && (
-                  <p className="text-sm text-[var(--ink2)] mt-2 line-clamp-2">{vet.bio}</p>
-                )}
-                {vet.phone && (
-                  <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
-                    <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-                    <a href={`tel:${vet.phone}`} className="hover:text-[var(--teal)] transition-colors">{vet.phone}</a>
-                  </div>
-                )}
-                <div className="mt-2">
-                  <a
-                    href={`/en/pros/${vet.userId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-[var(--teal)] hover:underline"
-                  >
-                    View full profile →
-                  </a>
-                </div>
-              </div>
+              <VetCard key={vet.id} vet={vet} onBook={setBookingTarget} />
             ))}
           </div>
         )
@@ -252,65 +304,7 @@ export default function FindPage() {
         ) : (
           <div className="space-y-3">
             {filteredSitters.map((sitter) => (
-              <div key={sitter.id} className="card p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[var(--accent-light)] flex items-center justify-center text-[var(--accent)] font-bold text-sm flex-shrink-0">
-                      {(sitter.name ?? "S")[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-semibold text-[var(--ink)]">{sitter.name ?? "Pet Sitter"}</p>
-                        {sitter.isVerified && <VerifiedBadge />}
-                        <AcceptingBadge accepting={sitter.isAcceptingClients} />
-                        <StarRating avg={sitter.avgRating} count={sitter.reviewCount} />
-                      </div>
-                      {sitter.pricePerDay != null && (
-                        <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">
-                          ${(sitter.pricePerDay / 100).toFixed(0)}/day
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  {sitter.isAcceptingClients && (
-                    <button
-                      onClick={() => setBookingTarget({ professionalId: sitter.userId, name: sitter.name })}
-                      className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
-                    >
-                      <CalendarPlus className="w-3.5 h-3.5" />
-                      Book
-                    </button>
-                  )}
-                </div>
-                {sitter.services && (
-                  <p className="text-sm text-[var(--muted)] mt-2">{formatServices(sitter.services)}</p>
-                )}
-                {(sitter.city || sitter.country) && (
-                  <div className="flex items-center gap-1.5 mt-1 text-sm text-[var(--muted)]">
-                    <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>{[sitter.city, sitter.country].filter(Boolean).join(", ")}</span>
-                  </div>
-                )}
-                {sitter.bio && (
-                  <p className="text-sm text-[var(--ink2)] mt-2 line-clamp-2">{sitter.bio}</p>
-                )}
-                {sitter.phone && (
-                  <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
-                    <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-                    <a href={`tel:${sitter.phone}`} className="hover:text-[var(--teal)] transition-colors">{sitter.phone}</a>
-                  </div>
-                )}
-                <div className="mt-2">
-                  <a
-                    href={`/en/pros/${sitter.userId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-[var(--teal)] hover:underline"
-                  >
-                    View full profile →
-                  </a>
-                </div>
-              </div>
+              <SitterCard key={sitter.id} sitter={sitter} onBook={setBookingTarget} />
             ))}
           </div>
         )
