@@ -28,6 +28,9 @@ export function getMetricDisplay(
   };
 }
 
+/** Thresholds for wellness score badge color bands (0–100 scale). */
+export const WELLNESS_SCORE_THRESHOLDS = { good: 80, fair: 60 } as const;
+
 /**
  * Compute a 0–100 wellness score from a set of metric stored values.
  * Each metric contributes equally. Inverted metrics are handled correctly.

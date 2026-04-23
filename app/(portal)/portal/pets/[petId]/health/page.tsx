@@ -13,7 +13,7 @@ import {
 } from "@/lib/config/health-metrics";
 import type { MetricId } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
-import { getMetricDisplay, computeWellnessScore } from "@/lib/domain/health";
+import { getMetricDisplay, computeWellnessScore, WELLNESS_SCORE_THRESHOLDS } from "@/lib/domain/health";
 import { formatDateShort } from "@/lib/utils/format";
 import { HealthTrendChart } from "@/components/portal/HealthTrendChart";
 
@@ -132,9 +132,9 @@ export default async function PetHealthPage({ params }: Params) {
                 {wellnessScore !== null && (
                   <span
                     className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                      wellnessScore >= 80
+                      wellnessScore >= WELLNESS_SCORE_THRESHOLDS.good
                         ? "bg-[var(--green-bg)] text-[var(--green)]"
-                        : wellnessScore >= 60
+                        : wellnessScore >= WELLNESS_SCORE_THRESHOLDS.fair
                           ? "bg-[var(--warn-bg)] text-[var(--warn)]"
                           : "bg-[var(--danger-bg)] text-[var(--danger)]"
                     }`}

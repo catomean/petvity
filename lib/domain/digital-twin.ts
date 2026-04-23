@@ -1,8 +1,8 @@
 import { TWIN_STATE_THRESHOLDS } from "@/lib/config/digital-twin";
-import type { TwinStateId } from "@/lib/config/digital-twin";
+import type { TwinStateId, TwinTrend } from "@/lib/config/digital-twin";
 import type { HealthMetricRow } from "./pet-signal";
 
-export type TwinTrend = "improving" | "stable" | "declining" | "insufficient_data";
+export type { TwinTrend }; // re-export for consumers that import from this module
 
 export interface TwinMetricDisplay {
   id: string;

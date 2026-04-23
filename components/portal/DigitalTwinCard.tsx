@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Zap, Smile, Wind, Users, Brain, CalendarDays, TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
+import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import type { TwinState, TwinTrend } from "@/lib/domain/digital-twin";
 
 const METRIC_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -10,11 +10,12 @@ const METRIC_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
   socialization: Users,
 };
 
-const TREND_CONFIG: Record<TwinTrend, { icon: React.ComponentType<{ className?: string }>; label: string; color: string }> = {
-  improving:         { icon: TrendingUp,   label: "Improving",  color: "text-[var(--green)]" },
-  stable:            { icon: Minus,        label: "Stable",     color: "text-[var(--muted)]" },
-  declining:         { icon: TrendingDown, label: "Declining",  color: "text-[var(--danger)]" },
-  insufficient_data: { icon: Minus,        label: "",           color: "text-[var(--faint)]"  },
+// Icon mapping stays in the component (React component references are UI, not config)
+const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
+  improving:         TrendingUp,
+  stable:            Minus,
+  declining:         TrendingDown,
+  insufficient_data: Minus,
 };
 
 type Props = {
@@ -25,8 +26,8 @@ type Props = {
 
 export function DigitalTwinCard({ twin, petId, petName }: Props) {
   const cfg = TWIN_STATE_CONFIG[twin.id];
-  const trendCfg = TREND_CONFIG[twin.trend];
-  const TrendIcon = trendCfg.icon;
+  const trendCfg = TWIN_TREND_CONFIG[twin.trend];
+  const TrendIcon = TREND_ICONS[twin.trend];
 
   return (
     <div className="card overflow-hidden">

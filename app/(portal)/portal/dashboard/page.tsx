@@ -6,10 +6,19 @@ import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES } from "@/lib/config/pet-signal";
-import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
+import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
+import type { TwinTrend } from "@/lib/domain/digital-twin";
 import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays } from "lucide-react";
+
+// Icon mapping stays component-side (React components are UI, not config)
+const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
+  improving:         TrendingUp,
+  stable:            Minus,
+  declining:         TrendingDown,
+  insufficient_data: Minus,
+};
 
 function greeting(name?: string | null) {
   const h = new Date().getHours();
@@ -124,12 +133,8 @@ export default async function DashboardPage() {
             const twinCfg = TWIN_STATE_CONFIG[twin.id];
             const needsCheckin = twin.daysAgo === null || twin.daysAgo > 0;
 
-            const TrendIcon =
-              twin.trend === "improving" ? TrendingUp :
-              twin.trend === "declining" ? TrendingDown : Minus;
-            const trendColor =
-              twin.trend === "improving" ? "text-[var(--green)]" :
-              twin.trend === "declining" ? "text-[var(--danger)]" : "text-[var(--faint)]";
+            const TrendIcon = TREND_ICONS[twin.trend];
+            const trendColor = TWIN_TREND_CONFIG[twin.trend].color;
 
             return (
               <Link

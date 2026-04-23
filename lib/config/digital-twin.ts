@@ -1,6 +1,16 @@
-/** SSOT: digital twin state labels, colors, thresholds */
+/** SSOT: digital twin state labels, colors, thresholds, and trend config */
 
 export type TwinStateId = "thriving" | "content" | "attention" | "struggling" | "no_data";
+
+export type TwinTrend = "improving" | "stable" | "declining" | "insufficient_data";
+
+/** Color and label for each trend direction — use in any component showing trend UI. */
+export const TWIN_TREND_CONFIG: Record<TwinTrend, { label: string; color: string }> = {
+  improving:         { label: "Improving", color: "text-[var(--green)]"  },
+  stable:            { label: "Stable",    color: "text-[var(--muted)]"  },
+  declining:         { label: "Declining", color: "text-[var(--danger)]" },
+  insufficient_data: { label: "",          color: "text-[var(--faint)]"  },
+};
 
 export const TWIN_STATE_CONFIG: Record<
   TwinStateId,
