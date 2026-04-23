@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq, gte, desc } from "drizzle-orm";
+import { and, eq, gte, inArray, desc } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
 import { pets, healthMetrics, vaccinations, users } from "@/lib/db/schema";
 import { computePetSignal } from "@/lib/domain/pet-signal";
@@ -16,29 +16,49 @@ export async function POST(req: NextRequest) {
 
   const db = getInstance();
   const now = new Date();
-  const sevenDaysAgo = new Date(now);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  const sinceStr = sevenDaysAgo.toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - 7 * 86400000).toISOString().slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
-  const allPets = await db.query.pets.findMany();
+  const allPets = await db.select().from(pets);
+  if (allPets.length === 0) {
+    return NextResponse.json({ success: true, data: { processed: 0, alerted: 0 } });
+  }
 
-  let alerted = 0;
+  const petIds = allPets.map((p) => p.id);
+
+  // Batch-fetch metrics and vaccinations for all pets in 2 queries (not N×2)
+  const [allMetrics, allVaccinations] = await Promise.all([
+    db
+      .select()
+      .from(healthMetrics)
+      .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr)))
+      .orderBy(desc(healthMetrics.date)),
+    db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
+  ]);
+
+  // Group by petId in memory
+  const metricsByPet = new Map<string, typeof allMetrics>();
+  for (const m of allMetrics) {
+    const arr = metricsByPet.get(m.petId) ?? [];
+    arr.push(m);
+    metricsByPet.set(m.petId, arr);
+  }
+
+  const vaccByPet = new Map<string, typeof allVaccinations>();
+  for (const v of allVaccinations) {
+    const arr = vaccByPet.get(v.petId) ?? [];
+    arr.push(v);
+    vaccByPet.set(v.petId, arr);
+  }
+
+  // Compute signals and identify pets needing alerts
+  const signalUpdates: { id: string; signal: string }[] = [];
+  const alertPetIds: string[] = [];
 
   for (const pet of allPets) {
-    const recentMetrics = await db.query.healthMetrics.findMany({
-      where: and(
-        eq(healthMetrics.petId, pet.id),
-        gte(healthMetrics.date, sinceStr),
-      ),
-      orderBy: [desc(healthMetrics.date)],
-    });
-
-    const allVaccinations = await db.query.vaccinations.findMany({
-      where: eq(vaccinations.petId, pet.id),
-    });
-
-    const overdueCount = allVaccinations.filter(
+    const recentMetrics = metricsByPet.get(pet.id) ?? [];
+    const petVacc = vaccByPet.get(pet.id) ?? [];
+    const overdueCount = petVacc.filter(
       (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
     ).length;
 
@@ -49,39 +69,68 @@ export async function POST(req: NextRequest) {
       now,
     });
 
-    // Update cached signal
-    await db
-      .update(pets)
-      .set({ lastKnownSignal: result.signal })
-      .where(eq(pets.id, pet.id));
+    signalUpdates.push({ id: pet.id, signal: result.signal });
 
-    // Alert owner if signal is "concern" and we haven't alerted today
     if (
       result.signal === "concern" &&
       (!pet.signalAlertSentAt ||
         pet.signalAlertSentAt.toISOString().slice(0, 10) !== todayStr)
     ) {
-      const owner = await db.query.users.findFirst({
-        where: eq(users.id, pet.ownerId),
-      });
-      if (owner?.email) {
-        const { subject, html } = petHealthAlert({
-          ownerName: owner.name ?? "there",
-          petName: pet.name,
-          reason: result.reason,
-          petUrl: `${APP_URL}/portal/pets/${pet.id}/health`,
-        });
-        try {
-          await sendEmail({ to: owner.email, subject, html });
-          await db
-            .update(pets)
-            .set({ signalAlertSentAt: now })
-            .where(eq(pets.id, pet.id));
-          alerted++;
-        } catch {
-          // Non-fatal — continue to next pet
-        }
-      }
+      alertPetIds.push(pet.id);
+    }
+  }
+
+  // Batch-update all cached signals
+  for (const { id, signal } of signalUpdates) {
+    await db.update(pets).set({ lastKnownSignal: signal }).where(eq(pets.id, id));
+  }
+
+  if (alertPetIds.length === 0) {
+    return NextResponse.json({ success: true, data: { processed: allPets.length, alerted: 0 } });
+  }
+
+  // Batch-fetch owners for alert pets only
+  const alertPets = allPets.filter((p) => alertPetIds.includes(p.id));
+  const ownerIds = [...new Set(alertPets.map((p) => p.ownerId))];
+  const ownerRows = await db
+    .select({ id: users.id, name: users.name, email: users.email })
+    .from(users)
+    .where(inArray(users.id, ownerIds));
+  const ownerMap = new Map(ownerRows.map((u) => [u.id, u]));
+
+  // Compute signals map for reason text
+  const signalResultMap = new Map<string, ReturnType<typeof computePetSignal>>();
+  for (const pet of alertPets) {
+    const recentMetrics = metricsByPet.get(pet.id) ?? [];
+    const petVacc = vaccByPet.get(pet.id) ?? [];
+    const overdueCount = petVacc.filter(
+      (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
+    ).length;
+    signalResultMap.set(
+      pet.id,
+      computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now }),
+    );
+  }
+
+  let alerted = 0;
+  for (const pet of alertPets) {
+    const owner = ownerMap.get(pet.ownerId);
+    if (!owner?.email) continue;
+
+    const result = signalResultMap.get(pet.id)!;
+    const { subject, html } = petHealthAlert({
+      ownerName: owner.name ?? "there",
+      petName: pet.name,
+      reason: result.reason,
+      petUrl: `${APP_URL}/portal/pets/${pet.id}/health`,
+    });
+
+    try {
+      await sendEmail({ to: owner.email, subject, html });
+      await db.update(pets).set({ signalAlertSentAt: now }).where(eq(pets.id, pet.id));
+      alerted++;
+    } catch {
+      // Non-fatal — continue to next pet
     }
   }
 

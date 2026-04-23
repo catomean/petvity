@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq, gte, lte, ne } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
-import { pets, users } from "@/lib/db/schema";
+import { pets, vaccinations, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { vaccinationReminder } from "@/lib/email/templates";
 import { APP_URL } from "@/lib/config/app";
@@ -17,44 +17,47 @@ export async function POST(req: NextRequest) {
   const db = getInstance();
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
+  const soonStr = new Date(now.getTime() + VACCINATION_DUE_SOON_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
 
-  const soonDate = new Date(now);
-  soonDate.setDate(soonDate.getDate() + VACCINATION_DUE_SOON_DAYS);
-  const soonStr = soonDate.toISOString().slice(0, 10);
-
-  // Find vaccinations due within the next VACCINATION_DUE_SOON_DAYS days
-  const allVaccinations = await db.query.vaccinations.findMany();
-  const dueSoon = allVaccinations.filter(
-    (v) =>
-      v.nextDueDate &&
-      v.nextDueDate >= todayStr &&
-      v.nextDueDate <= soonStr &&
-      v.status !== "not_applicable",
-  );
+  // Single JOIN query — no N+1
+  const dueSoon = await db
+    .select({
+      vaccinationId: vaccinations.id,
+      vaccinationName: vaccinations.name,
+      nextDueDate: vaccinations.nextDueDate,
+      petId: pets.id,
+      petName: pets.name,
+      ownerName: users.name,
+      ownerEmail: users.email,
+    })
+    .from(vaccinations)
+    .innerJoin(pets, eq(pets.id, vaccinations.petId))
+    .innerJoin(users, eq(users.id, pets.ownerId))
+    .where(
+      and(
+        gte(vaccinations.nextDueDate, todayStr),
+        lte(vaccinations.nextDueDate, soonStr),
+        ne(vaccinations.status, "not_applicable"),
+      ),
+    );
 
   let sent = 0;
 
-  for (const vaccination of dueSoon) {
-    const pet = await db.query.pets.findFirst({
-      where: eq(pets.id, vaccination.petId),
-    });
-    if (!pet) continue;
-
-    const owner = await db.query.users.findFirst({
-      where: eq(users.id, pet.ownerId),
-    });
-    if (!owner?.email) continue;
+  for (const row of dueSoon) {
+    if (!row.ownerEmail || !row.nextDueDate) continue;
 
     const { subject, html } = vaccinationReminder({
-      ownerName: owner.name ?? "there",
-      petName: pet.name,
-      vaccinationName: vaccination.name,
-      dueDate: formatDateShort(vaccination.nextDueDate!),
-      petUrl: `${APP_URL}/portal/pets/${pet.id}/vaccinations`,
+      ownerName: row.ownerName ?? "there",
+      petName: row.petName,
+      vaccinationName: row.vaccinationName,
+      dueDate: formatDateShort(row.nextDueDate),
+      petUrl: `${APP_URL}/portal/pets/${row.petId}/vaccinations`,
     });
 
     try {
-      await sendEmail({ to: owner.email, subject, html });
+      await sendEmail({ to: row.ownerEmail, subject, html });
       sent++;
     } catch {
       // Non-fatal — continue
