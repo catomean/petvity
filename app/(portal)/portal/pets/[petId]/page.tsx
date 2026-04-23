@@ -10,7 +10,7 @@ import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG } from "@/lib/config/p
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
-import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays } from "lucide-react";
+import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 
 type Params = { params: Promise<{ petId: string }> };
@@ -192,7 +192,7 @@ export default async function PetProfilePage({ params }: Params) {
       <DigitalTwinCard twin={twin} petId={pet.id} petName={pet.name} />
 
       {/* Section tabs */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
         {tabLinks.map(({ href, icon: Icon, label, desc }) => (
           <Link
             key={href}
@@ -207,6 +207,15 @@ export default async function PetProfilePage({ params }: Params) {
           </Link>
         ))}
       </div>
+
+      {/* Adoption shortcut */}
+      <Link
+        href={`/portal/pets/${pet.id}/list-for-adoption`}
+        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-dashed border-[var(--border)] text-sm text-[var(--muted)] hover:border-[var(--danger)] hover:text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
+      >
+        <Heart className="w-4 h-4 flex-shrink-0" />
+        List {pet.name} for adoption
+      </Link>
     </div>
   );
 }

@@ -402,6 +402,62 @@ export const orderItems = pgTable("order_items", {
   priceCents: integer("price_cents").notNull(),
 });
 
+// ─── Adoption ──────────────────────────────────────────────────────────────────
+
+export const adoptionListingStatusEnum = pgEnum("adoption_listing_status", [
+  "available",
+  "on_hold",
+  "adopted",
+  "withdrawn",
+]);
+
+export const adoptionApplicationStatusEnum = pgEnum("adoption_application_status", [
+  "pending",
+  "approved",
+  "rejected",
+  "withdrawn",
+]);
+
+export const adoptionListings = pgTable("adoption_listings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  petId: uuid("pet_id")
+    .notNull()
+    .references(() => pets.id, { onDelete: "cascade" }),
+  /** Denormalized for query efficiency — same as pet.ownerId */
+  ownerId: uuid("owner_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  status: adoptionListingStatusEnum("status").notNull().default("available"),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description"),
+  /** Adoption fee in cents; null = free */
+  feeCents: integer("fee_cents"),
+  /** City, region, or country */
+  location: varchar("location", { length: 150 }),
+  requiresExperience: boolean("requires_experience").notNull().default(false),
+  goodWithKids: boolean("good_with_kids"),
+  goodWithDogs: boolean("good_with_dogs"),
+  goodWithCats: boolean("good_with_cats"),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const adoptionApplications = pgTable("adoption_applications", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  listingId: uuid("listing_id")
+    .notNull()
+    .references(() => adoptionListings.id, { onDelete: "cascade" }),
+  applicantId: uuid("applicant_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  status: adoptionApplicationStatusEnum("status").notNull().default("pending"),
+  message: text("message"),
+  experience: text("experience"),
+  housingType: varchar("housing_type", { length: 100 }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
 // ─── Reviews ───────────────────────────────────────────────────────────────────
 
 export const reviews = pgTable("reviews", {

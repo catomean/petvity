@@ -1,0 +1,355 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  Heart, PawPrint, ChevronDown, ChevronUp, CheckCircle, XCircle,
+  Clock, Users, Eye, EyeOff, Loader2,
+} from "lucide-react";
+
+/* ─── Types ──────────────────────────────────────────────────────────────── */
+
+interface Application {
+  id: string;
+  listingId: string;
+  status: "pending" | "approved" | "rejected" | "withdrawn";
+  message: string | null;
+  experience: string | null;
+  housingType: string | null;
+  createdAt: string;
+  applicant: { id: string; name: string | null; email: string };
+}
+
+interface AdoptionListing {
+  id: string;
+  title: string;
+  status: "available" | "on_hold" | "adopted" | "withdrawn";
+  feeCents: number | null;
+  location: string | null;
+  createdAt: string;
+  pet: { id: string; name: string; species: string; avatarUrl: string | null };
+}
+
+/* ─── Status badges ──────────────────────────────────────────────────────── */
+
+const LISTING_STATUS: Record<string, { label: string; className: string }> = {
+  available:  { label: "Available",  className: "bg-[var(--green-bg)] text-[var(--green)]" },
+  on_hold:    { label: "On hold",    className: "bg-[var(--warn-bg)] text-[var(--warn)]" },
+  adopted:    { label: "Adopted",    className: "bg-[var(--teal-light)] text-[var(--teal)]" },
+  withdrawn:  { label: "Withdrawn",  className: "bg-[var(--off)] text-[var(--muted)]" },
+};
+
+const APP_STATUS: Record<string, { label: string; className: string }> = {
+  pending:   { label: "Pending",   className: "bg-[var(--warn-bg)] text-[var(--warn)]" },
+  approved:  { label: "Approved",  className: "bg-[var(--green-bg)] text-[var(--green)]" },
+  rejected:  { label: "Rejected",  className: "bg-[var(--off)] text-[var(--muted)]" },
+  withdrawn: { label: "Withdrawn", className: "bg-[var(--off)] text-[var(--muted)]" },
+};
+
+const SPECIES_EMOJI: Record<string, string> = {
+  dog: "🐕", cat: "🐈", horse: "🐎", bird: "🦜",
+  rabbit: "🐇", guinea_pig: "🐹", hamster: "🐹",
+  reptile: "🦎", fish: "🐟", other: "🐾",
+};
+
+/* ─── Application row ─────────────────────────────────────────────────────── */
+
+function ApplicationRow({
+  app,
+  listingId,
+  onUpdate,
+}: {
+  app: Application;
+  listingId: string;
+  onUpdate: (updated: Application) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  async function setStatus(status: Application["status"]) {
+    setBusy(true);
+    const res = await fetch(`/api/adoptions/${listingId}/applications`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ applicationId: app.id, status }),
+    });
+    const data = await res.json();
+    setBusy(false);
+    if (data.success) onUpdate({ ...app, status });
+  }
+
+  const badge = APP_STATUS[app.status] ?? APP_STATUS.pending;
+
+  return (
+    <div className="py-3 px-4 border-t border-[var(--border)] first:border-0">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-[var(--ink)] truncate">
+            {app.applicant.name ?? app.applicant.email}
+          </p>
+          <p className="text-xs text-[var(--muted)]">{app.applicant.email}</p>
+          {app.housingType && (
+            <p className="text-xs text-[var(--muted)] mt-0.5 capitalize">
+              {app.housingType.replace(/_/g, " ")}
+            </p>
+          )}
+        </div>
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${badge.className}`}>
+          {badge.label}
+        </span>
+      </div>
+      {app.message && (
+        <p className="text-sm text-[var(--ink2)] mt-2 leading-relaxed">{app.message}</p>
+      )}
+      {app.experience && (
+        <p className="text-xs text-[var(--muted)] mt-1 italic">{app.experience}</p>
+      )}
+      {app.status === "pending" && (
+        <div className="flex gap-2 mt-2">
+          <button
+            onClick={() => setStatus("approved")}
+            disabled={busy}
+            className="text-xs font-medium text-[var(--green)] hover:underline disabled:opacity-60 flex items-center gap-1"
+          >
+            {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
+            Approve
+          </button>
+          <button
+            onClick={() => setStatus("rejected")}
+            disabled={busy}
+            className="text-xs font-medium text-[var(--danger)] hover:underline disabled:opacity-60 flex items-center gap-1"
+          >
+            <XCircle className="w-3 h-3" />
+            Reject
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Listing card ────────────────────────────────────────────────────────── */
+
+function ListingCard({
+  listing,
+  onStatusChange,
+}: {
+  listing: AdoptionListing;
+  onStatusChange: (id: string, status: AdoptionListing["status"]) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [appsLoading, setAppsLoading] = useState(false);
+  const [appsLoaded, setAppsLoaded] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  async function loadApps() {
+    if (appsLoaded) return;
+    setAppsLoading(true);
+    const res = await fetch(`/api/adoptions/${listing.id}/applications`);
+    const data = await res.json();
+    setApplications(data.data ?? []);
+    setAppsLoading(false);
+    setAppsLoaded(true);
+  }
+
+  function toggle() {
+    if (!expanded) loadApps();
+    setExpanded((v) => !v);
+  }
+
+  async function setStatus(status: AdoptionListing["status"]) {
+    setBusy(true);
+    const res = await fetch(`/api/adoptions/${listing.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    const data = await res.json();
+    setBusy(false);
+    if (data.success) onStatusChange(listing.id, status);
+  }
+
+  const badge = LISTING_STATUS[listing.status] ?? LISTING_STATUS.available;
+  const emoji = SPECIES_EMOJI[listing.pet.species] ?? "🐾";
+
+  return (
+    <div className="card overflow-hidden">
+      <div
+        className="flex items-center gap-3 p-4 cursor-pointer hover:bg-[var(--off)] transition-colors"
+        onClick={toggle}
+      >
+        {/* Pet avatar */}
+        <div className="w-12 h-12 rounded-xl bg-[var(--teal-light)] flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
+          {listing.pet.avatarUrl ? (
+            <img src={listing.pet.avatarUrl} alt={listing.pet.name} className="w-full h-full object-cover" />
+          ) : (
+            <span>{emoji}</span>
+          )}
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-[var(--ink)] truncate">{listing.title}</p>
+          <p className="text-xs text-[var(--muted)] mt-0.5">
+            {listing.pet.name}
+            {listing.location ? ` · ${listing.location}` : ""}
+            {listing.feeCents !== null ? ` · $${(listing.feeCents / 100).toFixed(0)} fee` : " · Free"}
+          </p>
+        </div>
+
+        {/* Status + chevron */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${badge.className}`}>
+            {badge.label}
+          </span>
+          {expanded ? <ChevronUp className="w-4 h-4 text-[var(--muted)]" /> : <ChevronDown className="w-4 h-4 text-[var(--muted)]" />}
+        </div>
+      </div>
+
+      {expanded && (
+        <div className="border-t border-[var(--border)]">
+          {/* Listing actions */}
+          <div className="flex flex-wrap gap-2 px-4 py-3 bg-[var(--off)]">
+            <Link
+              href={`/portal/adopt/${listing.id}`}
+              className="text-xs font-medium text-[var(--teal)] hover:underline"
+            >
+              View listing
+            </Link>
+            {listing.status === "available" && (
+              <>
+                <button
+                  onClick={() => setStatus("on_hold")}
+                  disabled={busy}
+                  className="text-xs font-medium text-[var(--warn)] hover:underline disabled:opacity-60"
+                >
+                  Mark on hold
+                </button>
+                <button
+                  onClick={() => setStatus("adopted")}
+                  disabled={busy}
+                  className="text-xs font-medium text-[var(--green)] hover:underline disabled:opacity-60"
+                >
+                  Mark as adopted
+                </button>
+              </>
+            )}
+            {listing.status === "on_hold" && (
+              <button
+                onClick={() => setStatus("available")}
+                disabled={busy}
+                className="text-xs font-medium text-[var(--teal)] hover:underline disabled:opacity-60"
+              >
+                Re-open
+              </button>
+            )}
+            {(listing.status === "available" || listing.status === "on_hold") && (
+              <button
+                onClick={() => setStatus("withdrawn")}
+                disabled={busy}
+                className="text-xs font-medium text-[var(--danger)] hover:underline disabled:opacity-60"
+              >
+                Withdraw listing
+              </button>
+            )}
+          </div>
+
+          {/* Applications */}
+          <div>
+            <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide px-4 py-2">
+              Applications
+            </p>
+            {appsLoading ? (
+              <div className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--muted)]">
+                <Loader2 className="w-4 h-4 animate-spin" /> Loading…
+              </div>
+            ) : applications.length === 0 ? (
+              <p className="text-sm text-[var(--muted)] px-4 py-3">No applications yet.</p>
+            ) : (
+              applications.map((app) => (
+                <ApplicationRow
+                  key={app.id}
+                  app={app}
+                  listingId={listing.id}
+                  onUpdate={(updated) =>
+                    setApplications((prev) => prev.map((a) => (a.id === updated.id ? updated : a)))
+                  }
+                />
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Page ───────────────────────────────────────────────────────────────── */
+
+export default function AdoptionsPage() {
+  const [listings, setListings] = useState<AdoptionListing[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch only this user's listings by fetching pets then their listings
+    // We piggyback on the /api/adoptions endpoint but use pet ownership check
+    // The server filters visible listings; the GET endpoint is public but returns all
+    // We need a user-scoped endpoint. Use /api/pets to get pet IDs, then filter listings.
+    // Simpler: GET /api/adoptions returns all available; we need MY listings (any status).
+    // Route-level guard in PATCH shows ownerId. For now, fetch all and filter by ownerId
+    // embedded in session — but session isn't available client-side without extra call.
+    //
+    // Better approach: dedicated endpoint. For now use a query param approach:
+    // GET /api/adoptions?mine=1 — the server requiresSession and returns only user's listings.
+    fetch("/api/adoptions?mine=1")
+      .then((r) => r.json())
+      .then(({ data }) => { setListings(data ?? []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  function handleStatusChange(id: string, status: AdoptionListing["status"]) {
+    setListings((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)));
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-semibold text-[var(--ink)]">My Adoption Listings</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">Manage listings and review applications</p>
+        </div>
+        <Link href="/portal/adopt" className="btn-outline flex items-center gap-2 text-sm">
+          <Heart className="w-4 h-4" />
+          Browse adoptions
+        </Link>
+      </div>
+
+      {loading ? (
+        <div className="space-y-3">
+          {[1, 2].map((i) => <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />)}
+        </div>
+      ) : listings.length === 0 ? (
+        <div className="card py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
+            <Heart className="w-7 h-7 text-[var(--teal)]" />
+          </div>
+          <p className="font-medium text-[var(--ink)] mb-1">No adoption listings yet</p>
+          <p className="text-sm text-[var(--muted)] mb-5">
+            Go to a pet&apos;s profile and select &ldquo;List for adoption&rdquo; to create a listing.
+          </p>
+          <Link href="/portal/pets" className="btn-primary">Go to my pets</Link>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {listings.map((listing) => (
+            <ListingCard
+              key={listing.id}
+              listing={listing}
+              onStatusChange={handleStatusChange}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
