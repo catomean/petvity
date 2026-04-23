@@ -45,14 +45,23 @@ export async function POST(req: NextRequest) {
     }
 
     const db = getInstance();
-    const handle = createPetHandle(parsed.data.name);
+    const baseHandle = createPetHandle(parsed.data.name);
 
+    // Insert without handle first, then set handle = baseHandle-<id[:6]>
+    // This guarantees uniqueness since pet IDs are unique.
     const [pet] = await db
       .insert(pets)
-      .values({ ...parsed.data, ownerId: session.user.id, handle })
+      .values({ ...parsed.data, ownerId: session.user.id })
       .returning();
 
-    return NextResponse.json({ success: true, data: pet }, { status: 201 });
+    const handle = baseHandle ? `${baseHandle}-${pet.id.slice(0, 6)}` : null;
+    const [petWithHandle] = await db
+      .update(pets)
+      .set({ handle })
+      .where(eq(pets.id, pet.id))
+      .returning();
+
+    return NextResponse.json({ success: true, data: petWithHandle }, { status: 201 });
   } catch {
     return NextResponse.json(
       { success: false, error: "Failed to create pet" },
