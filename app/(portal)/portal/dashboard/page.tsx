@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
 import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { and, desc, eq, gte, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
@@ -22,35 +22,57 @@ export default async function DashboardPage() {
   if (!session) return null;
 
   const db = getInstance();
-  const userPets = await db.query.pets.findMany({
-    where: eq(pets.ownerId, session.user.id),
-    orderBy: [desc(pets.createdAt)],
-  });
+  const userPets = await db
+    .select()
+    .from(pets)
+    .where(eq(pets.ownerId, session.user.id))
+    .orderBy(desc(pets.createdAt));
 
   const now = new Date();
   const sinceStr = new Date(now.getTime() - 7 * 86400000).toISOString().slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
-  const petsWithData = await Promise.all(
-    userPets.map(async (pet) => {
-      const recentMetrics = await db.query.healthMetrics.findMany({
-        where: (t, { and, eq: eqFn, gte: gteFn }) =>
-          and(eqFn(t.petId, pet.id), gteFn(t.date, sinceStr)),
-        orderBy: [desc(healthMetrics.date)],
-      });
-      const allVacc = await db.query.vaccinations.findMany({
-        where: eq(vaccinations.petId, pet.id),
-      });
-      const overdueCount = allVacc.filter(
-        (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
-      ).length;
+  const petIds = userPets.map((p) => p.id);
 
-      const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now });
-      const twin   = computeDigitalTwin(recentMetrics, now);
+  // Batch-fetch metrics + vaccinations for all pets in 2 queries (not N×2)
+  const [allMetrics, allVacc] = petIds.length > 0
+    ? await Promise.all([
+        db
+          .select()
+          .from(healthMetrics)
+          .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr)))
+          .orderBy(desc(healthMetrics.date)),
+        db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
+      ])
+    : [[], []];
 
-      return { ...pet, signal, twin };
-    }),
-  );
+  // Group in memory by petId
+  const metricsByPet = new Map<string, typeof allMetrics>();
+  for (const m of allMetrics) {
+    const arr = metricsByPet.get(m.petId) ?? [];
+    arr.push(m);
+    metricsByPet.set(m.petId, arr);
+  }
+
+  const vaccByPet = new Map<string, typeof allVacc>();
+  for (const v of allVacc) {
+    const arr = vaccByPet.get(v.petId) ?? [];
+    arr.push(v);
+    vaccByPet.set(v.petId, arr);
+  }
+
+  const petsWithData = userPets.map((pet) => {
+    const recentMetrics = metricsByPet.get(pet.id) ?? [];
+    const petVacc = vaccByPet.get(pet.id) ?? [];
+    const overdueCount = petVacc.filter(
+      (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
+    ).length;
+
+    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now });
+    const twin   = computeDigitalTwin(recentMetrics, now);
+
+    return { ...pet, signal, twin };
+  });
 
   const loggedToday = petsWithData.filter((p) => p.twin.daysAgo === 0).length;
 
