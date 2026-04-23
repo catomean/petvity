@@ -10,7 +10,8 @@ import { PasswordInput } from "@/components/portal/PasswordInput";
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo") ?? searchParams.get("next") ?? "/portal/dashboard";
+  const rawReturnTo = searchParams.get("returnTo") ?? searchParams.get("next") ?? "";
+  const returnTo = rawReturnTo.startsWith("/") ? rawReturnTo : "/portal/dashboard";
   const nameRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

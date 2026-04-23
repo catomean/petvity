@@ -9,7 +9,8 @@ import { PasswordInput } from "@/components/portal/PasswordInput";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnTo = searchParams.get("returnTo") ?? "/portal/dashboard";
+  const rawReturnTo = searchParams.get("returnTo") ?? "";
+  const returnTo = rawReturnTo.startsWith("/") ? rawReturnTo : "/portal/dashboard";
   const emailRef = useRef<HTMLInputElement>(null);
 
   const [email, setEmail] = useState("");
