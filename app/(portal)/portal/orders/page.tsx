@@ -29,12 +29,12 @@ interface Order {
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
 // Icons are UI-layer; labels/colors sourced from lib/config/orders SSOT
-const STATUS_CONFIG: Record<OrderStatusId, { label: string; color: string; icon: React.ElementType }> = {
-  pending:   { ...ORDER_STATUS_CONFIG.pending,   color: `${ORDER_STATUS_CONFIG.pending.bg}   ${ORDER_STATUS_CONFIG.pending.color}`,   icon: Clock },
-  confirmed: { ...ORDER_STATUS_CONFIG.confirmed, color: `${ORDER_STATUS_CONFIG.confirmed.bg} ${ORDER_STATUS_CONFIG.confirmed.color}`, icon: CheckCircle },
-  shipped:   { ...ORDER_STATUS_CONFIG.shipped,   color: `${ORDER_STATUS_CONFIG.shipped.bg}   ${ORDER_STATUS_CONFIG.shipped.color}`,   icon: Truck },
-  delivered: { ...ORDER_STATUS_CONFIG.delivered, color: `${ORDER_STATUS_CONFIG.delivered.bg} ${ORDER_STATUS_CONFIG.delivered.color}`, icon: ShoppingBag },
-  cancelled: { ...ORDER_STATUS_CONFIG.cancelled, color: `${ORDER_STATUS_CONFIG.cancelled.bg} ${ORDER_STATUS_CONFIG.cancelled.color}`, icon: XCircle },
+const STATUS_ICONS: Record<OrderStatusId, React.ElementType> = {
+  pending:   Clock,
+  confirmed: CheckCircle,
+  shipped:   Truck,
+  delivered: ShoppingBag,
+  cancelled: XCircle,
 };
 
 function formatPrice(cents: number) {
@@ -52,8 +52,8 @@ function formatDate(iso: string) {
 function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) => void }) {
   const [expanded, setExpanded] = useState(false);
   const [cancelling, setCancelling] = useState(false);
-  const cfg = STATUS_CONFIG[order.status];
-  const Icon = cfg.icon;
+  const cfg = ORDER_STATUS_CONFIG[order.status];
+  const Icon = STATUS_ICONS[order.status];
 
   async function handleCancel() {
     setCancelling(true);
@@ -81,7 +81,7 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.color}`}>
+          <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.className}`}>
             <Icon className="w-3 h-3" />
             {cfg.label}
           </span>

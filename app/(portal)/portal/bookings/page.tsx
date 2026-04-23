@@ -35,18 +35,11 @@ const STATUS_ICONS: Record<BookingStatusId, React.ElementType> = {
   completed: CheckCircle,
 };
 
-const STATUS_CONFIG: Record<BookingStatusId, { label: string; color: string; icon: React.ElementType }> = {
-  pending:   { ...BOOKING_STATUS_CONFIG.pending,   color: `${BOOKING_STATUS_CONFIG.pending.bg}   ${BOOKING_STATUS_CONFIG.pending.color}`,   icon: STATUS_ICONS.pending },
-  confirmed: { ...BOOKING_STATUS_CONFIG.confirmed, color: `${BOOKING_STATUS_CONFIG.confirmed.bg} ${BOOKING_STATUS_CONFIG.confirmed.color}`, icon: STATUS_ICONS.confirmed },
-  cancelled: { ...BOOKING_STATUS_CONFIG.cancelled, color: `${BOOKING_STATUS_CONFIG.cancelled.bg} ${BOOKING_STATUS_CONFIG.cancelled.color}`, icon: STATUS_ICONS.cancelled },
-  completed: { ...BOOKING_STATUS_CONFIG.completed, color: `${BOOKING_STATUS_CONFIG.completed.bg} ${BOOKING_STATUS_CONFIG.completed.color}`, icon: STATUS_ICONS.completed },
-};
-
 function StatusBadge({ status }: { status: BookingRow["status"] }) {
-  const cfg = STATUS_CONFIG[status];
-  const Icon = cfg.icon;
+  const cfg = BOOKING_STATUS_CONFIG[status];
+  const Icon = STATUS_ICONS[status];
   return (
-    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.color}`}>
+    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.className}`}>
       <Icon className="w-3 h-3" />
       {cfg.label}
     </span>
