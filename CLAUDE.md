@@ -162,6 +162,8 @@ lib/
     pet-signal.ts      → SSOT: signal thresholds, labels, Tailwind bg classes
     products.ts        → SSOT: 6 product categories, labels, PRODUCT_CATEGORY_OPTIONS
     orders.ts          → SSOT: order status + booking status labels and color classes
+    adoptions.ts       → SSOT: adoption listing + application status labels and color classes
+    users.ts           → SSOT: user role labels, badge colors, USER_ROLE_OPTIONS
     locales.ts         → SSOT: 9 locales, RTL_LOCALES list
     app.ts             → APP name, emails, URL (NEXT_PUBLIC_APP_URL)
     auth.ts            → BCRYPT_SALT_ROUNDS, PASSWORD_MIN_LENGTH
