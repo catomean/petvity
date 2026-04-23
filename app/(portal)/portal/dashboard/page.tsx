@@ -10,7 +10,7 @@ import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin"
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import type { TwinTrend } from "@/lib/domain/digital-twin";
-import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays } from "lucide-react";
+import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle } from "lucide-react";
 
 // Icon mapping stays component-side (React components are UI, not config)
 const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
@@ -197,6 +197,14 @@ export default async function DashboardPage() {
                           style={{ width: `${twin.scorePercent}%` }}
                         />
                       </div>
+                    </div>
+                  )}
+
+                  {/* Signal reason — shown when watch/concern so owner knows why */}
+                  {sig !== "healthy" && pet.signal.reason && (
+                    <div className={`flex items-start gap-1.5 mt-2 text-xs ${sig === "concern" ? "text-[var(--danger)]" : "text-[var(--warn)]"}`}>
+                      <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                      <span className="leading-snug">{pet.signal.reason}</span>
                     </div>
                   )}
                 </div>
