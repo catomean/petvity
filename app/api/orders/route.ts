@@ -3,7 +3,9 @@ import { eq, desc, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { orders, orderItems, products } from "@/lib/db/schema";
+import { orders, orderItems, products, users } from "@/lib/db/schema";
+import { sendEmail } from "@/lib/email";
+import { orderConfirmation } from "@/lib/email/templates";
 
 const createSchema = z.object({
   items: z.array(
@@ -141,6 +143,32 @@ export async function POST(req: NextRequest) {
         .set({ stock: p.stock - item.quantity, updatedAt: new Date() })
         .where(eq(products.id, item.productId));
     }
+  }
+
+  // Send order confirmation email (fire-and-forget)
+  try {
+    const [user] = await db
+      .select({ name: users.name, email: users.email })
+      .from(users)
+      .where(eq(users.id, session.user.id))
+      .limit(1);
+
+    if (user?.email) {
+      const emailItems = insertedItems.map((i) => ({
+        name: productMap.get(i.productId)?.name ?? "Item",
+        quantity: i.quantity,
+        lineTotal: `$${((i.priceCents * i.quantity) / 100).toFixed(2)}`,
+      }));
+      const tpl = orderConfirmation({
+        customerName: user.name ?? user.email,
+        orderTotal: `$${(totalCents / 100).toFixed(2)}`,
+        items: emailItems,
+        notes: notes ?? null,
+      });
+      await sendEmail({ to: user.email, ...tpl });
+    }
+  } catch {
+    // Never fail the order response due to email error
   }
 
   return NextResponse.json(

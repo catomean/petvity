@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { adoptionApplications, adoptionListings } from "@/lib/db/schema";
+import { adoptionApplications, adoptionListings, pets, users } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
+import { sendEmail } from "@/lib/email";
+import { adoptionApplicationReceived } from "@/lib/email/templates";
 
 const applySchema = z.object({
   message: z.string().max(1000).nullable().optional(),
@@ -23,7 +25,12 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   // Listing must exist and be available
   const [listing] = await db
-    .select({ id: adoptionListings.id, ownerId: adoptionListings.ownerId, status: adoptionListings.status })
+    .select({
+      id: adoptionListings.id,
+      ownerId: adoptionListings.ownerId,
+      status: adoptionListings.status,
+      petId: adoptionListings.petId,
+    })
     .from(adoptionListings)
     .where(eq(adoptionListings.id, listingId))
     .limit(1);
@@ -82,6 +89,35 @@ export async function POST(req: NextRequest, { params }: Params) {
       housingType: parsed.data.housingType ?? null,
     })
     .returning();
+
+  // Notify listing owner (fire-and-forget)
+  try {
+    const [owner] = await db
+      .select({ name: users.name, email: users.email })
+      .from(users)
+      .where(eq(users.id, listing.ownerId))
+      .limit(1);
+
+    const [pet] = await db
+      .select({ name: pets.name })
+      .from(pets)
+      .where(eq(pets.id, listing.petId))
+      .limit(1);
+
+    if (owner?.email) {
+      const tpl = adoptionApplicationReceived({
+        ownerName: owner.name ?? owner.email,
+        petName: pet?.name ?? "your pet",
+        applicantName: session.user.name ?? session.user.email ?? "Someone",
+        message: parsed.data.message ?? null,
+        experience: parsed.data.experience ?? null,
+        housingType: parsed.data.housingType ?? null,
+      });
+      await sendEmail({ to: owner.email, ...tpl });
+    }
+  } catch {
+    // Never fail the application response due to email error
+  }
 
   return NextResponse.json({ success: true, data: application }, { status: 201 });
 }

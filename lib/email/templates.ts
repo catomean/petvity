@@ -191,6 +191,102 @@ export function bookingStatusChanged(data: {
   };
 }
 
+// ─── Order notifications ──────────────────────────────────────────────────────
+
+export function orderConfirmation(data: {
+  customerName: string;
+  orderTotal: string;
+  items: { name: string; quantity: number; lineTotal: string }[];
+  notes?: string | null;
+}) {
+  const itemRows = data.items
+    .map((i) => `<tr><td style="padding:6px 0;border-bottom:1px solid #f0ede8;">${i.name}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;">×${i.quantity}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;font-weight:500;">${i.lineTotal}</td></tr>`)
+    .join("");
+  return {
+    subject: `Your ${APP.name} order is confirmed`,
+    html: base(`
+      <h2>Order confirmed ✓</h2>
+      <p>Hi ${data.customerName}, your order has been received and is being prepared.</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0;">${itemRows}</table>
+      <p style="text-align:right;font-size:16px;font-weight:600;">Total: ${data.orderTotal}</p>
+      ${data.notes ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;font-size:14px;"><strong>Your note:</strong> ${data.notes}</p>` : ""}
+      <a class="btn" href="${APP_URL}/portal/orders">View my orders</a>
+    `),
+  };
+}
+
+export function orderStatusUpdate(data: {
+  customerName: string;
+  status: "confirmed" | "shipped" | "delivered" | "cancelled";
+  orderTotal: string;
+}) {
+  const messages = {
+    confirmed: { heading: "Order confirmed", body: "Your order has been confirmed and is being prepared for shipment." },
+    shipped:   { heading: "Order shipped!", body: "Great news — your order is on its way." },
+    delivered: { heading: "Order delivered", body: "Your order has been marked as delivered. Enjoy!" },
+    cancelled: { heading: "Order cancelled", body: "Your order has been cancelled." },
+  };
+  const { heading, body } = messages[data.status];
+  return {
+    subject: `${APP.name}: ${heading}`,
+    html: base(`
+      <h2>${heading}</h2>
+      <p>Hi ${data.customerName},</p>
+      <p>${body}</p>
+      <p style="color:#888;font-size:14px;">Order total: ${data.orderTotal}</p>
+      <a class="btn" href="${APP_URL}/portal/orders">View my orders</a>
+    `),
+  };
+}
+
+// ─── Adoption notifications ───────────────────────────────────────────────────
+
+export function adoptionApplicationReceived(data: {
+  ownerName: string;
+  petName: string;
+  applicantName: string;
+  message?: string | null;
+  experience?: string | null;
+  housingType?: string | null;
+}) {
+  return {
+    subject: `New adoption application for ${data.petName}`,
+    html: base(`
+      <h2>Someone wants to adopt ${data.petName}!</h2>
+      <p>Hi ${data.ownerName},</p>
+      <p><strong>${data.applicantName}</strong> has submitted an adoption application for <strong>${data.petName}</strong>.</p>
+      ${data.housingType ? `<p><strong>Housing:</strong> ${data.housingType.replace(/_/g, " ")}</p>` : ""}
+      ${data.experience ? `<p style="background:#f0faf8;padding:12px 16px;border-radius:6px;border-left:4px solid #0D6E78;"><strong>Experience:</strong> ${data.experience}</p>` : ""}
+      ${data.message ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;"><strong>Message:</strong> ${data.message}</p>` : ""}
+      <a class="btn" href="${APP_URL}/portal/adoptions">Review application</a>
+    `),
+  };
+}
+
+export function adoptionApplicationStatusChanged(data: {
+  applicantName: string;
+  petName: string;
+  status: "approved" | "rejected";
+  ownerNote?: string | null;
+}) {
+  const isApproved = data.status === "approved";
+  return {
+    subject: isApproved
+      ? `Your application to adopt ${data.petName} was approved! 🎉`
+      : `Update on your application to adopt ${data.petName}`,
+    html: base(`
+      <h2>${isApproved ? "Application approved! 🎉" : "Application update"}</h2>
+      <p>Hi ${data.applicantName},</p>
+      ${isApproved
+        ? `<p>Congratulations! Your adoption application for <strong>${data.petName}</strong> has been <strong style="color:#16A34A;">approved</strong>. The owner will be in touch to arrange the next steps.</p>`
+        : `<p>Your adoption application for <strong>${data.petName}</strong> has been reviewed. Unfortunately, the owner has decided to proceed with another applicant at this time.</p>`
+      }
+      ${data.ownerNote ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;"><strong>Message from owner:</strong> ${data.ownerNote}</p>` : ""}
+      <a class="btn" href="${APP_URL}/portal/adopt">Browse more pets</a>
+    `),
+  };
+}
+
 // ─── Template key → function map ─────────────────────────────────────────────
 
 export type TemplateKey =

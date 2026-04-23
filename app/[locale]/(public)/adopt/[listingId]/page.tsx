@@ -222,7 +222,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
             </p>
             <div className="flex gap-3 justify-center">
               <Link
-                href={`/register?next=/portal/adopt/${row.id}`}
+                href={`/register?returnTo=/portal/adopt/${row.id}`}
                 className="btn-primary flex items-center gap-2"
               >
                 <Heart className="w-4 h-4" />

@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and, or } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { z } from "zod";
-import { requireSession, requireAdmin } from "@/lib/auth/guards";
+import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { orders, orderStatusEnum } from "@/lib/db/schema";
+import { orders, orderStatusEnum, users } from "@/lib/db/schema";
+import { sendEmail } from "@/lib/email";
+import { orderStatusUpdate } from "@/lib/email/templates";
 
 const patchSchema = z.object({
   status: z.enum(orderStatusEnum.enumValues),
@@ -64,6 +66,30 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     .set({ status, updatedAt: new Date() })
     .where(eq(orders.id, orderId))
     .returning();
+
+  // Send status update email for meaningful transitions (fire-and-forget)
+  const EMAIL_STATUSES = ["confirmed", "shipped", "delivered", "cancelled"] as const;
+  type EmailStatus = typeof EMAIL_STATUSES[number];
+  if ((EMAIL_STATUSES as readonly string[]).includes(status)) {
+    try {
+      const [customer] = await db
+        .select({ name: users.name, email: users.email })
+        .from(users)
+        .where(eq(users.id, order.userId))
+        .limit(1);
+
+      if (customer?.email) {
+        const tpl = orderStatusUpdate({
+          customerName: customer.name ?? customer.email,
+          status: status as EmailStatus,
+          orderTotal: `$${(order.totalCents / 100).toFixed(2)}`,
+        });
+        await sendEmail({ to: customer.email, ...tpl });
+      }
+    } catch {
+      // Never fail the order response due to email error
+    }
+  }
 
   return NextResponse.json({ success: true, data: updated });
 }

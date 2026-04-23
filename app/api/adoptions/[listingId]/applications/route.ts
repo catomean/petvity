@@ -6,9 +6,12 @@ import {
   adoptionApplications,
   adoptionApplicationStatusEnum,
   adoptionListings,
+  pets,
   users,
 } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
+import { sendEmail } from "@/lib/email";
+import { adoptionApplicationStatusChanged } from "@/lib/email/templates";
 
 const patchSchema = z.object({
   applicationId: z.string().uuid(),
@@ -83,7 +86,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const db = getInstance();
 
   const [listing] = await db
-    .select({ ownerId: adoptionListings.ownerId })
+    .select({ ownerId: adoptionListings.ownerId, petId: adoptionListings.petId })
     .from(adoptionListings)
     .where(eq(adoptionListings.id, listingId))
     .limit(1);
@@ -119,6 +122,35 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   if (!updated) {
     return NextResponse.json({ success: false, error: "Application not found" }, { status: 404 });
+  }
+
+  // Notify applicant when approved or rejected (fire-and-forget)
+  if (parsed.data.status === "approved" || parsed.data.status === "rejected") {
+    try {
+      const [applicant] = await db
+        .select({ name: users.name, email: users.email })
+        .from(users)
+        .where(eq(users.id, updated.applicantId))
+        .limit(1);
+
+      const [pet] = await db
+        .select({ name: pets.name })
+        .from(pets)
+        .where(eq(pets.id, listing.petId))
+        .limit(1);
+
+      if (applicant?.email) {
+        const tpl = adoptionApplicationStatusChanged({
+          applicantName: applicant.name ?? applicant.email,
+          petName: pet?.name ?? "the pet",
+          status: parsed.data.status,
+          ownerNote: null,
+        });
+        await sendEmail({ to: applicant.email, ...tpl });
+      }
+    } catch {
+      // Never fail the response due to email error
+    }
   }
 
   return NextResponse.json({ success: true, data: updated });
