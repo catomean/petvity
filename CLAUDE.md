@@ -80,23 +80,63 @@ app/
         records/       → Vet visit records
         vaccinations/  → Vaccination schedule
     checkin/           → Multi-pet daily check-in shortcut
-    settings/          → Account settings (display-only for now)
+    settings/          → Account settings (name + password)
+    find/              → Browse vets + sitters, book via modal
+    bookings/          → User's bookings + review modal
+    shop/              → Product catalogue + cart + checkout
+    orders/            → User's order history
+    adopt/             → Browse adoption listings (public listings, no auth needed to browse)
+      [listingId]/     → Listing detail + apply form (auth required to apply)
+    adoptions/         → Owner's listings + applications management
+    pets/[petId]/
+      list-for-adoption/ → Create adoption listing for a pet
+    professional-profile/ → Vet/sitter profile editor (role-gated)
   (admin)/admin/       → Admin area (role=admin only)
+    users/             → User list + role management
+    products/          → Product CRUD + stock management
+    orders/            → Fulfillment workflow + revenue stats
+    adoptions/         → Adoption listings moderation + status management
   [locale]/            → Localized marketing (en/de/fr/es/ja/zh/ko/tr/ar)
     (marketing)/       → features, about, pricing, species guides
     (public)/pets/[handle]/ → Public influencer pet profile (no auth, isPublic=true only)
+    (public)/adopt/    → Public adoption browse (SSR, no auth)
+      [listingId]/     → Listing detail + sign-up CTA
+    (public)/pros/[userId]/ → Public vet/sitter profile
   api/
     auth/[...nextauth] → NextAuth (ALWAYS public — never auth-guard this)
-    account/           → POST: registration (no auth required)
+    account/           → POST: registration, PATCH: update name/password (no auth on POST)
     pets/              → GET list, POST create
     pets/[petId]/      → GET, PATCH, DELETE (owner-scoped)
     pets/[petId]/avatar → POST: upload to Vercel Blob
     health/metrics/[petId] → POST upsert daily health log
     health/records/    → Health records CRUD
+    health/records/[recordId] → PATCH/DELETE (owner-scoped)
     vaccinations/      → Vaccination CRUD
-    medications/       → Medications CRUD
+    vaccinations/[vaccinationId] → PATCH/DELETE
+    medications/       → Medication CRUD
+    medications/[medicationId] → PATCH/DELETE
+    vets/              → GET public vet list
+    vets/me/           → GET/POST/PATCH own vet profile
+    sitters/           → GET public sitter list
+    sitters/me/        → GET/POST/PATCH own sitter profile
+    bookings/          → GET list, POST create
+    bookings/[bookingId] → PATCH status, DELETE
+    reviews/           → POST (linked to completed booking)
+    products/          → GET public list (active only)
+    products/[productId] → GET single product
+    orders/            → GET user's orders, POST place order
+    orders/[orderId]   → PATCH status (user cancel pending; admin any transition)
+    adoptions/         → GET public available listings, POST create (auth)
+    adoptions/[listingId] → GET public, PATCH/DELETE (owner or admin)
+    adoptions/[listingId]/apply → POST (auth, one per user)
+    adoptions/[listingId]/applications → GET (owner/admin), PATCH approve/reject
     public/pets/[handle] → Public pet data (no auth)
-    admin/             → Admin-only endpoints
+    admin/users/       → GET list, PATCH role
+    admin/users/[userId] → PATCH (role change)
+    admin/products/    → Full product CRUD + stock
+    admin/orders/      → All orders with customer + items
+    admin/adoptions/   → All listings with pet, owner, application counts
+    admin/professionals/[userId] → PATCH verify/unverify
     cron/emails        → Process welcome email queue (Bearer CRON_SECRET)
     cron/health-alerts → Flag out-of-range metrics (Bearer CRON_SECRET)
     cron/vaccination-reminders → Remind about due vaccines (Bearer CRON_SECRET)
@@ -140,7 +180,8 @@ lib/
 1. /api/auth/*          → ALWAYS pass through (NextAuth must be public)
 2. /portal, /admin (PORTAL_PREFIXES)
    + /api/pets, /api/health, /api/vaccinations, /api/medications,
-     /api/cron, /api/admin (PRIVATE_API_PREFIXES)
+     /api/vets, /api/sitters, /api/bookings, /api/reviews,
+     /api/orders, /api/cron, /api/admin (PRIVATE_API_PREFIXES)
                         → Auth-guard only, no locale routing
                         → Unauthenticated → /login?returnTo=<path>
                         → Non-admin at /admin → /portal/dashboard
@@ -148,8 +189,10 @@ lib/
                         → Bypass intl routing (serve non-localized)
                         → Already-logged-in → redirect to dashboard
 4. /api/* (catch-all)   → Pass through, no locale routing (public API routes)
-   Public routes: /api/account (registration), /api/public/* (public profiles),
-                  /api/auth/forgot-password, /api/auth/reset-password
+   Public routes (NOT in PRIVATE_API_PREFIXES — self-guard via requireSession()):
+     /api/account (registration), /api/public/* (public profiles),
+     /api/products (public browse), /api/adoptions (public browse + self-guarded writes),
+     /api/auth/forgot-password, /api/auth/reset-password
 5. Everything else      → next-intl locale routing (marketing site)
 ```
 
@@ -161,9 +204,9 @@ lib/
 
 ---
 
-## Database Schema (Phase 1)
+## Database Schema
 
-**Enums:** `user_role` (pet_owner|veterinarian|pet_sitter|admin), `species` (dog|cat|horse|bird|rabbit|guinea_pig|hamster|reptile|fish|other), `sex`, `health_record_type`, `vaccination_status`, `medication_status`, `email_queue_status`
+**Enums:** `user_role` (pet_owner|veterinarian|pet_sitter|admin), `species` (dog|cat|horse|bird|rabbit|guinea_pig|hamster|reptile|fish|other), `sex`, `health_record_type`, `vaccination_status`, `medication_status`, `email_queue_status`, `order_status`, `product_category`, `booking_status`, `adoption_listing_status`, `adoption_application_status`
 
 **Tables:**
 | Table | Key columns | Notes |
@@ -179,6 +222,15 @@ lib/
 | `vaccinations` | petId, name, administeredDate, nextDueDate, status | |
 | `medications` | petId, name, dosage, frequency, startDate, endDate, status | |
 | `emailQueue` | userId, templateKey, sendAt, sentAt, status, payload (jsonb) | |
+| `vetProfiles` | userId (unique), specialty, clinicName, clinicAddress, city, country, phone, bio, isVerified, isAcceptingClients | |
+| `sitterProfiles` | userId (unique), bio, services (csv), pricePerDay (cents), city, country, phone, isVerified, isAcceptingClients | |
+| `bookings` | id, petId, ownerId, professionalId, startDate, endDate, status, notes | |
+| `reviews` | id, bookingId (unique), reviewerId, professionalId, rating (1–5), comment | |
+| `products` | id, name, description, priceCents, stock, imageUrl, category, isActive | |
+| `orderItems` | id, orderId, productId, quantity, priceCents | |
+| `orders` | id, userId, totalCents, status, notes | |
+| `adoptionListings` | id, petId, ownerId (denorm), status, title, description, feeCents (null=free), location, requiresExperience, goodWithKids/Dogs/Cats | |
+| `adoptionApplications` | id, listingId, applicantId, status, message, experience, housingType | |
 
 **Numeric storage conventions (NEVER violate):**
 - Weight: integer grams (3500 = 3.5 kg). Display: ÷ 1000. `toDisplay()` / `toStorage()` in health-metrics.ts.
@@ -315,19 +367,33 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - Species guides (`/[locale]/species/[dog|cat|horse]`)
 - Sidebar nav + mobile bottom nav + admin panel
 
-### Phase 1 — Still Needed
-- [ ] Pet avatar upload: set `BLOB_READ_WRITE_TOKEN` in Vercel Dashboard (user action)
-- [ ] `ADMIN_EMAILS` env var not set in Vercel Dashboard (user action)
-- [ ] Google OAuth: needs `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` (user action)
+### Env vars still needed (user action — no code change required)
+- [ ] `BLOB_READ_WRITE_TOKEN` → Vercel Blob dashboard → enables pet avatar upload
+- [ ] `ADMIN_EMAILS` → owner's email → enables admin panel access
+- [ ] `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` → Google Cloud Console → enables Google OAuth
+- [ ] `RESEND_API_KEY` + `RESEND_FROM` → resend.com → enables all transactional email
 
-### Phase 2 — Not started
-- Vet profiles, sitter profiles, bookings, reviews
+### Phase 2 — Complete ✓
+- Vet profiles (create/edit at `/portal/professional-profile`, public at `/[locale]/pros/[userId]`)
+- Sitter profiles (same)
+- Find a Pro page (`/portal/find`) with booking modal
+- Bookings management (`/portal/bookings`) with status flow + review modal
+- Reviews (POST `/api/reviews`, linked to completed booking, avg shown on pro card)
+- Admin professional verification (`/api/admin/professionals/[userId]`)
 
-### Phase 3 — Not started
-- Products, orders (marketplace)
+### Phase 3 — Complete ✓
+- Product catalogue (`/portal/shop`) with cart drawer + checkout
+- Order history (`/portal/orders`)
+- Admin products panel (`/admin/products`) — CRUD + stock management
+- Admin orders panel (`/admin/orders`) — fulfillment workflow + revenue stats
+- Transactional emails: order confirmation + status updates (via Resend)
 
-### Phase 4 — Not started
-- Adoption listings, applications
+### Phase 4 — Complete ✓
+- Adoption listings: owner creates at `/portal/pets/[petId]/list-for-adoption`, manages at `/portal/adoptions`
+- Adoption applications: browser applies at `/portal/adopt/[listingId]`, owner approves/rejects
+- Public browse: `/[locale]/adopt` + `/[locale]/adopt/[listingId]` (SSR, no auth)
+- Admin moderation: `/admin/adoptions` — status management for all listings
+- Transactional emails: application received (owner) + status change (applicant)
 
 ---
 
