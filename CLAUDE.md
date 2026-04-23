@@ -337,6 +337,9 @@ Algorithm:
 | Order/booking status labels, colors | `lib/config/orders.ts` | Component |
 | Adoption listing/application status labels, colors | `lib/config/adoptions.ts` | Component |
 | User role labels, badge colors | `lib/config/users.ts` | Component |
+| Health record type labels, colors | `lib/config/health-records.ts` | Component |
+| Vaccination status labels, badge classes | `lib/config/vaccinations.ts` | Component |
+| Medication status labels, badge classes | `lib/config/medications.ts` | Component |
 | Locales, RTL flag | `lib/config/locales.ts` | next-intl config |
 | App name, email, URL | `lib/config/app.ts` | Component |
 | Auth guards | `lib/auth/guards.ts` | Page component |

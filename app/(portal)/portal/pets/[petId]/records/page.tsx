@@ -10,20 +10,22 @@ import {
   Pencil, Trash2,
 } from "lucide-react";
 import { formatDateShort } from "@/lib/utils/format";
+import { HEALTH_RECORD_TYPE_CONFIG, HEALTH_RECORD_TYPE_OPTIONS } from "@/lib/config/health-records";
+import type { HealthRecordTypeId } from "@/lib/config/health-records";
 
-/* ── SSOT: record type config ───────────────────────────────────────────── */
-const RECORD_TYPE_CONFIG = {
-  vet_visit:   { label: "Vet visit",    icon: Stethoscope, color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
-  vaccination: { label: "Vaccination",  icon: Syringe,     color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
-  medication:  { label: "Medication",   icon: Pill,        color: "text-[var(--warn)]",   bg: "bg-[var(--warn-bg)]" },
-  surgery:     { label: "Surgery",      icon: Scissors,    color: "text-[var(--danger)]", bg: "bg-[var(--danger-bg)]" },
-  lab_result:  { label: "Lab result",   icon: FlaskConical,color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
-  dental:      { label: "Dental",       icon: Smile,       color: "text-[var(--teal)]",   bg: "bg-[var(--teal-light)]" },
-  grooming:    { label: "Grooming",     icon: Sparkles,    color: "text-[var(--accent)]", bg: "bg-[var(--accent-light)]" },
-  other:       { label: "Other",        icon: MoreHorizontal, color: "text-[var(--muted)]", bg: "bg-[var(--off)]" },
-} as const;
+/* ── Icon map — React components stay in the UI layer, not in config ─────── */
+const RECORD_TYPE_ICONS: Record<HealthRecordTypeId, React.ElementType> = {
+  vet_visit:   Stethoscope,
+  vaccination: Syringe,
+  medication:  Pill,
+  surgery:     Scissors,
+  lab_result:  FlaskConical,
+  dental:      Smile,
+  grooming:    Sparkles,
+  other:       MoreHorizontal,
+};
 
-type RecordType = keyof typeof RECORD_TYPE_CONFIG;
+type RecordType = HealthRecordTypeId;
 
 interface HealthRecord {
   id: string;
@@ -231,11 +233,9 @@ export default function HealthRecordsPage() {
                 value={form.type}
                 onChange={(e) => field("type", e.target.value as RecordType)}
               >
-                {(Object.entries(RECORD_TYPE_CONFIG) as [RecordType, typeof RECORD_TYPE_CONFIG[RecordType]][]).map(
-                  ([val, cfg]) => (
-                    <option key={val} value={val}>{cfg.label}</option>
-                  )
-                )}
+                {HEALTH_RECORD_TYPE_OPTIONS.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
               </select>
             </div>
 
@@ -342,8 +342,8 @@ export default function HealthRecordsPage() {
       ) : (
         <div className="space-y-3">
           {records.map((r) => {
-            const cfg = RECORD_TYPE_CONFIG[r.type] ?? RECORD_TYPE_CONFIG.other;
-            const Icon = cfg.icon;
+            const cfg = HEALTH_RECORD_TYPE_CONFIG[r.type] ?? HEALTH_RECORD_TYPE_CONFIG.other;
+            const Icon = RECORD_TYPE_ICONS[r.type] ?? RECORD_TYPE_ICONS.other;
             return (
               <div key={r.id} className="card p-4 flex gap-4">
                 <div className={`w-10 h-10 rounded-xl ${cfg.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>

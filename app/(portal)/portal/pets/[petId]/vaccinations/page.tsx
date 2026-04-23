@@ -9,16 +9,18 @@ import {
   Pencil, Trash2,
 } from "lucide-react";
 import { formatDateShort, formatRelativeDate } from "@/lib/utils/format";
+import { VACCINATION_STATUS_CONFIG } from "@/lib/config/vaccinations";
+import type { VaccinationStatusId } from "@/lib/config/vaccinations";
 
-/* ── SSOT: status config ─────────────────────────────────────────────────── */
-const STATUS_CONFIG = {
-  up_to_date:    { label: "Up to date", className: "signal-healthy",  icon: Check },
-  due_soon:      { label: "Due soon",   className: "signal-watch",    icon: Clock },
-  overdue:       { label: "Overdue",    className: "signal-concern",  icon: AlertTriangle },
-  not_applicable:{ label: "N/A",        className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium", icon: null },
-} as const;
+/* ── Icon map — React components stay in the UI layer, not in config ─────── */
+const STATUS_ICONS: Partial<Record<VaccinationStatusId, React.ElementType>> = {
+  up_to_date:     Check,
+  due_soon:       Clock,
+  overdue:        AlertTriangle,
+  not_applicable: undefined,
+};
 
-type VaccinationStatus = keyof typeof STATUS_CONFIG;
+type VaccinationStatus = VaccinationStatusId;
 
 interface Vaccination {
   id: string;
@@ -257,7 +259,7 @@ export default function VaccinationsPage() {
                 value={form.status}
                 onChange={(e) => field("status", e.target.value as VaccinationStatus)}
               >
-                {(Object.entries(STATUS_CONFIG) as [VaccinationStatus, typeof STATUS_CONFIG[VaccinationStatus]][]).map(
+                {(Object.entries(VACCINATION_STATUS_CONFIG) as [VaccinationStatus, { label: string }][]).map(
                   ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
                 )}
               </select>
@@ -328,8 +330,8 @@ export default function VaccinationsPage() {
             </thead>
             <tbody>
               {rows.map((v) => {
-                const status = STATUS_CONFIG[v.status] ?? STATUS_CONFIG.up_to_date;
-                const StatusIcon = status.icon;
+                const status = VACCINATION_STATUS_CONFIG[v.status] ?? VACCINATION_STATUS_CONFIG.up_to_date;
+                const StatusIcon = STATUS_ICONS[v.status];
                 const isDeleting = deletingId === v.id;
                 return (
                   <tr key={v.id} className="group border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">

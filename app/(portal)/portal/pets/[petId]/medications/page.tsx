@@ -9,15 +9,17 @@ import {
   Pencil, Trash2,
 } from "lucide-react";
 import { formatDateShort } from "@/lib/utils/format";
+import { MEDICATION_STATUS_CONFIG } from "@/lib/config/medications";
+import type { MedicationStatusId } from "@/lib/config/medications";
 
-/* ── SSOT: status config ─────────────────────────────────────────────────── */
-const STATUS_CONFIG = {
-  active:       { label: "Active",       className: "signal-healthy", icon: Check },
-  completed:    { label: "Completed",    className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium", icon: Clock },
-  discontinued: { label: "Discontinued", className: "bg-[var(--danger-bg)] text-[var(--danger)] text-xs px-2 py-0.5 rounded-full font-medium", icon: Ban },
-} as const;
+/* ── Icon map — React components stay in the UI layer, not in config ─────── */
+const STATUS_ICONS: Record<MedicationStatusId, React.ElementType> = {
+  active:        Check,
+  completed:     Clock,
+  discontinued:  Ban,
+};
 
-type MedicationStatus = keyof typeof STATUS_CONFIG;
+type MedicationStatus = MedicationStatusId;
 
 interface Medication {
   id: string;
@@ -288,7 +290,7 @@ export default function MedicationsPage() {
                 value={form.status}
                 onChange={(e) => field("status", e.target.value as MedicationStatus)}
               >
-                {(Object.entries(STATUS_CONFIG) as [MedicationStatus, typeof STATUS_CONFIG[MedicationStatus]][]).map(
+                {(Object.entries(MEDICATION_STATUS_CONFIG) as [MedicationStatus, { label: string }][]).map(
                   ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
                 )}
               </select>
@@ -357,8 +359,8 @@ export default function MedicationsPage() {
             </thead>
             <tbody>
               {rows.map((m) => {
-                const status = STATUS_CONFIG[m.status] ?? STATUS_CONFIG.active;
-                const StatusIcon = status.icon;
+                const status = MEDICATION_STATUS_CONFIG[m.status] ?? MEDICATION_STATUS_CONFIG.active;
+                const StatusIcon = STATUS_ICONS[m.status] ?? STATUS_ICONS.active;
                 const isDeleting = deletingId === m.id;
                 return (
                   <tr key={m.id} className="border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">
