@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CalendarCheck, Clock, CheckCircle, XCircle, ChevronDown, Star, X } from "lucide-react";
 import { BOOKING_STATUS_CONFIG } from "@/lib/config/orders";
 import type { BookingStatusId } from "@/lib/config/orders";
+import { userRoleLabel } from "@/lib/config/users";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -188,7 +189,7 @@ function BookingCard({
   onReview: (b: BookingRow) => void;
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
-  const roleLabel = b.professionalRole === "veterinarian" ? "Veterinarian" : "Pet Sitter";
+  const roleLabel = userRoleLabel(b.professionalRole);
   const canReview = b.status === "completed" && !b.reviewId;
 
   return (
@@ -335,7 +336,7 @@ function ReviewModal({
     else setError(data.error ?? "Failed to submit review.");
   }
 
-  const roleLabel = b.professionalRole === "veterinarian" ? "Veterinarian" : "Pet Sitter";
+  const roleLabel = userRoleLabel(b.professionalRole);
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4">

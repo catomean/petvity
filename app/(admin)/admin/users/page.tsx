@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { Users, PawPrint, Shield, BadgeCheck } from "lucide-react";
-
-type UserRole = "pet_owner" | "veterinarian" | "pet_sitter" | "admin";
+import { USER_ROLE_CONFIG, USER_ROLE_OPTIONS } from "@/lib/config/users";
+import type { UserRole } from "@/lib/auth/types";
 
 interface UserRow {
   id: string;
@@ -16,19 +16,10 @@ interface UserRow {
   isVerified: boolean | null;
 }
 
-const ROLE_STYLES: Record<UserRole, string> = {
-  admin:        "bg-purple-50 text-purple-700",
-  veterinarian: "bg-blue-50 text-blue-700",
-  pet_sitter:   "bg-amber-50 text-amber-700",
-  pet_owner:    "bg-[var(--teal-light)] text-[var(--teal)]",
-};
-
-const ROLE_OPTIONS: { value: UserRole; label: string }[] = [
-  { value: "pet_owner",    label: "Pet Owner" },
-  { value: "veterinarian", label: "Veterinarian" },
-  { value: "pet_sitter",   label: "Pet Sitter" },
-  { value: "admin",        label: "Admin" },
-];
+// Labels/colors sourced from lib/config/users SSOT
+const ROLE_STYLES: Record<UserRole, string> = Object.fromEntries(
+  Object.entries(USER_ROLE_CONFIG).map(([k, v]) => [k, `${v.bg} ${v.color}`]),
+) as Record<UserRole, string>;
 
 export default function AdminUsersPage() {
   const [rows, setRows] = useState<UserRow[]>([]);
@@ -165,7 +156,7 @@ export default function AdminUsersPage() {
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${ROLE_STYLES[row.role] ?? "bg-[var(--off)] text-[var(--ink2)]"}`}>
-                          {row.role.replace("_", " ")}
+                          {USER_ROLE_CONFIG[row.role]?.label ?? row.role}
                         </span>
                         <select
                           className="text-xs border border-[var(--border)] rounded-md px-1.5 py-0.5 bg-white text-[var(--ink2)] focus:outline-none focus:ring-1 focus:ring-[var(--teal)] disabled:opacity-50"
@@ -174,7 +165,7 @@ export default function AdminUsersPage() {
                           onChange={(e) => handleRoleChange(row.id, e.target.value as UserRole)}
                           aria-label={`Change role for ${row.name ?? row.email}`}
                         >
-                          {ROLE_OPTIONS.map((opt) => (
+                          {USER_ROLE_OPTIONS.map((opt) => (
                             <option key={opt.value} value={opt.value}>{opt.label}</option>
                           ))}
                         </select>
