@@ -7,7 +7,7 @@ const LINKS = {
     { label: "Features", href: "/features" },
     { label: "How it works", href: "/#how-it-works" },
     { label: "Pricing", href: "/pricing" },
-    { label: "Changelog", href: "#" },
+    { label: "❤️ Adopt a pet", href: "/adopt" },
   ],
   Guides: [
     { label: "🐕 Dog health", href: "/species/dog" },

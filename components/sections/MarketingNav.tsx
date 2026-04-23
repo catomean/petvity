@@ -172,6 +172,12 @@ export default function MarketingNav() {
           >
             Pricing
           </Link>
+          <Link
+            href="/adopt"
+            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
+          >
+            ❤️ Adopt
+          </Link>
         </nav>
 
         {/* Desktop CTA */}
@@ -238,6 +244,13 @@ export default function MarketingNav() {
               </div>
             </div>
             <div className="border-t border-[var(--border)] pt-3 flex flex-col gap-2">
+              <Link
+                href="/adopt"
+                onClick={() => setMenuOpen(false)}
+                className="px-3 py-2.5 text-sm font-medium text-[var(--danger)] no-underline"
+              >
+                ❤️ Adopt a pet
+              </Link>
               <Link
                 href="/login"
                 onClick={() => setMenuOpen(false)}
