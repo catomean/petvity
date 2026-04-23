@@ -3,6 +3,8 @@ import { adoptionListings, pets } from "@/lib/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import { Heart, MapPin, PawPrint } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -13,11 +15,9 @@ export const metadata: Metadata = {
 
 type Params = { params: Promise<{ locale: string }> };
 
-const SPECIES_EMOJI: Record<string, string> = {
-  dog: "🐕", cat: "🐈", horse: "🐎", bird: "🦜",
-  rabbit: "🐇", guinea_pig: "🐹", hamster: "🐹",
-  reptile: "🦎", fish: "🐟", other: "🐾",
-};
+function speciesEmoji(species: string): string {
+  return SPECIES_CONFIG[species as SpeciesId]?.emoji ?? "🐾";
+}
 
 function ageLabel(birthDate: string | null): string {
   if (!birthDate) return "";
@@ -122,7 +122,7 @@ export default async function PublicAdoptPage({ params }: Params) {
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {listings.map((listing) => {
-                const emoji = SPECIES_EMOJI[listing.pet.species] ?? "🐾";
+                const emoji = speciesEmoji(listing.pet.species);
                 const age = ageLabel(listing.pet.birthDate);
                 return (
                   <Link

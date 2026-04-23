@@ -7,6 +7,8 @@ import {
   Heart, ChevronLeft, MapPin, DollarSign, CheckCircle,
   Dog, Cat, Baby, Star, Loader2, Send,
 } from "lucide-react";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -44,12 +46,6 @@ interface FormState {
 }
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
-
-const SPECIES_EMOJI: Record<string, string> = {
-  dog: "🐕", cat: "🐈", horse: "🐎", bird: "🦜",
-  rabbit: "🐇", guinea_pig: "🐹", hamster: "🐹",
-  reptile: "🦎", fish: "🐟", other: "🐾",
-};
 
 const HOUSING_OPTIONS = [
   { value: "", label: "Select housing type…" },
@@ -132,7 +128,7 @@ export default function ListingDetailPage() {
     );
   }
 
-  const emoji = SPECIES_EMOJI[listing.pet.species] ?? "🐾";
+  const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
   const age = ageLabel(listing.pet.birthDate);
   const isAvailable = listing.status === "available";
 

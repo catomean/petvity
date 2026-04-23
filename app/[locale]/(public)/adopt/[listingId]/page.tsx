@@ -4,18 +4,14 @@ import { adoptionListings, pets } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import {
   Heart, MapPin, DollarSign, PawPrint, Baby, Dog, Cat, Star, ChevronLeft,
 } from "lucide-react";
 import type { Metadata } from "next";
 
 type Params = { params: Promise<{ locale: string; listingId: string }> };
-
-const SPECIES_EMOJI: Record<string, string> = {
-  dog: "🐕", cat: "🐈", horse: "🐎", bird: "🦜",
-  rabbit: "🐇", guinea_pig: "🐹", hamster: "🐹",
-  reptile: "🦎", fish: "🐟", other: "🐾",
-};
 
 function ageLabel(birthDate: string | null): string {
   if (!birthDate) return "";
@@ -81,7 +77,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
 
   if (!row) notFound();
 
-  const emoji = SPECIES_EMOJI[row.pet.species] ?? "🐾";
+  const emoji = SPECIES_CONFIG[row.pet.species as SpeciesId]?.emoji ?? "🐾";
   const age = ageLabel(row.pet.birthDate);
   const isAvailable = row.status === "available";
 

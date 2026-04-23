@@ -5,6 +5,8 @@ import {
   Heart, MapPin, DollarSign, Users, Clock, CheckCircle,
   PauseCircle, XCircle, ChevronDown, ChevronUp, PawPrint,
 } from "lucide-react";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -40,12 +42,6 @@ const STATUS_FILTER_OPTIONS: { value: string; label: string }[] = [
   { value: "adopted",    label: "Adopted" },
   { value: "withdrawn",  label: "Withdrawn" },
 ];
-
-const SPECIES_EMOJI: Record<string, string> = {
-  dog: "🐕", cat: "🐈", horse: "🐎", bird: "🦜",
-  rabbit: "🐇", guinea_pig: "🐹", hamster: "🐹",
-  reptile: "🦎", fish: "🐟", other: "🐾",
-};
 
 /* ─── Row component ──────────────────────────────────────────────────────── */
 
@@ -88,7 +84,7 @@ function ListingRow({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={listing.pet.avatarUrl} alt={listing.pet.name} className="w-full h-full object-cover" />
           ) : (
-            <span>{SPECIES_EMOJI[listing.pet.species] ?? "🐾"}</span>
+            <span>{SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾"}</span>
           )}
         </div>
 

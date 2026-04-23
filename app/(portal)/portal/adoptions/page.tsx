@@ -6,6 +6,8 @@ import {
   Heart, PawPrint, ChevronDown, ChevronUp, CheckCircle, XCircle,
   Clock, Users, Eye, EyeOff, Loader2,
 } from "lucide-react";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -44,12 +46,6 @@ const APP_STATUS: Record<string, { label: string; className: string }> = {
   approved:  { label: "Approved",  className: "bg-[var(--green-bg)] text-[var(--green)]" },
   rejected:  { label: "Rejected",  className: "bg-[var(--off)] text-[var(--muted)]" },
   withdrawn: { label: "Withdrawn", className: "bg-[var(--off)] text-[var(--muted)]" },
-};
-
-const SPECIES_EMOJI: Record<string, string> = {
-  dog: "🐕", cat: "🐈", horse: "🐎", bird: "🦜",
-  rabbit: "🐇", guinea_pig: "🐹", hamster: "🐹",
-  reptile: "🦎", fish: "🐟", other: "🐾",
 };
 
 /* ─── Application row ─────────────────────────────────────────────────────── */
@@ -170,7 +166,7 @@ function ListingCard({
   }
 
   const badge = LISTING_STATUS[listing.status] ?? LISTING_STATUS.available;
-  const emoji = SPECIES_EMOJI[listing.pet.species] ?? "🐾";
+  const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
 
   return (
     <div className="card overflow-hidden">

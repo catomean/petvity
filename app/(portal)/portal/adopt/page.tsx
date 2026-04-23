@@ -6,6 +6,8 @@ import {
   Heart, PawPrint, MapPin, Users,
   Search, Filter, ChevronRight, Sparkles,
 } from "lucide-react";
+import { SPECIES_CONFIG, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -38,20 +40,8 @@ interface AdoptionListing {
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
-const SPECIES_OPTIONS = [
-  { value: "", label: "All species" },
-  { value: "dog", label: "Dogs" },
-  { value: "cat", label: "Cats" },
-  { value: "bird", label: "Birds" },
-  { value: "rabbit", label: "Rabbits" },
-  { value: "other", label: "Other" },
-];
-
-const SPECIES_EMOJI: Record<string, string> = {
-  dog: "🐕", cat: "🐈", horse: "🐎", bird: "🦜",
-  rabbit: "🐇", guinea_pig: "🐹", hamster: "🐹",
-  reptile: "🦎", fish: "🐟", other: "🐾",
-};
+// Prepend "All species" to the SSOT list from lib/config/species
+const SPECIES_OPTIONS = [{ value: "", label: "All species" }, ...SPECIES_OPTS];
 
 function ageLabel(birthDate: string | null): string {
   if (!birthDate) return "";
@@ -72,7 +62,7 @@ function feeLabel(feeCents: number | null): string {
 /* ─── Listing Card ───────────────────────────────────────────────────────── */
 
 function ListingCard({ listing }: { listing: AdoptionListing }) {
-  const emoji = SPECIES_EMOJI[listing.pet.species] ?? "🐾";
+  const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
   const age = ageLabel(listing.pet.birthDate);
 
   return (
