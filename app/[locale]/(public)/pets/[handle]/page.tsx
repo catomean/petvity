@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics } from "@/lib/db/schema";
+import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { APP, APP_URL } from "@/lib/config/app";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
 import { HEALTH_CHART_WINDOW_DAYS } from "@/lib/config/health-metrics";
 import type { SpeciesId, SexId } from "@/lib/config/species";
-import type { PetWellnessSignal } from "@/lib/config/pet-signal";
+import { computePetSignal } from "@/lib/domain/pet-signal";
+import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { formatDateShort } from "@/lib/utils/format";
 import Link from "next/link";
@@ -67,14 +68,31 @@ export default async function PublicPetPage({ params }: Params) {
   if (!pet) notFound();
 
   const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
-  const signal = (pet.lastKnownSignal ?? "healthy") as PetWellnessSignal;
 
-  // Fetch recent metrics to power the digital twin
+  // Fetch recent metrics (30-day window for chart/twin) and vaccinations (for live signal)
   const since30 = new Date(Date.now() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
-  const recentMetrics = await db.query.healthMetrics.findMany({
-    where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
-    orderBy: [desc(healthMetrics.date)],
+  const sinceSignal = new Date(Date.now() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const today = new Date().toISOString().slice(0, 10);
+  const [recentMetrics, petVaccinations] = await Promise.all([
+    db.query.healthMetrics.findMany({
+      where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
+      orderBy: [desc(healthMetrics.date)],
+    }),
+    db.select({ nextDueDate: vaccinations.nextDueDate, status: vaccinations.status })
+      .from(vaccinations)
+      .where(eq(vaccinations.petId, pet.id)),
+  ]);
+
+  // Compute signal live (consistent with portal pet profile)
+  const signalMetrics = recentMetrics.filter((m) => m.date >= sinceSignal);
+  const overdueCount = countOverdueVaccinations(petVaccinations, today);
+  const signalResult = computePetSignal({
+    species: pet.species as SpeciesId,
+    recentMetrics: signalMetrics,
+    overdueVaccinations: overdueCount,
   });
+  const signal = signalResult.signal;
+
   const twin = computeDigitalTwin(recentMetrics);
   const twinCfg = TWIN_STATE_CONFIG[twin.id];
 
