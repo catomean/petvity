@@ -34,13 +34,13 @@ const VALUES = [
   {
     icon: Zap,
     color: "bg-amber-50 text-amber-600",
-    title: "Simple, not simplified",
-    desc: "We track the things that matter: weight, temperature, heart rate, energy, mood, anxiety, vaccinations, medications, and vet records. We don't add features for their own sake.",
+    title: "Data without action is noise",
+    desc: "Knowing your pet's signal is valuable. But the platform doesn't stop there — it connects you directly to vets who can act on it, products your pet needs, and a network that can find every animal a home.",
   },
 ];
 
 const STATS = [
-  { value: "4+", label: "Species supported" },
+  { value: "10", label: "Species supported" },
   { value: "7", label: "Health metrics tracked" },
   { value: "9", label: "Languages available" },
   { value: "Free", label: "For individual owners — forever" },
@@ -66,13 +66,18 @@ export default function AboutPage() {
               Our story
             </div>
             <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
-              We built the tool<br />
-              <span className="text-[var(--teal)]">we needed ourselves</span>
+              We built the platform<br />
+              <span className="text-[var(--teal)]">pet care was missing</span>
             </h1>
-            <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed">
-              {APP.name} was born out of a frustrating pattern: noticing something was
-              off with a pet, not being able to articulate exactly what, and arriving at
-              the vet with a vague &quot;he just seems a bit off.&quot; We wanted data. So we built it.
+            <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed mb-4">
+              {APP.name} was born from a frustrating pattern: noticing something was off
+              with a pet, not being able to articulate exactly what, and arriving at the
+              vet with a vague &quot;he just seems a bit off.&quot; We wanted data. So we built it.
+            </p>
+            <p className="text-lg text-[var(--muted)] leading-relaxed">
+              Then we kept going — because good data is only half the job. You also need
+              a vet who can interpret it, products your pet actually needs, and a network
+              that can find every animal a home. That&apos;s Petvity.
             </p>
           </div>
         </div>
@@ -85,7 +90,7 @@ export default function AboutPage() {
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-[var(--muted)] mb-4">Our mission</p>
               <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight mb-6">
-                Close the gap between what you notice and what your vet can act on
+                Turn a pet owner&apos;s instinct into a signal a vet can act on
               </h2>
               <p className="text-[var(--muted)] leading-relaxed mb-4">
                 Every pet owner has an intuition about their animal. Something&apos;s different.
@@ -94,14 +99,15 @@ export default function AboutPage() {
                 easy to dismiss.
               </p>
               <p className="text-[var(--muted)] leading-relaxed mb-4">
-                Petvity turns those observations into a structured health record. When you
-                arrive at the vet saying &quot;her energy score dropped from 4 to 2 over the last
-                eight days and her weight is down 400 grams,&quot; that&apos;s a workable clinical
-                observation — not a vague feeling.
+                Petvity turns those observations into a structured health record and a living
+                Digital Twin. When you arrive at the vet saying &quot;her energy score dropped from
+                4 to 2 over the last eight days and her Digital Twin shifted from Thriving to
+                Needs Attention,&quot; that&apos;s a workable clinical picture — not a vague feeling.
               </p>
               <p className="text-[var(--muted)] leading-relaxed">
-                We support dogs, cats, horses, and any other species — because the need for
-                good data isn&apos;t species-specific.
+                But data alone isn&apos;t enough. We also connect owners to the vets and sitters
+                who can respond, the products their pets need, and a global adoption network
+                — because the full care journey happens on one platform, not five.
               </p>
             </div>
 
@@ -147,19 +153,24 @@ export default function AboutPage() {
       <section className="py-16 bg-[var(--off)] border-y border-[var(--border)]">
         <div className="section-inner max-w-3xl mx-auto text-center">
           <p className="text-xs font-bold uppercase tracking-widest text-[var(--muted)] mb-4">
-            Part of a bigger picture
+            The long view
           </p>
           <h2 className="text-2xl font-extrabold text-[var(--ink)] mb-4">
-            {APP.name} is part of an ecosystem built around health data
+            A platform, not a feature
           </h2>
+          <p className="text-[var(--muted)] leading-relaxed text-sm mb-4">
+            Most pet apps do one thing. Petvity connects the whole picture: daily health
+            data feeds a Digital Twin, the twin surfaces a wellness signal, the signal
+            tells you whether to book a vet — and the vet is two taps away. That closed
+            loop is what makes it useful every day, not just when something goes wrong.
+          </p>
           <p className="text-[var(--muted)] leading-relaxed text-sm">
             We also build{" "}
             <span className="font-medium text-[var(--ink2)]">VitaReBa</span>
-            {" "}— a clinic management portal for rehabilitation therapists — and we&apos;re
-            exploring how shared data infrastructure can power better care decisions across
-            the human–animal spectrum. The long-term vision includes digital twins: IoT
-            sensors and cameras feeding real-time physiological data directly into each
-            pet&apos;s health record.
+            {" "}— a clinic management portal for rehabilitation therapists — and are
+            exploring how shared health data infrastructure can power better care decisions
+            across the human–animal spectrum. Long-term: IoT sensors and cameras feeding
+            real-time physiological data directly into each pet&apos;s Digital Twin.
           </p>
         </div>
       </section>

@@ -112,19 +112,22 @@ export default function HomePage() {
             <div>
               <div className="inline-flex items-center gap-2 bg-[var(--teal-light)] text-[var(--teal)] text-xs font-semibold px-3 py-1.5 rounded-full mb-7 border border-[var(--teal-mid)]">
                 <Zap className="w-3 h-3" />
-                Dogs, cats, horses & more · 7 health metrics · Free to start
+                10 species · Digital Twin · Free forever
               </div>
 
               <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
-                Your pet&apos;s health,
+                Your pet has a signal.
                 <br />
-                <span className="text-[var(--teal)]">understood</span>
+                <span className="text-[var(--teal)]">Now you can read it.</span>
               </h1>
 
               <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed mb-9 max-w-lg">
-                Track vitals, vaccinations, and vet records in one place.
-                Petvity tells you when something needs attention —
-                <strong className="text-[var(--ink2)] font-medium"> before it&apos;s urgent.</strong>
+                One daily check-in builds a living Digital Twin — physical vitals
+                plus emotional state, compared against species-specific norms.
+                When something shifts,{" "}
+                <strong className="text-[var(--ink2)] font-medium">
+                  Petvity tells you what, and connects you to a vet who can act on it.
+                </strong>
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 mb-10">
@@ -615,7 +618,7 @@ export default function HomePage() {
             {[
               { n: "01", title: "Create your free account", desc: "Email and password. 30 seconds." },
               { n: "02", title: "Add your pet", desc: "Name, species, breed, birthdate, photo. Dogs, cats, horses, and more." },
-              { n: "03", title: "Log your first check-in", desc: "Record vitals and mood. The wellness signal updates instantly." },
+              { n: "03", title: "Log your first check-in", desc: "Record vitals and mood. The wellness signal and Digital Twin update instantly." },
             ].map(({ n, title, desc }, i) => (
               <div key={n} className="text-center relative">
                 {i < 2 && (
@@ -685,12 +688,12 @@ export default function HomePage() {
         <div className="section-inner relative text-center">
           <CalendarDays className="w-12 h-12 text-[var(--teal-light)] mx-auto mb-6 opacity-80" />
           <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-5">
-            Your pet deserves
-            <br />the best care
+            Start reading
+            <br />your pet&apos;s signal
           </h2>
           <p className="text-lg text-[var(--teal-mid)] mb-10 max-w-xl mx-auto leading-relaxed">
-            Start tracking today. It&apos;s free, it takes minutes, and
-            it could make all the difference.
+            Free forever. No credit card. Add your first pet in under a minute —
+            and see your Digital Twin on your first check-in.
           </p>
           <Link
             href="/register"
