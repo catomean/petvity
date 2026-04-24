@@ -10,6 +10,13 @@ export const NO_METRIC_LOG_ALERT_DAYS = 7;
 export const VACCINATION_DUE_SOON_DAYS = 30;
 
 /**
+ * Reminder milestones (days before due date) at which the cron sends an email.
+ * Sorted descending. Sending at fixed points (not daily) prevents inbox spam
+ * while still giving 3 advance notices: 30d, 7d, and 1d before due.
+ */
+export const VACCINATION_REMINDER_DAYS = [30, 7, 1] as const;
+
+/**
  * Number of out-of-range metrics to trigger "watch" vs "concern".
  * concern: >= CONCERN threshold
  * watch:   >= WATCH threshold (but < CONCERN)

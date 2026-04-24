@@ -5,7 +5,7 @@ import { pets, vaccinations, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { vaccinationReminder } from "@/lib/email/templates";
 import { APP_URL } from "@/lib/config/app";
-import { VACCINATION_DUE_SOON_DAYS } from "@/lib/config/pet-signal";
+import { VACCINATION_DUE_SOON_DAYS, VACCINATION_REMINDER_DAYS } from "@/lib/config/pet-signal";
 import { formatDateShort } from "@/lib/utils/format";
 
 export async function POST(req: NextRequest) {
@@ -47,6 +47,14 @@ export async function POST(req: NextRequest) {
 
   for (const row of dueSoon) {
     if (!row.ownerEmail || !row.nextDueDate) continue;
+
+    // Only send at specific milestone distances (30d, 7d, 1d) to avoid daily spam.
+    // Compare UTC midnight dates so the difference is always a whole number of days.
+    const daysUntilDue =
+      (new Date(row.nextDueDate + "T00:00:00Z").getTime() -
+        new Date(todayStr + "T00:00:00Z").getTime()) /
+      86400000;
+    if (!(VACCINATION_REMINDER_DAYS as readonly number[]).includes(daysUntilDue)) continue;
 
     const { subject, html } = vaccinationReminder({
       ownerName: row.ownerName ?? "there",
