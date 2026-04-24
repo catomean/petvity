@@ -81,9 +81,16 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Batch-update all cached signals
+  // Batch-update cached signals — group by signal value so we run ≤3 queries
+  // instead of one per pet (there are only 3 possible signal values).
+  const petsBySignal = new Map<string, string[]>();
   for (const { id, signal } of signalUpdates) {
-    await db.update(pets).set({ lastKnownSignal: signal }).where(eq(pets.id, id));
+    const arr = petsBySignal.get(signal) ?? [];
+    arr.push(id);
+    petsBySignal.set(signal, arr);
+  }
+  for (const [signal, ids] of petsBySignal) {
+    await db.update(pets).set({ lastKnownSignal: signal }).where(inArray(pets.id, ids));
   }
 
   if (alertPetIds.length === 0) {
