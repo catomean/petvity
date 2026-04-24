@@ -82,11 +82,14 @@ export function makeMockDb() {
       }),
     }),
 
-    // UPDATE — db.update(table).set({...}).where(...).returning()
+    // UPDATE — supports both:
+    //   await db.update(t).set({}).where(c)           // no .returning()
+    //   await db.update(t).set({}).where(c).returning() // with .returning()
     update: vi.fn().mockReturnValue({
       set: vi.fn().mockReturnValue({
-        where: vi.fn().mockReturnValue({
-          returning: _updateReturning,
+        where: vi.fn().mockImplementation(() => {
+          const p = Promise.resolve(undefined as unknown);
+          return Object.assign(p, { returning: _updateReturning });
         }),
       }),
     }),
