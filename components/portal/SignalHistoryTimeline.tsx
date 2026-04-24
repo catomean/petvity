@@ -1,4 +1,4 @@
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 
 type HistoryRow = {
@@ -25,8 +25,8 @@ export function SignalHistoryTimeline({ rows }: { rows: HistoryRow[] }) {
           });
           return (
             <li key={row.id} className="ms-5">
-              {/* Timeline dot */}
-              <span className="absolute -start-[7px] w-3.5 h-3.5 rounded-full bg-[var(--border)] border-2 border-white" />
+              {/* Timeline dot — color matches signal level */}
+              <span className={`absolute -start-[7px] w-3.5 h-3.5 rounded-full border-2 border-white ${SIGNAL_STRIP_CLASSES[sig]}`} />
 
               <div className="flex items-center gap-2 flex-wrap">
                 <span className={SIGNAL_BG_CLASSES[sig]}>

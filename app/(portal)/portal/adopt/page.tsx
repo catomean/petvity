@@ -9,6 +9,7 @@ import {
 import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG, SEX_LABELS, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
+import { formatPetAgeShort } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -44,16 +45,6 @@ interface AdoptionListing {
 // Prepend "All species" to the SSOT list from lib/config/species
 const SPECIES_OPTIONS = [{ value: "", label: "All species" }, ...SPECIES_OPTS];
 
-function ageLabel(birthDate: string | null): string {
-  if (!birthDate) return "";
-  const months = Math.floor(
-    (Date.now() - new Date(birthDate).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
-  );
-  if (months < 1) return "< 1 month";
-  if (months < 12) return `${months}mo`;
-  const years = Math.floor(months / 12);
-  return `${years}yr`;
-}
 
 function feeLabel(feeCents: number | null): string {
   if (feeCents === null) return "Free";
@@ -64,7 +55,7 @@ function feeLabel(feeCents: number | null): string {
 
 function ListingCard({ listing }: { listing: AdoptionListing }) {
   const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
-  const age = ageLabel(listing.pet.birthDate);
+  const age = formatPetAgeShort(listing.pet.birthDate);
 
   return (
     <Link
