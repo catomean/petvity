@@ -66,7 +66,7 @@ describe("GET /api/adoptions (public browse)", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as any);
   });
 
   it("returns 200 with available listings", async () => {
@@ -100,7 +100,7 @@ describe("GET /api/adoptions?applied=1 (applicant view)", () => {
   });
 
   it("returns 401 when unauthenticated", async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as any);
 
     const res = await GET(makeGetRequest("applied=1"));
     expect(res.status).toBe(401);
@@ -152,7 +152,7 @@ describe("GET /api/adoptions?mine=1 (owner's listings)", () => {
   });
 
   it("returns 401 when unauthenticated", async () => {
-    vi.mocked(auth).mockResolvedValue(null);
+    vi.mocked(auth).mockResolvedValue(null as any);
 
     const res = await GET(makeGetRequest("mine=1"));
     expect(res.status).toBe(401);
