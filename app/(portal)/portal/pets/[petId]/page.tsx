@@ -88,13 +88,15 @@ export default async function PetProfilePage({ params }: Params) {
       href: `/portal/pets/${pet.id}/records`,
       icon: FileText,
       label: "Records",
-      desc: "Vet visits",
+      desc: "Health history",
     },
     {
       href: `/portal/pets/${pet.id}/vaccinations`,
       icon: Syringe,
       label: "Vaccinations",
-      desc: `${allVacc.length} logged`,
+      desc: overdueCount > 0
+        ? `${allVacc.length} logged · ${overdueCount} overdue`
+        : `${allVacc.length} logged`,
     },
     {
       href: `/portal/pets/${pet.id}/medications`,
