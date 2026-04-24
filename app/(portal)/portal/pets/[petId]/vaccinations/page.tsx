@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   Plus, Syringe, ChevronLeft, X,
   Check, AlertTriangle, Clock,
-  Pencil, Trash2,
+  Pencil, Trash2, Search,
 } from "lucide-react";
 import { formatDateShort, formatRelativeDate } from "@/lib/utils/format";
 import { VACCINATION_STATUS_CONFIG } from "@/lib/config/vaccinations";
@@ -62,6 +62,7 @@ export default function VaccinationsPage() {
   const [rows, setRows] = useState<Vaccination[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<VaccinationStatus | "all">("all");
+  const [searchQ, setSearchQ] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -165,9 +166,17 @@ export default function VaccinationsPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  const filteredRows = statusFilter === "all"
-    ? rows
-    : rows.filter((r) => r.status === statusFilter);
+  const filteredRows = rows.filter((r) => {
+    if (statusFilter !== "all" && r.status !== statusFilter) return false;
+    if (searchQ.trim()) {
+      const q = searchQ.toLowerCase();
+      return (
+        r.name.toLowerCase().includes(q) ||
+        (r.notes?.toLowerCase().includes(q) ?? false)
+      );
+    }
+    return true;
+  });
 
   if (loading) {
     return (
@@ -194,19 +203,32 @@ export default function VaccinationsPage() {
           <h1 className="text-2xl font-semibold text-[var(--ink)]">Vaccinations</h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">Track immunisations and upcoming boosters</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {rows.length > 0 && !showForm && (
-            <select
-              className="form-input text-sm py-1.5"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as VaccinationStatus | "all")}
-              aria-label="Filter by status"
-            >
-              <option value="all">All statuses</option>
-              {(Object.entries(VACCINATION_STATUS_CONFIG) as [VaccinationStatus, { label: string }][]).map(
-                ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
-              )}
-            </select>
+            <>
+              <div className="relative">
+                <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search vaccines…"
+                  className="form-input text-sm py-1.5 ps-8 w-40"
+                  value={searchQ}
+                  onChange={(e) => setSearchQ(e.target.value)}
+                  aria-label="Search vaccinations"
+                />
+              </div>
+              <select
+                className="form-input text-sm py-1.5"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as VaccinationStatus | "all")}
+                aria-label="Filter by status"
+              >
+                <option value="all">All statuses</option>
+                {(Object.entries(VACCINATION_STATUS_CONFIG) as [VaccinationStatus, { label: string }][]).map(
+                  ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
+                )}
+              </select>
+            </>
           )}
           {!showForm && (
             <button onClick={openAdd} className="btn-primary flex items-center gap-2">
@@ -357,9 +379,12 @@ export default function VaccinationsPage() {
           </div>
         ) : filteredRows.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="font-medium text-[var(--ink)] mb-1">No vaccinations match this filter</p>
-            <button onClick={() => setStatusFilter("all")} className="text-sm text-[var(--teal)] hover:underline mt-1">
-              Show all vaccinations
+            <p className="font-medium text-[var(--ink)] mb-1">No vaccinations match</p>
+            <button
+              onClick={() => { setStatusFilter("all"); setSearchQ(""); }}
+              className="text-sm text-[var(--teal)] hover:underline mt-1"
+            >
+              Clear filters
             </button>
           </div>
         ) : (

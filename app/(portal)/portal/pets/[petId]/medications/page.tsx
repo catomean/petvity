@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   Plus, Pill, ChevronLeft, X,
   Check, Clock, Ban,
-  Pencil, Trash2,
+  Pencil, Trash2, Search,
 } from "lucide-react";
 import { formatDateShort } from "@/lib/utils/format";
 import { MEDICATION_STATUS_CONFIG } from "@/lib/config/medications";
@@ -64,6 +64,7 @@ export default function MedicationsPage() {
   const [rows, setRows] = useState<Medication[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<MedicationStatus | "all">("all");
+  const [searchQ, setSearchQ] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -169,9 +170,18 @@ export default function MedicationsPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  const filteredRows = statusFilter === "all"
-    ? rows
-    : rows.filter((m) => m.status === statusFilter);
+  const filteredRows = rows.filter((m) => {
+    if (statusFilter !== "all" && m.status !== statusFilter) return false;
+    if (searchQ.trim()) {
+      const q = searchQ.toLowerCase();
+      return (
+        m.name.toLowerCase().includes(q) ||
+        (m.dosage?.toLowerCase().includes(q) ?? false) ||
+        (m.notes?.toLowerCase().includes(q) ?? false)
+      );
+    }
+    return true;
+  });
 
   if (loading) {
     return (
@@ -198,19 +208,32 @@ export default function MedicationsPage() {
           <h1 className="text-2xl font-semibold text-[var(--ink)]">Medications</h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">Track prescriptions, dosages, and treatment history</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {rows.length > 0 && !showForm && (
-            <select
-              className="form-input text-sm py-1.5"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as MedicationStatus | "all")}
-              aria-label="Filter by status"
-            >
-              <option value="all">All statuses</option>
-              {(Object.entries(MEDICATION_STATUS_CONFIG) as [MedicationStatus, { label: string }][]).map(
-                ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
-              )}
-            </select>
+            <>
+              <div className="relative">
+                <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search medications…"
+                  className="form-input text-sm py-1.5 ps-8 w-44"
+                  value={searchQ}
+                  onChange={(e) => setSearchQ(e.target.value)}
+                  aria-label="Search medications"
+                />
+              </div>
+              <select
+                className="form-input text-sm py-1.5"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as MedicationStatus | "all")}
+                aria-label="Filter by status"
+              >
+                <option value="all">All statuses</option>
+                {(Object.entries(MEDICATION_STATUS_CONFIG) as [MedicationStatus, { label: string }][]).map(
+                  ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
+                )}
+              </select>
+            </>
           )}
           {!showForm && (
             <button onClick={openAdd} className="btn-primary flex items-center gap-2">
@@ -368,9 +391,12 @@ export default function MedicationsPage() {
           </div>
         ) : filteredRows.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="font-medium text-[var(--ink)] mb-1">No medications match this filter</p>
-            <button onClick={() => setStatusFilter("all")} className="text-sm text-[var(--teal)] hover:underline mt-1">
-              Show all medications
+            <p className="font-medium text-[var(--ink)] mb-1">No medications match</p>
+            <button
+              onClick={() => { setStatusFilter("all"); setSearchQ(""); }}
+              className="text-sm text-[var(--teal)] hover:underline mt-1"
+            >
+              Clear filters
             </button>
           </div>
         ) : (

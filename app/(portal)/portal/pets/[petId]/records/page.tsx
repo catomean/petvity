@@ -7,7 +7,7 @@ import {
   Plus, ChevronLeft, X, FileText,
   Stethoscope, Syringe, Pill, Scissors, FlaskConical,
   Smile, Sparkles, MoreHorizontal,
-  Pencil, Trash2,
+  Pencil, Trash2, Search,
 } from "lucide-react";
 import { formatDateShort } from "@/lib/utils/format";
 import { HEALTH_RECORD_TYPE_CONFIG, HEALTH_RECORD_TYPE_OPTIONS } from "@/lib/config/health-records";
@@ -64,6 +64,7 @@ export default function HealthRecordsPage() {
   const [records, setRecords] = useState<HealthRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState<RecordType | "all">("all");
+  const [searchQ, setSearchQ] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -165,9 +166,19 @@ export default function HealthRecordsPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  const filteredRecords = typeFilter === "all"
-    ? records
-    : records.filter((r) => r.type === typeFilter);
+  const filteredRecords = records.filter((r) => {
+    if (typeFilter !== "all" && r.type !== typeFilter) return false;
+    if (searchQ.trim()) {
+      const q = searchQ.toLowerCase();
+      return (
+        r.title.toLowerCase().includes(q) ||
+        (r.vetName?.toLowerCase().includes(q) ?? false) ||
+        (r.clinic?.toLowerCase().includes(q) ?? false) ||
+        (r.notes?.toLowerCase().includes(q) ?? false)
+      );
+    }
+    return true;
+  });
 
   if (loading) {
     return (
@@ -196,19 +207,32 @@ export default function HealthRecordsPage() {
             Vet visits, treatments, lab results and more
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {records.length > 0 && !showForm && (
-            <select
-              className="form-input text-sm py-1.5"
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value as RecordType | "all")}
-              aria-label="Filter by type"
-            >
-              <option value="all">All types</option>
-              {HEALTH_RECORD_TYPE_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>{label}</option>
-              ))}
-            </select>
+            <>
+              <div className="relative">
+                <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search records…"
+                  className="form-input text-sm py-1.5 ps-8 w-44"
+                  value={searchQ}
+                  onChange={(e) => setSearchQ(e.target.value)}
+                  aria-label="Search records"
+                />
+              </div>
+              <select
+                className="form-input text-sm py-1.5"
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value as RecordType | "all")}
+                aria-label="Filter by type"
+              >
+                <option value="all">All types</option>
+                {HEALTH_RECORD_TYPE_OPTIONS.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>
+            </>
           )}
           {!showForm && (
             <button onClick={openAdd} className="btn-primary flex items-center gap-2">
@@ -361,12 +385,12 @@ export default function HealthRecordsPage() {
         </div>
       ) : filteredRecords.length === 0 ? (
         <div className="card py-12 text-center">
-          <p className="font-medium text-[var(--ink)] mb-1">No records match this filter</p>
+          <p className="font-medium text-[var(--ink)] mb-1">No records match</p>
           <button
-            onClick={() => setTypeFilter("all")}
+            onClick={() => { setTypeFilter("all"); setSearchQ(""); }}
             className="text-sm text-[var(--teal)] hover:underline mt-1"
           >
-            Show all records
+            Clear filters
           </button>
         </div>
       ) : (
