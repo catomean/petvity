@@ -155,8 +155,8 @@ export default async function PublicAdoptPage({ params }: Params) {
                       <p className="font-semibold text-[var(--ink)] truncate group-hover:text-[var(--teal)] transition-colors">
                         {listing.pet.name}
                       </p>
-                      <p className="text-xs text-[var(--muted)] mt-0.5 capitalize">
-                        {listing.pet.species}
+                      <p className="text-xs text-[var(--muted)] mt-0.5">
+                        {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
                         {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
                         {age ? ` · ${age}` : ""}
                         {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${listing.pet.sex}` : ""}

@@ -91,8 +91,8 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <p className="font-semibold text-[var(--ink)] truncate">{listing.pet.name}</p>
-            <p className="text-xs text-[var(--muted)] mt-0.5 capitalize">
-              {listing.pet.species}
+            <p className="text-xs text-[var(--muted)] mt-0.5">
+              {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
               {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
               {age ? ` · ${age}` : ""}
               {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${listing.pet.sex}` : ""}

@@ -170,8 +170,8 @@ export default function ListingDetailPage() {
           <div className="flex items-start justify-between gap-3 mb-4">
             <div>
               <h1 className="text-2xl font-bold text-[var(--ink)]">{listing.pet.name}</h1>
-              <p className="text-sm text-[var(--muted)] capitalize mt-0.5">
-                {listing.pet.species}
+              <p className="text-sm text-[var(--muted)] mt-0.5">
+                {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
                 {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
                 {age ? ` · ${age}` : ""}
                 {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${listing.pet.sex}` : ""}

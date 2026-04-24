@@ -135,8 +135,8 @@ export default async function PublicListingDetailPage({ params }: Params) {
             <div className="flex items-start justify-between gap-3 mb-4">
               <div>
                 <h1 className="text-2xl font-bold text-[var(--ink)]">{row.pet.name}</h1>
-                <p className="text-sm text-[var(--muted)] capitalize mt-0.5">
-                  {row.pet.species}
+                <p className="text-sm text-[var(--muted)] mt-0.5">
+                  {SPECIES_CONFIG[row.pet.species as SpeciesId]?.label ?? row.pet.species}
                   {row.pet.breed ? ` · ${row.pet.breed}` : ""}
                   {age ? ` · ${age}` : ""}
                   {row.pet.sex && row.pet.sex !== "unknown" ? ` · ${row.pet.sex}` : ""}
