@@ -3,6 +3,7 @@ import {
   Activity, Syringe, Pill,
   CalendarDays, CheckCircle, TrendingUp,
   ArrowRight, Zap, Star,
+  Brain, Stethoscope, ShoppingBag, Heart,
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
@@ -307,6 +308,89 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Digital Twin ─────────────────────────────────────────────────── */}
+      <section className="py-24 md:py-32 bg-gradient-to-br from-violet-50 via-white to-[var(--teal-light)]">
+        <div className="section-inner">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Visual */}
+            <div className="order-2 lg:order-1">
+              <div className="card shadow-[var(--shadow-lg)] rounded-2xl overflow-hidden max-w-sm mx-auto">
+                {/* Card header */}
+                <div className="bg-gradient-to-r from-violet-600 to-[var(--teal)] px-5 py-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl">🐕</div>
+                  <div>
+                    <p className="font-bold text-white text-sm">Buddy</p>
+                    <p className="text-white/60 text-xs">Golden Retriever · 3 yr</p>
+                  </div>
+                </div>
+                <div className="p-5">
+                  {/* Twin state badge */}
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">Digital Twin</p>
+                    <span className="inline-flex items-center gap-1.5 bg-[var(--green-bg)] text-[var(--green)] text-xs font-bold px-3 py-1 rounded-full">
+                      <Brain className="w-3 h-3" />
+                      Thriving
+                    </span>
+                  </div>
+
+                  {/* Trend */}
+                  <div className="flex items-center gap-1.5 mb-5">
+                    <TrendingUp className="w-3.5 h-3.5 text-[var(--green)]" />
+                    <p className="text-xs text-[var(--green)] font-medium">Improving over the last 7 days</p>
+                  </div>
+
+                  {/* Metric bars */}
+                  <div className="space-y-2.5">
+                    {[
+                      { label: "Mood",          value: 4, max: 5, invert: false },
+                      { label: "Energy",         value: 4, max: 5, invert: false },
+                      { label: "Socialization",  value: 5, max: 5, invert: false },
+                      { label: "Calm",           value: 4, max: 5, invert: true,  note: "low anxiety" },
+                    ].map(({ label, value, max, note }) => (
+                      <div key={label}>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-xs text-[var(--ink2)] font-medium">{label}</span>
+                          <span className="text-xs text-[var(--muted)]">{note ?? `${value}/${max}`}</span>
+                        </div>
+                        <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-[var(--green)] rounded-full"
+                            style={{ width: `${(value / max) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* History note */}
+                  <p className="text-[11px] text-[var(--faint)] mt-4 text-center">Based on 28 check-ins · last 30 days</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Copy */}
+            <div className="order-1 lg:order-2">
+              <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3">Digital twin</p>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-6 leading-tight">
+                See how your pet
+                <br /><span className="text-violet-600">feels</span>, not just
+                <br />how they measure
+              </h2>
+              <p className="text-lg text-[var(--muted)] leading-relaxed mb-5">
+                Vitals tell you what. The Digital Twin tells you how. It combines mood, energy, anxiety, and socialization into a single living portrait — updated every time you log a check-in.
+              </p>
+              <p className="text-base text-[var(--muted)] leading-relaxed mb-8">
+                Four emotional states — <strong className="text-[var(--ink2)] font-medium">Thriving</strong>, <strong className="text-[var(--ink2)] font-medium">Doing Well</strong>, <strong className="text-[var(--ink2)] font-medium">Needs Attention</strong>, or <strong className="text-[var(--ink2)] font-medium">Struggling</strong> — plus a trend indicator so you can see whether things are improving or declining before they become a problem.
+              </p>
+              <Link href="/register" className="btn-primary">
+                See your pet&apos;s twin
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Wellness signals ─────────────────────────────────────────────── */}
       <section className="bg-[var(--off)] border-y border-[var(--border)] py-24 md:py-32">
         <div className="section-inner">
@@ -361,6 +445,113 @@ export default function HomePage() {
                   <p className="text-sm text-[var(--ink2)] leading-relaxed">{desc}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Platform ecosystem ───────────────────────────────────────────── */}
+      <section className="py-24 md:py-32">
+        <div className="section-inner">
+          <div className="text-center mb-16">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
+              The full platform
+            </p>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
+              Everything pet care needs
+            </h2>
+            <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
+              Health tracking is just the start. Petvity is the only platform that covers the complete care journey — from daily check-ins to finding a vet to giving a pet a home.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Find a Pro */}
+            <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center">
+                <Stethoscope className="w-6 h-6 text-[var(--teal)]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">Find a Vet or Sitter</h3>
+                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                  Search verified veterinarians and pet sitters near you. Read reviews, check availability, and book directly — without leaving the app.
+                </p>
+              </div>
+              <div className="space-y-2.5 mt-auto">
+                {[
+                  { icon: "🔍", text: "Search by specialty or location" },
+                  { icon: "⭐", text: "Verified reviews from real bookings" },
+                  { icon: "📅", text: "Book and manage appointments" },
+                ].map(({ icon, text }) => (
+                  <div key={text} className="flex items-center gap-2.5">
+                    <span className="text-base w-5 flex-shrink-0">{icon}</span>
+                    <span className="text-sm text-[var(--ink2)]">{text}</span>
+                  </div>
+                ))}
+              </div>
+              <Link href="/register" className="btn-outline text-sm justify-center mt-2">
+                Find a pro <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* Marketplace */}
+            <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--accent-light)] flex items-center justify-center">
+                <ShoppingBag className="w-6 h-6 text-[var(--accent)]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">Pet Care Marketplace</h3>
+                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                  Shop food, supplements, toys, and accessories — all in the same app you use to track health. No switching between sites.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mt-auto">
+                {[
+                  { icon: "🦴", name: "Dental Chews", price: "$18.99" },
+                  { icon: "🐟", name: "Omega-3",      price: "$24.99" },
+                  { icon: "🛏️", name: "Ortho Bed",    price: "$89.99" },
+                  { icon: "💊", name: "Probiotics",   price: "$22.99" },
+                ].map(({ icon, name, price }) => (
+                  <div key={name} className="bg-[var(--off)] rounded-xl p-2.5 flex items-center gap-2">
+                    <span className="text-base">{icon}</span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-medium text-[var(--ink)] truncate">{name}</p>
+                      <p className="text-xs text-[var(--teal)] font-semibold">{price}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link href="/register" className="btn-outline text-sm justify-center mt-2">
+                Browse shop <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* Adoption */}
+            <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
+              <div className="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center">
+                <Heart className="w-6 h-6 text-pink-500" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">Pet Adoption</h3>
+                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                  List a pet for adoption or find your next companion. Full application workflow, cross-border listings, and direct messaging between owners.
+                </p>
+              </div>
+              <div className="space-y-2.5 mt-auto">
+                {[
+                  { icon: "📋", text: "Structured adoption applications" },
+                  { icon: "🌍", text: "Cross-border listings supported" },
+                  { icon: "✅", text: "Owner-managed approvals" },
+                ].map(({ icon, text }) => (
+                  <div key={text} className="flex items-center gap-2.5">
+                    <span className="text-base w-5 flex-shrink-0">{icon}</span>
+                    <span className="text-sm text-[var(--ink2)]">{text}</span>
+                  </div>
+                ))}
+              </div>
+              <Link href="/register" className="btn-outline text-sm justify-center mt-2">
+                Browse adoptions <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
         </div>
