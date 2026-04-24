@@ -4,6 +4,13 @@ import {
 } from "lucide-react";
 import MarketingNav from "@/components/sections/MarketingNav";
 import MarketingFooter from "@/components/sections/MarketingFooter";
+import type { Metadata } from "next";
+import { APP } from "@/lib/config/app";
+
+export const metadata: Metadata = {
+  title: `Pricing · ${APP.name}`,
+  description: "Free for individual pet owners, always. Pro and Clinic plans for breeders and veterinary businesses coming soon.",
+};
 
 const PLANS = [
   {

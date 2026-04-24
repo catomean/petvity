@@ -8,6 +8,18 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import MarketingNav from "@/components/sections/MarketingNav";
 import MarketingFooter from "@/components/sections/MarketingFooter";
+import type { Metadata } from "next";
+import { APP } from "@/lib/config/app";
+
+export const metadata: Metadata = {
+  title: `${APP.name} — The global platform for pet care`,
+  description: "Track your pet's health signals, connect with vets and sitters, shop essentials, and manage adoption — all in one place. Free forever.",
+  openGraph: {
+    title: `${APP.name} — The global platform for pet care`,
+    description: "Track your pet's health signals, connect with vets and sitters, shop essentials, and manage adoption — all in one place. Free forever.",
+    type: "website",
+  },
+};
 
 const SPECIES_DISPLAY = Object.values(SPECIES_CONFIG).filter(
   (s) => s.id !== "other"

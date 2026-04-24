@@ -9,8 +9,21 @@ import MarketingFooter from "@/components/sections/MarketingFooter";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { HEALTH_METRIC_CONFIG, getNormalRange } from "@/lib/config/health-metrics";
+import type { Metadata } from "next";
+import { APP } from "@/lib/config/app";
 
 type Params = { params: Promise<{ speciesId: string; locale: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { speciesId } = await params;
+  const def = SPECIES_CONFIG[speciesId as SpeciesId];
+  if (!def || def.id === "other") return { title: APP.name };
+
+  return {
+    title: `${def.label} Care Guide · ${APP.name}`,
+    description: `Health tracking, normal ranges, vaccinations, and wellness tips for ${def.label.toLowerCase()}s. Built for ${def.label.toLowerCase()} owners on ${APP.name}.`,
+  };
+}
 
 /** Statically render dog, cat, horse. "other" has no useful health ranges. */
 export function generateStaticParams() {

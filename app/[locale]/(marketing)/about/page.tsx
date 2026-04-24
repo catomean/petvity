@@ -5,6 +5,12 @@ import {
 import MarketingNav from "@/components/sections/MarketingNav";
 import MarketingFooter from "@/components/sections/MarketingFooter";
 import { APP } from "@/lib/config/app";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `About · ${APP.name}`,
+  description: `${APP.name} is the global platform for pet care — helping owners track wellness, connect with vets, and give their pets the life they deserve.`,
+};
 
 const VALUES = [
   {

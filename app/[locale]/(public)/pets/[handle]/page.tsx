@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getInstance } from "@/lib/db";
 import { pets, healthMetrics } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
-import { APP } from "@/lib/config/app";
+import { APP, APP_URL } from "@/lib/config/app";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
@@ -11,8 +11,47 @@ import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { formatDateShort } from "@/lib/utils/format";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 type Params = { params: Promise<{ handle: string; locale: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { handle } = await params;
+  const db = getInstance();
+
+  const pet = await db.query.pets.findFirst({
+    where: and(eq(pets.handle, handle), eq(pets.isPublic, true)),
+  });
+  if (!pet) return { title: APP.name };
+
+  const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
+  const speciesLabel = speciesDef?.label ?? pet.species;
+  const title = `${pet.name} · ${APP.name}`;
+  const description = [
+    speciesLabel,
+    pet.breed,
+    pet.bio,
+  ].filter(Boolean).join(" · ") || `${pet.name} is on ${APP.name}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${APP_URL}/en/pets/${handle}`,
+      siteName: APP.name,
+      type: "profile",
+      ...(pet.avatarUrl ? { images: [{ url: pet.avatarUrl, alt: pet.name }] } : {}),
+    },
+    twitter: {
+      card: pet.avatarUrl ? "summary_large_image" : "summary",
+      title,
+      description,
+      ...(pet.avatarUrl ? { images: [pet.avatarUrl] } : {}),
+    },
+  };
+}
 
 export default async function PublicPetPage({ params }: Params) {
   const { handle, locale } = await params;

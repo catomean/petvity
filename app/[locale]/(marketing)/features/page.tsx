@@ -6,6 +6,13 @@ import {
 } from "lucide-react";
 import MarketingNav from "@/components/sections/MarketingNav";
 import MarketingFooter from "@/components/sections/MarketingFooter";
+import type { Metadata } from "next";
+import { APP } from "@/lib/config/app";
+
+export const metadata: Metadata = {
+  title: `Features · ${APP.name}`,
+  description: "Health tracking, digital twin, vaccinations, vet booking, marketplace, and adoption listings — everything your pet needs in one place.",
+};
 
 const FEATURE_PILLARS = [
   {
