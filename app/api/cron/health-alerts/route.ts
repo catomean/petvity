@@ -3,6 +3,7 @@ import { and, eq, gte, inArray, desc } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
 import { pets, healthMetrics, vaccinations, users } from "@/lib/db/schema";
 import { computePetSignal } from "@/lib/domain/pet-signal";
+import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { sendEmail } from "@/lib/email";
 import { petHealthAlert } from "@/lib/email/templates";
 import { APP_URL } from "@/lib/config/app";
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
 
   const db = getInstance();
   const now = new Date();
-  const sinceStr = new Date(now.getTime() - 7 * 86400000).toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
   const allPets = await db.select().from(pets);

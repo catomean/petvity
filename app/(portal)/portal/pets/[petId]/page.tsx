@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
@@ -41,7 +41,7 @@ export default async function PetProfilePage({ params }: Params) {
   if (!pet) notFound();
 
   const now = new Date();
-  const sinceStr = new Date(now.getTime() - 7 * 86400000)
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000)
     .toISOString()
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);

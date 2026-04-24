@@ -5,7 +5,7 @@ import { and, desc, eq, gte, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORDER } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import { SPECIES_CONFIG } from "@/lib/config/species";
@@ -39,7 +39,7 @@ export default async function DashboardPage() {
     .orderBy(desc(pets.createdAt));
 
   const now = new Date();
-  const sinceStr = new Date(now.getTime() - 7 * 86400000).toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
   const petIds = userPets.map((p) => p.id);

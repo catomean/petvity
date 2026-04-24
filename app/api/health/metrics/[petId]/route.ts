@@ -5,6 +5,7 @@ import { getInstance } from "@/lib/db";
 import { healthMetrics, pets, vaccinations } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 import { computePetSignal } from "@/lib/domain/pet-signal";
+import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
 
 const logMetricsSchema = z.object({
@@ -100,7 +101,7 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   // Recompute and cache the wellness signal immediately
   const now = new Date();
-  const sinceStr = new Date(now.getTime() - 7 * 86400000).toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
   const [recentMetrics, allVacc] = await Promise.all([
