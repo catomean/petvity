@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { computeVaccinationDisplayStatus } from "./vaccinations";
+import { computeVaccinationDisplayStatus, countOverdueVaccinations } from "./vaccinations";
 
 const TODAY = "2026-04-24";
 const YESTERDAY = "2026-04-23";
@@ -69,5 +69,54 @@ describe("computeVaccinationDisplayStatus", () => {
     expect(
       computeVaccinationDisplayStatus("up_to_date", in7Days, TODAY, 7),
     ).toBe("due_soon");
+  });
+});
+
+describe("countOverdueVaccinations", () => {
+  it("returns 0 for empty array", () => {
+    expect(countOverdueVaccinations([], TODAY)).toBe(0);
+  });
+
+  it("returns 0 when all vaccinations are up to date", () => {
+    const vaccs = [
+      { nextDueDate: IN_31_DAYS, status: "up_to_date" },
+      { nextDueDate: IN_29_DAYS, status: "due_soon" },
+    ];
+    expect(countOverdueVaccinations(vaccs, TODAY)).toBe(0);
+  });
+
+  it("counts vaccinations with past nextDueDate as overdue", () => {
+    const vaccs = [
+      { nextDueDate: YESTERDAY, status: "overdue" },
+      { nextDueDate: IN_31_DAYS, status: "up_to_date" },
+    ];
+    expect(countOverdueVaccinations(vaccs, TODAY)).toBe(1);
+  });
+
+  it("does not count today as overdue (today is not < today)", () => {
+    const vaccs = [{ nextDueDate: TODAY, status: "due_soon" }];
+    expect(countOverdueVaccinations(vaccs, TODAY)).toBe(0);
+  });
+
+  it("excludes not_applicable records regardless of date", () => {
+    const vaccs = [
+      { nextDueDate: YESTERDAY, status: "not_applicable" },
+      { nextDueDate: "2020-01-01", status: "not_applicable" },
+    ];
+    expect(countOverdueVaccinations(vaccs, TODAY)).toBe(0);
+  });
+
+  it("counts multiple overdue vaccinations", () => {
+    const vaccs = [
+      { nextDueDate: YESTERDAY,  status: "overdue" },
+      { nextDueDate: "2025-01-01", status: "overdue" },
+      { nextDueDate: IN_29_DAYS, status: "due_soon" },
+    ];
+    expect(countOverdueVaccinations(vaccs, TODAY)).toBe(2);
+  });
+
+  it("handles null nextDueDate (no booster required) as not overdue", () => {
+    const vaccs = [{ nextDueDate: null, status: "up_to_date" }];
+    expect(countOverdueVaccinations(vaccs, TODAY)).toBe(0);
   });
 });
