@@ -2,7 +2,7 @@ import Link from "next/link";
 import {
   Activity, Syringe, FileText, Pill, Globe, Zap,
   Heart, BarChart3, Bell, Shield, Smartphone, Users,
-  ArrowRight, CheckCircle,
+  ArrowRight, CheckCircle, Brain, Search, ShoppingBag,
 } from "lucide-react";
 import MarketingNav from "@/components/sections/MarketingNav";
 import MarketingFooter from "@/components/sections/MarketingFooter";
@@ -33,6 +33,18 @@ const FEATURE_PILLARS = [
     ],
   },
   {
+    icon: Brain,
+    color: "bg-violet-50 text-violet-600",
+    title: "Digital twin",
+    desc: "A living emotional portrait of your pet, updated with every check-in. See whether they're Thriving, Content, Needing Attention, or Struggling — at a glance.",
+    bullets: [
+      "Emotional score from mood, energy, anxiety, socialization",
+      "Trend indicator: improving / stable / declining",
+      "Visible on your dashboard and public pet profile",
+      "Powered by the last 30 days of check-ins",
+    ],
+  },
+  {
     icon: Syringe,
     color: "bg-purple-50 text-purple-600",
     title: "Vaccination schedule",
@@ -48,12 +60,12 @@ const FEATURE_PILLARS = [
     icon: FileText,
     color: "bg-blue-50 text-blue-600",
     title: "Health records",
-    desc: "Every vet visit, lab result, surgery, dental, and grooming session in one searchable timeline. Arrive at every appointment prepared.",
+    desc: "Every vet visit, lab result, surgery, dental, and grooming session in one timeline. Arrive at every appointment prepared.",
     bullets: [
-      "8 record types with rich metadata",
-      "Vet name, clinic, notes per record",
-      "Attachment support for lab PDFs and X-rays",
-      "Fully searchable history",
+      "8 record types: vet visit, surgery, lab result, and more",
+      "Vet name, clinic, date, and notes per record",
+      "Edit or delete any record at any time",
+      "Full history visible in a single scrollable list",
     ],
   },
   {
@@ -65,7 +77,43 @@ const FEATURE_PILLARS = [
       "Dosage, frequency, and duration tracking",
       "Active / completed / discontinued statuses",
       "Prescribed-by field for multi-vet households",
-      "Linked to health records for full context",
+      "Edit or delete any medication at any time",
+    ],
+  },
+  {
+    icon: Search,
+    color: "bg-sky-50 text-sky-600",
+    title: "Find a vet or sitter",
+    desc: "Browse verified local professionals and book a visit directly. When your pet's signal turns Watch, a vet is one tap away.",
+    bullets: [
+      "Dedicated vet and pet sitter profiles",
+      "Booking calendar with start and end dates",
+      "Post-visit reviews and star ratings",
+      "Admin-verified professional badges",
+    ],
+  },
+  {
+    icon: ShoppingBag,
+    color: "bg-rose-50 text-rose-600",
+    title: "Pet marketplace",
+    desc: "Shop for food, accessories, and health essentials without leaving the platform. Order history and status updates in one place.",
+    bullets: [
+      "Product catalogue with categories and stock levels",
+      "Cart and checkout flow",
+      "Order history with fulfillment status",
+      "Email confirmation on every order",
+    ],
+  },
+  {
+    icon: Heart,
+    color: "bg-pink-50 text-pink-600",
+    title: "Adoption listings",
+    desc: "List a pet for adoption or find your next companion — all within Petvity. Applications, approvals, and notifications handled automatically.",
+    bullets: [
+      "Owner lists pets with traits (good with kids, dogs, cats)",
+      "Public browse — no account needed to discover listings",
+      "Applicants submit housing type and experience",
+      "Owner approves or rejects; applicant gets notified by email",
     ],
   },
   {
@@ -76,7 +124,7 @@ const FEATURE_PILLARS = [
     bullets: [
       "Custom handle (petvity.com/pets/luna)",
       "Photo, bio, species, breed, and age",
-      "Wellness signal badge visible to visitors",
+      "Wellness signal and digital twin visible to visitors",
       "Toggle public / private at any time",
     ],
   },
@@ -87,8 +135,8 @@ const CROSS_CUTTING = [
   { icon: Bell, label: "Smart email alerts", desc: "Health alerts and vaccination reminders delivered to your inbox." },
   { icon: Shield, label: "Secure by design", desc: "Your data is yours. Owner-scoped queries, no third-party sharing." },
   { icon: BarChart3, label: "Trend charts", desc: "Visualise weeks and months of health data at a glance." },
-  { icon: Heart, label: "Multi-pet households", desc: "Unlimited pets. Switch between them in one tap." },
-  { icon: Users, label: "9 languages", desc: "English, German, French, Spanish, Japanese, Chinese, Korean, Turkish, Arabic." },
+  { icon: Users, label: "Multi-pet households", desc: "Unlimited pets. Switch between them in one tap." },
+  { icon: Globe, label: "9 languages", desc: "English, German, French, Spanish, Japanese, Chinese, Korean, Turkish, Arabic." },
 ];
 
 export default function FeaturesPage() {
@@ -114,8 +162,9 @@ export default function FeaturesPage() {
             <span className="text-[var(--teal)]">actually needs</span>
           </h1>
           <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed mb-10">
-            From daily health logs to vaccination schedules, Petvity covers the full
-            lifecycle of pet care — for any species, in any language.
+            From daily health logs and digital twins to vets, a marketplace, and
+            cross-border adoption — Petvity covers the full lifecycle of pet care,
+            for any species, in any language.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/register" className="btn-primary text-base px-7 py-3.5 justify-center">
