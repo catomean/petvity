@@ -435,8 +435,8 @@ export default function HomePage() {
           <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">Pricing</p>
           <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">Free, forever</h2>
           <p className="text-lg text-[var(--muted)] max-w-lg mx-auto mb-12 leading-relaxed">
-            All core features are free with no pet limits.
-            Premium add-ons (vet network, marketplace) will be optional when they launch.
+            Every feature — health tracking, digital twin, vet network, marketplace,
+            and adoption listings — is included free with no pet limits.
           </p>
 
           <div className="card max-w-sm mx-auto p-8 text-left shadow-[var(--shadow-lg)]">
@@ -449,9 +449,12 @@ export default function HomePage() {
             <ul className="space-y-3.5 mb-8">
               {[
                 "Unlimited pets",
-                "7 health metrics with charts",
+                "7 health metrics with digital twin",
                 "Vaccination scheduler & reminders",
                 "Full health records & medications",
+                "Find & book vets and pet sitters",
+                "Pet care marketplace",
+                "Adoption listings & applications",
                 "Public shareable pet profiles",
                 "9 languages including Arabic",
               ].map((item) => (
