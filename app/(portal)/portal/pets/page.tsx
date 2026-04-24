@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics } from "@/lib/db/schema";
-import { eq, desc, inArray, max } from "drizzle-orm";
+import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
+import { eq, desc, inArray, max, gte, and } from "drizzle-orm";
 import Link from "next/link";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
@@ -9,8 +9,11 @@ import {
   SIGNAL_BG_CLASSES,
   SIGNAL_LABELS,
   SIGNAL_SORT_ORDER,
+  SIGNAL_METRIC_WINDOW_DAYS,
 } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
+import { computePetSignal } from "@/lib/domain/pet-signal";
+import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { formatRelativeDate } from "@/lib/utils/format";
 import { Plus, ChevronRight, PawPrint } from "lucide-react";
 
@@ -19,26 +22,60 @@ export default async function PetsPage() {
   if (!session) return null;
 
   const db = getInstance();
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+
   const userPets = await db.query.pets.findMany({
     where: eq(pets.ownerId, session.user.id),
     orderBy: [desc(pets.createdAt)],
   });
 
-  // Batch-fetch latest check-in date per pet (one query, no N+1)
   const petIds = userPets.map((p) => p.id);
-  const lastLogRows = petIds.length > 0
-    ? await db
-        .select({ petId: healthMetrics.petId, lastDate: max(healthMetrics.date) })
-        .from(healthMetrics)
-        .where(inArray(healthMetrics.petId, petIds))
-        .groupBy(healthMetrics.petId)
-    : [];
+
+  // Batch-fetch: last check-in date (all-time) + recent metrics + vaccinations (no N+1)
+  const [lastLogRows, allMetrics, allVacc] = petIds.length > 0
+    ? await Promise.all([
+        db.select({ petId: healthMetrics.petId, lastDate: max(healthMetrics.date) })
+          .from(healthMetrics)
+          .where(inArray(healthMetrics.petId, petIds))
+          .groupBy(healthMetrics.petId),
+        db.select()
+          .from(healthMetrics)
+          .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr))),
+        db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
+      ])
+    : [[], [], []];
+
   const lastLogMap = new Map(lastLogRows.map((r) => [r.petId, r.lastDate]));
 
-  // Sort by signal severity (concern → watch → healthy), then by creation date (newest first)
-  const sortedPets = [...userPets].sort((a, b) => {
-    const aOrder = SIGNAL_SORT_ORDER[(a.lastKnownSignal ?? "healthy") as PetWellnessSignal] ?? 2;
-    const bOrder = SIGNAL_SORT_ORDER[(b.lastKnownSignal ?? "healthy") as PetWellnessSignal] ?? 2;
+  // Group metrics + vaccinations by petId for O(1) lookup
+  const metricsByPet = new Map<string, typeof allMetrics>();
+  for (const m of allMetrics) {
+    const arr = metricsByPet.get(m.petId) ?? [];
+    arr.push(m);
+    metricsByPet.set(m.petId, arr);
+  }
+  const vaccByPet = new Map<string, typeof allVacc>();
+  for (const v of allVacc) {
+    const arr = vaccByPet.get(v.petId) ?? [];
+    arr.push(v);
+    vaccByPet.set(v.petId, arr);
+  }
+
+  // Compute live signal for each pet
+  const petsWithSignal = userPets.map((pet) => {
+    const recentMetrics = metricsByPet.get(pet.id) ?? [];
+    const petVacc = vaccByPet.get(pet.id) ?? [];
+    const overdueCount = countOverdueVaccinations(petVacc, todayStr);
+    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now });
+    return { ...pet, signal };
+  });
+
+  // Sort by live signal severity (concern → watch → healthy), then newest first
+  const sortedPets = [...petsWithSignal].sort((a, b) => {
+    const aOrder = SIGNAL_SORT_ORDER[a.signal.signal as PetWellnessSignal] ?? 2;
+    const bOrder = SIGNAL_SORT_ORDER[b.signal.signal as PetWellnessSignal] ?? 2;
     if (aOrder !== bOrder) return aOrder - bOrder;
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
@@ -80,7 +117,7 @@ export default async function PetsPage() {
         <div className="flex flex-col gap-3">
           {sortedPets.map((pet) => {
             const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
-            const sig = pet.lastKnownSignal as PetWellnessSignal | null;
+            const sig = pet.signal.signal as PetWellnessSignal;
             const lastDate = lastLogMap.get(pet.id) ?? null;
             return (
               <Link
@@ -116,11 +153,9 @@ export default async function PetsPage() {
                   )}
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  {sig && (
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${SIGNAL_BG_CLASSES[sig]}`}>
-                      {SIGNAL_LABELS[sig]}
-                    </span>
-                  )}
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${SIGNAL_BG_CLASSES[sig]}`}>
+                    {SIGNAL_LABELS[sig]}
+                  </span>
                   {pet.isPublic && (
                     <span className="text-xs bg-[var(--teal-light)] text-[var(--teal)] px-2.5 py-1 rounded-full font-medium hidden sm:inline">
                       Public

@@ -133,9 +133,12 @@ export default async function PublicPetPage({ params }: Params) {
             {pet.handle && (
               <p className="text-sm text-[var(--muted)] mb-2">@{pet.handle}</p>
             )}
-            <span className={`${SIGNAL_BG_CLASSES[signal]} mt-1 mb-2`}>
+            <span className={`${SIGNAL_BG_CLASSES[signal]} mt-1`}>
               {SIGNAL_LABELS[signal]}
             </span>
+            {signalResult.reason && (
+              <p className="text-xs text-[var(--muted)] mt-1 mb-1">{signalResult.reason}</p>
+            )}
             <p className="text-sm text-[var(--muted)] mt-2">
               {speciesDef?.label ?? pet.species}
               {pet.breed ? ` · ${pet.breed}` : ""}
