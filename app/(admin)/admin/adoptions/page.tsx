@@ -38,7 +38,7 @@ const STATUS_ICONS: Record<ListingStatus, React.ElementType> = {
   withdrawn: XCircle,
 };
 
-const STATUS_CONFIG: Record<ListingStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
+const STATUS_CONFIG: Record<ListingStatus, { label: string; icon: React.ElementType; color: string; bg: string; className: string }> = {
   available: { ...LISTING_STATUS_CONFIG.available, icon: STATUS_ICONS.available },
   on_hold:   { ...LISTING_STATUS_CONFIG.on_hold,   icon: STATUS_ICONS.on_hold },
   adopted:   { ...LISTING_STATUS_CONFIG.adopted,   icon: STATUS_ICONS.adopted },
@@ -135,7 +135,7 @@ function ListingRow({
         </div>
 
         {/* Status badge */}
-        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${cfg.bg} ${cfg.color}`}>
+        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${cfg.className}`}>
           <StatusIcon className="w-3 h-3" />
           {cfg.label}
         </span>

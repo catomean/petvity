@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG, listingStatusClass, applicationStatusClass } from "@/lib/config/adoptions";
+import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ListingStatusId, ApplicationStatusId } from "@/lib/config/adoptions";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -34,16 +34,7 @@ interface AdoptionListing {
   pet: { id: string; name: string; species: string; avatarUrl: string | null };
 }
 
-/* ─── Status badges ──────────────────────────────────────────────────────── */
-
-// Labels/colors sourced from lib/config/adoptions SSOT
-const LISTING_STATUS = Object.fromEntries(
-  Object.entries(LISTING_STATUS_CONFIG).map(([k, v]) => [k, { label: v.label, className: listingStatusClass(k) }]),
-) as Record<ListingStatusId, { label: string; className: string }>;
-
-const APP_STATUS = Object.fromEntries(
-  Object.entries(APPLICATION_STATUS_CONFIG).map(([k, v]) => [k, { label: v.label, className: applicationStatusClass(k) }]),
-) as Record<ApplicationStatusId, { label: string; className: string }>;
+// Labels/colors sourced from lib/config/adoptions SSOT; className = bg + color combined
 
 /* ─── Application row ─────────────────────────────────────────────────────── */
 
@@ -70,7 +61,7 @@ function ApplicationRow({
     if (data.success) onUpdate({ ...app, status });
   }
 
-  const badge = APP_STATUS[app.status] ?? APP_STATUS.pending;
+  const badge = APPLICATION_STATUS_CONFIG[app.status] ?? APPLICATION_STATUS_CONFIG.pending;
 
   return (
     <div className="py-3 px-4 border-t border-[var(--border)] first:border-0">
@@ -162,7 +153,7 @@ function ListingCard({
     if (data.success) onStatusChange(listing.id, status);
   }
 
-  const badge = LISTING_STATUS[listing.status] ?? LISTING_STATUS.available;
+  const badge = LISTING_STATUS_CONFIG[listing.status] ?? LISTING_STATUS_CONFIG.available;
   const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
 
   return (
