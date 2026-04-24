@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, ne } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
 import {
@@ -122,6 +122,27 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   if (!updated) {
     return NextResponse.json({ success: false, error: "Application not found" }, { status: 404 });
+  }
+
+  // When approved: close the listing and reject all other pending applications atomically.
+  // This prevents duplicate approvals and removes the listing from public browse.
+  if (parsed.data.status === "approved") {
+    await Promise.all([
+      db
+        .update(adoptionListings)
+        .set({ status: "adopted" })
+        .where(eq(adoptionListings.id, listingId)),
+      db
+        .update(adoptionApplications)
+        .set({ status: "rejected", updatedAt: new Date() })
+        .where(
+          and(
+            eq(adoptionApplications.listingId, listingId),
+            eq(adoptionApplications.status, "pending"),
+            ne(adoptionApplications.id, parsed.data.applicationId),
+          ),
+        ),
+    ]);
   }
 
   // Notify applicant when approved or rejected (fire-and-forget)
