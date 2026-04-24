@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
+import { APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
+import type { ApplicationStatusId } from "@/lib/config/adoptions";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -76,16 +78,24 @@ export default function ListingDetailPage() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
   const [applied, setApplied] = useState(false);
+  const [existingStatus, setExistingStatus] = useState<ApplicationStatusId | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormState>({ message: "", experience: "", housingType: "" });
 
   useEffect(() => {
-    fetch(`/api/adoptions/${listingId}`)
-      .then((r) => r.json())
-      .then(({ data }) => { setListing(data ?? null); setLoading(false); })
-      .catch(() => setLoading(false));
+    Promise.all([
+      fetch(`/api/adoptions/${listingId}`).then((r) => r.json()),
+      fetch("/api/adoptions?applied=1").then((r) => r.json()).catch(() => ({ data: [] })),
+    ]).then(([listingRes, appsRes]) => {
+      setListing(listingRes.data ?? null);
+      // Check if the user has already applied to this listing
+      const apps: { listingId: string; applicationStatus: ApplicationStatusId }[] = appsRes.data ?? [];
+      const match = apps.find((a) => a.listingId === listingId);
+      if (match) setExistingStatus(match.applicationStatus);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, [listingId]);
 
   async function handleApply(e: React.FormEvent) {
@@ -247,6 +257,39 @@ export default function ListingDetailPage() {
           <p className="text-sm text-[var(--muted)]">
             The owner will review your application and get in touch.
           </p>
+        </div>
+      ) : existingStatus ? (
+        <div className={`card p-6 border-2 ${
+          existingStatus === "approved"
+            ? "border-[var(--green)]"
+            : existingStatus === "rejected"
+            ? "border-[var(--border)]"
+            : "border-[var(--warn-bg)]"
+        }`}>
+          <div className="flex items-center gap-3 mb-3">
+            <span className={`text-xs font-semibold px-3 py-1 rounded-full ${APPLICATION_STATUS_CONFIG[existingStatus].className}`}>
+              {APPLICATION_STATUS_CONFIG[existingStatus].label}
+            </span>
+            <p className="text-sm font-medium text-[var(--ink)]">
+              {existingStatus === "approved"
+                ? `Your application to adopt ${listing.pet.name} was approved!`
+                : existingStatus === "rejected"
+                ? "Your application was not accepted this time."
+                : existingStatus === "withdrawn"
+                ? "You withdrew this application."
+                : `Your application for ${listing.pet.name} is under review.`}
+            </p>
+          </div>
+          <p className="text-sm text-[var(--muted)]">
+            {existingStatus === "approved"
+              ? "The owner will be in touch with next steps."
+              : existingStatus === "pending"
+              ? "The owner will review your application and get in touch."
+              : "You can browse other available pets below."}
+          </p>
+          <Link href="/portal/adopt" className="text-sm text-[var(--teal)] hover:underline mt-3 inline-block no-underline">
+            Browse other listings →
+          </Link>
         </div>
       ) : isAvailable ? (
         showForm ? (
