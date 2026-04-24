@@ -168,6 +168,24 @@ export function medicationEndingReminder(data: {
 
 // ─── Booking notifications ────────────────────────────────────────────────────
 
+export function bookingReminder(data: {
+  ownerName: string;
+  petName: string;
+  professionalName: string;
+  startDate: string;
+  bookingsUrl: string;
+}) {
+  return {
+    subject: `${APP.name}: Reminder — ${data.petName}'s appointment tomorrow`,
+    html: base(`
+      <h2>Appointment reminder</h2>
+      <p>Hi ${data.ownerName},</p>
+      <p>This is a reminder that <strong>${data.petName}</strong> has an appointment with <strong>${data.professionalName}</strong> tomorrow on <strong>${data.startDate}</strong>.</p>
+      <a class="btn" href="${data.bookingsUrl}">View booking details</a>
+    `),
+  };
+}
+
 export function bookingRequestReceived(data: {
   professionalName: string;
   ownerName: string;
