@@ -59,6 +59,7 @@ export default function VaccinationsPage() {
   const [petName, setPetName] = useState<string>("");
   const [rows, setRows] = useState<Vaccination[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<VaccinationStatus | "all">("all");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -160,6 +161,10 @@ export default function VaccinationsPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  const filteredRows = statusFilter === "all"
+    ? rows
+    : rows.filter((r) => r.status === statusFilter);
+
   if (loading) {
     return (
       <div className="animate-pulse">
@@ -185,12 +190,27 @@ export default function VaccinationsPage() {
           <h1 className="text-2xl font-semibold text-[var(--ink)]">Vaccinations</h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">Track immunisations and upcoming boosters</p>
         </div>
-        {!showForm && (
-          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {rows.length > 0 && !showForm && (
+            <select
+              className="form-input text-sm py-1.5"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as VaccinationStatus | "all")}
+              aria-label="Filter by status"
+            >
+              <option value="all">All statuses</option>
+              {(Object.entries(VACCINATION_STATUS_CONFIG) as [VaccinationStatus, { label: string }][]).map(
+                ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
+              )}
+            </select>
+          )}
+          {!showForm && (
+            <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              Add
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Form (add / edit) */}
@@ -317,6 +337,13 @@ export default function VaccinationsPage() {
               </button>
             )}
           </div>
+        ) : filteredRows.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="font-medium text-[var(--ink)] mb-1">No vaccinations match this filter</p>
+            <button onClick={() => setStatusFilter("all")} className="text-sm text-[var(--teal)] hover:underline mt-1">
+              Show all vaccinations
+            </button>
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
@@ -329,7 +356,7 @@ export default function VaccinationsPage() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((v) => {
+              {filteredRows.map((v) => {
                 const status = VACCINATION_STATUS_CONFIG[v.status] ?? VACCINATION_STATUS_CONFIG.up_to_date;
                 const StatusIcon = STATUS_ICONS[v.status];
                 const isDeleting = deletingId === v.id;
