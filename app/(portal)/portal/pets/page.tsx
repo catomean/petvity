@@ -8,6 +8,7 @@ import type { SpeciesId, SexId } from "@/lib/config/species";
 import {
   SIGNAL_BG_CLASSES,
   SIGNAL_LABELS,
+  SIGNAL_SORT_ORDER,
 } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { formatRelativeDate } from "@/lib/utils/format";
@@ -33,6 +34,14 @@ export default async function PetsPage() {
         .groupBy(healthMetrics.petId)
     : [];
   const lastLogMap = new Map(lastLogRows.map((r) => [r.petId, r.lastDate]));
+
+  // Sort by signal severity (concern → watch → healthy), then by creation date (newest first)
+  const sortedPets = [...userPets].sort((a, b) => {
+    const aOrder = SIGNAL_SORT_ORDER[(a.lastKnownSignal ?? "healthy") as PetWellnessSignal] ?? 2;
+    const bOrder = SIGNAL_SORT_ORDER[(b.lastKnownSignal ?? "healthy") as PetWellnessSignal] ?? 2;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   return (
     <div>
@@ -69,7 +78,7 @@ export default async function PetsPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {userPets.map((pet) => {
+          {sortedPets.map((pet) => {
             const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
             const sig = pet.lastKnownSignal as PetWellnessSignal | null;
             const lastDate = lastLogMap.get(pet.id) ?? null;
