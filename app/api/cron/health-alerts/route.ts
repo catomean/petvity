@@ -53,8 +53,9 @@ export async function POST(req: NextRequest) {
     vaccByPet.set(v.petId, arr);
   }
 
-  // Compute signals and identify pets needing alerts
-  const signalUpdates: { id: string; signal: string }[] = [];
+  // Compute signals once per pet — results reused for cache update, history, and emails
+  type SignalEntry = { id: string; signal: string; result: ReturnType<typeof computePetSignal> };
+  const signalEntries: SignalEntry[] = [];
   const alertPetIds: string[] = [];
   // Accumulate history rows for signal transitions — one bulk INSERT after the loop
   const historyRows: {
@@ -77,7 +78,7 @@ export async function POST(req: NextRequest) {
       now,
     });
 
-    signalUpdates.push({ id: pet.id, signal: result.signal });
+    signalEntries.push({ id: pet.id, signal: result.signal, result });
 
     // Record a history entry only when the signal changes.
     if (pet.lastKnownSignal !== result.signal) {
@@ -102,7 +103,7 @@ export async function POST(req: NextRequest) {
   // Batch-update cached signals — group by signal value so we run ≤3 queries
   // instead of one per pet (there are only 3 possible signal values).
   const petsBySignal = new Map<string, string[]>();
-  for (const { id, signal } of signalUpdates) {
+  for (const { id, signal } of signalEntries) {
     const arr = petsBySignal.get(signal) ?? [];
     arr.push(id);
     petsBySignal.set(signal, arr);
@@ -134,17 +135,8 @@ export async function POST(req: NextRequest) {
     .where(inArray(users.id, ownerIds));
   const ownerMap = new Map(ownerRows.map((u) => [u.id, u]));
 
-  // Compute signals map for reason text
-  const signalResultMap = new Map<string, ReturnType<typeof computePetSignal>>();
-  for (const pet of alertPets) {
-    const recentMetrics = metricsByPet.get(pet.id) ?? [];
-    const petVacc = vaccByPet.get(pet.id) ?? [];
-    const overdueCount = countOverdueVaccinations(petVacc, todayStr);
-    signalResultMap.set(
-      pet.id,
-      computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now }),
-    );
-  }
+  // Build a lookup from the already-computed signal entries (no second computePetSignal call)
+  const signalResultMap = new Map(signalEntries.map(({ id, result }) => [id, result]));
 
   const alertedIds: string[] = [];
   for (const pet of alertPets) {
