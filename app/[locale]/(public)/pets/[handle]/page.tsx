@@ -19,7 +19,7 @@ export const revalidate = 60;
 type Params = { params: Promise<{ handle: string; locale: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { handle } = await params;
+  const { handle, locale } = await params;
   const db = getInstance();
 
   const pet = await db.query.pets.findFirst({
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      url: `${APP_URL}/en/pets/${handle}`,
+      url: `${APP_URL}/${locale}/pets/${handle}`,
       siteName: APP.name,
       type: "profile",
       ...(pet.avatarUrl ? { images: [{ url: pet.avatarUrl, alt: pet.name }] } : {}),

@@ -16,7 +16,7 @@ type Params = { params: Promise<{ userId: string; locale: string }> };
 /* ─── Metadata ───────────────────────────────────────────────────────────── */
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { userId } = await params;
+  const { userId, locale } = await params;
   const db = getInstance();
   const [u] = await db.select({ name: users.name }).from(users).where(eq(users.id, userId)).limit(1);
   const name = u?.name ?? "Professional";
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description: `View ${name}'s professional profile on ${APP.name}`,
     openGraph: {
       title: `${name} · ${APP.name}`,
-      url: `${APP_URL}/pros/${userId}`,
+      url: `${APP_URL}/${locale}/pros/${userId}`,
     },
   };
 }
