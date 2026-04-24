@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ListingStatusId } from "@/lib/config/adoptions";
+import { formatPetAge } from "@/lib/utils/format";
 import type { Metadata } from "next";
 
 /** Cache adoption listing detail for 30 s — status changes propagate quickly. */
@@ -18,17 +19,6 @@ export const revalidate = 30;
 
 type Params = { params: Promise<{ locale: string; listingId: string }> };
 
-function ageLabel(birthDate: string | null): string {
-  if (!birthDate) return "";
-  const months = Math.floor(
-    (Date.now() - new Date(birthDate).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
-  );
-  if (months < 1) return "< 1 month old";
-  if (months < 12) return `${months} months old`;
-  const years = Math.floor(months / 12);
-  const rem = months % 12;
-  return rem > 0 ? `${years}y ${rem}mo old` : `${years} year${years !== 1 ? "s" : ""} old`;
-}
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { listingId } = await params;
@@ -83,7 +73,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
   if (!row) notFound();
 
   const emoji = SPECIES_CONFIG[row.pet.species as SpeciesId]?.emoji ?? "🐾";
-  const age = ageLabel(row.pet.birthDate);
+  const age = formatPetAge(row.pet.birthDate);
   const isAvailable = row.status === "available";
 
   return (

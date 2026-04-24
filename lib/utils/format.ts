@@ -28,6 +28,36 @@ export function formatTemperature(centidegrees: number): string {
 }
 
 /**
+ * Format a pet's age from birthDate for compact display.
+ * e.g. null → ""; 3 months → "3mo"; 14 months → "1yr"
+ */
+export function formatPetAgeShort(birthDate: string | null): string {
+  if (!birthDate) return "";
+  const months = Math.floor(
+    (Date.now() - new Date(birthDate).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
+  );
+  if (months < 1) return "< 1mo";
+  if (months < 12) return `${months}mo`;
+  return `${Math.floor(months / 12)}yr`;
+}
+
+/**
+ * Format a pet's age from birthDate for verbose display.
+ * e.g. null → ""; 3 months → "3 months old"; 14 months → "1y 2mo old"
+ */
+export function formatPetAge(birthDate: string | null): string {
+  if (!birthDate) return "";
+  const months = Math.floor(
+    (Date.now() - new Date(birthDate).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
+  );
+  if (months < 1) return "< 1 month old";
+  if (months < 12) return `${months} months old`;
+  const years = Math.floor(months / 12);
+  const rem = months % 12;
+  return rem > 0 ? `${years}y ${rem}mo old` : `${years} year${years !== 1 ? "s" : ""} old`;
+}
+
+/**
  * Format a date relative to now.
  * e.g. "2 days ago", "in 3 days"
  */

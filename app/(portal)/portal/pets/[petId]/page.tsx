@@ -9,24 +9,12 @@ import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
-import { formatDateShort } from "@/lib/utils/format";
+import { formatDateShort, formatPetAge } from "@/lib/utils/format";
 import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 
 type Params = { params: Promise<{ petId: string }> };
 
-function ageString(birthDate: string | null): string | null {
-  if (!birthDate) return null;
-  const birth = new Date(birthDate);
-  const now = new Date();
-  const months =
-    (now.getFullYear() - birth.getFullYear()) * 12 +
-    (now.getMonth() - birth.getMonth());
-  if (months < 1) return "< 1 month old";
-  if (months < 12) return `${months} month${months !== 1 ? "s" : ""} old`;
-  const years = Math.floor(months / 12);
-  return `${years} year${years !== 1 ? "s" : ""} old`;
-}
 
 export default async function PetProfilePage({ params }: Params) {
   const session = await auth();
@@ -74,7 +62,7 @@ export default async function PetProfilePage({ params }: Params) {
 
   const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
   const sig = signalResult.signal;
-  const age = ageString(pet.birthDate ?? null);
+  const age = formatPetAge(pet.birthDate ?? null);
 
   const twin = computeDigitalTwin(recentMetrics, now);
 

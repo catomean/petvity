@@ -6,6 +6,7 @@ import { APP } from "@/lib/config/app";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import { Heart, MapPin, PawPrint } from "lucide-react";
+import { formatPetAgeShort } from "@/lib/utils/format";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,16 +21,6 @@ type Params = { params: Promise<{ locale: string }> };
 
 function speciesEmoji(species: string): string {
   return SPECIES_CONFIG[species as SpeciesId]?.emoji ?? "🐾";
-}
-
-function ageLabel(birthDate: string | null): string {
-  if (!birthDate) return "";
-  const months = Math.floor(
-    (Date.now() - new Date(birthDate).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
-  );
-  if (months < 1) return "< 1mo";
-  if (months < 12) return `${months}mo`;
-  return `${Math.floor(months / 12)}yr`;
 }
 
 function feeLabel(feeCents: number | null): string {
@@ -126,7 +117,7 @@ export default async function PublicAdoptPage({ params }: Params) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {listings.map((listing) => {
                 const emoji = speciesEmoji(listing.pet.species);
-                const age = ageLabel(listing.pet.birthDate);
+                const age = formatPetAgeShort(listing.pet.birthDate);
                 return (
                   <Link
                     key={listing.id}

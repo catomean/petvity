@@ -12,6 +12,7 @@ import type { SpeciesId, SexId } from "@/lib/config/species";
 import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS, LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ApplicationStatusId, ListingStatusId } from "@/lib/config/adoptions";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
+import { formatPetAge } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -55,17 +56,7 @@ const HOUSING_OPTIONS = [
   ...HOUSING_TYPE_OPTIONS,
 ];
 
-function ageLabel(birthDate: string | null): string {
-  if (!birthDate) return "";
-  const months = Math.floor(
-    (Date.now() - new Date(birthDate).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
-  );
-  if (months < 1) return "< 1 month old";
-  if (months < 12) return `${months} months old`;
-  const years = Math.floor(months / 12);
-  const rem = months % 12;
-  return rem > 0 ? `${years}y ${rem}mo old` : `${years} year${years !== 1 ? "s" : ""} old`;
-}
+
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
@@ -136,7 +127,7 @@ export default function ListingDetailPage() {
   }
 
   const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
-  const age = ageLabel(listing.pet.birthDate);
+  const age = formatPetAge(listing.pet.birthDate);
   const isAvailable = listing.status === "available";
 
   return (
