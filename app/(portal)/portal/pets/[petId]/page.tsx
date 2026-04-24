@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, vaccinations, medications } from "@/lib/db/schema";
-import { and, eq, gte, desc } from "drizzle-orm";
+import { pets, healthMetrics, healthRecords, vaccinations, medications } from "@/lib/db/schema";
+import { and, eq, gte, desc, count } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
@@ -46,7 +46,7 @@ export default async function PetProfilePage({ params }: Params) {
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
-  const [recentMetrics, allVacc, activeMeds] = await Promise.all([
+  const [recentMetrics, allVacc, activeMeds, [{ recordCount }]] = await Promise.all([
     db.query.healthMetrics.findMany({
       where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, sinceStr)),
       orderBy: [desc(healthMetrics.date)],
@@ -55,6 +55,7 @@ export default async function PetProfilePage({ params }: Params) {
     db.query.medications.findMany({
       where: and(eq(medications.petId, pet.id), eq(medications.status, "active")),
     }),
+    db.select({ recordCount: count() }).from(healthRecords).where(eq(healthRecords.petId, pet.id)),
   ]);
 
   const overdueCount = allVacc.filter(
@@ -88,7 +89,7 @@ export default async function PetProfilePage({ params }: Params) {
       href: `/portal/pets/${pet.id}/records`,
       icon: FileText,
       label: "Records",
-      desc: "Health history",
+      desc: recordCount > 0 ? `${recordCount} record${recordCount !== 1 ? "s" : ""}` : "Health history",
     },
     {
       href: `/portal/pets/${pet.id}/vaccinations`,
