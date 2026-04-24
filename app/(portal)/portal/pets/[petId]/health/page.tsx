@@ -161,6 +161,7 @@ export default async function PetHealthPage({ params }: Params) {
                     if (raw === null) return null;
                     const display = getMetricDisplay(metricId, raw, species);
                     const def = HEALTH_METRIC_CONFIG[metricId];
+                    const range = !display.inRange ? getNormalRange(metricId, species) : null;
                     return (
                       <div
                         key={metricId}
@@ -173,6 +174,11 @@ export default async function PetHealthPage({ params }: Params) {
                             {display.unit}
                           </span>
                         </div>
+                        {range && (
+                          <p className="text-xs text-[var(--danger)] mt-1">
+                            Normal: {def.toDisplay(range.min)}–{def.toDisplay(range.max)} {display.unit}
+                          </p>
+                        )}
                       </div>
                     );
                   })}
@@ -191,6 +197,7 @@ export default async function PetHealthPage({ params }: Params) {
                     if (raw === null) return null;
                     const display = getMetricDisplay(metricId, raw, species);
                     const def = HEALTH_METRIC_CONFIG[metricId];
+                    const range = !display.inRange ? getNormalRange(metricId, species) : null;
                     return (
                       <div
                         key={metricId}
@@ -203,6 +210,11 @@ export default async function PetHealthPage({ params }: Params) {
                             {display.unit}
                           </span>
                         </div>
+                        {range && (
+                          <p className="text-xs text-[var(--danger)] mt-1">
+                            Normal: {range.min}–{range.max} {display.unit}
+                          </p>
+                        )}
                       </div>
                     );
                   })}
