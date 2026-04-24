@@ -5,7 +5,8 @@ import { and, desc, eq, gte, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORDER } from "@/lib/config/pet-signal";
+import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
@@ -81,6 +82,13 @@ export default async function DashboardPage() {
     const twin   = computeDigitalTwin(recentMetrics, now);
 
     return { ...pet, signal, twin };
+  });
+
+  // Sort: concern first, then watch, then healthy
+  petsWithData.sort((a, b) => {
+    const aOrder = SIGNAL_SORT_ORDER[a.signal.signal as PetWellnessSignal] ?? 3;
+    const bOrder = SIGNAL_SORT_ORDER[b.signal.signal as PetWellnessSignal] ?? 3;
+    return aOrder - bOrder;
   });
 
   const loggedToday = petsWithData.filter((p) => p.twin.daysAgo === 0).length;
