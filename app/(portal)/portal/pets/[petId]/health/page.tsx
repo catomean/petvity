@@ -4,7 +4,7 @@ import { pets, healthMetrics } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { BarChart3, ChevronLeft } from "lucide-react";
+import { BarChart3, ChevronLeft, Pencil } from "lucide-react";
 import {
   HEALTH_METRIC_CONFIG,
   HEALTH_CHART_WINDOW_DAYS,
@@ -285,11 +285,12 @@ export default async function PetHealthPage({ params }: Params) {
                     <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Temp</th>
                     <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Energy</th>
                     <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Mood</th>
+                    <th className="py-2 px-3 w-8" />
                   </tr>
                 </thead>
                 <tbody>
                   {metrics.map((m) => (
-                    <tr key={m.id} className="border-b border-[var(--border)] last:border-0">
+                    <tr key={m.id} className="border-b border-[var(--border)] last:border-0 group">
                       <td className="py-2 px-3 text-[var(--muted)]">{formatDateShort(m.date)}</td>
                       <td className="py-2 px-3">
                         {m.weightGrams != null
@@ -303,6 +304,15 @@ export default async function PetHealthPage({ params }: Params) {
                       </td>
                       <td className="py-2 px-3">{m.energy ?? "–"}</td>
                       <td className="py-2 px-3">{m.mood ?? "–"}</td>
+                      <td className="py-2 px-3">
+                        <Link
+                          href={`/portal/pets/${pet.id}/health/log?date=${m.date}`}
+                          className="p-1 rounded hover:bg-[var(--teal-light)] text-[var(--faint)] hover:text-[var(--teal)] transition-colors opacity-0 group-hover:opacity-100"
+                          title={`Edit entry for ${m.date}`}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </Link>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

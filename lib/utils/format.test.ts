@@ -126,4 +126,12 @@ describe("formatRelativeDate", () => {
   it("returns 'N days ago' for past dates", () => {
     expect(formatRelativeDate("2026-01-08", now)).toBe("7 days ago");
   });
+
+  it("returns plural 'N days ago' for large past offsets", () => {
+    expect(formatRelativeDate("2025-12-16", now)).toBe("30 days ago");
+  });
+
+  it("returns plural 'In N days' for large future offsets", () => {
+    expect(formatRelativeDate("2026-02-14", now)).toBe("In 30 days");
+  });
 });

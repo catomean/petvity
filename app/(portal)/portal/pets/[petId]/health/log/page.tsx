@@ -10,13 +10,14 @@ import type { SpeciesId } from "@/lib/config/species";
 import { HealthLogForm } from "@/components/portal/HealthLogForm";
 import { formatRelativeDate } from "@/lib/utils/format";
 
-type Params = { params: Promise<{ petId: string }> };
+type Params = { params: Promise<{ petId: string }>; searchParams: Promise<{ date?: string }> };
 
-export default async function LogHealthPage({ params }: Params) {
+export default async function LogHealthPage({ params, searchParams }: Params) {
   const session = await auth();
   if (!session) return null;
 
   const { petId } = await params;
+  const { date: dateParam } = await searchParams;
   const db = getInstance();
 
   const pet = await db.query.pets.findFirst({
@@ -26,24 +27,28 @@ export default async function LogHealthPage({ params }: Params) {
 
   const species = pet.species as SpeciesId;
 
-  // Check if there's already a log for today so we can pre-fill the form
+  // Use date from query param (for editing past entries) or default to today
   const todayStr = new Date().toISOString().slice(0, 10);
+  const targetDate = dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam) ? dateParam : todayStr;
+  const isEditing = targetDate !== todayStr;
+
+  // Check if there's already a log for the target date so we can pre-fill the form
   const [existing, prevLog] = await Promise.all([
     db.query.healthMetrics.findFirst({
-      where: and(eq(healthMetrics.petId, petId), eq(healthMetrics.date, todayStr)),
+      where: and(eq(healthMetrics.petId, petId), eq(healthMetrics.date, targetDate)),
     }),
-    // Most recent log BEFORE today — shown as context to help owners spot trends
+    // Most recent log BEFORE the target date — shown as context to help owners spot trends
     db
       .select()
       .from(healthMetrics)
-      .where(and(eq(healthMetrics.petId, petId), lt(healthMetrics.date, todayStr)))
+      .where(and(eq(healthMetrics.petId, petId), lt(healthMetrics.date, targetDate)))
       .orderBy(desc(healthMetrics.date))
       .limit(1)
       .then((rows) => rows[0] ?? null),
   ]);
   const initialValues = existing
     ? {
-        date: existing.date,
+        date: targetDate,
         weightKg: existing.weightGrams != null ? (existing.weightGrams / 1000).toString() : "",
         temperatureC: existing.temperatureCentidegrees != null ? (existing.temperatureCentidegrees / 100).toString() : "",
         heartRateBpm: existing.heartRateBpm?.toString() ?? "",
@@ -53,7 +58,14 @@ export default async function LogHealthPage({ params }: Params) {
         socialization: existing.socialization?.toString() ?? "",
         notes: existing.notes ?? "",
       }
-    : undefined;
+    // Pre-fill the date when editing a past date with no prior entry
+    : isEditing
+      ? {
+          date: targetDate,
+          weightKg: "", temperatureC: "", heartRateBpm: "",
+          energy: "", mood: "", anxiety: "", socialization: "", notes: "",
+        }
+      : undefined;
 
   // Compute species-specific normal ranges in display units
   const weightRaw = getNormalRange("weight", species);
@@ -87,12 +99,14 @@ export default async function LogHealthPage({ params }: Params) {
       </Link>
 
       <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">
-        {existing ? "Update today's check-in" : "Log health check"}
+        {isEditing ? "Edit past entry" : existing ? "Update today's check-in" : "Log health check"}
       </h1>
       <p className="text-sm text-[var(--muted)] mb-4">
-        {existing
-          ? "You already logged today — update any values below."
-          : "Track as many or as few metrics as you have data for today."}
+        {isEditing
+          ? `Editing entry for ${formatRelativeDate(targetDate).toLowerCase()}.`
+          : existing
+            ? "You already logged today — update any values below."
+            : "Track as many or as few metrics as you have data for today."}
       </p>
 
       {/* Previous log context — helps owners notice trends */}
