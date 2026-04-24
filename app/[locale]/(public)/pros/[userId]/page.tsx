@@ -8,6 +8,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { formatSitterServices } from "@/lib/config/professionals";
 
+/** Cache professional profiles for 60 s — profiles don't change frequently. */
+export const revalidate = 60;
+
 type Params = { params: Promise<{ userId: string; locale: string }> };
 
 /* ─── Metadata ───────────────────────────────────────────────────────────── */

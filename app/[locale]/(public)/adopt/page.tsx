@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   description: "Find dogs, cats, and other pets looking for a loving home.",
 };
 
+/** Cache adoption listings for 30 s — listings update more frequently. */
+export const revalidate = 30;
+
 type Params = { params: Promise<{ locale: string }> };
 
 function speciesEmoji(species: string): string {

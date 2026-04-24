@@ -13,6 +13,9 @@ import { formatDateShort } from "@/lib/utils/format";
 import Link from "next/link";
 import type { Metadata } from "next";
 
+/** Cache public pet profiles for 60 s (ISR stale-while-revalidate). */
+export const revalidate = 60;
+
 type Params = { params: Promise<{ handle: string; locale: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {

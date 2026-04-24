@@ -13,6 +13,9 @@ import { LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ListingStatusId } from "@/lib/config/adoptions";
 import type { Metadata } from "next";
 
+/** Cache adoption listing detail for 30 s — status changes propagate quickly. */
+export const revalidate = 30;
+
 type Params = { params: Promise<{ locale: string; listingId: string }> };
 
 function ageLabel(birthDate: string | null): string {
