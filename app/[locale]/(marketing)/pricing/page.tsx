@@ -2,8 +2,6 @@ import Link from "next/link";
 import {
   CheckCircle, ArrowRight, Zap, Shield, Users, Globe,
 } from "lucide-react";
-import MarketingNav from "@/components/sections/MarketingNav";
-import MarketingFooter from "@/components/sections/MarketingFooter";
 import type { Metadata } from "next";
 import { APP } from "@/lib/config/app";
 
@@ -112,8 +110,6 @@ const FAQ = [
 export default function PricingPage() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <MarketingNav />
-
       {/* Hero */}
       <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div
@@ -255,7 +251,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <MarketingFooter />
     </div>
   );
 }

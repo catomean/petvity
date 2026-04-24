@@ -4,8 +4,6 @@ import {
   Heart, BarChart3, Bell, Shield, Smartphone, Users,
   ArrowRight, CheckCircle, Brain, Search, ShoppingBag,
 } from "lucide-react";
-import MarketingNav from "@/components/sections/MarketingNav";
-import MarketingFooter from "@/components/sections/MarketingFooter";
 import type { Metadata } from "next";
 import { APP } from "@/lib/config/app";
 
@@ -149,8 +147,6 @@ const CROSS_CUTTING = [
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <MarketingNav />
-
       {/* Hero */}
       <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div
@@ -255,7 +251,6 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      <MarketingFooter />
     </div>
   );
 }

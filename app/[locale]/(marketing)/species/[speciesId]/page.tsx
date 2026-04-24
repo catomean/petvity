@@ -4,8 +4,6 @@ import {
   ArrowRight, Thermometer, Heart, Weight,
   Zap, Smile, Wind, Users, CheckCircle,
 } from "lucide-react";
-import MarketingNav from "@/components/sections/MarketingNav";
-import MarketingFooter from "@/components/sections/MarketingFooter";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { HEALTH_METRIC_CONFIG, getNormalRange } from "@/lib/config/health-metrics";
@@ -102,10 +100,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
   const tips  = CARE_TIPS[species.id] ?? [];
 
   return (
-    <>
-      <MarketingNav />
-
-      <main>
+    <main>
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <section className="bg-gradient-to-b from-[var(--teal-light)] to-white py-16 lg:py-24">
           <div className="section-inner text-center">
@@ -264,9 +259,6 @@ export default async function SpeciesGuidePage({ params }: Params) {
             </Link>
           </div>
         </section>
-      </main>
-
-      <MarketingFooter />
-    </>
+    </main>
   );
 }

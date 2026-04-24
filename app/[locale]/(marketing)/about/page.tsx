@@ -2,8 +2,6 @@ import Link from "next/link";
 import {
   PawPrint, Heart, Globe, Shield, Zap, ArrowRight,
 } from "lucide-react";
-import MarketingNav from "@/components/sections/MarketingNav";
-import MarketingFooter from "@/components/sections/MarketingFooter";
 import { APP } from "@/lib/config/app";
 import type { Metadata } from "next";
 
@@ -49,8 +47,6 @@ const STATS = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <MarketingNav />
-
       {/* Hero */}
       <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div
@@ -191,7 +187,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <MarketingFooter />
     </div>
   );
 }

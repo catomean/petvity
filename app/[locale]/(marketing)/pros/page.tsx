@@ -3,8 +3,6 @@ import {
   Stethoscope, Heart, CheckCircle, ArrowRight, Star,
   CalendarDays, Shield, TrendingUp, Users, Brain, Zap,
 } from "lucide-react";
-import MarketingNav from "@/components/sections/MarketingNav";
-import MarketingFooter from "@/components/sections/MarketingFooter";
 import type { Metadata } from "next";
 import { APP } from "@/lib/config/app";
 
@@ -94,8 +92,6 @@ const HOW_IT_WORKS_SITTER = [
 export default function ProsPage() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <MarketingNav />
-
       {/* Hero */}
       <section className="relative pt-28 pb-20 md:pt-36 md:pb-28">
         <div
@@ -395,7 +391,6 @@ export default function ProsPage() {
         </div>
       </section>
 
-      <MarketingFooter />
     </div>
   );
 }

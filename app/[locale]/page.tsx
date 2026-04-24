@@ -95,6 +95,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white overflow-x-hidden">
       <MarketingNav />
 
+      <main>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative pt-28 pb-20 md:pt-36 md:pb-28">
         {/* Warm gradient background */}
@@ -705,6 +706,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      </main>
       <MarketingFooter />
     </div>
   );
