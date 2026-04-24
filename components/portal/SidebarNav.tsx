@@ -29,6 +29,24 @@ const NAV_ITEMS = [
   { href: "/portal/adopt", icon: Heart, label: "Adopt" },
 ];
 
+// Mobile tab bar: max 5 items — standard for reliable touch targets.
+// Professionals swap "Find" for their own profile since they are the pro.
+const MOBILE_NAV_ITEMS_DEFAULT = [
+  { href: "/portal/dashboard", icon: Home, label: "Dashboard" },
+  { href: "/portal/pets", icon: PawPrint, label: "My Pets" },
+  { href: "/portal/checkin", icon: CalendarDays, label: "Check-in" },
+  { href: "/portal/find", icon: Search, label: "Find" },
+  { href: "/portal/settings", icon: Settings, label: "Settings" },
+];
+
+const MOBILE_NAV_ITEMS_PRO = [
+  { href: "/portal/dashboard", icon: Home, label: "Dashboard" },
+  { href: "/portal/pets", icon: PawPrint, label: "My Pets" },
+  { href: "/portal/checkin", icon: CalendarDays, label: "Check-in" },
+  { href: "/portal/professional-profile", icon: Stethoscope, label: "My Profile" },
+  { href: "/portal/settings", icon: Settings, label: "Settings" },
+];
+
 function isActive(pathname: string, href: string): boolean {
   if (href === "/portal/dashboard") return pathname === href;
   return pathname === href || pathname.startsWith(href + "/");
@@ -154,11 +172,7 @@ export default function SidebarNav({ userName, userEmail, userRole }: Props) {
 
       {/* ── Mobile bottom nav ────────────────────────────────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-[var(--border)] flex safe-area-inset-bottom z-20">
-        {[
-          ...NAV_ITEMS,
-          ...(isProfessional ? [{ href: "/portal/professional-profile", icon: Stethoscope, label: "My Profile" }] : []),
-          { href: "/portal/settings", icon: Settings, label: "Settings" },
-        ].map(({ href, icon: Icon, label }) => (
+        {(isProfessional ? MOBILE_NAV_ITEMS_PRO : MOBILE_NAV_ITEMS_DEFAULT).map(({ href, icon: Icon, label }) => (
           <Link
             key={href}
             href={href}

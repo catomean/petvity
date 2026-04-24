@@ -444,7 +444,7 @@ export default function VaccinationsPage() {
                           </button>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 hover:opacity-100">
+                        <div className="flex items-center gap-1">
                           <button
                             onClick={() => openEdit(v)}
                             className="p-1.5 rounded-lg hover:bg-[var(--teal-light)] text-[var(--muted)] hover:text-[var(--teal)] transition-colors"
