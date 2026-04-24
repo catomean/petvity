@@ -189,13 +189,20 @@ export default async function DashboardPage() {
 
                   {/* Row 3: twin mini-bar OR "Log today" shortcut */}
                   {needsCheckin ? (
-                    <Link
-                      href={`/portal/pets/${pet.id}/health/log`}
-                      className="relative z-10 inline-flex items-center gap-1.5 text-xs font-medium text-[var(--accent)] hover:text-[var(--accent-dark)] transition-colors no-underline"
-                    >
-                      <CalendarDays className="w-3 h-3" />
-                      Log today
-                    </Link>
+                    <div className="flex items-center justify-between">
+                      <Link
+                        href={`/portal/pets/${pet.id}/health/log`}
+                        className="relative z-10 inline-flex items-center gap-1.5 text-xs font-medium text-[var(--accent)] hover:text-[var(--accent-dark)] transition-colors no-underline"
+                      >
+                        <CalendarDays className="w-3 h-3" />
+                        Log today
+                      </Link>
+                      {twin.daysAgo !== null && twin.daysAgo > 0 && (
+                        <span className="text-[11px] text-[var(--muted)]">
+                          {twin.daysAgo === 1 ? "1d ago" : `${twin.daysAgo}d ago`}
+                        </span>
+                      )}
+                    </div>
                   ) : (
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
