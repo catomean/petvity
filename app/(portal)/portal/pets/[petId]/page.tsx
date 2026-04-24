@@ -35,7 +35,7 @@ export default async function PetProfilePage({ params }: Params) {
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
-  const [recentMetrics, allVacc, activeMeds, [{ recordCount }], signalHistory] = await Promise.all([
+  const [recentMetrics, allVacc, activeMeds, [{ recordCount }]] = await Promise.all([
     db.query.healthMetrics.findMany({
       where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, sinceStr)),
       orderBy: [desc(healthMetrics.date)],
@@ -45,13 +45,21 @@ export default async function PetProfilePage({ params }: Params) {
       where: and(eq(medications.petId, pet.id), eq(medications.status, "active")),
     }),
     db.select({ recordCount: count() }).from(healthRecords).where(eq(healthRecords.petId, pet.id)),
-    db
+  ]);
+
+  // Graceful degradation: the pet_signal_history table requires a db:push before it
+  // exists in production. Fail silently so the profile page still renders.
+  let signalHistory: typeof petSignalHistory.$inferSelect[] = [];
+  try {
+    signalHistory = await db
       .select()
       .from(petSignalHistory)
       .where(eq(petSignalHistory.petId, pet.id))
       .orderBy(desc(petSignalHistory.recordedAt))
-      .limit(5),
-  ]);
+      .limit(5);
+  } catch {
+    // Table not yet created — no history to show
+  }
 
   const overdueCount = allVacc.filter(
     (v) =>
