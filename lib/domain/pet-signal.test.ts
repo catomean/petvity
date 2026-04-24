@@ -247,4 +247,22 @@ describe("computePetSignal", () => {
     expect(result.reason).toContain("41");
     expect(result.reason).toContain("°C");
   });
+
+  it("reason for weight shows kg (not raw grams)", () => {
+    // 500g is below dog minimum (1500g = 1.5 kg)
+    const row: HealthMetricRow = { ...normalDogRow, weightGrams: 500 };
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [row],
+      overdueVaccinations: 0,
+      now: NOW,
+    });
+    expect(result.outOfRangeMetrics).toContain("weight");
+    // Display value: 0.5 kg, NOT 500 (raw grams)
+    expect(result.reason).toContain("0.5kg");
+    expect(result.reason).not.toContain("500kg");
+    // Normal range in kg, NOT grams
+    expect(result.reason).toContain("1.5");
+    expect(result.reason).not.toContain("1500");
+  });
 });
