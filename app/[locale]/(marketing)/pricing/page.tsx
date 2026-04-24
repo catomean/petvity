@@ -16,10 +16,13 @@ const PLANS = [
     primary: false,
     features: [
       "Unlimited pets",
-      "All 7 health metrics",
+      "All 7 health metrics + Digital Twin",
       "Vaccination schedule & reminders",
       "Health records (vet visits, medications, lab results)",
       "Wellness signals (Healthy / Watch / Concern)",
+      "Find & book vets and sitters",
+      "Pet marketplace (food, accessories, essentials)",
+      "Adoption listings — list or adopt",
       "Public pet profiles",
       "9 languages including Arabic (RTL)",
       "Email health alerts",
@@ -83,11 +86,11 @@ const FAQ = [
   },
   {
     q: "Which species are supported?",
-    a: "Dogs, cats, horses, and any other animal via the 'Other' category. Each species has its own normal ranges for health metrics — a horse's normal temperature is different from a cat's.",
+    a: "Dogs, cats, horses, birds, rabbits, guinea pigs, hamsters, reptiles, fish, and more via the 'Other' category. Each species has its own normal ranges for health metrics — a horse's normal temperature is different from a cat's.",
   },
   {
     q: "When will Pro and Clinic plans launch?",
-    a: "We're building Phase 1 (individual pet owners) first. Pro and Clinic will follow. Join the waitlist to be notified when they launch.",
+    a: "The core platform — health tracking, digital twin, vet/sitter network, marketplace, and adoption — is live and free. Pro and Clinic tiers for breeders and veterinary businesses are next. Join the waitlist to be notified.",
   },
   {
     q: "Can I use Petvity in my language?",
@@ -144,7 +147,7 @@ export default function PricingPage() {
                 {primary && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                     <span className="bg-[var(--teal)] text-white text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap">
-                      Most popular (coming soon)
+                      Most requested
                     </span>
                   </div>
                 )}
