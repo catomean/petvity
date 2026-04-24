@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
 import { getInstance } from "@/lib/db";
-import { pets } from "@/lib/db/schema";
-import { and, eq } from "drizzle-orm";
+import { pets, healthMetrics } from "@/lib/db/schema";
+import { and, eq, gte, desc } from "drizzle-orm";
 import { APP } from "@/lib/config/app";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
+import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
 import type { SpeciesId } from "@/lib/config/species";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
+import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { formatDateShort } from "@/lib/utils/format";
 import Link from "next/link";
 
@@ -23,6 +25,15 @@ export default async function PublicPetPage({ params }: Params) {
 
   const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
   const signal = (pet.lastKnownSignal ?? "healthy") as PetWellnessSignal;
+
+  // Fetch recent metrics to power the digital twin
+  const since30 = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const recentMetrics = await db.query.healthMetrics.findMany({
+    where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
+    orderBy: [desc(healthMetrics.date)],
+  });
+  const twin = computeDigitalTwin(recentMetrics);
+  const twinCfg = TWIN_STATE_CONFIG[twin.id];
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
@@ -64,7 +75,7 @@ export default async function PublicPetPage({ params }: Params) {
             <span className={`${SIGNAL_BG_CLASSES[signal]} mt-1 mb-2`}>
               {SIGNAL_LABELS[signal]}
             </span>
-            <p className="text-sm text-[var(--muted)]">
+            <p className="text-sm text-[var(--muted)] mt-2">
               {speciesDef?.label ?? pet.species}
               {pet.breed ? ` · ${pet.breed}` : ""}
               {pet.sex !== "unknown" ? ` · ${pet.sex}` : ""}
@@ -76,6 +87,48 @@ export default async function PublicPetPage({ params }: Params) {
               <p className="mt-4 text-sm text-[var(--ink2)]">{pet.bio}</p>
             )}
           </div>
+
+          {/* Digital twin — only shown when data exists */}
+          {twin.id !== "no_data" && (
+            <div className={`border-t border-[var(--border)] px-6 py-5 ${twinCfg.bg}`}>
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className={`text-sm font-semibold ${twinCfg.text}`}>{twinCfg.label}</p>
+                  <p className="text-xs text-[var(--muted)] mt-0.5">{twin.summary}</p>
+                </div>
+                <span className={`text-2xl font-extrabold tabular-nums ${twinCfg.text}`}>
+                  {twin.scorePercent}
+                  <span className="text-sm font-normal text-[var(--muted)] ms-1">/ 100</span>
+                </span>
+              </div>
+              {/* Overall bar */}
+              <div className="h-2 rounded-full bg-[var(--border)] mb-4">
+                <div
+                  className={`h-2 rounded-full ${twinCfg.barColor}`}
+                  style={{ width: `${twin.scorePercent}%` }}
+                />
+              </div>
+              {/* Metric bars */}
+              {twin.metrics.length > 0 && (
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
+                  {twin.metrics.map((m) => (
+                    <div key={m.id}>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span className="text-[var(--muted)]">{m.label}</span>
+                        <span className="text-[var(--ink2)]">{m.valueLabel}</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-[var(--border)]">
+                        <div
+                          className={`h-1.5 rounded-full ${twinCfg.barColor}`}
+                          style={{ width: `${m.fillPercent}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Species info */}
           {speciesDef && (
