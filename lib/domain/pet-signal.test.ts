@@ -165,4 +165,86 @@ describe("computePetSignal", () => {
     // Should use TODAY (normalDogRow), not YESTERDAY
     expect(result.signal).toBe("healthy");
   });
+
+  // ── Reason string format ──────────────────────────────────────────────────
+
+  it("reason is 'All monitored metrics within normal range' when healthy and no overdue vaccines", () => {
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [normalDogRow],
+      overdueVaccinations: 0,
+      now: NOW,
+    });
+    expect(result.reason).toBe("All monitored metrics within normal range");
+  });
+
+  it("reason includes metric label, display value, unit and normal range when out-of-range", () => {
+    const row: HealthMetricRow = {
+      ...normalDogRow,
+      heartRateBpm: 200, // dog normal: 60–140 bpm
+    };
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [row],
+      overdueVaccinations: 0,
+      now: NOW,
+    });
+    // e.g. "Heart Rate 200bpm (normal 60–140bpm)"
+    expect(result.reason).toContain("Heart Rate");
+    expect(result.reason).toContain("200");
+    expect(result.reason).toContain("60");
+    expect(result.reason).toContain("140");
+  });
+
+  it("reason includes overdue vaccination count when only vaccines are overdue", () => {
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [normalDogRow],
+      overdueVaccinations: 2,
+      now: NOW,
+    });
+    expect(result.reason).toContain("2 overdue vaccinations");
+  });
+
+  it("reason includes singular 'vaccination' for exactly 1 overdue", () => {
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [normalDogRow],
+      overdueVaccinations: 1,
+      now: NOW,
+    });
+    expect(result.reason).toContain("1 overdue vaccination");
+    expect(result.reason).not.toContain("vaccinations");
+  });
+
+  it("reason joins out-of-range metric details and vaccination count with ' · '", () => {
+    const row: HealthMetricRow = {
+      ...normalDogRow,
+      heartRateBpm: 200,
+    };
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [row],
+      overdueVaccinations: 1,
+      now: NOW,
+    });
+    // Should contain both parts joined by ' · '
+    expect(result.reason).toMatch(/Heart Rate.*·.*1 overdue vaccination/);
+  });
+
+  it("reason for temperature includes °C value and normal range", () => {
+    const row: HealthMetricRow = {
+      ...normalDogRow,
+      temperatureCentidegrees: 4100, // 41.0°C — above dog normal 38–39°C
+    };
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [row],
+      overdueVaccinations: 0,
+      now: NOW,
+    });
+    expect(result.reason).toContain("Temperature");
+    expect(result.reason).toContain("41");
+    expect(result.reason).toContain("°C");
+  });
 });
