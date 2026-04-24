@@ -7,6 +7,7 @@ import Link from "next/link";
 import { BarChart3, ChevronLeft } from "lucide-react";
 import {
   HEALTH_METRIC_CONFIG,
+  HEALTH_CHART_WINDOW_DAYS,
   PHYSICAL_METRICS,
   EMOTIONAL_METRICS,
   getNormalRange,
@@ -32,7 +33,7 @@ export default async function PetHealthPage({ params }: Params) {
   if (!pet) notFound();
 
   // eslint-disable-next-line react-hooks/purity
-  const since30 = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const since30 = new Date(Date.now() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const metrics = await db.query.healthMetrics.findMany({
     where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
     orderBy: [desc(healthMetrics.date)],

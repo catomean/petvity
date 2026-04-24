@@ -48,6 +48,9 @@ export type MetricDef = {
   chartColor: string;
 };
 
+/** Days of health metric history shown in charts and public profiles. */
+export const HEALTH_CHART_WINDOW_DAYS = 30;
+
 export const HEALTH_METRIC_CONFIG: Record<MetricId, MetricDef> = {
   // ── Physical ────────────────────────────────────────────────────────────
 

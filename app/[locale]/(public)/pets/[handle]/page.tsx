@@ -6,6 +6,7 @@ import { APP, APP_URL } from "@/lib/config/app";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
+import { HEALTH_CHART_WINDOW_DAYS } from "@/lib/config/health-metrics";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
@@ -69,7 +70,7 @@ export default async function PublicPetPage({ params }: Params) {
   const signal = (pet.lastKnownSignal ?? "healthy") as PetWellnessSignal;
 
   // Fetch recent metrics to power the digital twin
-  const since30 = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
+  const since30 = new Date(Date.now() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const recentMetrics = await db.query.healthMetrics.findMany({
     where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
     orderBy: [desc(healthMetrics.date)],
