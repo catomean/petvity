@@ -247,3 +247,20 @@ export function getBreedOptions(
     label: b,
   }));
 }
+
+/** Pet sex type derived from the DB enum — SSOT lives here. */
+export type SexId = "male" | "female" | "unknown";
+
+/** Human-readable labels for all sex values. */
+export const SEX_LABELS: Record<SexId, string> = {
+  male:    "Male",
+  female:  "Female",
+  unknown: "Unknown",
+};
+
+/** Ordered sex options for UI selects. */
+export const SEX_OPTIONS: { value: SexId; label: string }[] = [
+  { value: "unknown", label: "Unknown" },
+  { value: "male",    label: "Male" },
+  { value: "female",  label: "Female" },
+];

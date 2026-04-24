@@ -7,8 +7,8 @@ import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
-import { SPECIES_CONFIG } from "@/lib/config/species";
-import type { SpeciesId } from "@/lib/config/species";
+import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
+import type { SpeciesId, SexId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
 import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
@@ -153,7 +153,7 @@ export default async function PetProfilePage({ params }: Params) {
                 <p className="text-sm text-[var(--muted)] leading-relaxed">
                   {speciesDef?.label ?? pet.species}
                   {pet.breed ? ` · ${pet.breed}` : ""}
-                  {pet.sex !== "unknown" ? ` · ${pet.sex}` : ""}
+                  {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
                   {age ? ` · ${age}` : pet.birthDate ? ` · Born ${formatDateShort(pet.birthDate)}` : ""}
                 </p>
 

@@ -6,8 +6,8 @@ import {
   Heart, PawPrint, MapPin, Users,
   Search, Filter, ChevronRight, Sparkles,
 } from "lucide-react";
-import { SPECIES_CONFIG, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
-import type { SpeciesId } from "@/lib/config/species";
+import { SPECIES_CONFIG, SEX_LABELS, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
+import type { SpeciesId, SexId } from "@/lib/config/species";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -95,7 +95,7 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
               {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
               {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
               {age ? ` · ${age}` : ""}
-              {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${listing.pet.sex}` : ""}
+              {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${SEX_LABELS[listing.pet.sex as SexId] ?? listing.pet.sex}` : ""}
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--teal)] transition-colors flex-shrink-0 mt-0.5" />

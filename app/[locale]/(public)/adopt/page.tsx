@@ -3,8 +3,8 @@ import { adoptionListings, pets } from "@/lib/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
-import { SPECIES_CONFIG } from "@/lib/config/species";
-import type { SpeciesId } from "@/lib/config/species";
+import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
+import type { SpeciesId, SexId } from "@/lib/config/species";
 import { Heart, MapPin, PawPrint } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -159,7 +159,7 @@ export default async function PublicAdoptPage({ params }: Params) {
                         {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
                         {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
                         {age ? ` · ${age}` : ""}
-                        {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${listing.pet.sex}` : ""}
+                        {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${SEX_LABELS[listing.pet.sex as SexId] ?? listing.pet.sex}` : ""}
                       </p>
                       {listing.location && (
                         <p className="text-xs text-[var(--muted)] flex items-center gap-1 mt-2">

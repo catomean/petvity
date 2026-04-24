@@ -3,10 +3,10 @@ import { getInstance } from "@/lib/db";
 import { pets, healthMetrics } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { APP, APP_URL } from "@/lib/config/app";
-import { SPECIES_CONFIG } from "@/lib/config/species";
+import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
-import type { SpeciesId } from "@/lib/config/species";
+import type { SpeciesId, SexId } from "@/lib/config/species";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { formatDateShort } from "@/lib/utils/format";
@@ -120,7 +120,7 @@ export default async function PublicPetPage({ params }: Params) {
             <p className="text-sm text-[var(--muted)] mt-2">
               {speciesDef?.label ?? pet.species}
               {pet.breed ? ` · ${pet.breed}` : ""}
-              {pet.sex !== "unknown" ? ` · ${pet.sex}` : ""}
+              {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
               {pet.birthDate
                 ? ` · Born ${formatDateShort(pet.birthDate)}`
                 : ""}

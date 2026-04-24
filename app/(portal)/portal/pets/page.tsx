@@ -3,8 +3,8 @@ import { getInstance } from "@/lib/db";
 import { pets, healthMetrics } from "@/lib/db/schema";
 import { eq, desc, inArray, max } from "drizzle-orm";
 import Link from "next/link";
-import { SPECIES_CONFIG } from "@/lib/config/species";
-import type { SpeciesId } from "@/lib/config/species";
+import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
+import type { SpeciesId, SexId } from "@/lib/config/species";
 import {
   SIGNAL_BG_CLASSES,
   SIGNAL_LABELS,
@@ -98,7 +98,7 @@ export default async function PetsPage() {
                   <p className="text-sm text-[var(--muted)] truncate">
                     {speciesDef?.label ?? pet.species}
                     {pet.breed ? ` · ${pet.breed}` : ""}
-                    {pet.sex !== "unknown" ? ` · ${pet.sex}` : ""}
+                    {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
                   </p>
                   {lastDate && (
                     <p className="text-xs text-[var(--faint)] mt-0.5">

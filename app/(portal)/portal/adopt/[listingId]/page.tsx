@@ -7,8 +7,8 @@ import {
   Heart, ChevronLeft, MapPin, DollarSign, CheckCircle,
   Dog, Cat, Baby, Star, Loader2, Send,
 } from "lucide-react";
-import { SPECIES_CONFIG } from "@/lib/config/species";
-import type { SpeciesId } from "@/lib/config/species";
+import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
+import type { SpeciesId, SexId } from "@/lib/config/species";
 import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS, LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ApplicationStatusId, ListingStatusId } from "@/lib/config/adoptions";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
@@ -174,7 +174,7 @@ export default function ListingDetailPage() {
                 {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
                 {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
                 {age ? ` · ${age}` : ""}
-                {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${listing.pet.sex}` : ""}
+                {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${SEX_LABELS[listing.pet.sex as SexId] ?? listing.pet.sex}` : ""}
               </p>
             </div>
             <span className={`text-xs font-medium px-3 py-1 rounded-full ${

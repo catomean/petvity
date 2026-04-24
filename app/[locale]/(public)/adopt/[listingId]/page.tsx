@@ -4,8 +4,8 @@ import { adoptionListings, pets } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
-import { SPECIES_CONFIG } from "@/lib/config/species";
-import type { SpeciesId } from "@/lib/config/species";
+import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
+import type { SpeciesId, SexId } from "@/lib/config/species";
 import {
   Heart, MapPin, DollarSign, PawPrint, Baby, Dog, Cat, Star, ChevronLeft,
 } from "lucide-react";
@@ -139,7 +139,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
                   {SPECIES_CONFIG[row.pet.species as SpeciesId]?.label ?? row.pet.species}
                   {row.pet.breed ? ` · ${row.pet.breed}` : ""}
                   {age ? ` · ${age}` : ""}
-                  {row.pet.sex && row.pet.sex !== "unknown" ? ` · ${row.pet.sex}` : ""}
+                  {row.pet.sex && row.pet.sex !== "unknown" ? ` · ${SEX_LABELS[row.pet.sex as SexId] ?? row.pet.sex}` : ""}
                 </p>
               </div>
               <span className={`text-xs font-medium px-3 py-1 rounded-full flex-shrink-0 ${

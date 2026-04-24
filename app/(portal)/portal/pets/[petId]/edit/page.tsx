@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { SPECIES_OPTIONS, getBreedOptions } from "@/lib/config/species";
-import type { SpeciesId } from "@/lib/config/species";
+import { SPECIES_OPTIONS, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
+import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
 import { ChevronLeft, Trash2, Camera, Loader2 } from "lucide-react";
 
@@ -13,7 +13,7 @@ interface PetData {
   species: string;
   breed: string | null;
   birthDate: string | null;
-  sex: "male" | "female" | "unknown";
+  sex: SexId;
   bio: string | null;
   isPublic: boolean;
   handle: string | null;
@@ -39,7 +39,7 @@ export default function EditPetPage() {
     species: "" as SpeciesId | "",
     breed: "",
     birthDate: "",
-    sex: "unknown" as "male" | "female" | "unknown",
+    sex: "unknown" as SexId,
     bio: "",
     isPublic: false,
     handle: "",
@@ -282,14 +282,14 @@ export default function EditPetPage() {
               onChange={(e) =>
                 setForm({
                   ...form,
-                  sex: e.target.value as "male" | "female" | "unknown",
+                  sex: e.target.value as SexId,
                 })
               }
               className="form-input"
             >
-              <option value="unknown">Unknown</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              {SEX_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
             </select>
           </div>
         </div>
