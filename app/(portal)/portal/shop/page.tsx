@@ -89,6 +89,7 @@ function CartDrawer({
                 <div key={product.id} className="flex items-start gap-3">
                   <div className="w-12 h-12 rounded-xl bg-[var(--off)] flex items-center justify-center flex-shrink-0">
                     {product.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover rounded-xl" />
                     ) : (
                       <Package className="w-5 h-5 text-[var(--faint)]" />
@@ -284,6 +285,7 @@ export default function ShopPage() {
               <div key={product.id} className="card overflow-hidden flex flex-col">
                 <div className="h-36 bg-[var(--off)] flex items-center justify-center">
                   {product.imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={product.imageUrl}
                       alt={product.name}

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { desc, eq, sql } from "drizzle-orm";
 import { requireAdmin } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { adoptionListings, adoptionApplications, pets, users } from "@/lib/db/schema";
+import { adoptionListings, pets, users } from "@/lib/db/schema";
 
 /** GET /api/admin/adoptions — all listings with pet + owner + application counts */
 export async function GET() {

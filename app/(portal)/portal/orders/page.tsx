@@ -95,6 +95,7 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
             <div key={item.id} className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-[var(--off)] flex items-center justify-center flex-shrink-0">
                 {item.productImageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={item.productImageUrl} alt={item.productName} className="w-full h-full object-cover rounded-lg" />
                 ) : (
                   <Package className="w-4 h-4 text-[var(--faint)]" />

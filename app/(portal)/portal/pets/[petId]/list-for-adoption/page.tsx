@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Heart, ChevronLeft, X } from "lucide-react";
+import { Heart, ChevronLeft } from "lucide-react";
 
 interface Pet {
   id: string;

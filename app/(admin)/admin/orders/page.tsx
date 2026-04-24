@@ -163,6 +163,7 @@ function OrderRow({
               <div key={item.id} className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0 border border-[var(--border)]">
                   {item.productImageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={item.productImageUrl} alt={item.productName} className="w-full h-full object-cover rounded-lg" />
                   ) : (
                     <Package className="w-3.5 h-3.5 text-[var(--faint)]" />

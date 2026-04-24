@@ -146,6 +146,7 @@ export default function ListingDetailPage() {
         {/* Photo */}
         <div className="aspect-video bg-[var(--teal-light)] flex items-center justify-center text-8xl">
           {listing.pet.avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={listing.pet.avatarUrl}
               alt={listing.pet.name}

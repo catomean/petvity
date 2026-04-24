@@ -39,10 +39,6 @@ function makePostRequest(body: unknown) {
   });
 }
 
-function makeGetRequest() {
-  return new NextRequest("http://localhost/api/pets", { method: "GET" });
-}
-
 const VALID_BODY = { name: "Buddy", species: "dog", sex: "male" };
 
 /* ─── GET tests ────────────────────────────────────────────────────────────── */

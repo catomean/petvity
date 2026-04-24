@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { eq, and } from "drizzle-orm";
 import { z } from "zod";
-import { requireAdmin, requireSession } from "@/lib/auth/guards";
+import { requireAdmin } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { products, productCategoryEnum } from "@/lib/db/schema";
 

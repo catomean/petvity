@@ -35,7 +35,6 @@ export default async function PetHealthPage({ params }: Params) {
   });
   if (!pet) notFound();
 
-  // eslint-disable-next-line react-hooks/purity
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
   const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);

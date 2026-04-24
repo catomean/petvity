@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, desc, eq, ne } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { adoptionListings, adoptionApplications, adoptionListingStatusEnum, pets } from "@/lib/db/schema";
+import { adoptionListings, adoptionApplications, pets } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 import { auth } from "@/lib/auth";
 

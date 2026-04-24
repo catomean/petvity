@@ -123,7 +123,7 @@ describe("POST /api/health/records", () => {
   });
 
   it("returns 400 when title is missing", async () => {
-    const { title: _omit, ...bodyWithoutTitle } = VALID_BODY;
+    const { title: _, ...bodyWithoutTitle } = VALID_BODY;
     const res = await POST(makePostRequest(bodyWithoutTitle));
     expect(res.status).toBe(400);
   });

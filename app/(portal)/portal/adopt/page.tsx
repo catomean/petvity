@@ -65,6 +65,7 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
       {/* Avatar */}
       <div className="aspect-[4/3] bg-[var(--teal-light)] flex items-center justify-center text-5xl relative overflow-hidden">
         {listing.pet.avatarUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={listing.pet.avatarUrl}
             alt={listing.pet.name}

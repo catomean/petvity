@@ -1,6 +1,6 @@
 import { getInstance } from "@/lib/db";
 import { adoptionListings, pets } from "@/lib/db/schema";
-import { and, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
 import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";

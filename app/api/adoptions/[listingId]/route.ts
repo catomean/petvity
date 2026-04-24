@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
 import { adoptionListings, adoptionListingStatusEnum, pets } from "@/lib/db/schema";

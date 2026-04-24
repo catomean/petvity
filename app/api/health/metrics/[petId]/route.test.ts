@@ -67,7 +67,7 @@ describe("POST /api/health/metrics/[petId]", () => {
   });
 
   it("returns 400 when date is missing", async () => {
-    const { date: _omit, ...bodyWithoutDate } = VALID_BODY;
+    const { date: _, ...bodyWithoutDate } = VALID_BODY;
     const res = await POST(makePostRequest(bodyWithoutDate), ROUTE_CONTEXT);
     expect(res.status).toBe(400);
   });

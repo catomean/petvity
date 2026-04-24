@@ -123,7 +123,7 @@ describe("POST /api/vaccinations", () => {
   });
 
   it("returns 400 when name is missing", async () => {
-    const { name: _omit, ...bodyWithoutName } = VALID_BODY;
+    const { name: _, ...bodyWithoutName } = VALID_BODY;
     const res = await POST(makePostRequest(bodyWithoutName));
     expect(res.status).toBe(400);
   });

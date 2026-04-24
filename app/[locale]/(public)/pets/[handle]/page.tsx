@@ -70,9 +70,10 @@ export default async function PublicPetPage({ params }: Params) {
   const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
 
   // Fetch recent metrics (30-day window for chart/twin) and vaccinations (for live signal)
-  const since30 = new Date(Date.now() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
-  const sinceSignal = new Date(Date.now() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const today = now.toISOString().slice(0, 10);
   const [recentMetrics, petVaccinations] = await Promise.all([
     db.query.healthMetrics.findMany({
       where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),

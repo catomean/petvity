@@ -3,13 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Heart, PawPrint, ChevronDown, ChevronUp, CheckCircle, XCircle,
-  Clock, Users, Eye, EyeOff, Loader2,
+  Heart, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2,
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG, HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
-import type { ListingStatusId, ApplicationStatusId } from "@/lib/config/adoptions";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -184,6 +182,7 @@ function ListingCard({
         {/* Pet avatar */}
         <div className="w-12 h-12 rounded-xl bg-[var(--teal-light)] flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
           {listing.pet.avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={listing.pet.avatarUrl} alt={listing.pet.name} className="w-full h-full object-cover" />
           ) : (
             <span>{emoji}</span>
