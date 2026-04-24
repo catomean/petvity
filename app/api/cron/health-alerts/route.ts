@@ -112,8 +112,13 @@ export async function POST(req: NextRequest) {
   }
 
   // Bulk-insert signal history for all transitions — 0 or 1 query regardless of pet count.
+  // Wrapped in try/catch: table requires pnpm db:push before it exists in production.
   if (historyRows.length > 0) {
-    await db.insert(petSignalHistory).values(historyRows);
+    try {
+      await db.insert(petSignalHistory).values(historyRows);
+    } catch {
+      // Table not yet created — history not written, but signal cache update still proceeds
+    }
   }
 
   if (alertPetIds.length === 0) {
