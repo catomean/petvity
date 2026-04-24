@@ -63,6 +63,7 @@ export default function MedicationsPage() {
   const [petName, setPetName] = useState("");
   const [rows, setRows] = useState<Medication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<MedicationStatus | "all">("all");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -168,6 +169,10 @@ export default function MedicationsPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  const filteredRows = statusFilter === "all"
+    ? rows
+    : rows.filter((m) => m.status === statusFilter);
+
   if (loading) {
     return (
       <div className="animate-pulse space-y-3">
@@ -193,12 +198,27 @@ export default function MedicationsPage() {
           <h1 className="text-2xl font-semibold text-[var(--ink)]">Medications</h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">Track prescriptions, dosages, and treatment history</p>
         </div>
-        {!showForm && (
-          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {rows.length > 0 && !showForm && (
+            <select
+              className="form-input text-sm py-1.5"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as MedicationStatus | "all")}
+              aria-label="Filter by status"
+            >
+              <option value="all">All statuses</option>
+              {(Object.entries(MEDICATION_STATUS_CONFIG) as [MedicationStatus, { label: string }][]).map(
+                ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
+              )}
+            </select>
+          )}
+          {!showForm && (
+            <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              Add
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Form (add / edit) */}
@@ -346,6 +366,13 @@ export default function MedicationsPage() {
               </button>
             )}
           </div>
+        ) : filteredRows.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="font-medium text-[var(--ink)] mb-1">No medications match this filter</p>
+            <button onClick={() => setStatusFilter("all")} className="text-sm text-[var(--teal)] hover:underline mt-1">
+              Show all medications
+            </button>
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
@@ -358,7 +385,7 @@ export default function MedicationsPage() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((m) => {
+              {filteredRows.map((m) => {
                 const status = MEDICATION_STATUS_CONFIG[m.status] ?? MEDICATION_STATUS_CONFIG.active;
                 const StatusIcon = STATUS_ICONS[m.status] ?? STATUS_ICONS.active;
                 const isDeleting = deletingId === m.id;
