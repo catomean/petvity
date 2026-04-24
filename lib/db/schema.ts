@@ -8,6 +8,7 @@ import {
   integer,
   timestamp,
   jsonb,
+  index,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
@@ -163,7 +164,8 @@ export const pets = pgTable("pets", {
   signalAlertSentAt: timestamp("signal_alert_sent_at", { mode: "date" }),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [index("pets_owner_id_idx").on(t.ownerId)]);
 
 // ─── Health metrics (daily KPI log) ───────────────────────────────────────────
 
@@ -212,7 +214,8 @@ export const healthRecords = pgTable("health_records", {
   attachmentUrl: text("attachment_url"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [index("health_records_pet_id_idx").on(t.petId)]);
 
 // ─── Vaccinations ─────────────────────────────────────────────────────────────
 
@@ -232,7 +235,8 @@ export const vaccinations = pgTable("vaccinations", {
   notes: text("notes"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [index("vaccinations_pet_id_idx").on(t.petId)]);
 
 // ─── Medications ──────────────────────────────────────────────────────────────
 
@@ -253,7 +257,8 @@ export const medications = pgTable("medications", {
   notes: text("notes"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [index("medications_pet_id_idx").on(t.petId)]);
 
 // ─── Email queue ──────────────────────────────────────────────────────────────
 
@@ -269,7 +274,8 @@ export const emailQueue = pgTable("email_queue", {
   /** Arbitrary data passed to the email template */
   payload: jsonb("payload").notNull().default({}),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [index("email_queue_status_send_at_idx").on(t.status, t.sendAt)]);
 
 // ─── Veterinarian profiles ─────────────────────────────────────────────────
 
@@ -340,7 +346,11 @@ export const bookings = pgTable("bookings", {
   status: bookingStatusEnum("status").notNull().default("pending"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [
+  index("bookings_owner_id_idx").on(t.ownerId),
+  index("bookings_professional_id_idx").on(t.professionalId),
+]);
 
 // ─── Marketplace ──────────────────────────────────────────────────────────────
 
@@ -387,7 +397,8 @@ export const orders = pgTable("orders", {
   notes: text("notes"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [index("orders_user_id_idx").on(t.userId)]);
 
 export const orderItems = pgTable("order_items", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -400,7 +411,8 @@ export const orderItems = pgTable("order_items", {
   quantity: integer("quantity").notNull(),
   /** Price snapshot at order time */
   priceCents: integer("price_cents").notNull(),
-});
+},
+(t) => [index("order_items_order_id_idx").on(t.orderId)]);
 
 // ─── Adoption ──────────────────────────────────────────────────────────────────
 
@@ -440,7 +452,11 @@ export const adoptionListings = pgTable("adoption_listings", {
   goodWithCats: boolean("good_with_cats"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [
+  index("adoption_listings_owner_id_idx").on(t.ownerId),
+  index("adoption_listings_status_idx").on(t.status),
+]);
 
 export const adoptionApplications = pgTable("adoption_applications", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -456,7 +472,11 @@ export const adoptionApplications = pgTable("adoption_applications", {
   housingType: varchar("housing_type", { length: 100 }),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [
+  index("adoption_applications_listing_id_idx").on(t.listingId),
+  index("adoption_applications_applicant_id_idx").on(t.applicantId),
+]);
 
 // ─── Reviews ───────────────────────────────────────────────────────────────────
 
@@ -479,4 +499,5 @@ export const reviews = pgTable("reviews", {
   rating: integer("rating").notNull(),
   comment: text("comment"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [index("reviews_professional_id_idx").on(t.professionalId)]);
