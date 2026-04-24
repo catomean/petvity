@@ -169,7 +169,10 @@ export default function AdoptPage() {
           </h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">Find a pet looking for a loving home</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link href="/portal/adopt/applications" className="btn-ghost text-sm flex items-center gap-2">
+            My applications
+          </Link>
           <Link href="/portal/adoptions" className="btn-ghost text-sm flex items-center gap-2">
             <Users className="w-4 h-4" />
             My listings

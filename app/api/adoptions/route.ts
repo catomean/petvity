@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { and, desc, eq, ne } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { adoptionListings, adoptionListingStatusEnum, pets } from "@/lib/db/schema";
+import { adoptionListings, adoptionApplications, adoptionListingStatusEnum, pets } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 import { auth } from "@/lib/auth";
 
@@ -45,16 +45,49 @@ const SELECT_LISTING = {
 
 /**
  * GET /api/adoptions
- * - ?mine=1   → authenticated user's own listings (all statuses)
- * - ?species= → filter public listings by species
- * - default   → public browse (available listings only)
+ * - ?mine=1     → authenticated user's own listings (all statuses)
+ * - ?applied=1  → authenticated user's submitted applications (with listing + pet info)
+ * - ?species=   → filter public listings by species
+ * - default     → public browse (available listings only)
  */
 export async function GET(req: NextRequest) {
   const db = getInstance();
   const { searchParams } = new URL(req.url);
   const mine = searchParams.get("mine") === "1";
+  const applied = searchParams.get("applied") === "1";
   const species = searchParams.get("species");
   const location = searchParams.get("location");
+
+  // Applicant's submitted applications — requires auth
+  if (applied) {
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+    }
+    const rows = await db
+      .select({
+        applicationId: adoptionApplications.id,
+        applicationStatus: adoptionApplications.status,
+        message: adoptionApplications.message,
+        createdAt: adoptionApplications.createdAt,
+        listingId: adoptionListings.id,
+        listingTitle: adoptionListings.title,
+        listingStatus: adoptionListings.status,
+        location: adoptionListings.location,
+        feeCents: adoptionListings.feeCents,
+        petId: pets.id,
+        petName: pets.name,
+        petSpecies: pets.species,
+        petBreed: pets.breed,
+        petAvatarUrl: pets.avatarUrl,
+      })
+      .from(adoptionApplications)
+      .innerJoin(adoptionListings, eq(adoptionListings.id, adoptionApplications.listingId))
+      .innerJoin(pets, eq(pets.id, adoptionListings.petId))
+      .where(eq(adoptionApplications.applicantId, session.user.id))
+      .orderBy(desc(adoptionApplications.createdAt));
+    return NextResponse.json({ success: true, data: rows });
+  }
 
   // Owner's own listings — requires auth
   if (mine) {
