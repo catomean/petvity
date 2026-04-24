@@ -75,7 +75,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
     if (!data.success) {
       setError(data.error ?? "Failed to save.");
     } else {
-      router.push(`/portal/pets/${petId}/health`);
+      router.push(`/portal/pets/${petId}`);
     }
   }
 
