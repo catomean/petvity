@@ -40,6 +40,7 @@ interface FormState {
   vetName: string;
   batchNumber: string;
   status: VaccinationStatus;
+  notes: string;
 }
 
 const EMPTY_FORM: FormState = {
@@ -49,6 +50,7 @@ const EMPTY_FORM: FormState = {
   vetName: "",
   batchNumber: "",
   status: "up_to_date",
+  notes: "",
 };
 
 export default function VaccinationsPage() {
@@ -98,6 +100,7 @@ export default function VaccinationsPage() {
       vetName: v.vetName ?? "",
       batchNumber: v.batchNumber ?? "",
       status: v.status,
+      notes: v.notes ?? "",
     });
     setError("");
     setShowForm(true);
@@ -127,6 +130,7 @@ export default function VaccinationsPage() {
       vetName: form.vetName.trim() || null,
       batchNumber: form.batchNumber.trim() || null,
       status: form.status,
+      notes: form.notes.trim() || null,
     };
 
     const res = await fetch(url, {
@@ -311,6 +315,20 @@ export default function VaccinationsPage() {
               />
             </div>
 
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                Notes
+                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+              </label>
+              <textarea
+                rows={2}
+                className="form-input resize-none"
+                placeholder="Reactions, observations, or reminders…"
+                value={form.notes}
+                onChange={(e) => field("notes", e.target.value)}
+              />
+            </div>
+
             <div className="sm:col-span-2 flex gap-3 pt-1">
               <button type="submit" disabled={saving || isPending} className="btn-primary disabled:opacity-60">
                 {saving ? "Saving…" : editingId ? "Update vaccination" : "Save vaccination"}
@@ -365,6 +383,7 @@ export default function VaccinationsPage() {
                     <td className="py-3 px-4">
                       <p className="font-medium text-[var(--ink)]">{v.name}</p>
                       {v.vetName && <p className="text-xs text-[var(--muted)] mt-0.5">{v.vetName}</p>}
+                      {v.notes && <p className="text-xs text-[var(--muted)] mt-0.5 italic">{v.notes}</p>}
                       <p className="text-xs text-[var(--muted)] mt-0.5 sm:hidden">{formatDateShort(v.administeredDate)}</p>
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell">
