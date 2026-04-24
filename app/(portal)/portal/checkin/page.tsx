@@ -5,7 +5,7 @@ import { and, eq, desc, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { CalendarDays, ChevronRight, CheckCircle } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_SORT_ORDER } from "@/lib/config/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 
@@ -33,12 +33,15 @@ export default async function CheckinPage() {
 
   const checkedInToday = new Set(todayRows.map((r) => r.petId));
 
-  // Pending first, then already done
+  // Pending first (sorted by signal severity: concern → watch → healthy), then done
   const sorted = [...userPets].sort((a, b) => {
     const aDone = checkedInToday.has(a.id);
     const bDone = checkedInToday.has(b.id);
-    if (aDone === bDone) return 0;
-    return aDone ? 1 : -1;
+    if (aDone !== bDone) return aDone ? 1 : -1;
+    // Within the same done/pending group, sort by signal severity
+    const aOrder = SIGNAL_SORT_ORDER[(a.lastKnownSignal ?? "healthy") as PetWellnessSignal] ?? 2;
+    const bOrder = SIGNAL_SORT_ORDER[(b.lastKnownSignal ?? "healthy") as PetWellnessSignal] ?? 2;
+    return aOrder - bOrder;
   });
 
   const pendingCount = userPets.length - checkedInToday.size;

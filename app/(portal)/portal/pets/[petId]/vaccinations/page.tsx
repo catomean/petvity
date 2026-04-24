@@ -450,6 +450,14 @@ export default function VaccinationsPage() {
                         </div>
                       ) : (
                         <div className="flex items-center gap-1">
+                          {displayStatus === "overdue" && (
+                            <button
+                              onClick={() => openEdit(v)}
+                              className="text-xs font-medium text-[var(--teal)] hover:underline me-1 whitespace-nowrap"
+                            >
+                              Log dose
+                            </button>
+                          )}
                           <button
                             onClick={() => openEdit(v)}
                             className="p-1.5 rounded-lg hover:bg-[var(--teal-light)] text-[var(--muted)] hover:text-[var(--teal)] transition-colors"
