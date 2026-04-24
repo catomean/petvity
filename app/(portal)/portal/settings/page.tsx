@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { User, Lock, CheckCircle } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
+import { userRoleLabel } from "@/lib/config/users";
 
 export default function SettingsPage() {
   const { data: session, update: updateSession } = useSession();
@@ -121,8 +122,8 @@ export default function SettingsPage() {
               Role
             </label>
             <input
-              className="form-input bg-[var(--off)] cursor-not-allowed capitalize"
-              value={(session.user?.role ?? "pet_owner").replace("_", " ")}
+              className="form-input bg-[var(--off)] cursor-not-allowed"
+              value={userRoleLabel(session.user?.role ?? "pet_owner")}
               disabled
             />
           </div>

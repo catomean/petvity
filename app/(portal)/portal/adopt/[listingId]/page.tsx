@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS } from "@/lib/config/adoptions";
-import type { ApplicationStatusId } from "@/lib/config/adoptions";
+import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS, LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
+import type { ApplicationStatusId, ListingStatusId } from "@/lib/config/adoptions";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -177,11 +177,9 @@ export default function ListingDetailPage() {
               </p>
             </div>
             <span className={`text-xs font-medium px-3 py-1 rounded-full ${
-              isAvailable
-                ? "bg-[var(--green-bg)] text-[var(--green)]"
-                : "bg-[var(--off)] text-[var(--muted)]"
+              LISTING_STATUS_CONFIG[listing.status as ListingStatusId]?.className ?? "bg-[var(--off)] text-[var(--muted)]"
             }`}>
-              {isAvailable ? "Available" : listing.status.replace("_", " ")}
+              {LISTING_STATUS_CONFIG[listing.status as ListingStatusId]?.label ?? listing.status}
             </span>
           </div>
 

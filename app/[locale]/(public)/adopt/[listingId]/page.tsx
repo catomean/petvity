@@ -9,6 +9,8 @@ import type { SpeciesId } from "@/lib/config/species";
 import {
   Heart, MapPin, DollarSign, PawPrint, Baby, Dog, Cat, Star, ChevronLeft,
 } from "lucide-react";
+import { LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
+import type { ListingStatusId } from "@/lib/config/adoptions";
 import type { Metadata } from "next";
 
 type Params = { params: Promise<{ locale: string; listingId: string }> };
@@ -138,11 +140,9 @@ export default async function PublicListingDetailPage({ params }: Params) {
                 </p>
               </div>
               <span className={`text-xs font-medium px-3 py-1 rounded-full flex-shrink-0 ${
-                isAvailable
-                  ? "bg-[var(--green-bg)] text-[var(--green)]"
-                  : "bg-[var(--off)] text-[var(--muted)]"
+                LISTING_STATUS_CONFIG[row.status as ListingStatusId]?.className ?? "bg-[var(--off)] text-[var(--muted)]"
               }`}>
-                {isAvailable ? "Available" : row.status.replace("_", " ")}
+                {LISTING_STATUS_CONFIG[row.status as ListingStatusId]?.label ?? row.status}
               </span>
             </div>
 
