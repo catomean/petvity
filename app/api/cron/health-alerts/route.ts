@@ -4,6 +4,7 @@ import { getInstance } from "@/lib/db";
 import { pets, healthMetrics, vaccinations, users, petSignalHistory } from "@/lib/db/schema";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { sendEmail } from "@/lib/email";
 import { petHealthAlert } from "@/lib/email/templates";
 import { APP_URL } from "@/lib/config/app";
@@ -67,9 +68,7 @@ export async function POST(req: NextRequest) {
   for (const pet of allPets) {
     const recentMetrics = metricsByPet.get(pet.id) ?? [];
     const petVacc = vaccByPet.get(pet.id) ?? [];
-    const overdueCount = petVacc.filter(
-      (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
-    ).length;
+    const overdueCount = countOverdueVaccinations(petVacc, todayStr);
 
     const result = computePetSignal({
       species: pet.species as SpeciesId,
@@ -135,9 +134,7 @@ export async function POST(req: NextRequest) {
   for (const pet of alertPets) {
     const recentMetrics = metricsByPet.get(pet.id) ?? [];
     const petVacc = vaccByPet.get(pet.id) ?? [];
-    const overdueCount = petVacc.filter(
-      (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
-    ).length;
+    const overdueCount = countOverdueVaccinations(petVacc, todayStr);
     signalResultMap.set(
       pet.id,
       computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now }),

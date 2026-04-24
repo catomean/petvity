@@ -11,6 +11,7 @@ import { getInstance } from "@/lib/db";
 import { healthMetrics, pets, petSignalHistory, vaccinations } from "@/lib/db/schema";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId } from "@/lib/config/species";
 
 export async function refreshSignalCache(petId: string, now = new Date()): Promise<void> {
@@ -32,9 +33,7 @@ export async function refreshSignalCache(petId: string, now = new Date()): Promi
 
   if (!pet) return; // pet deleted concurrently — nothing to update
 
-  const overdueCount = allVacc.filter(
-    (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
-  ).length;
+  const overdueCount = countOverdueVaccinations(allVacc, todayStr);
 
   const signal = computePetSignal({
     species: pet.species as SpeciesId,

@@ -28,6 +28,32 @@ export type VaccinationStatusId = keyof typeof VACCINATION_STATUS_CONFIG;
  * @param today       - YYYY-MM-DD string for the current date
  * @param dueSoonDays - Days before due date to start showing "due_soon"
  */
+/**
+ * Minimal shape needed to compute overdue count — avoids importing full DB types.
+ * Any row with `nextDueDate` and `status` fields satisfies this.
+ */
+type VaccinationOverdueRow = {
+  nextDueDate: string | null;
+  status: string;
+};
+
+/**
+ * Count vaccinations that are past their due date.
+ * Used by signal-cache, dashboard, and health-alerts cron — single SSOT.
+ * Excludes "not_applicable" records (user-declared intent).
+ *
+ * @param vaccs   - Array of vaccination rows
+ * @param today   - YYYY-MM-DD string for the current date
+ */
+export function countOverdueVaccinations(
+  vaccs: VaccinationOverdueRow[],
+  today: string,
+): number {
+  return vaccs.filter(
+    (v) => v.nextDueDate && v.nextDueDate < today && v.status !== "not_applicable",
+  ).length;
+}
+
 export function computeVaccinationDisplayStatus(
   stored: VaccinationStatusId,
   nextDueDate: string | null,

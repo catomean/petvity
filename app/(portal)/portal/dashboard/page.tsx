@@ -9,6 +9,7 @@ import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORD
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import { SPECIES_CONFIG } from "@/lib/config/species";
+import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId } from "@/lib/config/species";
 import type { TwinTrend } from "@/lib/domain/digital-twin";
 import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe } from "lucide-react";
@@ -74,9 +75,7 @@ export default async function DashboardPage() {
   const petsWithData = userPets.map((pet) => {
     const recentMetrics = metricsByPet.get(pet.id) ?? [];
     const petVacc = vaccByPet.get(pet.id) ?? [];
-    const overdueCount = petVacc.filter(
-      (v) => v.nextDueDate && v.nextDueDate < todayStr && v.status !== "not_applicable",
-    ).length;
+    const overdueCount = countOverdueVaccinations(petVacc, todayStr);
 
     const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now });
     const twin   = computeDigitalTwin(recentMetrics, now);
