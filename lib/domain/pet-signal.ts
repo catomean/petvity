@@ -122,12 +122,15 @@ export function computePetSignal({
     else if (signal === "watch") signal = "concern";
   }
 
+  const metricLabels = outOfRangeMetrics.map((id) => HEALTH_METRIC_CONFIG[id].label);
   const reason =
     outOfRangeMetrics.length === 0 && overdueVaccinations === 0
       ? "All monitored metrics within normal range"
-      : outOfRangeMetrics.length > 0
-        ? `${outOfRangeMetrics.length} metric(s) outside normal range: ${outOfRangeMetrics.join(", ")}`
-        : `${overdueVaccinations} overdue vaccination(s)`;
+      : outOfRangeMetrics.length > 0 && overdueVaccinations > 0
+        ? `${metricLabels.join(", ")} outside normal range · ${overdueVaccinations} overdue vaccination${overdueVaccinations !== 1 ? "s" : ""}`
+        : outOfRangeMetrics.length > 0
+          ? `${metricLabels.join(", ")} outside normal range`
+          : `${overdueVaccinations} overdue vaccination${overdueVaccinations !== 1 ? "s" : ""}`;
 
   return { signal, reason, outOfRangeMetrics };
 }
