@@ -168,10 +168,8 @@ export default function ListingDetailPage() {
                 {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${SEX_LABELS[listing.pet.sex as SexId] ?? listing.pet.sex}` : ""}
               </p>
             </div>
-            <span className={`text-xs font-medium px-3 py-1 rounded-full ${
-              LISTING_STATUS_CONFIG[listing.status as ListingStatusId]?.className ?? "bg-[var(--off)] text-[var(--muted)]"
-            }`}>
-              {LISTING_STATUS_CONFIG[listing.status as ListingStatusId]?.label ?? listing.status}
+            <span className={`text-xs font-medium px-3 py-1 rounded-full ${LISTING_STATUS_CONFIG[listing.status as ListingStatusId].className}`}>
+              {LISTING_STATUS_CONFIG[listing.status as ListingStatusId].label}
             </span>
           </div>
 

@@ -132,10 +132,8 @@ export default async function PublicListingDetailPage({ params }: Params) {
                   {row.pet.sex && row.pet.sex !== "unknown" ? ` · ${SEX_LABELS[row.pet.sex as SexId] ?? row.pet.sex}` : ""}
                 </p>
               </div>
-              <span className={`text-xs font-medium px-3 py-1 rounded-full flex-shrink-0 ${
-                LISTING_STATUS_CONFIG[row.status as ListingStatusId]?.className ?? "bg-[var(--off)] text-[var(--muted)]"
-              }`}>
-                {LISTING_STATUS_CONFIG[row.status as ListingStatusId]?.label ?? row.status}
+              <span className={`text-xs font-medium px-3 py-1 rounded-full flex-shrink-0 ${LISTING_STATUS_CONFIG[row.status as ListingStatusId].className}`}>
+                {LISTING_STATUS_CONFIG[row.status as ListingStatusId].label}
               </span>
             </div>
 
