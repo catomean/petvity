@@ -15,9 +15,9 @@ const LINKS = {
     { label: "🐴 Horse health", href: "/species/horse" },
   ],
   Professionals: [
+    { label: "For vets & sitters", href: "/pros" },
     { label: "Join as a veterinarian", href: "/register?role=vet" },
     { label: "Join as a pet sitter", href: "/register?role=sitter" },
-    { label: "About", href: "/about" },
     { label: "Contact us", href: `mailto:${APP.supportEmail}` },
   ],
   Support: [

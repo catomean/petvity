@@ -197,6 +197,12 @@ export default function MarketingNav() {
             Pricing
           </Link>
           <Link
+            href="/pros"
+            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--teal)] hover:bg-[var(--teal-light)] transition-colors no-underline"
+          >
+            For Pros
+          </Link>
+          <Link
             href="/adopt"
             className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
           >
@@ -268,6 +274,13 @@ export default function MarketingNav() {
               </div>
             </div>
             <div className="border-t border-[var(--border)] pt-3 flex flex-col gap-2">
+              <Link
+                href="/pros"
+                onClick={() => setMenuOpen(false)}
+                className="px-3 py-2.5 text-sm font-medium text-[var(--teal)] no-underline"
+              >
+                🩺 For professionals
+              </Link>
               <Link
                 href="/adopt"
                 onClick={() => setMenuOpen(false)}
