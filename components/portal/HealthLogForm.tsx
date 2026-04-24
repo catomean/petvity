@@ -210,7 +210,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
 
       <div className="flex gap-3">
         <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
-          {saving ? "Saving…" : "Save check-in"}
+          {saving ? "Saving…" : initialValues ? "Update check-in" : "Save check-in"}
         </button>
         <button type="button" onClick={() => router.back()} className="btn-outline">
           Cancel
