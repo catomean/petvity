@@ -63,8 +63,15 @@
   "portal": {
     "dashboard": "ダッシュボード",
     "myPets": "マイペット",
-    "checkin": "デイリーチェックイン",
+    "checkin": "チェックイン",
+    "findAPro": "専門家を探す",
+    "bookings": "予約",
+    "shop": "ショップ",
+    "orders": "注文",
+    "adopt": "引き取る",
     "settings": "設定",
+    "myProfile": "マイプロフィール",
+    "signOut": "ログアウト",
     "addPet": "ペットを追加",
     "noPets": "まだペットが登録されていません。",
     "noPetsAction": "最初のペットを追加して始めましょう。"

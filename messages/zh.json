@@ -63,8 +63,15 @@
   "portal": {
     "dashboard": "仪表板",
     "myPets": "我的宠物",
-    "checkin": "每日签到",
+    "checkin": "签到",
+    "findAPro": "找专业人士",
+    "bookings": "预订",
+    "shop": "商店",
+    "orders": "订单",
+    "adopt": "领养",
     "settings": "设置",
+    "myProfile": "我的资料",
+    "signOut": "退出登录",
     "addPet": "添加宠物",
     "noPets": "您还没有添加任何宠物。",
     "noPetsAction": "添加您的第一只宠物以开始使用。"

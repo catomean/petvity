@@ -63,8 +63,15 @@
   "portal": {
     "dashboard": "Panel",
     "myPets": "Mis mascotas",
-    "checkin": "Check-in diario",
+    "checkin": "Check-in",
+    "findAPro": "Buscar profesional",
+    "bookings": "Reservas",
+    "shop": "Tienda",
+    "orders": "Pedidos",
+    "adopt": "Adoptar",
     "settings": "Configuración",
+    "myProfile": "Mi perfil",
+    "signOut": "Cerrar sesión",
     "addPet": "Añadir mascota",
     "noPets": "Aún no has añadido ninguna mascota.",
     "noPetsAction": "Añade tu primera mascota para empezar."

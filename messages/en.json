@@ -63,8 +63,15 @@
   "portal": {
     "dashboard": "Dashboard",
     "myPets": "My Pets",
-    "checkin": "Daily Check-in",
+    "checkin": "Check-in",
+    "findAPro": "Find a Pro",
+    "bookings": "Bookings",
+    "shop": "Shop",
+    "orders": "Orders",
+    "adopt": "Adopt",
     "settings": "Settings",
+    "myProfile": "My Profile",
+    "signOut": "Sign out",
     "addPet": "Add a pet",
     "noPets": "You haven't added any pets yet.",
     "noPetsAction": "Add your first pet to get started."

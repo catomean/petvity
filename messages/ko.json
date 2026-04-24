@@ -63,8 +63,15 @@
   "portal": {
     "dashboard": "대시보드",
     "myPets": "내 반려동물",
-    "checkin": "일일 체크인",
+    "checkin": "체크인",
+    "findAPro": "전문가 찾기",
+    "bookings": "예약",
+    "shop": "쇼핑",
+    "orders": "주문",
+    "adopt": "입양",
     "settings": "설정",
+    "myProfile": "내 프로필",
+    "signOut": "로그아웃",
     "addPet": "반려동물 추가",
     "noPets": "아직 반려동물을 추가하지 않으셨습니다.",
     "noPetsAction": "첫 번째 반려동물을 추가하여 시작하세요."

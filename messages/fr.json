@@ -63,8 +63,15 @@
   "portal": {
     "dashboard": "Tableau de bord",
     "myPets": "Mes animaux",
-    "checkin": "Check-in quotidien",
+    "checkin": "Check-in",
+    "findAPro": "Trouver un pro",
+    "bookings": "Réservations",
+    "shop": "Boutique",
+    "orders": "Commandes",
+    "adopt": "Adopter",
     "settings": "Paramètres",
+    "myProfile": "Mon profil",
+    "signOut": "Se déconnecter",
     "addPet": "Ajouter un animal",
     "noPets": "Vous n'avez pas encore ajouté d'animaux.",
     "noPetsAction": "Ajoutez votre premier animal pour commencer."

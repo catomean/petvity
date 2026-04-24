@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import {
   Home,
   PawPrint,
@@ -18,35 +19,6 @@ import {
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
-const NAV_ITEMS = [
-  { href: "/portal/dashboard", icon: Home, label: "Dashboard" },
-  { href: "/portal/pets", icon: PawPrint, label: "My Pets" },
-  { href: "/portal/checkin", icon: CalendarDays, label: "Check-in" },
-  { href: "/portal/find", icon: Search, label: "Find a Pro" },
-  { href: "/portal/bookings", icon: CalendarCheck, label: "Bookings" },
-  { href: "/portal/shop", icon: ShoppingCart, label: "Shop" },
-  { href: "/portal/orders", icon: ShoppingBag, label: "Orders" },
-  { href: "/portal/adopt", icon: Heart, label: "Adopt" },
-];
-
-// Mobile tab bar: max 5 items — standard for reliable touch targets.
-// Professionals swap "Find" for their own profile since they are the pro.
-const MOBILE_NAV_ITEMS_DEFAULT = [
-  { href: "/portal/dashboard", icon: Home, label: "Dashboard" },
-  { href: "/portal/pets", icon: PawPrint, label: "My Pets" },
-  { href: "/portal/checkin", icon: CalendarDays, label: "Check-in" },
-  { href: "/portal/find", icon: Search, label: "Find" },
-  { href: "/portal/settings", icon: Settings, label: "Settings" },
-];
-
-const MOBILE_NAV_ITEMS_PRO = [
-  { href: "/portal/dashboard", icon: Home, label: "Dashboard" },
-  { href: "/portal/pets", icon: PawPrint, label: "My Pets" },
-  { href: "/portal/checkin", icon: CalendarDays, label: "Check-in" },
-  { href: "/portal/professional-profile", icon: Stethoscope, label: "My Profile" },
-  { href: "/portal/settings", icon: Settings, label: "Settings" },
-];
-
 function isActive(pathname: string, href: string): boolean {
   if (href === "/portal/dashboard") return pathname === href;
   return pathname === href || pathname.startsWith(href + "/");
@@ -60,8 +32,38 @@ interface Props {
 
 export default function SidebarNav({ userName, userEmail, userRole }: Props) {
   const pathname = usePathname();
+  const t = useTranslations("portal");
   const initials = userName?.[0]?.toUpperCase() ?? "?";
   const isProfessional = userRole === "veterinarian" || userRole === "pet_sitter";
+
+  const NAV_ITEMS = [
+    { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
+    { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
+    { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
+    { href: "/portal/find", icon: Search, label: t("findAPro") },
+    { href: "/portal/bookings", icon: CalendarCheck, label: t("bookings") },
+    { href: "/portal/shop", icon: ShoppingCart, label: t("shop") },
+    { href: "/portal/orders", icon: ShoppingBag, label: t("orders") },
+    { href: "/portal/adopt", icon: Heart, label: t("adopt") },
+  ];
+
+  // Mobile tab bar: max 5 items — standard for reliable touch targets.
+  // Professionals swap "Find" for their own profile since they are the pro.
+  const MOBILE_NAV_ITEMS_DEFAULT = [
+    { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
+    { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
+    { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
+    { href: "/portal/find", icon: Search, label: t("findAPro") },
+    { href: "/portal/settings", icon: Settings, label: t("settings") },
+  ];
+
+  const MOBILE_NAV_ITEMS_PRO = [
+    { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
+    { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
+    { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
+    { href: "/portal/professional-profile", icon: Stethoscope, label: t("myProfile") },
+    { href: "/portal/settings", icon: Settings, label: t("settings") },
+  ];
 
   return (
     <>
@@ -106,7 +108,7 @@ export default function SidebarNav({ userName, userEmail, userRole }: Props) {
               }`}
             >
               <Stethoscope className="w-4 h-4 flex-shrink-0" />
-              My Profile
+              {t("myProfile")}
             </Link>
           )}
         </nav>
@@ -122,14 +124,14 @@ export default function SidebarNav({ userName, userEmail, userRole }: Props) {
             }`}
           >
             <Settings className="w-4 h-4 flex-shrink-0" />
-            Settings
+            {t("settings")}
           </Link>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[var(--muted)] hover:bg-[var(--danger-bg)] hover:text-[var(--danger-text)] transition-colors cursor-pointer border-none bg-transparent"
           >
             <LogOut className="w-4 h-4 flex-shrink-0" />
-            Sign out
+            {t("signOut")}
           </button>
         </div>
 

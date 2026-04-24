@@ -63,8 +63,15 @@
   "portal": {
     "dashboard": "Kontrol Paneli",
     "myPets": "Evcil Hayvanlarım",
-    "checkin": "Günlük Kontrol",
+    "checkin": "Kontrol",
+    "findAPro": "Uzman Bul",
+    "bookings": "Rezervasyonlar",
+    "shop": "Mağaza",
+    "orders": "Siparişler",
+    "adopt": "Sahiplen",
     "settings": "Ayarlar",
+    "myProfile": "Profilim",
+    "signOut": "Çıkış yap",
     "addPet": "Evcil hayvan ekle",
     "noPets": "Henüz evcil hayvan eklemediniz.",
     "noPetsAction": "Başlamak için ilk evcil hayvanınızı ekleyin."
