@@ -150,7 +150,7 @@ function ListingRow({
               <p><span className="font-medium">Listing ID:</span> <span className="font-mono text-xs">{listing.id}</span></p>
               <p><span className="font-medium">Created:</span> {new Date(listing.createdAt).toLocaleDateString()}</p>
               <p><span className="font-medium">Updated:</span> {new Date(listing.updatedAt).toLocaleDateString()}</p>
-              <p><span className="font-medium">Species:</span> <span className="capitalize">{listing.pet.species}</span></p>
+              <p><span className="font-medium">Species:</span> {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}</p>
             </div>
 
             {/* Admin actions */}

@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
+import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG, HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
 import type { ListingStatusId, ApplicationStatusId } from "@/lib/config/adoptions";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -72,8 +72,8 @@ function ApplicationRow({
           </p>
           <p className="text-xs text-[var(--muted)]">{app.applicant.email}</p>
           {app.housingType && (
-            <p className="text-xs text-[var(--muted)] mt-0.5 capitalize">
-              {app.housingType.replace(/_/g, " ")}
+            <p className="text-xs text-[var(--muted)] mt-0.5">
+              {HOUSING_TYPE_LABELS[app.housingType] ?? app.housingType.replace(/_/g, " ")}
             </p>
           )}
         </div>

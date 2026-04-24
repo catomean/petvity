@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Package, Pencil, X, Eye, EyeOff } from "lucide-react";
-import { PRODUCT_CATEGORY_OPTIONS } from "@/lib/config/products";
+import { PRODUCT_CATEGORY_OPTIONS, productCategoryLabel } from "@/lib/config/products";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -270,7 +270,7 @@ export default function AdminProductsPage() {
                       <p className="text-xs text-[var(--muted)] truncate max-w-[200px]">{p.description}</p>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell capitalize">{p.category}</td>
+                  <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell">{productCategoryLabel(p.category)}</td>
                   <td className="py-3 px-4 font-medium text-[var(--ink2)]">{formatPrice(p.priceCents)}</td>
                   <td className="py-3 px-4 text-[var(--muted)] hidden md:table-cell">
                     {p.stock != null ? p.stock : <span className="text-[var(--faint)]">∞</span>}
