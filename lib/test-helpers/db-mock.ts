@@ -67,13 +67,18 @@ export function makeMockDb() {
     // SELECT — each call creates a fresh thenable resolved from the queue
     select: vi.fn().mockImplementation(makeSelectChain),
 
-    // INSERT — supports both:
-    //   db.insert(t).values({...}).returning()
-    //   db.insert(t).values({...}).onConflictDoUpdate({...}).returning()
+    // INSERT — supports all patterns:
+    //   await db.insert(t).values({...})
+    //   await db.insert(t).values({...}).returning()
+    //   await db.insert(t).values({...}).onConflictDoUpdate({...}).returning()
     insert: vi.fn().mockReturnValue({
-      values: vi.fn().mockReturnValue({
-        returning: _insertReturning,
-        onConflictDoUpdate: vi.fn().mockReturnValue({ returning: _insertReturning }),
+      values: vi.fn().mockImplementation(() => {
+        // Make values() itself awaitable (for inserts without .returning())
+        const p = Promise.resolve([] as unknown[]);
+        return Object.assign(p, {
+          returning: _insertReturning,
+          onConflictDoUpdate: vi.fn().mockReturnValue({ returning: _insertReturning }),
+        });
       }),
     }),
 
