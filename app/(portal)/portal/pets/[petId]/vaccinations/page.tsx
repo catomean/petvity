@@ -9,8 +9,9 @@ import {
   Pencil, Trash2, Search,
 } from "lucide-react";
 import { formatDateShort, formatRelativeDate } from "@/lib/utils/format";
-import { VACCINATION_STATUS_CONFIG } from "@/lib/config/vaccinations";
+import { VACCINATION_STATUS_CONFIG, computeVaccinationDisplayStatus } from "@/lib/config/vaccinations";
 import type { VaccinationStatusId } from "@/lib/config/vaccinations";
+import { VACCINATION_DUE_SOON_DAYS } from "@/lib/config/pet-signal";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Partial<Record<VaccinationStatusId, React.ElementType>> = {
@@ -166,8 +167,11 @@ export default function VaccinationsPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  const todayStr = new Date().toISOString().slice(0, 10);
+
   const filteredRows = rows.filter((r) => {
-    if (statusFilter !== "all" && r.status !== statusFilter) return false;
+    const displayStatus = computeVaccinationDisplayStatus(r.status, r.nextDueDate, todayStr, VACCINATION_DUE_SOON_DAYS);
+    if (statusFilter !== "all" && displayStatus !== statusFilter) return false;
     if (searchQ.trim()) {
       const q = searchQ.toLowerCase();
       return (
@@ -400,8 +404,9 @@ export default function VaccinationsPage() {
             </thead>
             <tbody>
               {filteredRows.map((v) => {
-                const status = VACCINATION_STATUS_CONFIG[v.status] ?? VACCINATION_STATUS_CONFIG.up_to_date;
-                const StatusIcon = STATUS_ICONS[v.status];
+                const displayStatus = computeVaccinationDisplayStatus(v.status, v.nextDueDate, todayStr, VACCINATION_DUE_SOON_DAYS);
+                const status = VACCINATION_STATUS_CONFIG[displayStatus] ?? VACCINATION_STATUS_CONFIG.up_to_date;
+                const StatusIcon = STATUS_ICONS[displayStatus];
                 const isDeleting = deletingId === v.id;
                 return (
                   <tr key={v.id} className="group border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">

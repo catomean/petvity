@@ -13,3 +13,35 @@ export const VACCINATION_STATUS_CONFIG = {
 } as const;
 
 export type VaccinationStatusId = keyof typeof VACCINATION_STATUS_CONFIG;
+
+/**
+ * Compute the effective display status from the vaccination's dates rather than
+ * the stored status field, which gets stale over time.
+ *
+ * Only "not_applicable" is treated as a durable user intent; all other stored
+ * values are overridden by date arithmetic. This keeps the badge in sync with
+ * the signal computation in lib/domain/pet-signal.ts, which also ignores the
+ * stored status and derives overdue-ness from nextDueDate directly.
+ *
+ * @param stored    - The DB-persisted status (used only to propagate "not_applicable")
+ * @param nextDueDate - YYYY-MM-DD or null (null = no booster required)
+ * @param today       - YYYY-MM-DD string for the current date
+ * @param dueSoonDays - Days before due date to start showing "due_soon"
+ */
+export function computeVaccinationDisplayStatus(
+  stored: VaccinationStatusId,
+  nextDueDate: string | null,
+  today: string,
+  dueSoonDays: number,
+): VaccinationStatusId {
+  if (stored === "not_applicable") return "not_applicable";
+  if (!nextDueDate) return "up_to_date";
+  if (nextDueDate < today) return "overdue";
+  const msPerDay = 86_400_000;
+  const daysUntil =
+    (new Date(nextDueDate + "T00:00:00Z").getTime() -
+      new Date(today + "T00:00:00Z").getTime()) /
+    msPerDay;
+  if (daysUntil <= dueSoonDays) return "due_soon";
+  return "up_to_date";
+}
