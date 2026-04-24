@@ -279,7 +279,10 @@ export default function FindPage() {
           <EmptyState
             icon={Stethoscope}
             title="No veterinarians listed yet"
-            body={cityFilter ? `No vets found in "${cityFilter}".` : "Be the first to join as a veterinarian."}
+            body={cityFilter
+              ? `No vets found in "${cityFilter}". Try a different city or clear the filter.`
+              : "No vets have joined yet. Are you a veterinarian? Create your professional profile and start accepting clients today."}
+            cta={cityFilter ? undefined : { label: "Register as a veterinarian", href: "/register?role=vet" }}
           />
         ) : (
           <div className="space-y-3">
@@ -293,7 +296,10 @@ export default function FindPage() {
           <EmptyState
             icon={Home}
             title="No pet sitters listed yet"
-            body={cityFilter ? `No sitters found in "${cityFilter}".` : "Be the first to join as a pet sitter."}
+            body={cityFilter
+              ? `No sitters found in "${cityFilter}". Try a different city or clear the filter.`
+              : "No sitters have joined yet. Do you offer pet sitting or boarding? Create your profile and connect with pet owners near you."}
+            cta={cityFilter ? undefined : { label: "Register as a pet sitter", href: "/register?role=sitter" }}
           />
         ) : (
           <div className="space-y-3">
@@ -457,10 +463,12 @@ function EmptyState({
   icon: Icon,
   title,
   body,
+  cta,
 }: {
   icon: React.ElementType;
   title: string;
   body: string;
+  cta?: { label: string; href: string };
 }) {
   return (
     <div className="card py-16 text-center">
@@ -468,7 +476,12 @@ function EmptyState({
         <Icon className="w-7 h-7 text-[var(--teal)]" />
       </div>
       <p className="font-medium text-[var(--ink)] mb-1">{title}</p>
-      <p className="text-sm text-[var(--muted)]">{body}</p>
+      <p className="text-sm text-[var(--muted)] mb-5">{body}</p>
+      {cta && (
+        <Link href={cta.href} className="btn-primary">
+          {cta.label}
+        </Link>
+      )}
     </div>
   );
 }

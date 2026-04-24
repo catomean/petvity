@@ -273,8 +273,14 @@ export default function ShopPage() {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <Package className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-1">No products yet</p>
-          <p className="text-sm text-[var(--muted)]">Check back soon — new products are added regularly.</p>
+          <p className="font-medium text-[var(--ink)] mb-2">No products yet</p>
+          <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">
+            The marketplace is being stocked. In the meantime, check your pet's health dashboard or find a vet.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="/portal/dashboard" className="btn-primary text-sm">Go to dashboard</a>
+            <a href="/portal/find" className="btn-outline text-sm">Find a vet or sitter</a>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

@@ -21,12 +21,15 @@ function RegisterForm() {
   const searchParams = useSearchParams();
   const rawReturnTo = searchParams.get("returnTo") ?? searchParams.get("next") ?? "";
   const returnTo = rawReturnTo.startsWith("/") ? rawReturnTo : "/portal/dashboard";
+  const roleParam = searchParams.get("role");
   const nameRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [intendedRole, setIntendedRole] = useState<IntendedRole>("pet_owner");
+  const [intendedRole, setIntendedRole] = useState<IntendedRole>(
+    roleParam === "vet" ? "veterinarian" : roleParam === "sitter" ? "pet_sitter" : "pet_owner",
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
