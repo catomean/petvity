@@ -8,6 +8,7 @@ import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
+import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import { formatDateShort, formatPetAge } from "@/lib/utils/format";
 import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
@@ -61,12 +62,7 @@ export default async function PetProfilePage({ params }: Params) {
     // Table not yet created — no history to show
   }
 
-  const overdueCount = allVacc.filter(
-    (v) =>
-      v.nextDueDate &&
-      v.nextDueDate < todayStr &&
-      v.status !== "not_applicable",
-  ).length;
+  const overdueCount = countOverdueVaccinations(allVacc, todayStr);
 
   const signalResult = computePetSignal({
     species: pet.species as SpeciesId,
