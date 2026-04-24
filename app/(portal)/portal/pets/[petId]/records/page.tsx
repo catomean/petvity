@@ -63,6 +63,7 @@ export default function HealthRecordsPage() {
   const [petName, setPetName] = useState("");
   const [records, setRecords] = useState<HealthRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [typeFilter, setTypeFilter] = useState<RecordType | "all">("all");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -164,6 +165,10 @@ export default function HealthRecordsPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  const filteredRecords = typeFilter === "all"
+    ? records
+    : records.filter((r) => r.type === typeFilter);
+
   if (loading) {
     return (
       <div className="animate-pulse space-y-3">
@@ -191,12 +196,27 @@ export default function HealthRecordsPage() {
             Vet visits, treatments, lab results and more
           </p>
         </div>
-        {!showForm && (
-          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add record
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {records.length > 0 && !showForm && (
+            <select
+              className="form-input text-sm py-1.5"
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value as RecordType | "all")}
+              aria-label="Filter by type"
+            >
+              <option value="all">All types</option>
+              {HEALTH_RECORD_TYPE_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          )}
+          {!showForm && (
+            <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              Add record
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Add form */}
@@ -339,9 +359,19 @@ export default function HealthRecordsPage() {
             </button>
           )}
         </div>
+      ) : filteredRecords.length === 0 ? (
+        <div className="card py-12 text-center">
+          <p className="font-medium text-[var(--ink)] mb-1">No records match this filter</p>
+          <button
+            onClick={() => setTypeFilter("all")}
+            className="text-sm text-[var(--teal)] hover:underline mt-1"
+          >
+            Show all records
+          </button>
+        </div>
       ) : (
         <div className="space-y-3">
-          {records.map((r) => {
+          {filteredRecords.map((r) => {
             const cfg = HEALTH_RECORD_TYPE_CONFIG[r.type] ?? HEALTH_RECORD_TYPE_CONFIG.other;
             const Icon = RECORD_TYPE_ICONS[r.type] ?? RECORD_TYPE_ICONS.other;
             return (
