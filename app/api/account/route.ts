@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { name: rawName, email, password } = parsed.data;
+    const { name: rawName, email, password, intendedRole } = parsed.data;
     // Derive a display name from the email prefix if not provided
     const name = rawName?.trim() ||
       email.split("@")[0]
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     }
 
     const hashed = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
-    const role = resolveRole(email);
+    const role = resolveRole(email, intendedRole);
 
     const [user] = await db
       .insert(users)

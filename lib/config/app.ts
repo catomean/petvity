@@ -12,6 +12,6 @@ export const APP_URL =
 export function getAdminEmails(): string[] {
   return (process.env.ADMIN_EMAILS ?? "")
     .split(",")
-    .map((e) => e.trim())
+    .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
 }

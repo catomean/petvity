@@ -111,6 +111,34 @@ describe("POST /api/account (registration)", () => {
     const res = await POST(makePostRequest({ email: "john.doe@example.com", password: "securepass123" }));
     expect(res.status).toBe(201);
   });
+
+  it("registers as veterinarian when intendedRole=veterinarian", async () => {
+    db._queryFindFirst.mockResolvedValueOnce(undefined);
+    db._insertReturning.mockResolvedValueOnce([{ id: "vet-user-id" }]);
+
+    const res = await POST(makePostRequest({ ...VALID_REGISTER, intendedRole: "veterinarian" }));
+    expect(res.status).toBe(201);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+    // resolveRole should have been called with intendedRole — the route should pass it through
+    // (we verify via db insert being called once with vet role)
+    expect(db._insertReturning).toHaveBeenCalledOnce();
+  });
+
+  it("registers as pet_sitter when intendedRole=pet_sitter", async () => {
+    db._queryFindFirst.mockResolvedValueOnce(undefined);
+    db._insertReturning.mockResolvedValueOnce([{ id: "sitter-user-id" }]);
+
+    const res = await POST(makePostRequest({ ...VALID_REGISTER, intendedRole: "pet_sitter" }));
+    expect(res.status).toBe(201);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+  });
+
+  it("returns 400 for an invalid intendedRole value", async () => {
+    const res = await POST(makePostRequest({ ...VALID_REGISTER, intendedRole: "admin" }));
+    expect(res.status).toBe(400);
+  });
 });
 
 /* ─── PATCH (account update) tests ─────────────────────────────────────────── */

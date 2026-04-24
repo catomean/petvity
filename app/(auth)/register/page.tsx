@@ -4,8 +4,17 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { PawPrint, Stethoscope, Heart } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
+
+type IntendedRole = "pet_owner" | "veterinarian" | "pet_sitter";
+
+const ROLE_OPTIONS: { id: IntendedRole; icon: React.ElementType; label: string; desc: string }[] = [
+  { id: "pet_owner",    icon: PawPrint,     label: "Pet owner",   desc: "Track my pet's health" },
+  { id: "veterinarian", icon: Stethoscope,  label: "Veterinarian", desc: "Offer vet services" },
+  { id: "pet_sitter",   icon: Heart,        label: "Pet sitter",   desc: "Offer sitting & boarding" },
+];
 
 function RegisterForm() {
   const router = useRouter();
@@ -17,6 +26,7 @@ function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [intendedRole, setIntendedRole] = useState<IntendedRole>("pet_owner");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +45,7 @@ function RegisterForm() {
     const res = await fetch("/api/account", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name.trim() || undefined, email, password }),
+      body: JSON.stringify({ name: name.trim() || undefined, email, password, intendedRole }),
     });
     const data = await res.json();
 
@@ -55,7 +65,7 @@ function RegisterForm() {
     if (signInRes?.error) {
       setError("Account created — please log in.");
     } else {
-      router.push(returnTo);
+      router.push(intendedRole === "pet_owner" ? returnTo : "/portal/professional-profile");
     }
   }
 
@@ -64,11 +74,39 @@ function RegisterForm() {
       <h1 className="text-2xl font-bold mb-1 text-[var(--ink)]">
         Start for free
       </h1>
-      <p className="text-sm text-[var(--muted)] mb-7">
+      <p className="text-sm text-[var(--muted)] mb-6">
         No credit card · Cancel anytime
       </p>
 
       {error && <p className="alert-error mb-5">{error}</p>}
+
+      {/* Role selector */}
+      <div className="mb-5">
+        <p className="text-sm font-medium text-[var(--ink2)] mb-2">I am joining as…</p>
+        <div className="grid grid-cols-3 gap-2">
+          {ROLE_OPTIONS.map(({ id, icon: Icon, label, desc }) => {
+            const selected = intendedRole === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setIntendedRole(id)}
+                className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 text-center transition-all ${
+                  selected
+                    ? "border-[var(--teal)] bg-[var(--teal-light)]"
+                    : "border-[var(--border)] hover:border-[var(--teal-light)] hover:bg-[var(--off)]"
+                }`}
+              >
+                <Icon className={`w-5 h-5 ${selected ? "text-[var(--teal)]" : "text-[var(--muted)]"}`} />
+                <span className={`text-xs font-semibold leading-tight ${selected ? "text-[var(--teal)]" : "text-[var(--ink2)]"}`}>
+                  {label}
+                </span>
+                <span className="text-[10px] text-[var(--muted)] leading-tight hidden sm:block">{desc}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
@@ -133,7 +171,11 @@ function RegisterForm() {
           disabled={loading}
           className="btn-primary w-full justify-center mt-1 py-3 text-base disabled:opacity-60"
         >
-          {loading ? "Setting up your account…" : "Begin your pet's wellness journey"}
+          {loading
+            ? "Setting up your account…"
+            : intendedRole === "pet_owner"
+              ? "Begin your pet's wellness journey"
+              : "Create professional account"}
         </button>
       </form>
 
