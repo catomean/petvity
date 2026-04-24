@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
+import { formatPrice, formatIsoDate, formatIsoDateTime } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -65,21 +66,6 @@ const STATUS_FILTER_OPTIONS: { value: string; label: string }[] = [
   ...Object.entries(ORDER_STATUS_CONFIG).map(([value, { label }]) => ({ value, label })),
 ];
 
-function formatPrice(cents: number) {
-  return `$${(cents / 100).toFixed(2)}`;
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, {
-    year: "numeric", month: "short", day: "numeric",
-  });
-}
-
-function formatDateTime(iso: string) {
-  return new Date(iso).toLocaleString(undefined, {
-    month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
-  });
-}
 
 /* ─── Order row ──────────────────────────────────────────────────────────── */
 
@@ -127,7 +113,7 @@ function OrderRow({
             {order.customer.name ?? order.customer.email}
           </p>
           <p className="text-xs text-[var(--muted)]">
-            {order.items.length} {order.items.length === 1 ? "item" : "items"} · {formatDate(order.createdAt)}
+            {order.items.length} {order.items.length === 1 ? "item" : "items"} · {formatIsoDate(order.createdAt)}
           </p>
         </div>
 
@@ -153,7 +139,7 @@ function OrderRow({
               {order.customer.email}
             </span>
             <span className="text-xs text-[var(--faint)] ms-auto">
-              Updated {formatDateTime(order.updatedAt)}
+              Updated {formatIsoDateTime(order.updatedAt)}
             </span>
           </div>
 

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X } from "lucide-react";
 import { productCategoryLabel } from "@/lib/config/products";
+import { formatPrice } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -20,10 +21,6 @@ interface Product {
 interface CartItem {
   product: Product;
   quantity: number;
-}
-
-function formatPrice(cents: number) {
-  return `$${(cents / 100).toFixed(2)}`;
 }
 
 /* ─── Cart ───────────────────────────────────────────────────────────────── */

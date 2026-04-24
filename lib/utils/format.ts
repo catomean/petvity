@@ -58,6 +58,39 @@ export function formatPetAge(birthDate: string | null): string {
 }
 
 /**
+ * Format an integer cent amount as a price string.
+ * e.g. 2999 → "$29.99"
+ */
+export function formatPrice(cents: number): string {
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
+/**
+ * Format an ISO datetime string for compact display.
+ * e.g. "2026-01-15T10:30:00Z" → "Jan 15, 2026"
+ */
+export function formatIsoDate(iso: string): string {
+  return new Date(iso).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+/**
+ * Format an ISO datetime string with time for compact display.
+ * e.g. "2026-01-15T10:30:00Z" → "Jan 15, 10:30 AM"
+ */
+export function formatIsoDateTime(iso: string): string {
+  return new Date(iso).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+/**
  * Format a date relative to now.
  * e.g. "2 days ago", "in 3 days"
  */

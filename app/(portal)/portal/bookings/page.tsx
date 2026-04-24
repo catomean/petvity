@@ -6,6 +6,7 @@ import { CalendarCheck, Clock, CheckCircle, XCircle, ChevronDown, Star, X } from
 import { BOOKING_STATUS_CONFIG } from "@/lib/config/orders";
 import type { BookingStatusId } from "@/lib/config/orders";
 import { userRoleLabel } from "@/lib/config/users";
+import { formatIsoDate } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -44,12 +45,6 @@ function StatusBadge({ status }: { status: BookingRow["status"] }) {
       {cfg.label}
     </span>
   );
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, {
-    year: "numeric", month: "short", day: "numeric",
-  });
 }
 
 /* ─── Component ──────────────────────────────────────────────────────────── */
@@ -202,8 +197,8 @@ function BookingCard({
             )}
           </div>
           <p className="text-sm text-[var(--muted)]">
-            {formatDate(b.startDate)}
-            {b.startDate !== b.endDate && ` – ${formatDate(b.endDate)}`}
+            {formatIsoDate(b.startDate)}
+            {b.startDate !== b.endDate && ` – ${formatIsoDate(b.endDate)}`}
           </p>
           {b.ownerName && (
             <p className="text-sm text-[var(--ink2)] mt-0.5">Owner: {b.ownerName}</p>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ShoppingBag, Package, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
+import { formatPrice, formatIsoDate } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -37,15 +38,6 @@ const STATUS_ICONS: Record<OrderStatusId, React.ElementType> = {
   cancelled: XCircle,
 };
 
-function formatPrice(cents: number) {
-  return `$${(cents / 100).toFixed(2)}`;
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString(undefined, {
-    year: "numeric", month: "short", day: "numeric",
-  });
-}
 
 /* ─── Order Card ─────────────────────────────────────────────────────────── */
 
@@ -73,7 +65,7 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
           </div>
           <div className="min-w-0">
             <p className="font-medium text-[var(--ink)] text-sm">
-              Order · {formatDate(order.createdAt)}
+              Order · {formatIsoDate(order.createdAt)}
             </p>
             <p className="text-xs text-[var(--muted)]">
               {order.items.length} {order.items.length === 1 ? "item" : "items"} · {formatPrice(order.totalCents)}

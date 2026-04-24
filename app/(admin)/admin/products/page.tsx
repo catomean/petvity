@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Package, Pencil, X, Eye, EyeOff } from "lucide-react";
 import { PRODUCT_CATEGORY_OPTIONS, productCategoryLabel } from "@/lib/config/products";
+import { formatPrice } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -32,10 +33,6 @@ interface FormState {
 const EMPTY_FORM: FormState = {
   name: "", description: "", priceDollars: "", imageUrl: "", category: "other", stock: "",
 };
-
-function formatPrice(cents: number) {
-  return `$${(cents / 100).toFixed(2)}`;
-}
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
