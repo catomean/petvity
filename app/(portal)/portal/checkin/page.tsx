@@ -1,11 +1,13 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics } from "@/lib/db/schema";
-import { and, eq, desc, inArray } from "drizzle-orm";
+import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
+import { and, eq, desc, inArray, gte } from "drizzle-orm";
 import Link from "next/link";
-import { CalendarDays, ChevronRight, CheckCircle } from "lucide-react";
+import { AlertTriangle, CalendarDays, ChevronRight, CheckCircle } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_SORT_ORDER } from "@/lib/config/pet-signal";
+import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { countOverdueVaccinations } from "@/lib/config/vaccinations";
+import { computePetSignal } from "@/lib/domain/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 
@@ -14,7 +16,9 @@ export default async function CheckinPage() {
   if (!session) return null;
 
   const db = getInstance();
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
 
   const userPets = await db.query.pets.findMany({
     where: eq(pets.ownerId, session.user.id),
@@ -23,24 +27,51 @@ export default async function CheckinPage() {
 
   const petIds = userPets.map((p) => p.id);
 
-  // One query to find which pets already have today's log entry
-  const todayRows = petIds.length > 0
-    ? await db
-        .select({ petId: healthMetrics.petId })
-        .from(healthMetrics)
-        .where(and(inArray(healthMetrics.petId, petIds), eq(healthMetrics.date, todayStr)))
-    : [];
+  // Batch-fetch today's check-ins + recent metrics + vaccinations (3 queries, no N+1)
+  const [todayRows, allMetrics, allVacc] = petIds.length > 0
+    ? await Promise.all([
+        db.select({ petId: healthMetrics.petId })
+          .from(healthMetrics)
+          .where(and(inArray(healthMetrics.petId, petIds), eq(healthMetrics.date, todayStr))),
+        db.select()
+          .from(healthMetrics)
+          .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr))),
+        db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
+      ])
+    : [[], [], []];
+
+  // Group by petId in memory
+  const metricsByPet = new Map<string, typeof allMetrics>();
+  for (const m of allMetrics) {
+    const arr = metricsByPet.get(m.petId) ?? [];
+    arr.push(m);
+    metricsByPet.set(m.petId, arr);
+  }
+  const vaccByPet = new Map<string, typeof allVacc>();
+  for (const v of allVacc) {
+    const arr = vaccByPet.get(v.petId) ?? [];
+    arr.push(v);
+    vaccByPet.set(v.petId, arr);
+  }
 
   const checkedInToday = new Set(todayRows.map((r) => r.petId));
 
+  // Compute live signal for each pet (includes vaccination state)
+  const petsWithSignal = userPets.map((pet) => {
+    const recentMetrics = metricsByPet.get(pet.id) ?? [];
+    const petVacc = vaccByPet.get(pet.id) ?? [];
+    const overdueCount = countOverdueVaccinations(petVacc, todayStr);
+    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now });
+    return { ...pet, signal };
+  });
+
   // Pending first (sorted by signal severity: concern → watch → healthy), then done
-  const sorted = [...userPets].sort((a, b) => {
+  const sorted = [...petsWithSignal].sort((a, b) => {
     const aDone = checkedInToday.has(a.id);
     const bDone = checkedInToday.has(b.id);
     if (aDone !== bDone) return aDone ? 1 : -1;
-    // Within the same done/pending group, sort by signal severity
-    const aOrder = SIGNAL_SORT_ORDER[(a.lastKnownSignal ?? "healthy") as PetWellnessSignal] ?? 2;
-    const bOrder = SIGNAL_SORT_ORDER[(b.lastKnownSignal ?? "healthy") as PetWellnessSignal] ?? 2;
+    const aOrder = SIGNAL_SORT_ORDER[a.signal.signal as PetWellnessSignal] ?? 2;
+    const bOrder = SIGNAL_SORT_ORDER[b.signal.signal as PetWellnessSignal] ?? 2;
     return aOrder - bOrder;
   });
 
@@ -72,7 +103,7 @@ export default async function CheckinPage() {
         <div className="flex flex-col gap-3 max-w-lg">
           {sorted.map((pet) => {
             const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
-            const signal = (pet.lastKnownSignal ?? "healthy") as PetWellnessSignal;
+            const sig = pet.signal.signal;
             const done = checkedInToday.has(pet.id);
 
             return (
@@ -93,12 +124,18 @@ export default async function CheckinPage() {
                     : speciesDef?.emoji ?? "🐾"}
                 </div>
 
-                {/* Name + species */}
+                {/* Name + species + signal reason */}
                 <div className="min-w-0 flex-1">
                   <div className="font-medium text-[var(--ink)]">{pet.name}</div>
                   <div className="text-xs text-[var(--muted)]">
                     {speciesDef?.label ?? pet.species}
                   </div>
+                  {!done && sig !== "healthy" && pet.signal.reason && (
+                    <div className={`flex items-center gap-1 mt-1 text-xs ${sig === "concern" ? "text-[var(--danger)]" : "text-[var(--warn)]"}`}>
+                      <AlertTriangle className="w-3 h-3 flex-shrink-0" />
+                      <span className="truncate">{pet.signal.reason}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Status */}
@@ -108,8 +145,8 @@ export default async function CheckinPage() {
                     Logged today
                   </span>
                 ) : (
-                  <span className={`${SIGNAL_BG_CLASSES[signal]} flex-shrink-0 hidden sm:inline-flex`}>
-                    {SIGNAL_LABELS[signal]}
+                  <span className={`${SIGNAL_BG_CLASSES[sig]} flex-shrink-0 hidden sm:inline-flex`}>
+                    {SIGNAL_LABELS[sig]}
                   </span>
                 )}
 

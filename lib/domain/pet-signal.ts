@@ -1,5 +1,6 @@
 import {
   HEALTH_METRIC_CONFIG,
+  getNormalRange,
   isMetricInRange,
   signalFromOutOfRangeCount,
   type MetricId,
@@ -96,21 +97,27 @@ export function computePetSignal({
   // ── Step 2: Count out-of-range metrics from the most recent row ─────────────
   const latest = sorted[0];
   const outOfRangeMetrics: MetricId[] = [];
+  // Stores a human-readable description per out-of-range metric for the reason string
+  const outOfRangeDetails: string[] = [];
 
   for (const { metricId, field } of METRIC_DB_MAP) {
     const storedValue = latest[field] as number | null;
     if (storedValue === null || storedValue === undefined) continue;
 
-    const def = HEALTH_METRIC_CONFIG[metricId];
     const inRange = isMetricInRange(metricId, storedValue, species);
-
-    // Inverted metrics: "out of range" means anxiety is too high (already handled
-    // by the normalRange being min:1 max:2, so isMetricInRange handles it correctly)
     if (!inRange) {
       outOfRangeMetrics.push(metricId);
+      const def = HEALTH_METRIC_CONFIG[metricId];
+      const range = getNormalRange(metricId, species);
+      const displayVal = def.toDisplay(storedValue);
+      const displayMin = def.toDisplay(range.min);
+      const displayMax = def.toDisplay(range.max);
+      // Format: "Temperature 40.5°C (normal 38–39°C)" or "Anxiety 4/5 (normal ≤2/5)"
+      const unit = def.unit;
+      const valStr = `${displayVal}${unit}`;
+      const rangeStr = `${displayMin}–${displayMax}${unit}`;
+      outOfRangeDetails.push(`${def.label} ${valStr} (normal ${rangeStr})`);
     }
-
-    void def; // suppress unused warning
   }
 
   // ── Step 3: Compute base signal from metric count ─────────────────────────
@@ -122,15 +129,14 @@ export function computePetSignal({
     else if (signal === "watch") signal = "concern";
   }
 
-  const metricLabels = outOfRangeMetrics.map((id) => HEALTH_METRIC_CONFIG[id].label);
+  const vaccStr = overdueVaccinations > 0
+    ? `${overdueVaccinations} overdue vaccination${overdueVaccinations !== 1 ? "s" : ""}`
+    : null;
+
   const reason =
-    outOfRangeMetrics.length === 0 && overdueVaccinations === 0
+    outOfRangeDetails.length === 0 && !vaccStr
       ? "All monitored metrics within normal range"
-      : outOfRangeMetrics.length > 0 && overdueVaccinations > 0
-        ? `${metricLabels.join(", ")} outside normal range · ${overdueVaccinations} overdue vaccination${overdueVaccinations !== 1 ? "s" : ""}`
-        : outOfRangeMetrics.length > 0
-          ? `${metricLabels.join(", ")} outside normal range`
-          : `${overdueVaccinations} overdue vaccination${overdueVaccinations !== 1 ? "s" : ""}`;
+      : [...outOfRangeDetails, ...(vaccStr ? [vaccStr] : [])].join(" · ");
 
   return { signal, reason, outOfRangeMetrics };
 }

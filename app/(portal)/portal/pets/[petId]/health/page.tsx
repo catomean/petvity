@@ -1,10 +1,10 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics } from "@/lib/db/schema";
+import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { BarChart3, ChevronLeft, Pencil } from "lucide-react";
+import { AlertTriangle, BarChart3, ChevronLeft, Pencil, Syringe } from "lucide-react";
 import {
   HEALTH_METRIC_CONFIG,
   HEALTH_CHART_WINDOW_DAYS,
@@ -15,6 +15,9 @@ import {
 import type { MetricId } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
 import { getMetricDisplay, computeWellnessScore, WELLNESS_SCORE_THRESHOLDS } from "@/lib/domain/health";
+import { computePetSignal } from "@/lib/domain/pet-signal";
+import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { formatDateShort } from "@/lib/utils/format";
 import { HealthTrendChart } from "@/components/portal/HealthTrendChart";
 
@@ -33,14 +36,26 @@ export default async function PetHealthPage({ params }: Params) {
   if (!pet) notFound();
 
   // eslint-disable-next-line react-hooks/purity
-  const since30 = new Date(Date.now() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
-  const metrics = await db.query.healthMetrics.findMany({
-    where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
-    orderBy: [desc(healthMetrics.date)],
-  });
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+
+  const [metrics, petVacc] = await Promise.all([
+    db.query.healthMetrics.findMany({
+      where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
+      orderBy: [desc(healthMetrics.date)],
+    }),
+    db.select().from(vaccinations).where(eq(vaccinations.petId, pet.id)),
+  ]);
 
   const latest = metrics[0];
   const species = pet.species as SpeciesId;
+
+  // Live signal computation for the reason banner
+  const signalMetrics = metrics.filter((m) => m.date >= sinceSignal);
+  const overdueCount = countOverdueVaccinations(petVacc, todayStr);
+  const petSignal = computePetSignal({ species, recentMetrics: signalMetrics, overdueVaccinations: overdueCount, now });
 
   const metricFieldMap: Record<MetricId, keyof typeof latest> = {
     weight: "weightGrams",
@@ -125,6 +140,31 @@ export default async function PetHealthPage({ params }: Params) {
         </div>
       ) : (
         <div className="space-y-6">
+          {/* Signal reason banner — shown for watch/concern */}
+          {petSignal.signal !== "healthy" && (
+            <div className={`flex items-start gap-3 rounded-xl px-4 py-3 ${
+              petSignal.signal === "concern"
+                ? "bg-[var(--danger-bg)] border border-[var(--danger)]"
+                : "bg-[var(--warn-bg)] border border-[var(--warn)]"
+            }`}>
+              <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${petSignal.signal === "concern" ? "text-[var(--danger)]" : "text-[var(--warn)]"}`} />
+              <div className="flex-1 min-w-0">
+                <p className={`text-sm font-medium ${petSignal.signal === "concern" ? "text-[var(--danger)]" : "text-[var(--warn)]"}`}>
+                  {petSignal.reason}
+                </p>
+                {overdueCount > 0 && (
+                  <Link
+                    href={`/portal/pets/${petId}/vaccinations`}
+                    className="inline-flex items-center gap-1 text-xs font-medium text-[var(--warn)] hover:underline mt-1 no-underline"
+                  >
+                    <Syringe className="w-3 h-3" />
+                    Update vaccinations
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Latest reading */}
           <div className="card p-5">
             <div className="flex items-center justify-between mb-4">
