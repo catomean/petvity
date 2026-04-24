@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { PawPrint, Users, LogOut, Package, ShoppingBag, Heart } from "lucide-react";
+import { PawPrint, Users, LogOut, Package, ShoppingBag, Heart, LayoutDashboard } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
 export default async function AdminLayout({
@@ -17,7 +17,7 @@ export default async function AdminLayout({
       {/* Sidebar */}
       <aside className="w-52 flex-shrink-0 bg-[var(--ink)] flex flex-col fixed inset-y-0 start-0">
         <div className="h-14 flex items-center px-4 border-b border-white/10">
-          <Link href="/admin/users" className="flex items-center gap-2 no-underline">
+          <Link href="/admin" className="flex items-center gap-2 no-underline">
             <div className="w-7 h-7 rounded-lg bg-[var(--teal)] flex items-center justify-center">
               <PawPrint className="w-3.5 h-3.5 text-white" />
             </div>
@@ -29,6 +29,13 @@ export default async function AdminLayout({
         </div>
 
         <nav className="flex-1 px-2 py-4 space-y-0.5">
+          <Link
+            href="/admin"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-colors no-underline"
+          >
+            <LayoutDashboard className="w-4 h-4 flex-shrink-0" />
+            Overview
+          </Link>
           <Link
             href="/admin/users"
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-colors no-underline"
