@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, healthRecords, vaccinations, medications } from "@/lib/db/schema";
+import { pets, healthMetrics, healthRecords, vaccinations, medications, petSignalHistory } from "@/lib/db/schema";
 import { and, eq, gte, desc, count } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import type { SpeciesId, SexId } from "@/lib/config/species";
 import { formatDateShort, formatPetAge } from "@/lib/utils/format";
 import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
+import { SignalHistoryTimeline } from "@/components/portal/SignalHistoryTimeline";
 
 type Params = { params: Promise<{ petId: string }> };
 
@@ -34,7 +35,7 @@ export default async function PetProfilePage({ params }: Params) {
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
-  const [recentMetrics, allVacc, activeMeds, [{ recordCount }]] = await Promise.all([
+  const [recentMetrics, allVacc, activeMeds, [{ recordCount }], signalHistory] = await Promise.all([
     db.query.healthMetrics.findMany({
       where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, sinceStr)),
       orderBy: [desc(healthMetrics.date)],
@@ -44,6 +45,12 @@ export default async function PetProfilePage({ params }: Params) {
       where: and(eq(medications.petId, pet.id), eq(medications.status, "active")),
     }),
     db.select({ recordCount: count() }).from(healthRecords).where(eq(healthRecords.petId, pet.id)),
+    db
+      .select()
+      .from(petSignalHistory)
+      .where(eq(petSignalHistory.petId, pet.id))
+      .orderBy(desc(petSignalHistory.recordedAt))
+      .limit(5),
   ]);
 
   const overdueCount = allVacc.filter(
@@ -201,6 +208,9 @@ export default async function PetProfilePage({ params }: Params) {
 
       {/* Digital Twin */}
       <DigitalTwinCard twin={twin} petId={pet.id} petName={pet.name} />
+
+      {/* Signal History — shown only once at least one transition has been recorded */}
+      <SignalHistoryTimeline rows={signalHistory} />
 
       {/* Section tabs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">

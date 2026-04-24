@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, gte, inArray, desc } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, vaccinations, users } from "@/lib/db/schema";
+import { pets, healthMetrics, vaccinations, users, petSignalHistory } from "@/lib/db/schema";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { sendEmail } from "@/lib/email";
@@ -55,6 +55,14 @@ export async function POST(req: NextRequest) {
   // Compute signals and identify pets needing alerts
   const signalUpdates: { id: string; signal: string }[] = [];
   const alertPetIds: string[] = [];
+  // Accumulate history rows for signal transitions — one bulk INSERT after the loop
+  const historyRows: {
+    petId: string;
+    signal: "healthy" | "watch" | "concern";
+    reason: string;
+    source: string;
+    recordedAt: Date;
+  }[] = [];
 
   for (const pet of allPets) {
     const recentMetrics = metricsByPet.get(pet.id) ?? [];
@@ -71,6 +79,17 @@ export async function POST(req: NextRequest) {
     });
 
     signalUpdates.push({ id: pet.id, signal: result.signal });
+
+    // Record a history entry only when the signal changes.
+    if (pet.lastKnownSignal !== result.signal) {
+      historyRows.push({
+        petId: pet.id,
+        signal: result.signal as "healthy" | "watch" | "concern",
+        reason: result.reason,
+        source: "cron",
+        recordedAt: now,
+      });
+    }
 
     if (
       result.signal === "concern" &&
@@ -91,6 +110,11 @@ export async function POST(req: NextRequest) {
   }
   for (const [signal, ids] of petsBySignal) {
     await db.update(pets).set({ lastKnownSignal: signal }).where(inArray(pets.id, ids));
+  }
+
+  // Bulk-insert signal history for all transitions — 0 or 1 query regardless of pet count.
+  if (historyRows.length > 0) {
+    await db.insert(petSignalHistory).values(historyRows);
   }
 
   if (alertPetIds.length === 0) {

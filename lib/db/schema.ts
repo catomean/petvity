@@ -73,6 +73,12 @@ export const bookingStatusEnum = pgEnum("booking_status", [
   "completed",
 ]);
 
+export const petWellnessSignalEnum = pgEnum("pet_wellness_signal", [
+  "healthy",
+  "watch",
+  "concern",
+]);
+
 // ─── NextAuth tables ──────────────────────────────────────────────────────────
 
 export const users = pgTable("users", {
@@ -477,6 +483,30 @@ export const adoptionApplications = pgTable("adoption_applications", {
   index("adoption_applications_listing_id_idx").on(t.listingId),
   index("adoption_applications_applicant_id_idx").on(t.applicantId),
 ]);
+
+// ─── Pet signal history ────────────────────────────────────────────────────────
+
+/**
+ * Append-only log of pet wellness signal transitions.
+ * A row is inserted only when the signal CHANGES from its previous value.
+ * Used to show owners a timeline of "why did my pet's signal change?"
+ */
+export const petSignalHistory = pgTable(
+  "pet_signal_history",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    petId: uuid("pet_id")
+      .notNull()
+      .references(() => pets.id, { onDelete: "cascade" }),
+    signal: petWellnessSignalEnum("signal").notNull(),
+    /** Human-readable reason at the moment of transition (from computePetSignal). */
+    reason: text("reason"),
+    /** "user_action" = triggered by a health/vaccination mutation; "cron" = daily batch. */
+    source: varchar("source", { length: 20 }).notNull().default("user_action"),
+    recordedAt: timestamp("recorded_at", { mode: "date" }).notNull().defaultNow(),
+  },
+  (t) => [index("pet_signal_history_pet_id_idx").on(t.petId)],
+);
 
 // ─── Reviews ───────────────────────────────────────────────────────────────────
 

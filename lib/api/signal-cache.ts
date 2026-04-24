@@ -8,7 +8,7 @@
 
 import { and, desc, eq, gte } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
-import { healthMetrics, pets, vaccinations } from "@/lib/db/schema";
+import { healthMetrics, pets, petSignalHistory, vaccinations } from "@/lib/db/schema";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
@@ -42,6 +42,17 @@ export async function refreshSignalCache(petId: string, now = new Date()): Promi
     overdueVaccinations: overdueCount,
     now,
   });
+
+  // Only record a history row when the signal actually changes — not on every refresh.
+  if (pet.lastKnownSignal !== signal.signal) {
+    await db.insert(petSignalHistory).values({
+      petId,
+      signal: signal.signal as "healthy" | "watch" | "concern",
+      reason: signal.reason,
+      source: "user_action",
+      recordedAt: now,
+    });
+  }
 
   await db.update(pets).set({ lastKnownSignal: signal.signal }).where(eq(pets.id, petId));
 }
