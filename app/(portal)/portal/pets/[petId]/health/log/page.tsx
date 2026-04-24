@@ -1,13 +1,14 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
 import { pets, healthMetrics } from "@/lib/db/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, lt, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { HEALTH_METRIC_CONFIG, getNormalRange } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
 import { HealthLogForm } from "@/components/portal/HealthLogForm";
+import { formatRelativeDate } from "@/lib/utils/format";
 
 type Params = { params: Promise<{ petId: string }> };
 
@@ -27,9 +28,19 @@ export default async function LogHealthPage({ params }: Params) {
 
   // Check if there's already a log for today so we can pre-fill the form
   const todayStr = new Date().toISOString().slice(0, 10);
-  const existing = await db.query.healthMetrics.findFirst({
-    where: and(eq(healthMetrics.petId, petId), eq(healthMetrics.date, todayStr)),
-  });
+  const [existing, prevLog] = await Promise.all([
+    db.query.healthMetrics.findFirst({
+      where: and(eq(healthMetrics.petId, petId), eq(healthMetrics.date, todayStr)),
+    }),
+    // Most recent log BEFORE today — shown as context to help owners spot trends
+    db
+      .select()
+      .from(healthMetrics)
+      .where(and(eq(healthMetrics.petId, petId), lt(healthMetrics.date, todayStr)))
+      .orderBy(desc(healthMetrics.date))
+      .limit(1)
+      .then((rows) => rows[0] ?? null),
+  ]);
   const initialValues = existing
     ? {
         date: existing.date,
@@ -78,11 +89,28 @@ export default async function LogHealthPage({ params }: Params) {
       <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">
         {existing ? "Update today's check-in" : "Log health check"}
       </h1>
-      <p className="text-sm text-[var(--muted)] mb-6">
+      <p className="text-sm text-[var(--muted)] mb-4">
         {existing
           ? "You already logged today — update any values below."
           : "Track as many or as few metrics as you have data for today."}
       </p>
+
+      {/* Previous log context — helps owners notice trends */}
+      {prevLog && (() => {
+        const parts: string[] = [];
+        if (prevLog.weightGrams != null)
+          parts.push(`${HEALTH_METRIC_CONFIG.weight.toDisplay(prevLog.weightGrams)} kg`);
+        if (prevLog.temperatureCentidegrees != null)
+          parts.push(`${HEALTH_METRIC_CONFIG.temperature.toDisplay(prevLog.temperatureCentidegrees)}°C`);
+        if (prevLog.heartRateBpm != null)
+          parts.push(`${prevLog.heartRateBpm} bpm`);
+        return parts.length > 0 ? (
+          <p className="text-xs text-[var(--muted)] bg-[var(--off)] border border-[var(--border)] rounded-lg px-3 py-2 mb-6">
+            <span className="font-medium text-[var(--ink2)]">Last logged {formatRelativeDate(prevLog.date)}:</span>
+            {" "}{parts.join(" · ")}
+          </p>
+        ) : null;
+      })()}
 
       <HealthLogForm
         petId={petId}
