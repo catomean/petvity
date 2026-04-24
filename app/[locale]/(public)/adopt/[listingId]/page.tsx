@@ -9,8 +9,8 @@ import type { SpeciesId, SexId } from "@/lib/config/species";
 import {
   Heart, MapPin, DollarSign, PawPrint, Baby, Dog, Cat, Star, ChevronLeft,
 } from "lucide-react";
-import { LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
-import type { ListingStatusId } from "@/lib/config/adoptions";
+import { LISTING_STATUS_CONFIG, LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
+import type { ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
 import { formatPetAge } from "@/lib/utils/format";
 import type { Metadata } from "next";
 
@@ -153,29 +153,23 @@ export default async function PublicListingDetailPage({ params }: Params) {
               </span>
             </div>
 
-            {/* Traits */}
-            {(row.goodWithKids || row.goodWithDogs || row.goodWithCats || row.requiresExperience) && (
+            {/* Traits — icons are UI-layer only; labels come from LISTING_TRAIT_CONFIG */}
+            {LISTING_TRAIT_CONFIG.some((t) => row[t.field]) && (
               <div className="flex flex-wrap gap-2 mb-5">
-                {row.goodWithKids && (
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-[var(--teal-light)] text-[var(--teal)] px-3 py-1 rounded-full">
-                    <Baby className="w-3.5 h-3.5" /> Good with kids
-                  </span>
-                )}
-                {row.goodWithDogs && (
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-[var(--teal-light)] text-[var(--teal)] px-3 py-1 rounded-full">
-                    <Dog className="w-3.5 h-3.5" /> Good with dogs
-                  </span>
-                )}
-                {row.goodWithCats && (
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-[var(--teal-light)] text-[var(--teal)] px-3 py-1 rounded-full">
-                    <Cat className="w-3.5 h-3.5" /> Good with cats
-                  </span>
-                )}
-                {row.requiresExperience && (
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-[var(--warn-bg)] text-[var(--warn)] px-3 py-1 rounded-full">
-                    <Star className="w-3.5 h-3.5" /> Experienced owner required
-                  </span>
-                )}
+                {LISTING_TRAIT_CONFIG.map((t) => {
+                  if (!row[t.field]) return null;
+                  const icon: Record<ListingTraitKey, React.ReactNode> = {
+                    goodWithKids:       <Baby className="w-3.5 h-3.5" />,
+                    goodWithDogs:       <Dog className="w-3.5 h-3.5" />,
+                    goodWithCats:       <Cat className="w-3.5 h-3.5" />,
+                    requiresExperience: <Star className="w-3.5 h-3.5" />,
+                  };
+                  return (
+                    <span key={t.field} className={`inline-flex items-center gap-1.5 text-xs font-medium ${t.className} px-3 py-1 rounded-full`}>
+                      {icon[t.field]} {t.label}
+                    </span>
+                  );
+                })}
               </div>
             )}
 

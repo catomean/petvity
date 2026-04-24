@@ -178,7 +178,10 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
                   className="form-input"
                 >
                   <option value="">Not logged</option>
-                  {[1, 2, 3, 4, 5].map((v) => (
+                  {Array.from(
+                    { length: (def.scale?.max ?? 5) - (def.scale?.min ?? 1) + 1 },
+                    (_, i) => (def.scale?.min ?? 1) + i,
+                  ).map((v) => (
                     <option key={v} value={v}>
                       {v} — {labels[v - 1] ?? ""}
                     </option>

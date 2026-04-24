@@ -3,6 +3,7 @@ import { adoptionListings, pets } from "@/lib/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
+import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import { Heart, MapPin, PawPrint } from "lucide-react";
@@ -160,17 +161,12 @@ export default async function PublicAdoptPage({ params }: Params) {
                       )}
                       {/* Trait pills */}
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {listing.goodWithKids && (
-                          <span className="text-[10px] font-medium bg-[var(--teal-light)] text-[var(--teal)] px-2 py-0.5 rounded-full">Kids</span>
-                        )}
-                        {listing.goodWithDogs && (
-                          <span className="text-[10px] font-medium bg-[var(--teal-light)] text-[var(--teal)] px-2 py-0.5 rounded-full">Dogs</span>
-                        )}
-                        {listing.goodWithCats && (
-                          <span className="text-[10px] font-medium bg-[var(--teal-light)] text-[var(--teal)] px-2 py-0.5 rounded-full">Cats</span>
-                        )}
-                        {listing.requiresExperience && (
-                          <span className="text-[10px] font-medium bg-[var(--warn-bg)] text-[var(--warn)] px-2 py-0.5 rounded-full">Exp. owner</span>
+                        {LISTING_TRAIT_CONFIG.map((t) =>
+                          listing[t.field] ? (
+                            <span key={t.field} className={`text-[10px] font-medium ${t.className} px-2 py-0.5 rounded-full`}>
+                              {t.shortLabel}
+                            </span>
+                          ) : null,
                         )}
                       </div>
                     </div>

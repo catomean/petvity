@@ -6,6 +6,7 @@ import {
   Heart, PawPrint, MapPin, Users,
   Search, Filter, ChevronRight, Sparkles,
 } from "lucide-react";
+import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG, SEX_LABELS, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 
@@ -110,25 +111,12 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
 
         {/* Traits */}
         <div className="flex flex-wrap gap-1 mt-3">
-          {listing.goodWithKids && (
-            <span className="text-[10px] font-medium bg-[var(--teal-light)] text-[var(--teal)] px-2 py-0.5 rounded-full">
-              Good with kids
-            </span>
-          )}
-          {listing.goodWithDogs && (
-            <span className="text-[10px] font-medium bg-[var(--teal-light)] text-[var(--teal)] px-2 py-0.5 rounded-full">
-              Good with dogs
-            </span>
-          )}
-          {listing.goodWithCats && (
-            <span className="text-[10px] font-medium bg-[var(--teal-light)] text-[var(--teal)] px-2 py-0.5 rounded-full">
-              Good with cats
-            </span>
-          )}
-          {listing.requiresExperience && (
-            <span className="text-[10px] font-medium bg-[var(--warn-bg)] text-[var(--warn)] px-2 py-0.5 rounded-full">
-              Experienced owner
-            </span>
+          {LISTING_TRAIT_CONFIG.map((t) =>
+            listing[t.field] ? (
+              <span key={t.field} className={`text-[10px] font-medium ${t.className} px-2 py-0.5 rounded-full`}>
+                {t.shortLabel}
+              </span>
+            ) : null,
           )}
         </div>
       </div>

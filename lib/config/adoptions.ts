@@ -35,3 +35,25 @@ export const HOUSING_TYPE_LABELS: Record<string, string> = {
 export const HOUSING_TYPE_OPTIONS = Object.entries(HOUSING_TYPE_LABELS).map(
   ([value, label]) => ({ value, label }),
 );
+
+/**
+ * SSOT for adoption listing trait pills.
+ * Defines the boolean fields on a listing that describe compatibility.
+ * Icons are excluded — they are React components and belong in the UI layer.
+ */
+export type ListingTraitKey = "goodWithKids" | "goodWithDogs" | "goodWithCats" | "requiresExperience";
+
+export const LISTING_TRAIT_CONFIG: Array<{
+  field: ListingTraitKey;
+  /** Full label for detail views. */
+  label: string;
+  /** Compact label for card/list views. */
+  shortLabel: string;
+  /** Tailwind bg + text classes. */
+  className: string;
+}> = [
+  { field: "goodWithKids",       label: "Good with kids",             shortLabel: "Kids",       className: "bg-[var(--teal-light)] text-[var(--teal)]" },
+  { field: "goodWithDogs",       label: "Good with dogs",             shortLabel: "Dogs",       className: "bg-[var(--teal-light)] text-[var(--teal)]" },
+  { field: "goodWithCats",       label: "Good with cats",             shortLabel: "Cats",       className: "bg-[var(--teal-light)] text-[var(--teal)]" },
+  { field: "requiresExperience", label: "Experienced owner required", shortLabel: "Exp. owner", className: "bg-[var(--warn-bg)] text-[var(--warn)]" },
+];
