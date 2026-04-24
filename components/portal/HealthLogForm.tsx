@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG, EMOTIONAL_SCALE_LABELS } from "@/lib/config/health-metrics";
 type PhysicalHint = { min: number; max: number; unit: string } | null;
 
@@ -39,6 +40,7 @@ const EMPTY_FORM: InitialValues = {
 };
 
 export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, initialValues }: Props) {
+  const t = useTranslations("portal");
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -210,10 +212,10 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
 
       <div className="flex gap-3">
         <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
-          {saving ? "Saving…" : initialValues ? "Update check-in" : "Save check-in"}
+          {saving ? t("saving") : initialValues ? t("updateCheckin") : t("saveCheckin")}
         </button>
         <button type="button" onClick={() => router.back()} className="btn-outline">
-          Cancel
+          {t("cancel")}
         </button>
       </div>
     </form>

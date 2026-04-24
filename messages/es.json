@@ -74,7 +74,21 @@
     "signOut": "Cerrar sesión",
     "addPet": "Añadir mascota",
     "noPets": "Aún no has añadido ninguna mascota.",
-    "noPetsAction": "Añade tu primera mascota para empezar."
+    "noPetsAction": "Añade tu primera mascota para empezar.",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "daysAgo": "hace {count} d",
+    "saving": "Guardando…",
+    "saveCheckin": "Guardar",
+    "updateCheckin": "Actualizar",
+    "cancel": "Cancelar",
+    "verified": "Verificado",
+    "acceptingClients": "Aceptando clientes",
+    "notAccepting": "No disponible",
+    "veterinarians": "Veterinarios",
+    "petSitters": "Cuidadores de mascotas",
+    "book": "Reservar",
+    "filterByCity": "Filtrar por ciudad…"
   },
   "pets": {
     "name": "Nombre",

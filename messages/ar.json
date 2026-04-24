@@ -74,7 +74,21 @@
     "signOut": "تسجيل الخروج",
     "addPet": "إضافة حيوان أليف",
     "noPets": "لم تضف أي حيوانات أليفة بعد.",
-    "noPetsAction": "أضف حيوانك الأليف الأول للبدء."
+    "noPetsAction": "أضف حيوانك الأليف الأول للبدء.",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "daysAgo": "منذ {count} يوم",
+    "saving": "جارٍ الحفظ…",
+    "saveCheckin": "حفظ",
+    "updateCheckin": "تحديث",
+    "cancel": "إلغاء",
+    "verified": "موثق",
+    "acceptingClients": "يقبل العملاء",
+    "notAccepting": "لا يقبل حاليًا",
+    "veterinarians": "أطباء بيطريون",
+    "petSitters": "مدبرو الحيوانات",
+    "book": "حجز",
+    "filterByCity": "تصفية حسب المدينة…"
   },
   "pets": {
     "name": "الاسم",

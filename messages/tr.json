@@ -74,7 +74,21 @@
     "signOut": "Çıkış yap",
     "addPet": "Evcil hayvan ekle",
     "noPets": "Henüz evcil hayvan eklemediniz.",
-    "noPetsAction": "Başlamak için ilk evcil hayvanınızı ekleyin."
+    "noPetsAction": "Başlamak için ilk evcil hayvanınızı ekleyin.",
+    "today": "Bugün",
+    "yesterday": "Dün",
+    "daysAgo": "{count} gün önce",
+    "saving": "Kaydediliyor…",
+    "saveCheckin": "Kaydet",
+    "updateCheckin": "Güncelle",
+    "cancel": "İptal",
+    "verified": "Doğrulanmış",
+    "acceptingClients": "Müşteri kabul ediyor",
+    "notAccepting": "Müşteri almıyor",
+    "veterinarians": "Veterinerler",
+    "petSitters": "Evcil Hayvan Bakıcıları",
+    "book": "Rezervasyon",
+    "filterByCity": "Şehre göre filtrele…"
   },
   "pets": {
     "name": "İsim",

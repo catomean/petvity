@@ -74,7 +74,21 @@
     "signOut": "Abmelden",
     "addPet": "Tier hinzufügen",
     "noPets": "Du hast noch keine Tiere hinzugefügt.",
-    "noPetsAction": "Füge dein erstes Tier hinzu, um loszulegen."
+    "noPetsAction": "Füge dein erstes Tier hinzu, um loszulegen.",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "daysAgo": "vor {count} T.",
+    "saving": "Speichern…",
+    "saveCheckin": "Check-in speichern",
+    "updateCheckin": "Check-in aktualisieren",
+    "cancel": "Abbrechen",
+    "verified": "Verifiziert",
+    "acceptingClients": "Nimmt Klienten an",
+    "notAccepting": "Nicht verfügbar",
+    "veterinarians": "Tierärzte",
+    "petSitters": "Tierbetreuung",
+    "book": "Buchen",
+    "filterByCity": "Stadt filtern…"
   },
   "pets": {
     "name": "Name",

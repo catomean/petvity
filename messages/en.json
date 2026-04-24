@@ -74,7 +74,21 @@
     "signOut": "Sign out",
     "addPet": "Add a pet",
     "noPets": "You haven't added any pets yet.",
-    "noPetsAction": "Add your first pet to get started."
+    "noPetsAction": "Add your first pet to get started.",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{count}d ago",
+    "saving": "Saving…",
+    "saveCheckin": "Save check-in",
+    "updateCheckin": "Update check-in",
+    "cancel": "Cancel",
+    "verified": "Verified",
+    "acceptingClients": "Accepting clients",
+    "notAccepting": "Not accepting",
+    "veterinarians": "Veterinarians",
+    "petSitters": "Pet Sitters",
+    "book": "Book",
+    "filterByCity": "Filter by city…"
   },
   "pets": {
     "name": "Name",

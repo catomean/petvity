@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { Zap, Smile, Wind, Users, Brain, CalendarDays, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import type { TwinState, TwinTrend } from "@/lib/domain/digital-twin";
+import { useTranslations } from "next-intl";
 
 const METRIC_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   mood:          Smile,
@@ -25,6 +28,7 @@ type Props = {
 };
 
 export function DigitalTwinCard({ twin, petId, petName }: Props) {
+  const t = useTranslations("portal");
   const cfg = TWIN_STATE_CONFIG[twin.id];
   const trendCfg = TWIN_TREND_CONFIG[twin.trend];
   const TrendIcon = TREND_ICONS[twin.trend];
@@ -52,7 +56,7 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
             )}
             {twin.daysAgo !== null && (
               <span className="text-xs text-[var(--muted)]">
-                {twin.daysAgo === 0 ? "Today" : twin.daysAgo === 1 ? "Yesterday" : `${twin.daysAgo}d ago`}
+                {twin.daysAgo === 0 ? t("today") : twin.daysAgo === 1 ? t("yesterday") : t("daysAgo", { count: twin.daysAgo })}
               </span>
             )}
           </div>

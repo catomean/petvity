@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { formatSitterServices } from "@/lib/config/professionals";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
 
@@ -53,22 +54,24 @@ interface BookingTarget {
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
 function VerifiedBadge() {
+  const t = useTranslations("portal");
   return (
     <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--teal)] bg-[var(--teal-light)] px-2 py-0.5 rounded-full">
       <BadgeCheck className="w-3 h-3" />
-      Verified
+      {t("verified")}
     </span>
   );
 }
 
 function AcceptingBadge({ accepting }: { accepting: boolean }) {
+  const t = useTranslations("portal");
   return (
     <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
       accepting
         ? "bg-[var(--green-bg)] text-[var(--green-text)]"
         : "bg-[var(--off)] text-[var(--muted)]"
     }`}>
-      {accepting ? "Accepting clients" : "Not accepting"}
+      {accepting ? t("acceptingClients") : t("notAccepting")}
     </span>
   );
 }
@@ -89,6 +92,7 @@ function StarRating({ avg, count }: { avg: number | null; count: number }) {
 /* ─── Card components ────────────────────────────────────────────────────── */
 
 function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => void }) {
+  const t = useTranslations("portal");
   return (
     <div className="card p-5">
       <div className="flex items-start justify-between gap-4">
@@ -112,7 +116,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
-            Book
+            {t("book")}
           </button>
         )}
       </div>
@@ -139,6 +143,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
 }
 
 function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: BookingTarget) => void }) {
+  const t = useTranslations("portal");
   return (
     <div className="card p-5">
       <div className="flex items-start justify-between gap-4">
@@ -166,7 +171,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
-            Book
+            {t("book")}
           </button>
         )}
       </div>
@@ -198,6 +203,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
 type Tab = "vets" | "sitters";
 
 export default function FindPage() {
+  const t = useTranslations("portal");
   const [tab, setTab] = useState<Tab>("vets");
   const [vets, setVets] = useState<VetRow[]>([]);
   const [sitters, setSitters] = useState<SitterRow[]>([]);
@@ -243,17 +249,17 @@ export default function FindPage() {
       {/* Tabs + search */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex gap-1 bg-[var(--off)] p-1 rounded-xl w-fit">
-          {(["vets", "sitters"] as Tab[]).map((t) => (
+          {(["vets", "sitters"] as Tab[]).map((tabId) => (
             <button
-              key={t}
-              onClick={() => setTab(t)}
+              key={tabId}
+              onClick={() => setTab(tabId)}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                tab === t
+                tab === tabId
                   ? "bg-white text-[var(--ink)] shadow-sm"
                   : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
-              {t === "vets" ? "Veterinarians" : "Pet Sitters"}
+              {tabId === "vets" ? t("veterinarians") : t("petSitters")}
             </button>
           ))}
         </div>
@@ -261,7 +267,7 @@ export default function FindPage() {
           <Search className="w-4 h-4 text-[var(--muted)] absolute start-3 top-1/2 -translate-y-1/2" />
           <input
             className="form-input ps-9 text-sm"
-            placeholder="Filter by city…"
+            placeholder={t("filterByCity")}
             value={cityFilter}
             onChange={(e) => setCityFilter(e.target.value)}
           />
@@ -330,6 +336,7 @@ function BookingModal({
   pets: PetOption[];
   onClose: () => void;
 }) {
+  const t = useTranslations("portal");
   const [petId, setPetId] = useState(pets[0]?.id ?? "");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -397,7 +404,7 @@ function BookingModal({
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Pet *</label>
               {pets.length === 0 ? (
                 <p className="text-sm text-[var(--muted)]">
-                  No pets found. <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">Add a pet first.</Link>
+                  {t("noPets")} <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">{t("noPetsAction")}</Link>
                 </p>
               ) : (
                 <select

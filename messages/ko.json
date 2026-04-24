@@ -74,7 +74,21 @@
     "signOut": "로그아웃",
     "addPet": "반려동물 추가",
     "noPets": "아직 반려동물을 추가하지 않으셨습니다.",
-    "noPetsAction": "첫 번째 반려동물을 추가하여 시작하세요."
+    "noPetsAction": "첫 번째 반려동물을 추가하여 시작하세요.",
+    "today": "오늘",
+    "yesterday": "어제",
+    "daysAgo": "{count}일 전",
+    "saving": "저장 중…",
+    "saveCheckin": "체크인 저장",
+    "updateCheckin": "체크인 업데이트",
+    "cancel": "취소",
+    "verified": "인증됨",
+    "acceptingClients": "고객 모집 중",
+    "notAccepting": "모집 안 함",
+    "veterinarians": "수의사",
+    "petSitters": "펛시터",
+    "book": "예약",
+    "filterByCity": "도시 필터링…"
   },
   "pets": {
     "name": "이름",

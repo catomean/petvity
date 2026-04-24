@@ -74,7 +74,21 @@
     "signOut": "退出登录",
     "addPet": "添加宠物",
     "noPets": "您还没有添加任何宠物。",
-    "noPetsAction": "添加您的第一只宠物以开始使用。"
+    "noPetsAction": "添加您的第一只宠物以开始使用。",
+    "today": "今天",
+    "yesterday": "昨天",
+    "daysAgo": "{count}天前",
+    "saving": "保存中…",
+    "saveCheckin": "保存记录",
+    "updateCheckin": "更新记录",
+    "cancel": "取消",
+    "verified": "已认证",
+    "acceptingClients": "接受客户",
+    "notAccepting": "暂不接受",
+    "veterinarians": "兽医",
+    "petSitters": "宠物托管",
+    "book": "预约",
+    "filterByCity": "按城市筛选…"
   },
   "pets": {
     "name": "名字",
