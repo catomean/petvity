@@ -13,16 +13,15 @@ const LINKS = {
     { label: "🐕 Dog health", href: "/species/dog" },
     { label: "🐈 Cat health", href: "/species/cat" },
     { label: "🐴 Horse health", href: "/species/horse" },
-    { label: "About", href: "/about" },
   ],
-  Company: [
-    { label: "Blog", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Press", href: "#" },
+  Professionals: [
+    { label: "Join as a veterinarian", href: "/register?role=vet" },
+    { label: "Join as a pet sitter", href: "/register?role=sitter" },
+    { label: "About", href: "/about" },
+    { label: "Contact us", href: `mailto:${APP.supportEmail}` },
   ],
   Support: [
     { label: "Help centre", href: "#" },
-    { label: "Contact us", href: `mailto:${APP.supportEmail}` },
     { label: "Status", href: "#" },
     { label: "Community", href: "#" },
   ],
