@@ -18,14 +18,20 @@ vi.mock("@/lib/db", () => ({
 
 /* ─── Import after mocks ───────────────────────────────────────────────────── */
 
-import { POST } from "./route";
+import { GET, POST } from "./route";
 import { requireSession } from "@/lib/auth/guards";
+import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
 const OWNER_SESSION = {
   user: { id: "owner-1", role: "pet_owner", email: "owner@example.com", name: "Owner" },
+  expires: "2099-01-01",
+};
+
+const APPLICANT_SESSION = {
+  user: { id: "applicant-1", role: "pet_owner", email: "applicant@example.com", name: "Applicant" },
   expires: "2099-01-01",
 };
 
@@ -47,7 +53,121 @@ function makeRequest(body: unknown) {
   });
 }
 
+function makeGetRequest(params = "") {
+  return new NextRequest(`http://localhost/api/adoptions${params ? `?${params}` : ""}`);
+}
+
 /* ─── Tests ────────────────────────────────────────────────────────────────── */
+
+describe("GET /api/adoptions (public browse)", () => {
+  let db: ReturnType<typeof makeMockDb>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    db = makeMockDb();
+    vi.mocked(getInstance).mockReturnValue(db as any);
+    vi.mocked(auth).mockResolvedValue(null);
+  });
+
+  it("returns 200 with available listings", async () => {
+    const mockListings = [{ id: "listing-1", title: "Dog available", status: "available" }];
+    db._queueSelectResult(mockListings);
+
+    const res = await GET(makeGetRequest());
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+    expect(Array.isArray(body.data)).toBe(true);
+  });
+
+  it("returns empty array when no listings exist", async () => {
+    db._queueSelectResult([]);
+
+    const res = await GET(makeGetRequest());
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data).toEqual([]);
+  });
+});
+
+describe("GET /api/adoptions?applied=1 (applicant view)", () => {
+  let db: ReturnType<typeof makeMockDb>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    db = makeMockDb();
+    vi.mocked(getInstance).mockReturnValue(db as any);
+  });
+
+  it("returns 401 when unauthenticated", async () => {
+    vi.mocked(auth).mockResolvedValue(null);
+
+    const res = await GET(makeGetRequest("applied=1"));
+    expect(res.status).toBe(401);
+    const body = await res.json();
+    expect(body.success).toBe(false);
+  });
+
+  it("returns 200 with applicant's submissions when authenticated", async () => {
+    vi.mocked(auth).mockResolvedValue(APPLICANT_SESSION as any);
+    const mockApps = [
+      {
+        applicationId: "app-1",
+        applicationStatus: "pending",
+        listingId: "listing-1",
+        listingTitle: "Dog available",
+        listingStatus: "available",
+        petName: "Rex",
+        petSpecies: "dog",
+      },
+    ];
+    db._queueSelectResult(mockApps);
+
+    const res = await GET(makeGetRequest("applied=1"));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+    expect(body.data).toHaveLength(1);
+    expect(body.data[0].applicationId).toBe("app-1");
+  });
+
+  it("returns empty array when applicant has no applications", async () => {
+    vi.mocked(auth).mockResolvedValue(APPLICANT_SESSION as any);
+    db._queueSelectResult([]);
+
+    const res = await GET(makeGetRequest("applied=1"));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data).toEqual([]);
+  });
+});
+
+describe("GET /api/adoptions?mine=1 (owner's listings)", () => {
+  let db: ReturnType<typeof makeMockDb>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    db = makeMockDb();
+    vi.mocked(getInstance).mockReturnValue(db as any);
+  });
+
+  it("returns 401 when unauthenticated", async () => {
+    vi.mocked(auth).mockResolvedValue(null);
+
+    const res = await GET(makeGetRequest("mine=1"));
+    expect(res.status).toBe(401);
+  });
+
+  it("returns 200 with owner's listings when authenticated", async () => {
+    vi.mocked(auth).mockResolvedValue(OWNER_SESSION as any);
+    db._queueSelectResult([{ id: "listing-1", ownerId: "owner-1", status: "available" }]);
+
+    const res = await GET(makeGetRequest("mine=1"));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+  });
+});
 
 describe("POST /api/adoptions", () => {
   let db: ReturnType<typeof makeMockDb>;
