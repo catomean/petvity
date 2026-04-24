@@ -87,7 +87,6 @@ export default async function LogHealthPage({ params }: Params) {
       <HealthLogForm
         petId={petId}
         petName={pet.name}
-        species={species}
         weightHint={weightHint}
         tempHint={tempHint}
         hrHint={hrHint}

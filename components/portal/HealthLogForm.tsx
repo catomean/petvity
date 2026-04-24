@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG, EMOTIONAL_SCALE_LABELS } from "@/lib/config/health-metrics";
-import type { SpeciesId } from "@/lib/config/species";
-
 type PhysicalHint = { min: number; max: number; unit: string } | null;
 
 type InitialValues = {
@@ -22,7 +20,6 @@ type InitialValues = {
 type Props = {
   petId: string;
   petName: string;
-  species: SpeciesId;
   weightHint: PhysicalHint;
   tempHint: PhysicalHint;
   hrHint: PhysicalHint;
