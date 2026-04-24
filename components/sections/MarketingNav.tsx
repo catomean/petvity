@@ -7,71 +7,11 @@ import {
   PawPrint, Menu, X, ChevronDown, Search, ShoppingBag, Heart,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
-
-const FEATURES_MENU = [
-  {
-    icon: Activity,
-    label: "Health Tracking",
-    desc: "Daily vitals, mood, energy — all in one place.",
-    href: "/features",
-  },
-  {
-    icon: Brain,
-    label: "Digital Twin",
-    desc: "Living emotional portrait: Thriving, Content, Struggling.",
-    href: "/features",
-  },
-  {
-    icon: Zap,
-    label: "Wellness Signals",
-    desc: "Auto healthy / watch / concern scoring.",
-    href: "/features",
-  },
-  {
-    icon: Syringe,
-    label: "Vaccinations",
-    desc: "Stay ahead of boosters and immunity gaps.",
-    href: "/features",
-  },
-  {
-    icon: FileText,
-    label: "Health Records",
-    desc: "Vet visits, lab results, surgery history.",
-    href: "/features",
-  },
-  {
-    icon: Globe,
-    label: "Public Profiles",
-    desc: "Shareable pet pages — your pet, the influencer.",
-    href: "/features",
-  },
-  {
-    icon: Search,
-    label: "Find a Vet or Sitter",
-    desc: "Book verified local professionals in minutes.",
-    href: "/features",
-  },
-  {
-    icon: ShoppingBag,
-    label: "Pet Marketplace",
-    desc: "Shop for food, accessories, and health essentials.",
-    href: "/features",
-  },
-  {
-    icon: Heart,
-    label: "Adoption Listings",
-    desc: "List or find pets for adoption, fully managed.",
-    href: "/features",
-  },
-];
-
-const GUIDES_MENU = [
-  { emoji: "🐕", label: "Dogs",   href: "/species/dog" },
-  { emoji: "🐈", label: "Cats",   href: "/species/cat" },
-  { emoji: "🐴", label: "Horses", href: "/species/horse" },
-];
+import { useTranslations } from "next-intl";
 
 export default function MarketingNav() {
+  const t = useTranslations("nav");
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [featuresOpen, setFeaturesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -101,6 +41,25 @@ export default function MarketingNav() {
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
+  // Feature menu items with hardcoded labels (not translated — marketing copy stays in English)
+  const FEATURE_ITEMS = [
+    { icon: Activity,    label: "Health Tracking",    desc: "Daily vitals, mood, energy — all in one place.",               href: "/features" },
+    { icon: Brain,       label: "Digital Twin",       desc: "Living emotional portrait: Thriving, Content, Struggling.",    href: "/features" },
+    { icon: Zap,         label: "Wellness Signals",   desc: "Auto healthy / watch / concern scoring.",                      href: "/features" },
+    { icon: Syringe,     label: "Vaccinations",       desc: "Stay ahead of boosters and immunity gaps.",                    href: "/features" },
+    { icon: FileText,    label: "Health Records",     desc: "Vet visits, lab results, surgery history.",                    href: "/features" },
+    { icon: Globe,       label: "Public Profiles",    desc: "Shareable pet pages — your pet, the influencer.",             href: "/features" },
+    { icon: Search,      label: "Find a Vet or Sitter", desc: "Book verified local professionals in minutes.",             href: "/features" },
+    { icon: ShoppingBag, label: "Pet Marketplace",    desc: "Shop for food, accessories, and health essentials.",           href: "/features" },
+    { icon: Heart,       label: "Adoption Listings",  desc: "List or find pets for adoption, fully managed.",              href: "/features" },
+  ];
+
+  const GUIDES_ITEMS = [
+    { emoji: "🐕", label: "Dogs",   href: "/species/dog" },
+    { emoji: "🐈", label: "Cats",   href: "/species/cat" },
+    { emoji: "🐴", label: "Horses", href: "/species/horse" },
+  ];
+
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-200 ${
@@ -126,7 +85,7 @@ export default function MarketingNav() {
               onClick={() => setFeaturesOpen((o) => !o)}
               className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] hover:bg-[var(--off)] transition-colors"
             >
-              Features
+              {t("features")}
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-150 ${featuresOpen ? "rotate-180" : ""}`}
               />
@@ -136,10 +95,10 @@ export default function MarketingNav() {
             {featuresOpen && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-white rounded-2xl border border-[var(--border)] shadow-xl p-5">
                 <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] mb-4 px-1">
-                  What you can do
+                  {t("megamenuTitle")}
                 </p>
                 <div className="grid grid-cols-2 gap-1">
-                  {FEATURES_MENU.map(({ icon: Icon, label, desc, href }) => (
+                  {FEATURE_ITEMS.map(({ icon: Icon, label, desc, href }) => (
                     <Link
                       key={label}
                       href={href}
@@ -158,10 +117,10 @@ export default function MarketingNav() {
                 </div>
                 <div className="mt-4 pt-4 border-t border-[var(--border)]">
                   <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] mb-3">
-                    Species guides
+                    {t("speciesGuides")}
                   </p>
                   <div className="flex items-center gap-2 flex-wrap">
-                    {GUIDES_MENU.map(({ emoji, label, href }) => (
+                    {GUIDES_ITEMS.map(({ emoji, label, href }) => (
                       <Link
                         key={label}
                         href={href}
@@ -176,7 +135,7 @@ export default function MarketingNav() {
                       onClick={() => setFeaturesOpen(false)}
                       className="flex items-center gap-1.5 text-xs font-medium text-[var(--danger)] bg-[var(--danger-bg)] hover:bg-red-100 px-3 py-1.5 rounded-full no-underline transition-colors ms-auto"
                     >
-                      ❤️ Adopt
+                      ❤️ {t("adopt")}
                     </Link>
                   </div>
                 </div>
@@ -188,25 +147,25 @@ export default function MarketingNav() {
             href="/#how-it-works"
             className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] hover:bg-[var(--off)] transition-colors no-underline"
           >
-            How it works
+            {t("howItWorks")}
           </Link>
           <Link
             href="/pricing"
             className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] hover:bg-[var(--off)] transition-colors no-underline"
           >
-            Pricing
+            {t("pricing")}
           </Link>
           <Link
             href="/pros"
             className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--teal)] hover:bg-[var(--teal-light)] transition-colors no-underline"
           >
-            For Pros
+            {t("forPros")}
           </Link>
           <Link
             href="/adopt"
             className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
           >
-            ❤️ Adopt
+            ❤️ {t("adopt")}
           </Link>
         </nav>
 
@@ -216,10 +175,10 @@ export default function MarketingNav() {
             href="/login"
             className="text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] transition-colors no-underline"
           >
-            Log in
+            {t("logIn")}
           </Link>
           <Link href="/register" className="btn-primary text-sm py-2 px-4">
-            Get started free
+            {t("getStartedFree")}
           </Link>
         </div>
 
@@ -238,9 +197,9 @@ export default function MarketingNav() {
         <div className="md:hidden bg-white border-t border-[var(--border)] shadow-lg">
           <div className="section-inner py-4 flex flex-col gap-1">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] px-3 pb-2">
-              Features
+              {t("features")}
             </p>
-            {FEATURES_MENU.map(({ icon: Icon, label, desc, href }) => (
+            {FEATURE_ITEMS.map(({ icon: Icon, label, desc, href }) => (
               <Link
                 key={label}
                 href={href}
@@ -258,10 +217,10 @@ export default function MarketingNav() {
             ))}
             <div className="border-t border-[var(--border)] mt-3 pt-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] px-3 pb-2">
-                Species guides
+                {t("speciesGuides")}
               </p>
               <div className="flex gap-2 px-3 pb-3 flex-wrap">
-                {GUIDES_MENU.map(({ emoji, label, href }) => (
+                {GUIDES_ITEMS.map(({ emoji, label, href }) => (
                   <Link
                     key={label}
                     href={href}
@@ -279,28 +238,28 @@ export default function MarketingNav() {
                 onClick={() => setMenuOpen(false)}
                 className="px-3 py-2.5 text-sm font-medium text-[var(--teal)] no-underline"
               >
-                🩺 For professionals
+                🩺 {t("forPros")}
               </Link>
               <Link
                 href="/adopt"
                 onClick={() => setMenuOpen(false)}
                 className="px-3 py-2.5 text-sm font-medium text-[var(--danger)] no-underline"
               >
-                ❤️ Adopt a pet
+                ❤️ {t("adopt")}
               </Link>
               <Link
                 href="/login"
                 onClick={() => setMenuOpen(false)}
                 className="px-3 py-2.5 text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] no-underline"
               >
-                Log in
+                {t("logIn")}
               </Link>
               <Link
                 href="/register"
                 onClick={() => setMenuOpen(false)}
                 className="btn-primary justify-center"
               >
-                Get started free
+                {t("getStartedFree")}
               </Link>
             </div>
           </div>

@@ -1,90 +1,131 @@
 {
   "nav": {
-    "home": "Home",
-    "features": "Features",
-    "about": "About",
-    "pricing": "Pricing",
-    "login": "Log in",
-    "register": "Get started"
+    "home": "首页",
+    "features": "功能",
+    "howItWorks": "使用方法",
+    "pricing": "定价",
+    "about": "关于我们",
+    "forPros": "专业人士",
+    "adopt": "领养",
+    "logIn": "登录",
+    "getStartedFree": "免费开始",
+    "megamenuTitle": "您可以做什么",
+    "speciesGuides": "物种指南",
+    "register": "开始使用",
+    "login": "登录"
+  },
+  "footer": {
+    "sections": {
+      "product": "产品",
+      "guides": "指南",
+      "professionals": "专业人士",
+      "support": "支持",
+      "legal": "法律"
+    },
+    "links": {
+      "features": "功能",
+      "howItWorks": "使用方法",
+      "pricing": "定价",
+      "adoptAPet": "❤️ 领养宠物",
+      "dogHealth": "🐕 狗的健康",
+      "catHealth": "🐈 猫的健康",
+      "horseHealth": "🐴 马的健康",
+      "forVetsSitters": "兽医和宠物保姆",
+      "joinAsVet": "注册为兽医",
+      "joinAsSitter": "注册为宠物保姆",
+      "contactUs": "联系我们",
+      "helpCentre": "帮助中心",
+      "status": "状态",
+      "community": "社区",
+      "privacyPolicy": "隐私政策",
+      "termsOfService": "服务条款",
+      "cookiePolicy": "Cookie政策"
+    },
+    "bottom": {
+      "rights": "版权所有。",
+      "privacy": "隐私政策",
+      "terms": "服务条款",
+      "cookies": "Cookie"
+    }
   },
   "auth": {
-    "login": "Log in",
-    "register": "Create account",
-    "logout": "Log out",
-    "email": "Email",
-    "password": "Password",
-    "name": "Full name",
-    "forgotPassword": "Forgot password?",
-    "resetPassword": "Reset password",
-    "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?"
+    "login": "登录",
+    "register": "创建账户",
+    "logout": "退出登录",
+    "email": "电子邮件",
+    "password": "密码",
+    "name": "全名",
+    "forgotPassword": "忘记密码？",
+    "resetPassword": "重置密码",
+    "noAccount": "还没有账户？",
+    "hasAccount": "已有账户？"
   },
   "portal": {
-    "dashboard": "Dashboard",
-    "myPets": "My Pets",
-    "checkin": "Daily Check-in",
-    "settings": "Settings",
-    "addPet": "Add a pet",
-    "noPets": "You haven't added any pets yet.",
-    "noPetsAction": "Add your first pet to get started."
+    "dashboard": "仪表板",
+    "myPets": "我的宠物",
+    "checkin": "每日签到",
+    "settings": "设置",
+    "addPet": "添加宠物",
+    "noPets": "您还没有添加任何宠物。",
+    "noPetsAction": "添加您的第一只宠物以开始使用。"
   },
   "pets": {
-    "name": "Name",
-    "species": "Species",
-    "breed": "Breed",
-    "birthDate": "Birth date",
-    "sex": "Sex",
-    "weight": "Weight",
-    "bio": "Bio",
-    "male": "Male",
-    "female": "Female",
-    "unknown": "Unknown",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit"
+    "name": "名字",
+    "species": "物种",
+    "breed": "品种",
+    "birthDate": "出生日期",
+    "sex": "性别",
+    "weight": "体重",
+    "bio": "简介",
+    "male": "雄性",
+    "female": "雌性",
+    "unknown": "未知",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑"
   },
   "health": {
-    "physical": "Physical",
-    "emotional": "Emotional",
-    "logMetrics": "Log today's metrics",
-    "history": "History",
-    "records": "Health records",
-    "vaccinations": "Vaccinations",
-    "medications": "Medications",
-    "noMetrics": "No metrics logged yet.",
-    "logFirst": "Log your first check-in to start tracking."
+    "physical": "身体",
+    "emotional": "情绪",
+    "logMetrics": "记录今日指标",
+    "history": "历史",
+    "records": "健康记录",
+    "vaccinations": "疫苗接种",
+    "medications": "药物",
+    "noMetrics": "还没有记录任何指标。",
+    "logFirst": "记录您的第一次签到以开始追踪。"
   },
   "signal": {
-    "healthy": "Healthy",
-    "watch": "Watch",
-    "concern": "Needs attention"
+    "healthy": "健康",
+    "watch": "观察",
+    "concern": "需要关注"
   },
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "back": "Back",
-    "loading": "Loading...",
-    "error": "Something went wrong.",
-    "success": "Saved successfully."
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "back": "返回",
+    "loading": "加载中...",
+    "error": "出现问题。",
+    "success": "保存成功。"
   },
   "home": {
     "hero": {
-      "title": "Care for your pets like family",
-      "subtitle": "Track health, connect with vets, and give your pets the life they deserve.",
-      "cta": "Get started free"
+      "title": "您的宠物有信号。现在您可以读取它。",
+      "subtitle": "追踪健康状况，与兽医联系，让您的宠物过上应有的生活。",
+      "cta": "免费开始"
     },
     "features": {
-      "title": "Everything your pet needs",
-      "profiles": "Pet Profiles",
-      "profilesDesc": "Detailed profiles for every pet — photos, history, and personality.",
-      "health": "Health Tracking",
-      "healthDesc": "Monitor physical and emotional well-being with daily check-ins.",
-      "vets": "Vet Network",
-      "vetsDesc": "Find trusted veterinarians and book appointments.",
-      "adoption": "Adoption",
-      "adoptionDesc": "Help pets find loving homes across borders."
+      "title": "宠物所需的一切",
+      "profiles": "宠物档案",
+      "profilesDesc": "每只宠物的详细档案 — 照片、历史和个性。",
+      "health": "健康追踪",
+      "healthDesc": "通过每日签到监控身体和情绪健康。",
+      "vets": "兽医网络",
+      "vetsDesc": "找到可信赖的兽医并预约。",
+      "adoption": "领养",
+      "adoptionDesc": "帮助宠物跨越国界找到充满爱的家。"
     }
   }
 }

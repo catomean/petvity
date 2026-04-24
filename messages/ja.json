@@ -1,90 +1,131 @@
 {
   "nav": {
-    "home": "Home",
-    "features": "Features",
+    "home": "ホーム",
+    "features": "機能",
+    "howItWorks": "使い方",
+    "pricing": "料金",
     "about": "About",
-    "pricing": "Pricing",
-    "login": "Log in",
-    "register": "Get started"
+    "forPros": "プロの方へ",
+    "adopt": "引き取る",
+    "logIn": "ログイン",
+    "getStartedFree": "無料で始める",
+    "megamenuTitle": "できること",
+    "speciesGuides": "動物種別ガイド",
+    "register": "始める",
+    "login": "ログイン"
+  },
+  "footer": {
+    "sections": {
+      "product": "製品",
+      "guides": "ガイド",
+      "professionals": "専門家向け",
+      "support": "サポート",
+      "legal": "法的情報"
+    },
+    "links": {
+      "features": "機能",
+      "howItWorks": "使い方",
+      "pricing": "料金",
+      "adoptAPet": "❤️ ペットを引き取る",
+      "dogHealth": "🐕 犬の健康",
+      "catHealth": "🐈 猫の健康",
+      "horseHealth": "🐴 馬の健康",
+      "forVetsSitters": "獣医・ペットシッター向け",
+      "joinAsVet": "獣医師として登録",
+      "joinAsSitter": "ペットシッターとして登録",
+      "contactUs": "お問い合わせ",
+      "helpCentre": "ヘルプセンター",
+      "status": "ステータス",
+      "community": "コミュニティ",
+      "privacyPolicy": "プライバシーポリシー",
+      "termsOfService": "利用規約",
+      "cookiePolicy": "Cookieポリシー"
+    },
+    "bottom": {
+      "rights": "All rights reserved.",
+      "privacy": "プライバシー",
+      "terms": "利用規約",
+      "cookies": "Cookie"
+    }
   },
   "auth": {
-    "login": "Log in",
-    "register": "Create account",
-    "logout": "Log out",
-    "email": "Email",
-    "password": "Password",
-    "name": "Full name",
-    "forgotPassword": "Forgot password?",
-    "resetPassword": "Reset password",
-    "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?"
+    "login": "ログイン",
+    "register": "アカウント作成",
+    "logout": "ログアウト",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "name": "氏名",
+    "forgotPassword": "パスワードを忘れた方",
+    "resetPassword": "パスワードをリセット",
+    "noAccount": "アカウントをお持ちでない方",
+    "hasAccount": "すでにアカウントをお持ちの方"
   },
   "portal": {
-    "dashboard": "Dashboard",
-    "myPets": "My Pets",
-    "checkin": "Daily Check-in",
-    "settings": "Settings",
-    "addPet": "Add a pet",
-    "noPets": "You haven't added any pets yet.",
-    "noPetsAction": "Add your first pet to get started."
+    "dashboard": "ダッシュボード",
+    "myPets": "マイペット",
+    "checkin": "デイリーチェックイン",
+    "settings": "設定",
+    "addPet": "ペットを追加",
+    "noPets": "まだペットが登録されていません。",
+    "noPetsAction": "最初のペットを追加して始めましょう。"
   },
   "pets": {
-    "name": "Name",
-    "species": "Species",
-    "breed": "Breed",
-    "birthDate": "Birth date",
-    "sex": "Sex",
-    "weight": "Weight",
-    "bio": "Bio",
-    "male": "Male",
-    "female": "Female",
-    "unknown": "Unknown",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit"
+    "name": "名前",
+    "species": "種類",
+    "breed": "品種",
+    "birthDate": "生年月日",
+    "sex": "性別",
+    "weight": "体重",
+    "bio": "プロフィール",
+    "male": "オス",
+    "female": "メス",
+    "unknown": "不明",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集"
   },
   "health": {
-    "physical": "Physical",
-    "emotional": "Emotional",
-    "logMetrics": "Log today's metrics",
-    "history": "History",
-    "records": "Health records",
-    "vaccinations": "Vaccinations",
-    "medications": "Medications",
-    "noMetrics": "No metrics logged yet.",
-    "logFirst": "Log your first check-in to start tracking."
+    "physical": "身体的",
+    "emotional": "感情的",
+    "logMetrics": "今日の指標を記録",
+    "history": "履歴",
+    "records": "健康記録",
+    "vaccinations": "ワクチン接種",
+    "medications": "投薬",
+    "noMetrics": "まだ指標が記録されていません。",
+    "logFirst": "最初のチェックインを記録してトラッキングを開始しましょう。"
   },
   "signal": {
-    "healthy": "Healthy",
-    "watch": "Watch",
-    "concern": "Needs attention"
+    "healthy": "健康",
+    "watch": "要観察",
+    "concern": "注意が必要"
   },
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "back": "Back",
-    "loading": "Loading...",
-    "error": "Something went wrong.",
-    "success": "Saved successfully."
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "back": "戻る",
+    "loading": "読み込み中...",
+    "error": "問題が発生しました。",
+    "success": "保存しました。"
   },
   "home": {
     "hero": {
-      "title": "Care for your pets like family",
-      "subtitle": "Track health, connect with vets, and give your pets the life they deserve.",
-      "cta": "Get started free"
+      "title": "あなたのペットにはシグナルがあります。今こそ読み取りましょう。",
+      "subtitle": "健康を追跡し、獣医師とつながり、ペットが deserving 生活を送れるようにしましょう。",
+      "cta": "無料で始める"
     },
     "features": {
-      "title": "Everything your pet needs",
-      "profiles": "Pet Profiles",
-      "profilesDesc": "Detailed profiles for every pet — photos, history, and personality.",
-      "health": "Health Tracking",
-      "healthDesc": "Monitor physical and emotional well-being with daily check-ins.",
-      "vets": "Vet Network",
-      "vetsDesc": "Find trusted veterinarians and book appointments.",
-      "adoption": "Adoption",
-      "adoptionDesc": "Help pets find loving homes across borders."
+      "title": "ペットに必要なすべて",
+      "profiles": "ペットプロフィール",
+      "profilesDesc": "すべてのペットの詳細なプロフィール — 写真、履歴、個性。",
+      "health": "健康トラッキング",
+      "healthDesc": "毎日のチェックインで身体的・感情的な健康を監視。",
+      "vets": "獣医師ネットワーク",
+      "vetsDesc": "信頼できる獣医師を見つけて予約。",
+      "adoption": "里親・譲渡",
+      "adoptionDesc": "国境を越えてペットが愛ある家庭を見つけるお手伝い。"
     }
   }
 }

@@ -1,90 +1,131 @@
 {
   "nav": {
-    "home": "Home",
-    "features": "Features",
-    "about": "About",
-    "pricing": "Pricing",
-    "login": "Log in",
-    "register": "Get started"
+    "home": "홈",
+    "features": "기능",
+    "howItWorks": "이용 방법",
+    "pricing": "요금제",
+    "about": "소개",
+    "forPros": "전문가용",
+    "adopt": "입양",
+    "logIn": "로그인",
+    "getStartedFree": "무료로 시작",
+    "megamenuTitle": "할 수 있는 것",
+    "speciesGuides": "종별 가이드",
+    "register": "시작하기",
+    "login": "로그인"
+  },
+  "footer": {
+    "sections": {
+      "product": "제품",
+      "guides": "가이드",
+      "professionals": "전문가",
+      "support": "지원",
+      "legal": "법적 정보"
+    },
+    "links": {
+      "features": "기능",
+      "howItWorks": "이용 방법",
+      "pricing": "요금제",
+      "adoptAPet": "❤️ 반려동물 입양",
+      "dogHealth": "🐕 강아지 건강",
+      "catHealth": "🐈 고양이 건강",
+      "horseHealth": "🐴 말 건강",
+      "forVetsSitters": "수의사 & 펫시터",
+      "joinAsVet": "수의사로 가입",
+      "joinAsSitter": "펫시터로 가입",
+      "contactUs": "문의하기",
+      "helpCentre": "도움말 센터",
+      "status": "상태",
+      "community": "커뮤니티",
+      "privacyPolicy": "개인정보 처리방침",
+      "termsOfService": "이용약관",
+      "cookiePolicy": "쿠키 정책"
+    },
+    "bottom": {
+      "rights": "All rights reserved.",
+      "privacy": "개인정보",
+      "terms": "이용약관",
+      "cookies": "쿠키"
+    }
   },
   "auth": {
-    "login": "Log in",
-    "register": "Create account",
-    "logout": "Log out",
-    "email": "Email",
-    "password": "Password",
-    "name": "Full name",
-    "forgotPassword": "Forgot password?",
-    "resetPassword": "Reset password",
-    "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?"
+    "login": "로그인",
+    "register": "계정 만들기",
+    "logout": "로그아웃",
+    "email": "이메일",
+    "password": "비밀번호",
+    "name": "이름",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "resetPassword": "비밀번호 재설정",
+    "noAccount": "계정이 없으신가요?",
+    "hasAccount": "이미 계정이 있으신가요?"
   },
   "portal": {
-    "dashboard": "Dashboard",
-    "myPets": "My Pets",
-    "checkin": "Daily Check-in",
-    "settings": "Settings",
-    "addPet": "Add a pet",
-    "noPets": "You haven't added any pets yet.",
-    "noPetsAction": "Add your first pet to get started."
+    "dashboard": "대시보드",
+    "myPets": "내 반려동물",
+    "checkin": "일일 체크인",
+    "settings": "설정",
+    "addPet": "반려동물 추가",
+    "noPets": "아직 반려동물을 추가하지 않으셨습니다.",
+    "noPetsAction": "첫 번째 반려동물을 추가하여 시작하세요."
   },
   "pets": {
-    "name": "Name",
-    "species": "Species",
-    "breed": "Breed",
-    "birthDate": "Birth date",
-    "sex": "Sex",
-    "weight": "Weight",
-    "bio": "Bio",
-    "male": "Male",
-    "female": "Female",
-    "unknown": "Unknown",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit"
+    "name": "이름",
+    "species": "종",
+    "breed": "품종",
+    "birthDate": "생년월일",
+    "sex": "성별",
+    "weight": "체중",
+    "bio": "소개",
+    "male": "수컷",
+    "female": "암컷",
+    "unknown": "알 수 없음",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집"
   },
   "health": {
-    "physical": "Physical",
-    "emotional": "Emotional",
-    "logMetrics": "Log today's metrics",
-    "history": "History",
-    "records": "Health records",
-    "vaccinations": "Vaccinations",
-    "medications": "Medications",
-    "noMetrics": "No metrics logged yet.",
-    "logFirst": "Log your first check-in to start tracking."
+    "physical": "신체",
+    "emotional": "감정",
+    "logMetrics": "오늘의 지표 기록",
+    "history": "기록",
+    "records": "건강 기록",
+    "vaccinations": "예방접종",
+    "medications": "약물",
+    "noMetrics": "아직 기록된 지표가 없습니다.",
+    "logFirst": "첫 번째 체크인을 기록하여 추적을 시작하세요."
   },
   "signal": {
-    "healthy": "Healthy",
-    "watch": "Watch",
-    "concern": "Needs attention"
+    "healthy": "건강",
+    "watch": "관찰",
+    "concern": "주의 필요"
   },
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "back": "Back",
-    "loading": "Loading...",
-    "error": "Something went wrong.",
-    "success": "Saved successfully."
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "편집",
+    "back": "뒤로",
+    "loading": "로딩 중...",
+    "error": "문제가 발생했습니다.",
+    "success": "저장되었습니다."
   },
   "home": {
     "hero": {
-      "title": "Care for your pets like family",
-      "subtitle": "Track health, connect with vets, and give your pets the life they deserve.",
-      "cta": "Get started free"
+      "title": "당신의 반려동물에게는 신호가 있습니다. 이제 읽을 수 있습니다.",
+      "subtitle": "건강을 추적하고, 수의사와 연결하고, 반려동물에게 합당한 삶을 선사하세요.",
+      "cta": "무료로 시작"
     },
     "features": {
-      "title": "Everything your pet needs",
-      "profiles": "Pet Profiles",
-      "profilesDesc": "Detailed profiles for every pet — photos, history, and personality.",
-      "health": "Health Tracking",
-      "healthDesc": "Monitor physical and emotional well-being with daily check-ins.",
-      "vets": "Vet Network",
-      "vetsDesc": "Find trusted veterinarians and book appointments.",
-      "adoption": "Adoption",
-      "adoptionDesc": "Help pets find loving homes across borders."
+      "title": "반려동물에게 필요한 모든 것",
+      "profiles": "반려동물 프로필",
+      "profilesDesc": "모든 반려동물의 상세 프로필 — 사진, 기록, 개성.",
+      "health": "건강 추적",
+      "healthDesc": "일일 체크인으로 신체적·감정적 건강을 모니터링하세요.",
+      "vets": "수의사 네트워크",
+      "vetsDesc": "신뢰할 수 있는 수의사를 찾고 예약하세요.",
+      "adoption": "입양",
+      "adoptionDesc": "국경을 넘어 반려동물이 사랑하는 가정을 찾도록 도와주세요."
     }
   }
 }

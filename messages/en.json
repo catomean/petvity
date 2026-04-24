@@ -2,10 +2,51 @@
   "nav": {
     "home": "Home",
     "features": "Features",
-    "about": "About",
+    "howItWorks": "How it works",
     "pricing": "Pricing",
-    "login": "Log in",
-    "register": "Get started"
+    "about": "About",
+    "forPros": "For Pros",
+    "adopt": "Adopt",
+    "logIn": "Log in",
+    "getStartedFree": "Get started free",
+    "megamenuTitle": "What you can do",
+    "speciesGuides": "Species guides",
+    "register": "Get started",
+    "login": "Log in"
+  },
+  "footer": {
+    "sections": {
+      "product": "Product",
+      "guides": "Guides",
+      "professionals": "Professionals",
+      "support": "Support",
+      "legal": "Legal"
+    },
+    "links": {
+      "features": "Features",
+      "howItWorks": "How it works",
+      "pricing": "Pricing",
+      "adoptAPet": "❤️ Adopt a pet",
+      "dogHealth": "🐕 Dog health",
+      "catHealth": "🐈 Cat health",
+      "horseHealth": "🐴 Horse health",
+      "forVetsSitters": "For vets & sitters",
+      "joinAsVet": "Join as a veterinarian",
+      "joinAsSitter": "Join as a pet sitter",
+      "contactUs": "Contact us",
+      "helpCentre": "Help centre",
+      "status": "Status",
+      "community": "Community",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "cookiePolicy": "Cookie Policy"
+    },
+    "bottom": {
+      "rights": "All rights reserved.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookies"
+    }
   },
   "auth": {
     "login": "Log in",
@@ -71,7 +112,7 @@
   },
   "home": {
     "hero": {
-      "title": "Care for your pets like family",
+      "title": "Your pet has a signal. Now you can read it.",
       "subtitle": "Track health, connect with vets, and give your pets the life they deserve.",
       "cta": "Get started free"
     },

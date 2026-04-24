@@ -1,38 +1,56 @@
 import Link from "next/link";
 import { PawPrint } from "lucide-react";
 import { APP } from "@/lib/config/app";
+import { getTranslations } from "next-intl/server";
 
-const LINKS = {
-  Product: [
-    { label: "Features", href: "/features" },
-    { label: "How it works", href: "/#how-it-works" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "❤️ Adopt a pet", href: "/adopt" },
-  ],
-  Guides: [
-    { label: "🐕 Dog health", href: "/species/dog" },
-    { label: "🐈 Cat health", href: "/species/cat" },
-    { label: "🐴 Horse health", href: "/species/horse" },
-  ],
-  Professionals: [
-    { label: "For vets & sitters", href: "/pros" },
-    { label: "Join as a veterinarian", href: "/register?role=vet" },
-    { label: "Join as a pet sitter", href: "/register?role=sitter" },
-    { label: "Contact us", href: `mailto:${APP.supportEmail}` },
-  ],
-  Support: [
-    { label: "Help centre", href: "#" },
-    { label: "Status", href: "#" },
-    { label: "Community", href: "#" },
-  ],
-  Legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Service", href: "#" },
-    { label: "Cookie Policy", href: "#" },
-  ],
-};
+export default async function MarketingFooter() {
+  const t = await getTranslations("footer");
 
-export default function MarketingFooter() {
+  const LINK_SECTIONS = [
+    {
+      heading: t("sections.product"),
+      links: [
+        { label: t("links.features"),   href: "/features" },
+        { label: t("links.howItWorks"), href: "/#how-it-works" },
+        { label: t("links.pricing"),    href: "/pricing" },
+        { label: t("links.adoptAPet"), href: "/adopt" },
+      ],
+    },
+    {
+      heading: t("sections.guides"),
+      links: [
+        { label: t("links.dogHealth"),   href: "/species/dog" },
+        { label: t("links.catHealth"),   href: "/species/cat" },
+        { label: t("links.horseHealth"), href: "/species/horse" },
+      ],
+    },
+    {
+      heading: t("sections.professionals"),
+      links: [
+        { label: t("links.forVetsSitters"), href: "/pros" },
+        { label: t("links.joinAsVet"),      href: "/register?role=vet" },
+        { label: t("links.joinAsSitter"),   href: "/register?role=sitter" },
+        { label: t("links.contactUs"),      href: `mailto:${APP.supportEmail}` },
+      ],
+    },
+    {
+      heading: t("sections.support"),
+      links: [
+        { label: t("links.helpCentre"), href: "#" },
+        { label: t("links.status"),     href: "#" },
+        { label: t("links.community"),  href: "#" },
+      ],
+    },
+    {
+      heading: t("sections.legal"),
+      links: [
+        { label: t("links.privacyPolicy"),  href: "#" },
+        { label: t("links.termsOfService"), href: "#" },
+        { label: t("links.cookiePolicy"),   href: "#" },
+      ],
+    },
+  ];
+
   return (
     <footer className="bg-[var(--ink)] text-white">
       <div className="section-inner py-16">
@@ -57,10 +75,10 @@ export default function MarketingFooter() {
           </div>
 
           {/* Link columns */}
-          {Object.entries(LINKS).map(([section, links]) => (
-            <div key={section}>
+          {LINK_SECTIONS.map(({ heading, links }) => (
+            <div key={heading}>
               <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
-                {section}
+                {heading}
               </p>
               <ul className="space-y-3">
                 {links.map(({ label, href }) => (
@@ -81,17 +99,17 @@ export default function MarketingFooter() {
         {/* Bottom bar */}
         <div className="border-t border-stone-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-stone-500">
-            © {APP.foundingYear} {APP.name}. All rights reserved.
+            © {APP.foundingYear} {APP.name}. {t("bottom.rights")}
           </p>
           <div className="flex items-center gap-6">
             <Link href="#" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
-              Privacy
+              {t("bottom.privacy")}
             </Link>
             <Link href="#" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
-              Terms
+              {t("bottom.terms")}
             </Link>
             <Link href="#" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
-              Cookies
+              {t("bottom.cookies")}
             </Link>
           </div>
         </div>

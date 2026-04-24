@@ -1,90 +1,131 @@
 {
   "nav": {
-    "home": "Home",
-    "features": "Features",
-    "about": "About",
-    "pricing": "Pricing",
-    "login": "Log in",
-    "register": "Get started"
+    "home": "الرئيسية",
+    "features": "الميزات",
+    "howItWorks": "كيف يعمل",
+    "pricing": "الأسعار",
+    "about": "من نحن",
+    "forPros": "للمحترفين",
+    "adopt": "تبني",
+    "logIn": "تسجيل الدخول",
+    "getStartedFree": "ابدأ مجاناً",
+    "megamenuTitle": "ما يمكنك فعله",
+    "speciesGuides": "أدلة الأنواع",
+    "register": "ابدأ الآن",
+    "login": "تسجيل الدخول"
+  },
+  "footer": {
+    "sections": {
+      "product": "المنتج",
+      "guides": "الأدلة",
+      "professionals": "المحترفون",
+      "support": "الدعم",
+      "legal": "قانوني"
+    },
+    "links": {
+      "features": "الميزات",
+      "howItWorks": "كيف يعمل",
+      "pricing": "الأسعار",
+      "adoptAPet": "❤️ تبني حيواناً أليفاً",
+      "dogHealth": "🐕 صحة الكلاب",
+      "catHealth": "🐈 صحة القطط",
+      "horseHealth": "🐴 صحة الخيول",
+      "forVetsSitters": "لأطباء البيطرة والجليسات",
+      "joinAsVet": "انضم كطبيب بيطري",
+      "joinAsSitter": "انضم كجليس حيوانات أليفة",
+      "contactUs": "اتصل بنا",
+      "helpCentre": "مركز المساعدة",
+      "status": "الحالة",
+      "community": "المجتمع",
+      "privacyPolicy": "سياسة الخصوصية",
+      "termsOfService": "شروط الخدمة",
+      "cookiePolicy": "سياسة ملفات تعريف الارتباط"
+    },
+    "bottom": {
+      "rights": "جميع الحقوق محفوظة.",
+      "privacy": "الخصوصية",
+      "terms": "الشروط",
+      "cookies": "ملفات الارتباط"
+    }
   },
   "auth": {
-    "login": "Log in",
-    "register": "Create account",
-    "logout": "Log out",
-    "email": "Email",
-    "password": "Password",
-    "name": "Full name",
-    "forgotPassword": "Forgot password?",
-    "resetPassword": "Reset password",
-    "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?"
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "name": "الاسم الكامل",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟"
   },
   "portal": {
-    "dashboard": "Dashboard",
-    "myPets": "My Pets",
-    "checkin": "Daily Check-in",
-    "settings": "Settings",
-    "addPet": "Add a pet",
-    "noPets": "You haven't added any pets yet.",
-    "noPetsAction": "Add your first pet to get started."
+    "dashboard": "لوحة التحكم",
+    "myPets": "حيواناتي الأليفة",
+    "checkin": "تسجيل يومي",
+    "settings": "الإعدادات",
+    "addPet": "إضافة حيوان أليف",
+    "noPets": "لم تضف أي حيوانات أليفة بعد.",
+    "noPetsAction": "أضف حيوانك الأليف الأول للبدء."
   },
   "pets": {
-    "name": "Name",
-    "species": "Species",
-    "breed": "Breed",
-    "birthDate": "Birth date",
-    "sex": "Sex",
-    "weight": "Weight",
-    "bio": "Bio",
-    "male": "Male",
-    "female": "Female",
-    "unknown": "Unknown",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit"
+    "name": "الاسم",
+    "species": "النوع",
+    "breed": "السلالة",
+    "birthDate": "تاريخ الميلاد",
+    "sex": "الجنس",
+    "weight": "الوزن",
+    "bio": "نبذة",
+    "male": "ذكر",
+    "female": "أنثى",
+    "unknown": "غير معروف",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل"
   },
   "health": {
-    "physical": "Physical",
-    "emotional": "Emotional",
-    "logMetrics": "Log today's metrics",
-    "history": "History",
-    "records": "Health records",
-    "vaccinations": "Vaccinations",
-    "medications": "Medications",
-    "noMetrics": "No metrics logged yet.",
-    "logFirst": "Log your first check-in to start tracking."
+    "physical": "جسدي",
+    "emotional": "عاطفي",
+    "logMetrics": "تسجيل مقاييس اليوم",
+    "history": "التاريخ",
+    "records": "السجلات الصحية",
+    "vaccinations": "اللقاحات",
+    "medications": "الأدوية",
+    "noMetrics": "لم يتم تسجيل أي مقاييس بعد.",
+    "logFirst": "سجّل أول تسجيل يومي لك لبدء التتبع."
   },
   "signal": {
-    "healthy": "Healthy",
-    "watch": "Watch",
-    "concern": "Needs attention"
+    "healthy": "بصحة جيدة",
+    "watch": "مراقبة",
+    "concern": "يحتاج انتباهاً"
   },
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "back": "Back",
-    "loading": "Loading...",
-    "error": "Something went wrong.",
-    "success": "Saved successfully."
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "back": "رجوع",
+    "loading": "جارٍ التحميل...",
+    "error": "حدث خطأ ما.",
+    "success": "تم الحفظ بنجاح."
   },
   "home": {
     "hero": {
-      "title": "Care for your pets like family",
-      "subtitle": "Track health, connect with vets, and give your pets the life they deserve.",
-      "cta": "Get started free"
+      "title": "حيوانك الأليف لديه إشارة. يمكنك الآن قراءتها.",
+      "subtitle": "تتبع الصحة، تواصل مع الأطباء البيطريين، وامنح حيوانك الأليف الحياة التي يستحقها.",
+      "cta": "ابدأ مجاناً"
     },
     "features": {
-      "title": "Everything your pet needs",
-      "profiles": "Pet Profiles",
-      "profilesDesc": "Detailed profiles for every pet — photos, history, and personality.",
-      "health": "Health Tracking",
-      "healthDesc": "Monitor physical and emotional well-being with daily check-ins.",
-      "vets": "Vet Network",
-      "vetsDesc": "Find trusted veterinarians and book appointments.",
-      "adoption": "Adoption",
-      "adoptionDesc": "Help pets find loving homes across borders."
+      "title": "كل ما يحتاجه حيوانك الأليف",
+      "profiles": "ملفات الحيوانات الأليفة",
+      "profilesDesc": "ملفات تفصيلية لكل حيوان أليف — صور وتاريخ وشخصية.",
+      "health": "تتبع الصحة",
+      "healthDesc": "مراقبة الصحة الجسدية والعاطفية من خلال تسجيلات يومية.",
+      "vets": "شبكة الأطباء البيطريين",
+      "vetsDesc": "ابحث عن أطباء بيطريين موثوقين واحجز مواعيد.",
+      "adoption": "التبني",
+      "adoptionDesc": "ساعد الحيوانات الأليفة في إيجاد منازل محبة عبر الحدود."
     }
   }
 }

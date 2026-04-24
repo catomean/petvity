@@ -1,90 +1,131 @@
 {
   "nav": {
-    "home": "Home",
-    "features": "Features",
-    "about": "About",
-    "pricing": "Pricing",
-    "login": "Log in",
-    "register": "Get started"
+    "home": "Inicio",
+    "features": "Funciones",
+    "howItWorks": "Cómo funciona",
+    "pricing": "Precios",
+    "about": "Acerca de",
+    "forPros": "Para profesionales",
+    "adopt": "Adoptar",
+    "logIn": "Iniciar sesión",
+    "getStartedFree": "Empezar gratis",
+    "megamenuTitle": "Lo que puedes hacer",
+    "speciesGuides": "Guías por especie",
+    "register": "Empezar",
+    "login": "Iniciar sesión"
+  },
+  "footer": {
+    "sections": {
+      "product": "Producto",
+      "guides": "Guías",
+      "professionals": "Profesionales",
+      "support": "Soporte",
+      "legal": "Legal"
+    },
+    "links": {
+      "features": "Funciones",
+      "howItWorks": "Cómo funciona",
+      "pricing": "Precios",
+      "adoptAPet": "❤️ Adoptar una mascota",
+      "dogHealth": "🐕 Salud del perro",
+      "catHealth": "🐈 Salud del gato",
+      "horseHealth": "🐴 Salud del caballo",
+      "forVetsSitters": "Para vets y cuidadores",
+      "joinAsVet": "Únete como veterinario",
+      "joinAsSitter": "Únete como cuidador",
+      "contactUs": "Contáctanos",
+      "helpCentre": "Centro de ayuda",
+      "status": "Estado",
+      "community": "Comunidad",
+      "privacyPolicy": "Política de privacidad",
+      "termsOfService": "Términos de servicio",
+      "cookiePolicy": "Política de cookies"
+    },
+    "bottom": {
+      "rights": "Todos los derechos reservados.",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "cookies": "Cookies"
+    }
   },
   "auth": {
-    "login": "Log in",
-    "register": "Create account",
-    "logout": "Log out",
-    "email": "Email",
-    "password": "Password",
-    "name": "Full name",
-    "forgotPassword": "Forgot password?",
-    "resetPassword": "Reset password",
-    "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?"
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "Nombre completo",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer contraseña",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?"
   },
   "portal": {
-    "dashboard": "Dashboard",
-    "myPets": "My Pets",
-    "checkin": "Daily Check-in",
-    "settings": "Settings",
-    "addPet": "Add a pet",
-    "noPets": "You haven't added any pets yet.",
-    "noPetsAction": "Add your first pet to get started."
+    "dashboard": "Panel",
+    "myPets": "Mis mascotas",
+    "checkin": "Check-in diario",
+    "settings": "Configuración",
+    "addPet": "Añadir mascota",
+    "noPets": "Aún no has añadido ninguna mascota.",
+    "noPetsAction": "Añade tu primera mascota para empezar."
   },
   "pets": {
-    "name": "Name",
-    "species": "Species",
-    "breed": "Breed",
-    "birthDate": "Birth date",
-    "sex": "Sex",
-    "weight": "Weight",
-    "bio": "Bio",
-    "male": "Male",
-    "female": "Female",
-    "unknown": "Unknown",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit"
+    "name": "Nombre",
+    "species": "Especie",
+    "breed": "Raza",
+    "birthDate": "Fecha de nacimiento",
+    "sex": "Sexo",
+    "weight": "Peso",
+    "bio": "Biografía",
+    "male": "Macho",
+    "female": "Hembra",
+    "unknown": "Desconocido",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar"
   },
   "health": {
-    "physical": "Physical",
-    "emotional": "Emotional",
-    "logMetrics": "Log today's metrics",
-    "history": "History",
-    "records": "Health records",
-    "vaccinations": "Vaccinations",
-    "medications": "Medications",
-    "noMetrics": "No metrics logged yet.",
-    "logFirst": "Log your first check-in to start tracking."
+    "physical": "Físico",
+    "emotional": "Emocional",
+    "logMetrics": "Registrar métricas de hoy",
+    "history": "Historial",
+    "records": "Historial médico",
+    "vaccinations": "Vacunaciones",
+    "medications": "Medicamentos",
+    "noMetrics": "Aún no hay métricas registradas.",
+    "logFirst": "Registra tu primer check-in para empezar el seguimiento."
   },
   "signal": {
-    "healthy": "Healthy",
-    "watch": "Watch",
-    "concern": "Needs attention"
+    "healthy": "Saludable",
+    "watch": "Vigilar",
+    "concern": "Requiere atención"
   },
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "back": "Back",
-    "loading": "Loading...",
-    "error": "Something went wrong.",
-    "success": "Saved successfully."
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "loading": "Cargando...",
+    "error": "Algo salió mal.",
+    "success": "Guardado con éxito."
   },
   "home": {
     "hero": {
-      "title": "Care for your pets like family",
-      "subtitle": "Track health, connect with vets, and give your pets the life they deserve.",
-      "cta": "Get started free"
+      "title": "Tu mascota tiene una señal. Ahora puedes leerla.",
+      "subtitle": "Rastrea la salud, conéctate con veterinarios y dale a tus mascotas la vida que merecen.",
+      "cta": "Empezar gratis"
     },
     "features": {
-      "title": "Everything your pet needs",
-      "profiles": "Pet Profiles",
-      "profilesDesc": "Detailed profiles for every pet — photos, history, and personality.",
-      "health": "Health Tracking",
-      "healthDesc": "Monitor physical and emotional well-being with daily check-ins.",
-      "vets": "Vet Network",
-      "vetsDesc": "Find trusted veterinarians and book appointments.",
-      "adoption": "Adoption",
-      "adoptionDesc": "Help pets find loving homes across borders."
+      "title": "Todo lo que tu mascota necesita",
+      "profiles": "Perfiles de mascotas",
+      "profilesDesc": "Perfiles detallados para cada mascota — fotos, historial y personalidad.",
+      "health": "Seguimiento de salud",
+      "healthDesc": "Monitorea el bienestar físico y emocional con check-ins diarios.",
+      "vets": "Red de veterinarios",
+      "vetsDesc": "Encuentra veterinarios de confianza y reserva citas.",
+      "adoption": "Adopción",
+      "adoptionDesc": "Ayuda a las mascotas a encontrar hogares amorosos más allá de las fronteras."
     }
   }
 }
