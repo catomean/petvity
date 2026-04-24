@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, Heart, MapPin, DollarSign } from "lucide-react";
-import { APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
-import type { ApplicationStatusId } from "@/lib/config/adoptions";
+import { APPLICATION_STATUS_CONFIG, LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
+import type { ApplicationStatusId, ListingStatusId } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort } from "@/lib/utils/format";
@@ -122,7 +122,7 @@ export default function MyApplicationsPage() {
                       <span>Applied {formatDateShort(app.createdAt)}</span>
                       {listingClosed && (
                         <span className="text-[var(--muted)]">
-                          Listing {app.listingStatus.replace("_", " ")}
+                          Listing {LISTING_STATUS_CONFIG[app.listingStatus as ListingStatusId]?.label ?? app.listingStatus}
                         </span>
                       )}
                     </div>
