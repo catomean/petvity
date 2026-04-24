@@ -5,9 +5,9 @@
  */
 
 export const MEDICATION_STATUS_CONFIG = {
-  active:        { label: "Active",        className: "signal-healthy" },
-  completed:     { label: "Completed",     className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium" },
-  discontinued:  { label: "Discontinued",  className: "bg-[var(--danger-bg)] text-[var(--danger)] text-xs px-2 py-0.5 rounded-full font-medium" },
+  active:       { label: "Active",       className: "bg-[var(--green-bg)] text-[var(--green)] text-xs px-2 py-0.5 rounded-full font-medium" },
+  completed:    { label: "Completed",    className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium" },
+  discontinued: { label: "Discontinued", className: "bg-[var(--danger-bg)] text-[var(--danger)] text-xs px-2 py-0.5 rounded-full font-medium" },
 } as const;
 
 export type MedicationStatusId = keyof typeof MEDICATION_STATUS_CONFIG;
