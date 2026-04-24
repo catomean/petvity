@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { and, eq, gte, inArray, desc } from "drizzle-orm";
+import { and, gte, inArray, desc } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
 import { pets, healthMetrics, vaccinations, users } from "@/lib/db/schema";
 import { computePetSignal } from "@/lib/domain/pet-signal";
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let alerted = 0;
+  const alertedIds: string[] = [];
   for (const pet of alertPets) {
     const owner = ownerMap.get(pet.ownerId);
     if (!owner?.email) continue;
@@ -135,12 +135,16 @@ export async function POST(req: NextRequest) {
 
     try {
       await sendEmail({ to: owner.email, subject, html });
-      await db.update(pets).set({ signalAlertSentAt: now }).where(eq(pets.id, pet.id));
-      alerted++;
+      alertedIds.push(pet.id);
     } catch {
       // Non-fatal — continue to next pet
     }
   }
 
-  return NextResponse.json({ success: true, data: { processed: allPets.length, alerted } });
+  // Batch-update signalAlertSentAt in one query instead of N
+  if (alertedIds.length > 0) {
+    await db.update(pets).set({ signalAlertSentAt: now }).where(inArray(pets.id, alertedIds));
+  }
+
+  return NextResponse.json({ success: true, data: { processed: allPets.length, alerted: alertedIds.length } });
 }
