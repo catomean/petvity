@@ -77,6 +77,16 @@ describe("POST /api/health/metrics/[petId]", () => {
     expect(res.status).toBe(400);
   });
 
+  it("returns 400 for a future date", async () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const futureDate = tomorrow.toISOString().slice(0, 10);
+    const res = await POST(makePostRequest({ ...VALID_BODY, date: futureDate }), ROUTE_CONTEXT);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toBe("Invalid input");
+  });
+
   it("returns 400 when weightGrams is a float (storage convention enforced)", async () => {
     // Storage rule: weight must be integer grams, not a decimal kg value
     const res = await POST(makePostRequest({ ...VALID_BODY, weightGrams: 28.5 }), ROUTE_CONTEXT);
