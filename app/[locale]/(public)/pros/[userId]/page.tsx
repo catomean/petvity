@@ -6,6 +6,7 @@ import { APP, APP_URL } from "@/lib/config/app";
 import { BadgeCheck, MapPin, Phone, Star, Stethoscope, Home } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { formatSitterServices } from "@/lib/config/professionals";
 
 type Params = { params: Promise<{ userId: string; locale: string }> };
 
@@ -41,13 +42,7 @@ function StarRow({ rating }: { rating: number }) {
   );
 }
 
-function formatServices(services: string | null): string {
-  if (!services) return "";
-  return services
-    .split(",")
-    .map((s) => s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
-    .join(" · ");
-}
+const formatServices = formatSitterServices;
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 

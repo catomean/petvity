@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
+import { formatSitterServices } from "@/lib/config/professionals";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -71,15 +72,7 @@ function AcceptingBadge({ accepting }: { accepting: boolean }) {
   );
 }
 
-function formatServices(services: string | null): string {
-  if (!services) return "";
-  return services
-    .split(",")
-    .map((s) =>
-      s.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-    )
-    .join(" · ");
-}
+const formatServices = formatSitterServices;
 
 function StarRating({ avg, count }: { avg: number | null; count: number }) {
   if (avg === null || count === 0) return null;

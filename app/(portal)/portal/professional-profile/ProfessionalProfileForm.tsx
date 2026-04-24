@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Stethoscope, Home, CheckCircle, Save } from "lucide-react";
+import { SITTER_SERVICES } from "@/lib/config/professionals";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -25,14 +26,6 @@ type SitterProfile = {
   phone: string | null;
   isAcceptingClients: boolean;
 };
-
-const SITTER_SERVICES = [
-  { value: "boarding",     label: "Boarding" },
-  { value: "daycare",      label: "Daycare" },
-  { value: "walking",      label: "Dog Walking" },
-  { value: "house_sitting",label: "House Sitting" },
-  { value: "drop_in",      label: "Drop-in Visits" },
-];
 
 /* ─── Component ──────────────────────────────────────────────────────────── */
 
