@@ -147,6 +147,25 @@ export function vaccinationReminder(data: {
   };
 }
 
+export function medicationEndingReminder(data: {
+  ownerName: string;
+  petName: string;
+  medicationName: string;
+  endDate: string;
+  petUrl: string;
+}) {
+  return {
+    subject: `${APP.name}: ${data.petName}'s ${data.medicationName} ends tomorrow`,
+    html: base(`
+      <h2>Medication ending tomorrow</h2>
+      <p>Hi ${data.ownerName},</p>
+      <p><strong>${data.petName}'s ${data.medicationName}</strong> course ends on <strong>${data.endDate}</strong>.</p>
+      <p>Check with your vet if a refill or follow-up is needed before the course ends.</p>
+      <a class="btn" href="${data.petUrl}">View medications</a>
+    `),
+  };
+}
+
 // ─── Booking notifications ────────────────────────────────────────────────────
 
 export function bookingRequestReceived(data: {
