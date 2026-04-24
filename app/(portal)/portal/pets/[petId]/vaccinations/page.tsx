@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   Plus, Syringe, ChevronLeft, X,
@@ -12,6 +11,7 @@ import { formatDateShort, formatRelativeDate } from "@/lib/utils/format";
 import { VACCINATION_STATUS_CONFIG, computeVaccinationDisplayStatus } from "@/lib/config/vaccinations";
 import type { VaccinationStatusId } from "@/lib/config/vaccinations";
 import { VACCINATION_DUE_SOON_DAYS } from "@/lib/config/pet-signal";
+import { useHealthList } from "@/hooks/useHealthList";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Partial<Record<VaccinationStatusId, React.ElementType>> = {
@@ -54,132 +54,63 @@ const EMPTY_FORM: FormState = {
   notes: "",
 };
 
+function rowToForm(v: Vaccination): FormState {
+  return {
+    name: v.name,
+    administeredDate: v.administeredDate,
+    nextDueDate: v.nextDueDate ?? "",
+    vetName: v.vetName ?? "",
+    batchNumber: v.batchNumber ?? "",
+    status: v.status,
+    notes: v.notes ?? "",
+  };
+}
+
+function buildBody(form: FormState, petId: string, isEdit: boolean) {
+  return {
+    ...(isEdit ? {} : { petId }),
+    name: form.name.trim(),
+    administeredDate: form.administeredDate,
+    nextDueDate: form.nextDueDate || null,
+    vetName: form.vetName.trim() || null,
+    batchNumber: form.batchNumber.trim() || null,
+    status: form.status,
+    notes: form.notes.trim() || null,
+  };
+}
+
 export default function VaccinationsPage() {
   const { petId } = useParams<{ petId: string }>();
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
-  const [petName, setPetName] = useState<string>("");
-  const [rows, setRows] = useState<Vaccination[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<VaccinationStatus | "all">("all");
-  const [searchQ, setSearchQ] = useState("");
-  const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function load() {
-      const [petRes, vacRes] = await Promise.all([
-        fetch(`/api/pets/${petId}`),
-        fetch(`/api/vaccinations?petId=${petId}`),
-      ]);
-      if (petRes.ok) setPetName((await petRes.json()).data?.name ?? "");
-      if (vacRes.ok) setRows((await vacRes.json()).data ?? []);
-      setLoading(false);
-    }
-    load();
-  }, [petId]);
-
-  function openAdd() {
-    setEditingId(null);
-    setDeletingId(null);
-    setForm(EMPTY_FORM);
-    setError("");
-    setShowForm(true);
-  }
-
-  function openEdit(v: Vaccination) {
-    setEditingId(v.id);
-    setDeletingId(null);
-    setForm({
-      name: v.name,
-      administeredDate: v.administeredDate,
-      nextDueDate: v.nextDueDate ?? "",
-      vetName: v.vetName ?? "",
-      batchNumber: v.batchNumber ?? "",
-      status: v.status,
-      notes: v.notes ?? "",
-    });
-    setError("");
-    setShowForm(true);
-  }
-
-  function closeForm() {
-    setShowForm(false);
-    setEditingId(null);
-    setForm(EMPTY_FORM);
-    setError("");
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setSaving(true);
-
-    const isEdit = editingId !== null;
-    const url = isEdit ? `/api/vaccinations/${editingId}` : "/api/vaccinations";
-    const method = isEdit ? "PATCH" : "POST";
-
-    const body = {
-      ...(isEdit ? {} : { petId }),
-      name: form.name.trim(),
-      administeredDate: form.administeredDate,
-      nextDueDate: form.nextDueDate || null,
-      vetName: form.vetName.trim() || null,
-      batchNumber: form.batchNumber.trim() || null,
-      status: form.status,
-      notes: form.notes.trim() || null,
-    };
-
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
-    setSaving(false);
-
-    if (!data.success) { setError(data.error ?? "Failed to save."); return; }
-
-    if (isEdit) {
-      setRows((prev) => prev.map((r) => (r.id === editingId ? data.data : r)));
-    } else {
-      setRows((prev) => [data.data, ...prev]);
-    }
-    closeForm();
-    startTransition(() => router.refresh());
-  }
-
-  async function handleDelete(id: string) {
-    const res = await fetch(`/api/vaccinations/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setRows((prev) => prev.filter((r) => r.id !== id));
-      setDeletingId(null);
-      startTransition(() => router.refresh());
-    }
-  }
-
-  function field(key: keyof FormState, value: string) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-
+  /* todayStr is needed both in the filter callback and in row rendering */
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  const filteredRows = rows.filter((r) => {
-    const displayStatus = computeVaccinationDisplayStatus(r.status, r.nextDueDate, todayStr, VACCINATION_DUE_SOON_DAYS);
-    if (statusFilter !== "all" && displayStatus !== statusFilter) return false;
-    if (searchQ.trim()) {
-      const q = searchQ.toLowerCase();
+  function matchesFilterAndSearch(v: Vaccination, filter: string, q: string): boolean {
+    const displayStatus = computeVaccinationDisplayStatus(v.status, v.nextDueDate, todayStr, VACCINATION_DUE_SOON_DAYS);
+    if (filter !== "all" && displayStatus !== filter) return false;
+    if (q) {
       return (
-        r.name.toLowerCase().includes(q) ||
-        (r.notes?.toLowerCase().includes(q) ?? false)
+        v.name.toLowerCase().includes(q) ||
+        (v.notes?.toLowerCase().includes(q) ?? false)
       );
     }
     return true;
+  }
+
+  const {
+    petName, rows, loading, filteredRows,
+    filter: statusFilter, setFilter: setStatusFilter,
+    searchQ, setSearchQ,
+    showForm, editingId, deletingId, setDeletingId,
+    form, saving, error,
+    openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
+  } = useHealthList<Vaccination, FormState>({
+    petId,
+    apiPath: "/api/vaccinations",
+    emptyForm: EMPTY_FORM,
+    rowToForm,
+    buildBody,
+    matchesFilterAndSearch,
   });
 
   if (loading) {
@@ -224,7 +155,7 @@ export default function VaccinationsPage() {
               <select
                 className="form-input text-sm py-1.5"
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as VaccinationStatus | "all")}
+                onChange={(e) => setStatusFilter(e.target.value)}
                 aria-label="Filter by status"
               >
                 <option value="all">All statuses</option>
@@ -307,7 +238,7 @@ export default function VaccinationsPage() {
               <select
                 className="form-input"
                 value={form.status}
-                onChange={(e) => field("status", e.target.value as VaccinationStatus)}
+                onChange={(e) => field("status", e.target.value)}
               >
                 {(Object.entries(VACCINATION_STATUS_CONFIG) as [VaccinationStatus, { label: string }][]).map(
                   ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
@@ -356,7 +287,7 @@ export default function VaccinationsPage() {
             </div>
 
             <div className="sm:col-span-2 flex gap-3 pt-1">
-              <button type="submit" disabled={saving || isPending} className="btn-primary disabled:opacity-60">
+              <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
                 {saving ? "Saving…" : editingId ? "Update vaccination" : "Save vaccination"}
               </button>
               <button type="button" onClick={closeForm} className="btn-outline">Cancel</button>

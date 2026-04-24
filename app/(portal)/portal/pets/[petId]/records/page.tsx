@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   Plus, ChevronLeft, X, FileText,
@@ -12,6 +11,7 @@ import {
 import { formatDateShort } from "@/lib/utils/format";
 import { HEALTH_RECORD_TYPE_CONFIG, HEALTH_RECORD_TYPE_OPTIONS } from "@/lib/config/health-records";
 import type { HealthRecordTypeId } from "@/lib/config/health-records";
+import { useHealthList } from "@/hooks/useHealthList";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const RECORD_TYPE_ICONS: Record<HealthRecordTypeId, React.ElementType> = {
@@ -55,129 +55,59 @@ const EMPTY_FORM: FormState = {
   notes: "",
 };
 
+function rowToForm(r: HealthRecord): FormState {
+  return {
+    type: r.type,
+    title: r.title,
+    date: r.date,
+    vetName: r.vetName ?? "",
+    clinic: r.clinic ?? "",
+    notes: r.notes ?? "",
+  };
+}
+
+function buildBody(form: FormState, petId: string, isEdit: boolean) {
+  return {
+    ...(isEdit ? {} : { petId }),
+    type: form.type,
+    title: form.title.trim(),
+    date: form.date,
+    vetName: form.vetName.trim() || null,
+    clinic: form.clinic.trim() || null,
+    notes: form.notes.trim() || null,
+  };
+}
+
+function matchesFilterAndSearch(r: HealthRecord, filter: string, q: string): boolean {
+  if (filter !== "all" && r.type !== filter) return false;
+  if (q) {
+    return (
+      r.title.toLowerCase().includes(q) ||
+      (r.vetName?.toLowerCase().includes(q) ?? false) ||
+      (r.clinic?.toLowerCase().includes(q) ?? false) ||
+      (r.notes?.toLowerCase().includes(q) ?? false)
+    );
+  }
+  return true;
+}
+
 export default function HealthRecordsPage() {
   const { petId } = useParams<{ petId: string }>();
-  const router = useRouter();
-  const [, startTransition] = useTransition();
 
-  const [petName, setPetName] = useState("");
-  const [records, setRecords] = useState<HealthRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [typeFilter, setTypeFilter] = useState<RecordType | "all">("all");
-  const [searchQ, setSearchQ] = useState("");
-  const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function load() {
-      const [petRes, recRes] = await Promise.all([
-        fetch(`/api/pets/${petId}`),
-        fetch(`/api/health/records?petId=${petId}`),
-      ]);
-      if (petRes.ok) setPetName((await petRes.json()).data?.name ?? "");
-      if (recRes.ok) setRecords((await recRes.json()).data ?? []);
-      setLoading(false);
-    }
-    load();
-  }, [petId]);
-
-  function openAdd() {
-    setEditingId(null);
-    setDeletingId(null);
-    setForm(EMPTY_FORM);
-    setError("");
-    setShowForm(true);
-  }
-
-  function openEdit(r: HealthRecord) {
-    setEditingId(r.id);
-    setDeletingId(null);
-    setForm({
-      type: r.type,
-      title: r.title,
-      date: r.date,
-      vetName: r.vetName ?? "",
-      clinic: r.clinic ?? "",
-      notes: r.notes ?? "",
-    });
-    setError("");
-    setShowForm(true);
-  }
-
-  function closeForm() {
-    setShowForm(false);
-    setEditingId(null);
-    setForm(EMPTY_FORM);
-    setError("");
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setSaving(true);
-
-    const isEdit = editingId !== null;
-    const url = isEdit ? `/api/health/records/${editingId}` : "/api/health/records";
-    const method = isEdit ? "PATCH" : "POST";
-
-    const body = {
-      ...(isEdit ? {} : { petId }),
-      type: form.type,
-      title: form.title.trim(),
-      date: form.date,
-      vetName: form.vetName.trim() || null,
-      clinic: form.clinic.trim() || null,
-      notes: form.notes.trim() || null,
-    };
-
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
-    setSaving(false);
-
-    if (!data.success) { setError(data.error ?? "Failed to save."); return; }
-
-    if (isEdit) {
-      setRecords((prev) => prev.map((r) => (r.id === editingId ? data.data : r)));
-    } else {
-      setRecords((prev) => [data.data, ...prev]);
-    }
-    closeForm();
-    startTransition(() => router.refresh());
-  }
-
-  async function handleDelete(id: string) {
-    const res = await fetch(`/api/health/records/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setRecords((prev) => prev.filter((r) => r.id !== id));
-      setDeletingId(null);
-      startTransition(() => router.refresh());
-    }
-  }
-
-  function field(key: keyof FormState, value: string) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  const filteredRecords = records.filter((r) => {
-    if (typeFilter !== "all" && r.type !== typeFilter) return false;
-    if (searchQ.trim()) {
-      const q = searchQ.toLowerCase();
-      return (
-        r.title.toLowerCase().includes(q) ||
-        (r.vetName?.toLowerCase().includes(q) ?? false) ||
-        (r.clinic?.toLowerCase().includes(q) ?? false) ||
-        (r.notes?.toLowerCase().includes(q) ?? false)
-      );
-    }
-    return true;
+  const {
+    petName, rows: records, loading, filteredRows: filteredRecords,
+    filter: typeFilter, setFilter: setTypeFilter,
+    searchQ, setSearchQ,
+    showForm, editingId, deletingId, setDeletingId,
+    form, saving, error,
+    openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
+  } = useHealthList<HealthRecord, FormState>({
+    petId,
+    apiPath: "/api/health/records",
+    emptyForm: EMPTY_FORM,
+    rowToForm,
+    buildBody,
+    matchesFilterAndSearch,
   });
 
   if (loading) {
@@ -224,7 +154,7 @@ export default function HealthRecordsPage() {
               <select
                 className="form-input text-sm py-1.5"
                 value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value as RecordType | "all")}
+                onChange={(e) => setTypeFilter(e.target.value)}
                 aria-label="Filter by type"
               >
                 <option value="all">All types</option>
@@ -267,7 +197,6 @@ export default function HealthRecordsPage() {
           {error && <p className="alert-error mb-4">{error}</p>}
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Type */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                 Type <span className="text-[var(--danger)]">*</span>
@@ -275,7 +204,7 @@ export default function HealthRecordsPage() {
               <select
                 className="form-input"
                 value={form.type}
-                onChange={(e) => field("type", e.target.value as RecordType)}
+                onChange={(e) => field("type", e.target.value)}
               >
                 {HEALTH_RECORD_TYPE_OPTIONS.map(({ value, label }) => (
                   <option key={value} value={value}>{label}</option>
@@ -283,7 +212,6 @@ export default function HealthRecordsPage() {
               </select>
             </div>
 
-            {/* Date */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                 Date <span className="text-[var(--danger)]">*</span>
@@ -297,7 +225,6 @@ export default function HealthRecordsPage() {
               />
             </div>
 
-            {/* Title */}
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                 Title / summary <span className="text-[var(--danger)]">*</span>
@@ -311,7 +238,6 @@ export default function HealthRecordsPage() {
               />
             </div>
 
-            {/* Vet */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                 Vet / practitioner
@@ -325,7 +251,6 @@ export default function HealthRecordsPage() {
               />
             </div>
 
-            {/* Clinic */}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                 Clinic / hospital
@@ -339,7 +264,6 @@ export default function HealthRecordsPage() {
               />
             </div>
 
-            {/* Notes */}
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
                 Notes
@@ -353,7 +277,6 @@ export default function HealthRecordsPage() {
               />
             </div>
 
-            {/* Actions */}
             <div className="sm:col-span-2 flex gap-3 pt-1">
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
                 {saving ? "Saving…" : editingId ? "Update record" : "Save record"}

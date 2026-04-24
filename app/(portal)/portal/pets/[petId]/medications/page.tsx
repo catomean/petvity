@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   Plus, Pill, ChevronLeft, X,
@@ -11,6 +10,7 @@ import {
 import { formatDateShort } from "@/lib/utils/format";
 import { MEDICATION_STATUS_CONFIG } from "@/lib/config/medications";
 import type { MedicationStatusId } from "@/lib/config/medications";
+import { useHealthList } from "@/hooks/useHealthList";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Record<MedicationStatusId, React.ElementType> = {
@@ -55,132 +55,62 @@ const EMPTY_FORM: FormState = {
   notes: "",
 };
 
+function rowToForm(m: Medication): FormState {
+  return {
+    name: m.name,
+    dosage: m.dosage ?? "",
+    frequency: m.frequency ?? "",
+    startDate: m.startDate,
+    endDate: m.endDate ?? "",
+    prescribedBy: m.prescribedBy ?? "",
+    status: m.status,
+    notes: m.notes ?? "",
+  };
+}
+
+function buildBody(form: FormState, petId: string, isEdit: boolean) {
+  return {
+    ...(isEdit ? {} : { petId }),
+    name: form.name.trim(),
+    startDate: form.startDate,
+    status: form.status,
+    dosage: form.dosage.trim() || null,
+    frequency: form.frequency.trim() || null,
+    endDate: form.endDate || null,
+    prescribedBy: form.prescribedBy.trim() || null,
+    notes: form.notes.trim() || null,
+  };
+}
+
+function matchesFilterAndSearch(m: Medication, filter: string, q: string): boolean {
+  if (filter !== "all" && m.status !== filter) return false;
+  if (q) {
+    return (
+      m.name.toLowerCase().includes(q) ||
+      (m.dosage?.toLowerCase().includes(q) ?? false) ||
+      (m.notes?.toLowerCase().includes(q) ?? false)
+    );
+  }
+  return true;
+}
+
 export default function MedicationsPage() {
   const { petId } = useParams<{ petId: string }>();
-  const router = useRouter();
-  const [, startTransition] = useTransition();
 
-  const [petName, setPetName] = useState("");
-  const [rows, setRows] = useState<Medication[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<MedicationStatus | "all">("all");
-  const [searchQ, setSearchQ] = useState("");
-  const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function load() {
-      const [petRes, medRes] = await Promise.all([
-        fetch(`/api/pets/${petId}`),
-        fetch(`/api/medications?petId=${petId}`),
-      ]);
-      if (petRes.ok) setPetName((await petRes.json()).data?.name ?? "");
-      if (medRes.ok) setRows((await medRes.json()).data ?? []);
-      setLoading(false);
-    }
-    load();
-  }, [petId]);
-
-  function openAdd() {
-    setEditingId(null);
-    setDeletingId(null);
-    setForm(EMPTY_FORM);
-    setError("");
-    setShowForm(true);
-  }
-
-  function openEdit(m: Medication) {
-    setEditingId(m.id);
-    setDeletingId(null);
-    setForm({
-      name: m.name,
-      dosage: m.dosage ?? "",
-      frequency: m.frequency ?? "",
-      startDate: m.startDate,
-      endDate: m.endDate ?? "",
-      prescribedBy: m.prescribedBy ?? "",
-      status: m.status,
-      notes: m.notes ?? "",
-    });
-    setError("");
-    setShowForm(true);
-  }
-
-  function closeForm() {
-    setShowForm(false);
-    setEditingId(null);
-    setForm(EMPTY_FORM);
-    setError("");
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setSaving(true);
-
-    const isEdit = editingId !== null;
-    const url = isEdit ? `/api/medications/${editingId}` : "/api/medications";
-    const method = isEdit ? "PATCH" : "POST";
-
-    const body = {
-      ...(isEdit ? {} : { petId }),
-      name: form.name.trim(),
-      startDate: form.startDate,
-      status: form.status,
-      dosage: form.dosage.trim() || null,
-      frequency: form.frequency.trim() || null,
-      endDate: form.endDate || null,
-      prescribedBy: form.prescribedBy.trim() || null,
-      notes: form.notes.trim() || null,
-    };
-
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json();
-    setSaving(false);
-
-    if (!data.success) { setError(data.error ?? "Failed to save."); return; }
-
-    if (isEdit) {
-      setRows((prev) => prev.map((r) => (r.id === editingId ? data.data : r)));
-    } else {
-      setRows((prev) => [data.data, ...prev]);
-    }
-    closeForm();
-    startTransition(() => router.refresh());
-  }
-
-  async function handleDelete(id: string) {
-    const res = await fetch(`/api/medications/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setRows((prev) => prev.filter((r) => r.id !== id));
-      setDeletingId(null);
-      startTransition(() => router.refresh());
-    }
-  }
-
-  function field(key: keyof FormState, value: string) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  const filteredRows = rows.filter((m) => {
-    if (statusFilter !== "all" && m.status !== statusFilter) return false;
-    if (searchQ.trim()) {
-      const q = searchQ.toLowerCase();
-      return (
-        m.name.toLowerCase().includes(q) ||
-        (m.dosage?.toLowerCase().includes(q) ?? false) ||
-        (m.notes?.toLowerCase().includes(q) ?? false)
-      );
-    }
-    return true;
+  const {
+    petName, rows, loading, filteredRows,
+    filter: statusFilter, setFilter: setStatusFilter,
+    searchQ, setSearchQ,
+    showForm, editingId, deletingId, setDeletingId,
+    form, saving, error,
+    openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
+  } = useHealthList<Medication, FormState>({
+    petId,
+    apiPath: "/api/medications",
+    emptyForm: EMPTY_FORM,
+    rowToForm,
+    buildBody,
+    matchesFilterAndSearch,
   });
 
   if (loading) {
@@ -225,7 +155,7 @@ export default function MedicationsPage() {
               <select
                 className="form-input text-sm py-1.5"
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as MedicationStatus | "all")}
+                onChange={(e) => setStatusFilter(e.target.value)}
                 aria-label="Filter by status"
               >
                 <option value="all">All statuses</option>
@@ -331,7 +261,7 @@ export default function MedicationsPage() {
               <select
                 className="form-input"
                 value={form.status}
-                onChange={(e) => field("status", e.target.value as MedicationStatus)}
+                onChange={(e) => field("status", e.target.value)}
               >
                 {(Object.entries(MEDICATION_STATUS_CONFIG) as [MedicationStatus, { label: string }][]).map(
                   ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
