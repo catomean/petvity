@@ -62,8 +62,12 @@ export function formatPetAge(birthDate: string | null): string {
  * e.g. "2 days ago", "in 3 days"
  */
 export function formatRelativeDate(date: string, now = new Date()): string {
-  const target = new Date(date + "T00:00:00");
-  const diffMs = target.getTime() - now.getTime();
+  // Use UTC midnight on both sides so the comparison is timezone-agnostic.
+  const target = new Date(date + "T00:00:00Z");
+  const nowUtcMidnight = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  );
+  const diffMs = target.getTime() - nowUtcMidnight.getTime();
   const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) return "Today";

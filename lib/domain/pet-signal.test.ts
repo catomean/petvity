@@ -123,6 +123,32 @@ describe("computePetSignal", () => {
     expect(result.signal).toBe("healthy");
   });
 
+  it("returns concern when no metrics and overdue vaccinations present", () => {
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [],
+      overdueVaccinations: 1,
+      now: NOW,
+    });
+    expect(result.signal).toBe("concern");
+    expect(result.reason).toMatch(/no health metrics/i);
+  });
+
+  it("detects high anxiety (inverted metric) as out-of-range", () => {
+    const row: HealthMetricRow = {
+      ...normalDogRow,
+      anxiety: 5, // very anxious — normal range is 1–2, so 5 is out-of-range
+    };
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [row],
+      overdueVaccinations: 0,
+      now: NOW,
+    });
+    expect(result.signal).toBe("watch");
+    expect(result.outOfRangeMetrics).toContain("anxiety");
+  });
+
   it("uses most recent row when multiple are provided", () => {
     const oldBadRow: HealthMetricRow = {
       ...normalDogRow,
