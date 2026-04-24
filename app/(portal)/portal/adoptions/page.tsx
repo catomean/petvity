@@ -42,10 +42,13 @@ function ApplicationRow({
   app,
   listingId,
   onUpdate,
+  onApproved,
 }: {
   app: Application;
   listingId: string;
   onUpdate: (updated: Application) => void;
+  /** Called when this application is approved so the listing card can sync state. */
+  onApproved?: () => void;
 }) {
   const [busy, setBusy] = useState(false);
 
@@ -58,7 +61,9 @@ function ApplicationRow({
     });
     const data = await res.json();
     setBusy(false);
-    if (data.success) onUpdate({ ...app, status });
+    if (!data.success) return;
+    onUpdate({ ...app, status });
+    if (status === "approved") onApproved?.();
   }
 
   const badge = APPLICATION_STATUS_CONFIG[app.status] ?? APPLICATION_STATUS_CONFIG.pending;
@@ -151,6 +156,20 @@ function ListingCard({
     const data = await res.json();
     setBusy(false);
     if (data.success) onStatusChange(listing.id, status);
+  }
+
+  /** Called when an application is approved — sync local state without refetch. */
+  function handleApplicationApproved(approvedId: string) {
+    onStatusChange(listing.id, "adopted");
+    setApplications((prev) =>
+      prev.map((a) =>
+        a.id === approvedId
+          ? a // already updated by onUpdate
+          : a.status === "pending"
+            ? { ...a, status: "rejected" }
+            : a,
+      ),
+    );
   }
 
   const badge = LISTING_STATUS_CONFIG[listing.status] ?? LISTING_STATUS_CONFIG.available;
@@ -258,6 +277,7 @@ function ListingCard({
                   onUpdate={(updated) =>
                     setApplications((prev) => prev.map((a) => (a.id === updated.id ? updated : a)))
                   }
+                  onApproved={() => handleApplicationApproved(app.id)}
                 />
               ))
             )}
