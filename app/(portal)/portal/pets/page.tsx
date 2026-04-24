@@ -1,10 +1,16 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { pets, healthMetrics } from "@/lib/db/schema";
+import { eq, desc, inArray, max } from "drizzle-orm";
 import Link from "next/link";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
+import {
+  SIGNAL_BG_CLASSES,
+  SIGNAL_LABELS,
+} from "@/lib/config/pet-signal";
+import type { PetWellnessSignal } from "@/lib/config/pet-signal";
+import { formatRelativeDate } from "@/lib/utils/format";
 import { Plus, ChevronRight, PawPrint } from "lucide-react";
 
 export default async function PetsPage() {
@@ -16,6 +22,17 @@ export default async function PetsPage() {
     where: eq(pets.ownerId, session.user.id),
     orderBy: [desc(pets.createdAt)],
   });
+
+  // Batch-fetch latest check-in date per pet (one query, no N+1)
+  const petIds = userPets.map((p) => p.id);
+  const lastLogRows = petIds.length > 0
+    ? await db
+        .select({ petId: healthMetrics.petId, lastDate: max(healthMetrics.date) })
+        .from(healthMetrics)
+        .where(inArray(healthMetrics.petId, petIds))
+        .groupBy(healthMetrics.petId)
+    : [];
+  const lastLogMap = new Map(lastLogRows.map((r) => [r.petId, r.lastDate]));
 
   return (
     <div>
@@ -54,6 +71,8 @@ export default async function PetsPage() {
         <div className="flex flex-col gap-3">
           {userPets.map((pet) => {
             const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
+            const sig = pet.lastKnownSignal as PetWellnessSignal | null;
+            const lastDate = lastLogMap.get(pet.id) ?? null;
             return (
               <Link
                 key={pet.id}
@@ -81,10 +100,20 @@ export default async function PetsPage() {
                     {pet.breed ? ` · ${pet.breed}` : ""}
                     {pet.sex !== "unknown" ? ` · ${pet.sex}` : ""}
                   </p>
+                  {lastDate && (
+                    <p className="text-xs text-[var(--faint)] mt-0.5">
+                      Last check-in {formatRelativeDate(lastDate)}
+                    </p>
+                  )}
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
+                  {sig && (
+                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${SIGNAL_BG_CLASSES[sig]}`}>
+                      {SIGNAL_LABELS[sig]}
+                    </span>
+                  )}
                   {pet.isPublic && (
-                    <span className="text-xs bg-[var(--teal-light)] text-[var(--teal)] px-2.5 py-1 rounded-full font-medium">
+                    <span className="text-xs bg-[var(--teal-light)] text-[var(--teal)] px-2.5 py-1 rounded-full font-medium hidden sm:inline">
                       Public
                     </span>
                   )}
