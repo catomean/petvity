@@ -132,7 +132,10 @@ export default async function PetHealthPage({ params }: Params) {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <BarChart3 className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="text-[var(--muted)] mb-4">No health data logged yet.</p>
+          <p className="font-medium text-[var(--ink)] mb-2">No health data yet</p>
+          <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">
+            Log your first check-in to see trends, charts, and your pet&apos;s Digital Twin.
+          </p>
           <Link href={`/portal/pets/${petId}/health/log`} className="btn-primary">
             Log first check-in
           </Link>

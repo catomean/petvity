@@ -112,11 +112,11 @@ export default function BookingsPage() {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <CalendarCheck className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-1">No bookings yet</p>
-          <p className="text-sm text-[var(--muted)]">
-            Book a vet or pet sitter from the{" "}
-            <Link href="/portal/find" className="text-[var(--teal)] hover:underline">Find a Pro</Link> page.
+          <p className="font-medium text-[var(--ink)] mb-2">No bookings yet</p>
+          <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">
+            Browse verified vets and pet sitters near you, then book an appointment directly from their profile.
           </p>
+          <Link href="/portal/find" className="btn-primary">Find a vet or sitter</Link>
         </div>
       ) : (
         <div className="space-y-8">
