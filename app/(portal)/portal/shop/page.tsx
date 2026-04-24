@@ -38,6 +38,7 @@ function CartDrawer({
   notes,
   onNotes,
   success,
+  error,
 }: {
   cart: CartItem[];
   onClose: () => void;
@@ -48,6 +49,7 @@ function CartDrawer({
   notes: string;
   onNotes: (v: string) => void;
   success: boolean;
+  error: string;
 }) {
   const total = cart.reduce((s, i) => s + i.product.priceCents * i.quantity, 0);
 
@@ -132,6 +134,7 @@ function CartDrawer({
                 <span className="text-sm text-[var(--muted)]">Total</span>
                 <span className="font-semibold text-[var(--ink)]">{formatPrice(total)}</span>
               </div>
+              {error && <p className="alert-error text-sm">{error}</p>}
               <button
                 onClick={onPlace}
                 disabled={placing}
@@ -238,8 +241,6 @@ export default function ShopPage() {
         </button>
       </div>
 
-      {error && <p className="alert-error mb-4">{error}</p>}
-
       {/* Category filter */}
       {!loading && products.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-1 mb-6 no-scrollbar">
@@ -344,7 +345,7 @@ export default function ShopPage() {
       {cartOpen && (
         <CartDrawer
           cart={cart}
-          onClose={() => setCartOpen(false)}
+          onClose={() => { setCartOpen(false); setError(""); }}
           onQty={adjustQty}
           onRemove={removeFromCart}
           onPlace={placeOrder}
@@ -352,6 +353,7 @@ export default function ShopPage() {
           notes={notes}
           onNotes={setNotes}
           success={success}
+          error={error}
         />
       )}
     </div>
