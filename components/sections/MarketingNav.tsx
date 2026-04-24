@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   Activity, Syringe, FileText, Globe, Zap, Brain,
-  PawPrint, Menu, X, ChevronDown,
+  PawPrint, Menu, X, ChevronDown, Search, ShoppingBag, Heart,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
@@ -43,6 +43,24 @@ const FEATURES_MENU = [
     icon: Globe,
     label: "Public Profiles",
     desc: "Shareable pet pages — your pet, the influencer.",
+    href: "/features",
+  },
+  {
+    icon: Search,
+    label: "Find a Vet or Sitter",
+    desc: "Book verified local professionals in minutes.",
+    href: "/features",
+  },
+  {
+    icon: ShoppingBag,
+    label: "Pet Marketplace",
+    desc: "Shop for food, accessories, and health essentials.",
+    href: "/features",
+  },
+  {
+    icon: Heart,
+    label: "Adoption Listings",
+    desc: "List or find pets for adoption, fully managed.",
     href: "/features",
   },
 ];
@@ -153,7 +171,13 @@ export default function MarketingNav() {
                         <span>{emoji}</span>{label}
                       </Link>
                     ))}
-                    <span className="text-xs text-[var(--muted)] ms-auto">Vet network coming soon</span>
+                    <Link
+                      href="/adopt"
+                      onClick={() => setFeaturesOpen(false)}
+                      className="flex items-center gap-1.5 text-xs font-medium text-[var(--danger)] bg-[var(--danger-bg)] hover:bg-red-100 px-3 py-1.5 rounded-full no-underline transition-colors ms-auto"
+                    >
+                      ❤️ Adopt
+                    </Link>
                   </div>
                 </div>
               </div>
