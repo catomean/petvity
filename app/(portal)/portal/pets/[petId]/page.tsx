@@ -236,7 +236,7 @@ export default async function PetProfilePage({ params }: Params) {
       {/* Adoption shortcut */}
       <Link
         href={`/portal/pets/${pet.id}/list-for-adoption`}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-dashed border-[var(--border)] text-sm text-[var(--muted)] hover:border-[var(--danger)] hover:text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
+        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-dashed border-[var(--border)] text-sm text-[var(--muted)] hover:border-[var(--danger)] hover:text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
       >
         <Heart className="w-4 h-4 flex-shrink-0" />
         List {pet.name} for adoption

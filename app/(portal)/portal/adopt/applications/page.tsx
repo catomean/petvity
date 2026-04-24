@@ -128,7 +128,7 @@ export default function MyApplicationsPage() {
                     </div>
 
                     {app.applicationStatus === "approved" && (
-                      <p className="text-sm text-[var(--green)] font-medium mt-2">
+                      <p className="text-sm text-[var(--green-text)] font-medium mt-2">
                         Congratulations — the owner has approved your application!
                       </p>
                     )}

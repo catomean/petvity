@@ -176,7 +176,7 @@ export default function AdminProductsPage() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Name <span className="text-[var(--danger)]">*</span>
+                Name <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input className="form-input" required value={form.name}
                 onChange={(e) => field("name", e.target.value)}
@@ -185,7 +185,7 @@ export default function AdminProductsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Price ($) <span className="text-[var(--danger)]">*</span>
+                Price ($) <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input className="form-input" required type="number" min="0.01" step="0.01"
                 value={form.priceDollars} onChange={(e) => field("priceDollars", e.target.value)}
@@ -278,7 +278,7 @@ export default function AdminProductsPage() {
                   <td className="py-3 px-4">
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                       p.isActive
-                        ? "bg-[var(--green-bg)] text-[var(--green)]"
+                        ? "bg-[var(--green-bg)] text-[var(--green-text)]"
                         : "bg-[var(--off)] text-[var(--muted)]"
                     }`}>
                       {p.isActive ? "Active" : "Inactive"}

@@ -149,15 +149,15 @@ export default async function PetHealthPage({ params }: Params) {
                 ? "bg-[var(--danger-bg)] border border-[var(--danger)]"
                 : "bg-[var(--warn-bg)] border border-[var(--warn)]"
             }`}>
-              <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${petSignal.signal === "concern" ? "text-[var(--danger)]" : "text-[var(--warn)]"}`} />
+              <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${petSignal.signal === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`} />
               <div className="flex-1 min-w-0">
-                <p className={`text-sm font-medium ${petSignal.signal === "concern" ? "text-[var(--danger)]" : "text-[var(--warn)]"}`}>
+                <p className={`text-sm font-medium ${petSignal.signal === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
                   {petSignal.reason}
                 </p>
                 {overdueCount > 0 && (
                   <Link
                     href={`/portal/pets/${petId}/vaccinations`}
-                    className="inline-flex items-center gap-1 text-xs font-medium text-[var(--warn)] hover:underline mt-1 no-underline"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-[var(--warn-text)] hover:underline mt-1 no-underline"
                   >
                     <Syringe className="w-3 h-3" />
                     Update vaccinations
@@ -176,10 +176,10 @@ export default async function PetHealthPage({ params }: Params) {
                   <span
                     className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                       wellnessScore >= WELLNESS_SCORE_THRESHOLDS.good
-                        ? "bg-[var(--green-bg)] text-[var(--green)]"
+                        ? "bg-[var(--green-bg)] text-[var(--green-text)]"
                         : wellnessScore >= WELLNESS_SCORE_THRESHOLDS.fair
-                          ? "bg-[var(--warn-bg)] text-[var(--warn)]"
-                          : "bg-[var(--danger-bg)] text-[var(--danger)]"
+                          ? "bg-[var(--warn-bg)] text-[var(--warn-text)]"
+                          : "bg-[var(--danger-bg)] text-[var(--danger-text)]"
                     }`}
                   >
                     Wellness {wellnessScore}%
@@ -218,7 +218,7 @@ export default async function PetHealthPage({ params }: Params) {
                           </span>
                         </div>
                         {range && (
-                          <p className="text-xs text-[var(--danger)] mt-1">
+                          <p className="text-xs text-[var(--danger-text)] mt-1">
                             Normal: {def.toDisplay(range.min)}–{def.toDisplay(range.max)} {display.unit}
                           </p>
                         )}
@@ -254,7 +254,7 @@ export default async function PetHealthPage({ params }: Params) {
                           </span>
                         </div>
                         {range && (
-                          <p className="text-xs text-[var(--danger)] mt-1">
+                          <p className="text-xs text-[var(--danger-text)] mt-1">
                             Normal: {range.min}–{range.max} {display.unit}
                           </p>
                         )}

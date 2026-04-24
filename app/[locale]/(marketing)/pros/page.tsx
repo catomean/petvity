@@ -136,7 +136,7 @@ export default function ProsPage() {
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               {["Free to create a profile", "No monthly fee", "Verified badge included"].map((t) => (
                 <span key={t} className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)]">
-                  <CheckCircle className="w-3.5 h-3.5 text-[var(--green)] flex-shrink-0" />
+                  <CheckCircle className="w-3.5 h-3.5 text-[var(--green-text)] flex-shrink-0" />
                   {t}
                 </span>
               ))}
@@ -296,7 +296,7 @@ export default function ProsPage() {
                   "Vet visit records and lab results",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2.5">
-                    <CheckCircle className="w-4 h-4 text-[var(--green)] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-4 h-4 text-[var(--green-text)] flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-[var(--ink2)]">{item}</span>
                   </div>
                 ))}
@@ -316,7 +316,7 @@ export default function ProsPage() {
                 {/* Signal */}
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">Signal</span>
-                  <span className="bg-[var(--warn-bg)] text-[var(--warn)] text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                  <span className="bg-[var(--warn-bg)] text-[var(--warn-text)] text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
                     <TrendingUp className="w-3 h-3" />
                     Watch
                   </span>
@@ -325,7 +325,7 @@ export default function ProsPage() {
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">Digital Twin</span>
-                    <span className="text-xs text-[var(--warn)] font-medium">Needs Attention · declining</span>
+                    <span className="text-xs text-[var(--warn-text)] font-medium">Needs Attention · declining</span>
                   </div>
                   <div className="h-2 bg-[var(--border)] rounded-full overflow-hidden">
                     <div className="h-full bg-[var(--warn)] rounded-full" style={{ width: "38%" }} />
@@ -351,7 +351,7 @@ export default function ProsPage() {
                 {/* Vaccinations */}
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-[var(--muted)]">Rabies booster</span>
-                  <span className="text-[var(--warn)] font-medium">Overdue 12 days</span>
+                  <span className="text-[var(--warn-text)] font-medium">Overdue 12 days</span>
                 </div>
               </div>
             </div>

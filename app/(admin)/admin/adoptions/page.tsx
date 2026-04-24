@@ -128,7 +128,7 @@ function ListingRow({
           <Users className="w-3.5 h-3.5 text-[var(--muted)]" />
           <span className="text-xs text-[var(--muted)]">{listing.applicationCount}</span>
           {listing.pendingCount > 0 && (
-            <span className="text-xs font-bold text-[var(--warn)] bg-[var(--warn-bg)] px-1.5 py-0.5 rounded-full leading-none">
+            <span className="text-xs font-bold text-[var(--warn-text)] bg-[var(--warn-bg)] px-1.5 py-0.5 rounded-full leading-none">
               {listing.pendingCount} new
             </span>
           )}
@@ -159,7 +159,7 @@ function ListingRow({
                 <button
                   disabled={updating}
                   onClick={() => changeStatus("available")}
-                  className="btn-outline text-xs py-1.5 px-3 text-[var(--green)] border-[var(--green)] hover:bg-[var(--green-bg)]"
+                  className="btn-outline text-xs py-1.5 px-3 text-[var(--green-text)] border-[var(--green)] hover:bg-[var(--green-bg)]"
                 >
                   Mark available
                 </button>
@@ -168,7 +168,7 @@ function ListingRow({
                 <button
                   disabled={updating}
                   onClick={() => changeStatus("on_hold")}
-                  className="btn-outline text-xs py-1.5 px-3 text-[var(--warn)] border-[var(--warn)] hover:bg-[var(--warn-bg)]"
+                  className="btn-outline text-xs py-1.5 px-3 text-[var(--warn-text)] border-[var(--warn)] hover:bg-[var(--warn-bg)]"
                 >
                   Put on hold
                 </button>
@@ -186,7 +186,7 @@ function ListingRow({
                 <button
                   disabled={updating}
                   onClick={() => changeStatus("withdrawn")}
-                  className="btn-outline text-xs py-1.5 px-3 text-[var(--danger)] border-[var(--danger)] hover:bg-[var(--danger-bg)]"
+                  className="btn-outline text-xs py-1.5 px-3 text-[var(--danger-text)] border-[var(--danger)] hover:bg-[var(--danger-bg)]"
                 >
                   Withdraw
                 </button>
@@ -245,8 +245,8 @@ export default function AdminAdoptionsPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         {[
           { label: "Total listings",    value: counts.total,     icon: PawPrint,      color: "text-[var(--teal)]",  bg: "bg-[var(--teal-light)]" },
-          { label: "Available",         value: counts.available, icon: CheckCircle,   color: "text-[var(--green)]", bg: "bg-[var(--green-bg)]" },
-          { label: "Pending reviews",   value: counts.pending,   icon: Clock,         color: "text-[var(--warn)]",  bg: "bg-[var(--warn-bg)]" },
+          { label: "Available",         value: counts.available, icon: CheckCircle,   color: "text-[var(--green-text)]", bg: "bg-[var(--green-bg)]" },
+          { label: "Pending reviews",   value: counts.pending,   icon: Clock,         color: "text-[var(--warn-text)]",  bg: "bg-[var(--warn-bg)]" },
           { label: "Adopted",           value: counts.adopted,   icon: Heart,         color: "text-[var(--teal)]",  bg: "bg-[var(--teal-light)]" },
         ].map(({ label, value, icon: Icon, color, bg }) => (
           <div key={label} className="card p-4 flex items-center gap-3">

@@ -69,7 +69,7 @@ const FEATURE_SECTIONS = [
         { label: "Mood", value: "5 / 5", ok: true },
         { label: "Anxiety", value: "2 / 5", ok: true },
       ],
-      badge: { label: "Healthy", cls: "bg-[var(--green-bg)] text-[var(--green)]" },
+      badge: { label: "Healthy", cls: "bg-[var(--green-bg)] text-[var(--green-text)]" },
     },
     flip: false,
   },
@@ -145,7 +145,7 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {["No credit card", "Unlimited pets", "Cancel anytime"].map((t) => (
                   <span key={t} className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)]">
-                    <CheckCircle className="w-3.5 h-3.5 text-[var(--green)] flex-shrink-0" />
+                    <CheckCircle className="w-3.5 h-3.5 text-[var(--green-text)] flex-shrink-0" />
                     {t}
                   </span>
                 ))}
@@ -167,7 +167,7 @@ export default function HomePage() {
                       <p className="text-white/60 text-xs">Golden Retriever · 3 yr</p>
                     </div>
                   </div>
-                  <span className="bg-[var(--green-bg)] text-[var(--green)] text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
+                  <span className="bg-[var(--green-bg)] text-[var(--green-text)] text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
                     <CheckCircle className="w-3 h-3" /> Healthy
                   </span>
                 </div>
@@ -186,7 +186,7 @@ export default function HomePage() {
                       <div key={label} className="bg-[var(--off)] rounded-xl p-3 text-center">
                         <p className="text-[10px] text-[var(--muted)] mb-1 uppercase tracking-wide">{label}</p>
                         <p className="text-sm font-bold text-[var(--ink)]">{value}</p>
-                        <p className="text-[10px] text-[var(--green)] mt-0.5">{sub}</p>
+                        <p className="text-[10px] text-[var(--green-text)] mt-0.5">{sub}</p>
                       </div>
                     ))}
                   </div>
@@ -331,7 +331,7 @@ export default function HomePage() {
                   {/* Twin state badge */}
                   <div className="flex items-center justify-between mb-4">
                     <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">Digital Twin</p>
-                    <span className="inline-flex items-center gap-1.5 bg-[var(--green-bg)] text-[var(--green)] text-xs font-bold px-3 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1.5 bg-[var(--green-bg)] text-[var(--green-text)] text-xs font-bold px-3 py-1 rounded-full">
                       <Brain className="w-3 h-3" />
                       Thriving
                     </span>
@@ -339,8 +339,8 @@ export default function HomePage() {
 
                   {/* Trend */}
                   <div className="flex items-center gap-1.5 mb-5">
-                    <TrendingUp className="w-3.5 h-3.5 text-[var(--green)]" />
-                    <p className="text-xs text-[var(--green)] font-medium">Improving over the last 7 days</p>
+                    <TrendingUp className="w-3.5 h-3.5 text-[var(--green-text)]" />
+                    <p className="text-xs text-[var(--green-text)] font-medium">Improving over the last 7 days</p>
                   </div>
 
                   {/* Metric bars */}
@@ -422,21 +422,21 @@ export default function HomePage() {
                 {
                   signal: "Healthy",
                   desc: "All metrics in range. Vaccinations current. Keep doing what you're doing.",
-                  badge: "bg-[var(--green-bg)] text-[var(--green)]",
+                  badge: "bg-[var(--green-bg)] text-[var(--green-text)]",
                   border: "border-[#bbf7d0]",
                   icon: CheckCircle,
                 },
                 {
                   signal: "Watch",
                   desc: "One metric slightly outside normal range, or a booster coming due soon.",
-                  badge: "bg-[var(--warn-bg)] text-[var(--warn)]",
+                  badge: "bg-[var(--warn-bg)] text-[var(--warn-text)]",
                   border: "border-[#fde68a]",
                   icon: TrendingUp,
                 },
                 {
                   signal: "Needs attention",
                   desc: "Multiple out-of-range readings, or an overdue vaccination. Book a vet visit.",
-                  badge: "bg-[var(--danger-bg)] text-[var(--danger)]",
+                  badge: "bg-[var(--danger-bg)] text-[var(--danger-text)]",
                   border: "border-[#fca5a5]",
                   icon: Activity,
                 },
@@ -666,7 +666,7 @@ export default function HomePage() {
                 "9 languages including Arabic",
               ].map((item) => (
                 <li key={item} className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-[var(--green)] flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-[var(--green-text)] flex-shrink-0" />
                   <span className="text-sm text-[var(--ink2)]">{item}</span>
                 </li>
               ))}

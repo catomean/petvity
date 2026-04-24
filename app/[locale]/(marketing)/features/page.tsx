@@ -123,7 +123,7 @@ const FEATURE_PILLARS = [
   },
   {
     icon: Globe,
-    color: "bg-[var(--green-bg)] text-[var(--green)]",
+    color: "bg-[var(--green-bg)] text-[var(--green-text)]",
     title: "Public pet profiles",
     desc: "Turn your pet into an influencer. Public pages are shareable, no login required — perfect for show animals, breeders, and proud pet parents.",
     bullets: [
@@ -196,7 +196,7 @@ export default function FeaturesPage() {
                   <ul className="space-y-2">
                     {bullets.map((b) => (
                       <li key={b} className="flex items-start gap-2 text-sm text-[var(--ink2)]">
-                        <CheckCircle className="w-4 h-4 text-[var(--green)] flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="w-4 h-4 text-[var(--green-text)] flex-shrink-0 mt-0.5" />
                         {b}
                       </li>
                     ))}

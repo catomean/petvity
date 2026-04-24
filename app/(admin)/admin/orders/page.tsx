@@ -204,7 +204,7 @@ function OrderRow({
                       disabled={updating}
                       className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-60 ${
                         isCancelAction
-                          ? "text-[var(--danger)] border-[var(--danger)] hover:bg-[var(--danger-bg)]"
+                          ? "text-[var(--danger-text)] border-[var(--danger)] hover:bg-[var(--danger-bg)]"
                           : "text-[var(--teal)] border-[var(--teal)] hover:bg-[var(--teal-light)]"
                       }`}
                     >
@@ -275,7 +275,7 @@ export default function AdminOrdersPage() {
           </div>
           <div className="card p-4">
             <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">Pending</p>
-            <p className="text-2xl font-bold text-[var(--warn)]">{counts.pending ?? 0}</p>
+            <p className="text-2xl font-bold text-[var(--warn-text)]">{counts.pending ?? 0}</p>
           </div>
           <div className="card p-4">
             <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">In transit</p>

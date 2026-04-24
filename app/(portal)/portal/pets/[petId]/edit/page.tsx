@@ -187,7 +187,7 @@ export default function EditPetPage() {
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-[var(--ink)] mb-1">Pet photo</p>
           <p className="text-xs text-[var(--muted)] mb-3">JPG, PNG or WebP · max 4 MB</p>
-          {avatarError && <p className="text-xs text-[var(--danger)] mb-2">{avatarError}</p>}
+          {avatarError && <p className="text-xs text-[var(--danger-text)] mb-2">{avatarError}</p>}
           <input
             ref={fileInputRef}
             type="file"
@@ -372,7 +372,7 @@ export default function EditPetPage() {
 
       {/* Danger zone */}
       <div className="mt-8 card p-5 border-[var(--danger-bg)]">
-        <h3 className="text-sm font-semibold text-[var(--danger)] mb-1">
+        <h3 className="text-sm font-semibold text-[var(--danger-text)] mb-1">
           Danger zone
         </h3>
         <p className="text-sm text-[var(--muted)] mb-4">
@@ -399,7 +399,7 @@ export default function EditPetPage() {
         ) : (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="inline-flex items-center gap-2 text-[var(--danger)] border border-[var(--danger)] bg-transparent rounded-[10px] px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-[var(--danger-bg)] transition-colors"
+            className="inline-flex items-center gap-2 text-[var(--danger-text)] border border-[var(--danger)] bg-transparent rounded-[10px] px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-[var(--danger-bg)] transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             Delete this pet

@@ -67,7 +67,7 @@ function CartDrawer({
         {success ? (
           <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
             <div className="w-16 h-16 rounded-full bg-[var(--green-bg)] flex items-center justify-center mb-4">
-              <ShoppingBag className="w-8 h-8 text-[var(--green)]" />
+              <ShoppingBag className="w-8 h-8 text-[var(--green-text)]" />
             </div>
             <p className="font-semibold text-[var(--ink)] mb-1">Order placed!</p>
             <p className="text-sm text-[var(--muted)] mb-5">
@@ -115,7 +115,7 @@ function CartDrawer({
                     </button>
                     <button
                       onClick={() => onRemove(product.id)}
-                      className="ms-1 p-1 hover:text-[var(--danger)] text-[var(--muted)] transition-colors"
+                      className="ms-1 p-1 hover:text-[var(--danger-text)] text-[var(--muted)] transition-colors"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -340,7 +340,7 @@ export default function ShopPage() {
                     )}
                   </div>
                   {product.stock !== null && product.stock > 0 && product.stock <= 5 && (
-                    <p className="text-xs text-[var(--warn)] mt-1">Only {product.stock} left</p>
+                    <p className="text-xs text-[var(--warn-text)] mt-1">Only {product.stock} left</p>
                   )}
                 </div>
               </div>

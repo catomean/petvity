@@ -36,9 +36,9 @@ export default async function AdminOverviewPage() {
     { label: "Total users",        value: totalUsers,        icon: Users,       href: "/admin/users",     color: "text-[var(--teal)]",    bg: "bg-[var(--teal-light)]" },
     { label: "Total pets",         value: totalPets,         icon: PawPrint,    href: "/admin/users",     color: "text-[var(--teal)]",    bg: "bg-[var(--teal-light)]" },
     { label: "Active adoptions",   value: activeListings,    icon: Heart,       href: "/admin/adoptions", color: "text-[var(--accent)]",  bg: "bg-[var(--accent-light)]" },
-    { label: "Pending orders",     value: pendingOrders,     icon: ShoppingBag, href: "/admin/orders",    color: "text-[var(--warn)]",    bg: "bg-[var(--warn-bg)]", urgent: pendingOrders > 0 },
+    { label: "Pending orders",     value: pendingOrders,     icon: ShoppingBag, href: "/admin/orders",    color: "text-[var(--warn-text)]",    bg: "bg-[var(--warn-bg)]", urgent: pendingOrders > 0 },
     { label: "Total orders",       value: totalOrders,       icon: Package,     href: "/admin/orders",    color: "text-[var(--ink2)]",    bg: "bg-[var(--off)]" },
-    { label: "Revenue",            value: revenueFormatted,  icon: TrendingUp,  href: "/admin/orders",    color: "text-[var(--green)]",   bg: "bg-[var(--green-bg)]" },
+    { label: "Revenue",            value: revenueFormatted,  icon: TrendingUp,  href: "/admin/orders",    color: "text-[var(--green-text)]",   bg: "bg-[var(--green-bg)]" },
   ];
 
   return (

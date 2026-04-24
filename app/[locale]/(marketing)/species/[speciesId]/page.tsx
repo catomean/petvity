@@ -233,7 +233,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
               <ul className="space-y-3 max-w-2xl mx-auto">
                 {tips.map((tip) => (
                   <li key={tip} className="flex items-start gap-3 card p-4">
-                    <CheckCircle className="w-5 h-5 text-[var(--green)] flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-5 h-5 text-[var(--green-text)] flex-shrink-0 mt-0.5" />
                     <span className="text-sm text-[var(--ink2)] leading-relaxed">{tip}</span>
                   </li>
                 ))}

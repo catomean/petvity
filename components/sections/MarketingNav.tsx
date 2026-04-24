@@ -133,7 +133,7 @@ export default function MarketingNav() {
                     <Link
                       href="/adopt"
                       onClick={() => setFeaturesOpen(false)}
-                      className="flex items-center gap-1.5 text-xs font-medium text-[var(--danger)] bg-[var(--danger-bg)] hover:bg-red-100 px-3 py-1.5 rounded-full no-underline transition-colors ms-auto"
+                      className="flex items-center gap-1.5 text-xs font-medium text-[var(--danger-text)] bg-[var(--danger-bg)] hover:bg-red-100 px-3 py-1.5 rounded-full no-underline transition-colors ms-auto"
                     >
                       ❤️ {t("adopt")}
                     </Link>
@@ -163,7 +163,7 @@ export default function MarketingNav() {
           </Link>
           <Link
             href="/adopt"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
+            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
           >
             ❤️ {t("adopt")}
           </Link>
@@ -243,7 +243,7 @@ export default function MarketingNav() {
               <Link
                 href="/adopt"
                 onClick={() => setMenuOpen(false)}
-                className="px-3 py-2.5 text-sm font-medium text-[var(--danger)] no-underline"
+                className="px-3 py-2.5 text-sm font-medium text-[var(--danger-text)] no-underline"
               >
                 ❤️ {t("adopt")}
               </Link>

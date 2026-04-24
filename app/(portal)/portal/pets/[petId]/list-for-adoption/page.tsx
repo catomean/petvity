@@ -167,7 +167,7 @@ export default function ListForAdoptionPage() {
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Listing headline <span className="text-[var(--danger)]">*</span>
+              Listing headline <span className="text-[var(--danger-text)]">*</span>
             </label>
             <input
               className="form-input"

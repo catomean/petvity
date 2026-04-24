@@ -199,7 +199,7 @@ export default function HealthRecordsPage() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Type <span className="text-[var(--danger)]">*</span>
+                Type <span className="text-[var(--danger-text)]">*</span>
               </label>
               <select
                 className="form-input"
@@ -214,7 +214,7 @@ export default function HealthRecordsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Date <span className="text-[var(--danger)]">*</span>
+                Date <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 type="date"
@@ -227,7 +227,7 @@ export default function HealthRecordsPage() {
 
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Title / summary <span className="text-[var(--danger)]">*</span>
+                Title / summary <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 className="form-input"
@@ -341,7 +341,7 @@ export default function HealthRecordsPage() {
                         <>
                           <button
                             onClick={() => handleDelete(r.id)}
-                            className="text-xs font-medium text-[var(--danger)] hover:underline"
+                            className="text-xs font-medium text-[var(--danger-text)] hover:underline"
                           >
                             Confirm
                           </button>
@@ -363,7 +363,7 @@ export default function HealthRecordsPage() {
                           </button>
                           <button
                             onClick={() => setDeletingId(r.id)}
-                            className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger)] transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger-text)] transition-colors"
                             title="Delete"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

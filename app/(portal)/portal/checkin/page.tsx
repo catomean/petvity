@@ -131,7 +131,7 @@ export default async function CheckinPage() {
                     {speciesDef?.label ?? pet.species}
                   </div>
                   {!done && sig !== "healthy" && pet.signal.reason && (
-                    <div className={`flex items-center gap-1 mt-1 text-xs ${sig === "concern" ? "text-[var(--danger)]" : "text-[var(--warn)]"}`}>
+                    <div className={`flex items-center gap-1 mt-1 text-xs ${sig === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
                       <AlertTriangle className="w-3 h-3 flex-shrink-0" />
                       <span className="truncate">{pet.signal.reason}</span>
                     </div>
@@ -140,7 +140,7 @@ export default async function CheckinPage() {
 
                 {/* Status */}
                 {done ? (
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--green)] flex-shrink-0">
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--green-text)] flex-shrink-0">
                     <CheckCircle className="w-3.5 h-3.5" />
                     Logged today
                   </span>

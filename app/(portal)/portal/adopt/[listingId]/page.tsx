@@ -231,7 +231,7 @@ export default function ListingDetailPage() {
       {/* Apply section */}
       {applied ? (
         <div className="card p-6 text-center border-2 border-[var(--green)]">
-          <CheckCircle className="w-10 h-10 text-[var(--green)] mx-auto mb-3" />
+          <CheckCircle className="w-10 h-10 text-[var(--green-text)] mx-auto mb-3" />
           <p className="font-semibold text-[var(--ink)] mb-1">Application submitted!</p>
           <p className="text-sm text-[var(--muted)]">
             The owner will review your application and get in touch.

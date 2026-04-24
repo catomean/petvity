@@ -95,7 +95,7 @@ function ApplicationRow({
           <button
             onClick={() => setStatus("approved")}
             disabled={busy}
-            className="text-xs font-medium text-[var(--green)] hover:underline disabled:opacity-60 flex items-center gap-1"
+            className="text-xs font-medium text-[var(--green-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
           >
             {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
             Approve
@@ -103,7 +103,7 @@ function ApplicationRow({
           <button
             onClick={() => setStatus("rejected")}
             disabled={busy}
-            className="text-xs font-medium text-[var(--danger)] hover:underline disabled:opacity-60 flex items-center gap-1"
+            className="text-xs font-medium text-[var(--danger-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
           >
             <XCircle className="w-3 h-3" />
             Reject
@@ -223,14 +223,14 @@ function ListingCard({
                 <button
                   onClick={() => setStatus("on_hold")}
                   disabled={busy}
-                  className="text-xs font-medium text-[var(--warn)] hover:underline disabled:opacity-60"
+                  className="text-xs font-medium text-[var(--warn-text)] hover:underline disabled:opacity-60"
                 >
                   Mark on hold
                 </button>
                 <button
                   onClick={() => setStatus("adopted")}
                   disabled={busy}
-                  className="text-xs font-medium text-[var(--green)] hover:underline disabled:opacity-60"
+                  className="text-xs font-medium text-[var(--green-text)] hover:underline disabled:opacity-60"
                 >
                   Mark as adopted
                 </button>
@@ -249,7 +249,7 @@ function ListingCard({
               <button
                 onClick={() => setStatus("withdrawn")}
                 disabled={busy}
-                className="text-xs font-medium text-[var(--danger)] hover:underline disabled:opacity-60"
+                className="text-xs font-medium text-[var(--danger-text)] hover:underline disabled:opacity-60"
               >
                 Withdraw listing
               </button>

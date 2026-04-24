@@ -38,7 +38,7 @@ function StarRow({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((n) => (
         <Star
           key={n}
-          className={`w-4 h-4 ${n <= rating ? "text-[var(--warn)] fill-current" : "text-[var(--faint)]"}`}
+          className={`w-4 h-4 ${n <= rating ? "text-[var(--warn-text)] fill-current" : "text-[var(--faint)]"}`}
         />
       ))}
     </div>
@@ -161,7 +161,7 @@ export default async function PublicProPage({ params }: Params) {
             {/* Availability */}
             <span className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full mb-4 ${
               profile.isAcceptingClients
-                ? "bg-[var(--green-bg)] text-[var(--green)]"
+                ? "bg-[var(--green-bg)] text-[var(--green-text)]"
                 : "bg-[var(--off)] text-[var(--muted)]"
             }`}>
               {profile.isAcceptingClients ? "Accepting new clients" : "Not accepting clients"}

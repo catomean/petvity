@@ -27,10 +27,13 @@
   /* States */
   --green: #16A34A;
   --green-bg: #DCFCE7;
+  --green-text: #166534;   /* 5.93:1 on --green-bg — WCAG AA for badges/alerts */
   --warn: #D97706;
   --warn-bg: #FEF3C7;
+  --warn-text: #92400E;    /* 5.79:1 on --warn-bg — WCAG AA for badges/alerts */
   --danger: #DC2626;
   --danger-bg: #FEE2E2;
+  --danger-text: #991B1B;  /* 6.36:1 on --danger-bg — WCAG AA for badges/alerts */
 
   /* Keep legacy aliases */
   --off-bg: var(--off);
@@ -192,7 +195,7 @@ body {
   align-items: center;
   gap: 4px;
   background: var(--green-bg);
-  color: var(--green);
+  color: var(--green-text);
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 12px;
@@ -204,7 +207,7 @@ body {
   align-items: center;
   gap: 4px;
   background: var(--warn-bg);
-  color: var(--warn);
+  color: var(--warn-text);
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 12px;
@@ -216,7 +219,7 @@ body {
   align-items: center;
   gap: 4px;
   background: var(--danger-bg);
-  color: var(--danger);
+  color: var(--danger-text);
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 12px;
@@ -227,7 +230,7 @@ body {
 
 .alert-error {
   background: var(--danger-bg);
-  color: var(--danger);
+  color: var(--danger-text);
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 13px;
@@ -235,7 +238,7 @@ body {
 
 .alert-success {
   background: var(--green-bg);
-  color: var(--green);
+  color: var(--green-text);
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 13px;

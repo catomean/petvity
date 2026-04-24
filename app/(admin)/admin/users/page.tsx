@@ -117,7 +117,7 @@ export default function AdminUsersPage() {
           <div className="p-10 text-center text-[var(--muted)] text-sm">Loading…</div>
         ) : error ? (
           <div className="p-10 text-center">
-            <p className="text-[var(--danger)] text-sm">{error}</p>
+            <p className="text-[var(--danger-text)] text-sm">{error}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">

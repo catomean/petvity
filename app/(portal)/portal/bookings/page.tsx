@@ -236,7 +236,7 @@ function BookingCard({
                 <div className="absolute end-0 top-full mt-1 w-44 bg-white border border-[var(--border)] rounded-xl shadow-lg z-10 py-1">
                   {b.status === "pending" && (
                     <button
-                      className="w-full text-start px-3 py-2 text-sm text-[var(--green)] hover:bg-[var(--green-bg)] transition-colors"
+                      className="w-full text-start px-3 py-2 text-sm text-[var(--green-text)] hover:bg-[var(--green-bg)] transition-colors"
                       onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "confirmed"); }}
                     >
                       Confirm booking
@@ -251,7 +251,7 @@ function BookingCard({
                     </button>
                   )}
                   <button
-                    className="w-full text-start px-3 py-2 text-sm text-[var(--danger)] hover:bg-[var(--danger-bg)] transition-colors"
+                    className="w-full text-start px-3 py-2 text-sm text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors"
                     onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "cancelled"); }}
                   >
                     Cancel booking
@@ -287,7 +287,7 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
           onClick={() => onChange(n)}
           onMouseEnter={() => setHover(n)}
           onMouseLeave={() => setHover(0)}
-          className="text-[var(--warn)] transition-transform hover:scale-110"
+          className="text-[var(--warn-text)] transition-transform hover:scale-110"
         >
           <Star
             className="w-7 h-7"

@@ -196,7 +196,7 @@ export default function MedicationsPage() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Medication name <span className="text-[var(--danger)]">*</span>
+                Medication name <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 className="form-input"
@@ -233,7 +233,7 @@ export default function MedicationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Start date <span className="text-[var(--danger)]">*</span>
+                Start date <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 type="date"
@@ -376,7 +376,7 @@ export default function MedicationsPage() {
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => handleDelete(m.id)}
-                            className="text-xs font-medium text-[var(--danger)] hover:underline"
+                            className="text-xs font-medium text-[var(--danger-text)] hover:underline"
                           >
                             Confirm
                           </button>
@@ -398,7 +398,7 @@ export default function MedicationsPage() {
                           </button>
                           <button
                             onClick={() => setDeletingId(m.id)}
-                            className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger)] transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger-text)] transition-colors"
                             title="Delete"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

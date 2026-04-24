@@ -125,7 +125,7 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
               <button
                 onClick={handleCancel}
                 disabled={cancelling}
-                className="text-xs text-[var(--danger)] hover:underline disabled:opacity-60"
+                className="text-xs text-[var(--danger-text)] hover:underline disabled:opacity-60"
               >
                 {cancelling ? "Cancelling…" : "Cancel order"}
               </button>

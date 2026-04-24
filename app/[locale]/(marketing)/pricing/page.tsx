@@ -183,7 +183,7 @@ export default function PricingPage() {
                 <ul className="space-y-2.5 flex-1">
                   {features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-sm text-[var(--ink2)]">
-                      <CheckCircle className="w-4 h-4 text-[var(--green)] flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-4 h-4 text-[var(--green-text)] flex-shrink-0 mt-0.5" />
                       {f}
                     </li>
                   ))}

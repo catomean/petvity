@@ -144,7 +144,7 @@ export default function AdoptPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-[var(--ink)] flex items-center gap-2">
-            <Heart className="w-6 h-6 text-[var(--danger)]" />
+            <Heart className="w-6 h-6 text-[var(--danger-text)]" />
             Adopt a Pet
           </h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">Find a pet looking for a loving home</p>

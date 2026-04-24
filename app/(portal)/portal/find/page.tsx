@@ -65,7 +65,7 @@ function AcceptingBadge({ accepting }: { accepting: boolean }) {
   return (
     <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
       accepting
-        ? "bg-[var(--green-bg)] text-[var(--green)]"
+        ? "bg-[var(--green-bg)] text-[var(--green-text)]"
         : "bg-[var(--off)] text-[var(--muted)]"
     }`}>
       {accepting ? "Accepting clients" : "Not accepting"}
@@ -78,7 +78,7 @@ const formatServices = formatSitterServices;
 function StarRating({ avg, count }: { avg: number | null; count: number }) {
   if (avg === null || count === 0) return null;
   return (
-    <span className="inline-flex items-center gap-1 text-xs text-[var(--warn)]">
+    <span className="inline-flex items-center gap-1 text-xs text-[var(--warn-text)]">
       <Star className="w-3 h-3 fill-current" />
       <span className="font-medium">{avg.toFixed(1)}</span>
       <span className="text-[var(--muted)]">({count})</span>
@@ -381,7 +381,7 @@ function BookingModal({
         {success ? (
           <div className="px-5 py-8 text-center">
             <div className="w-12 h-12 rounded-full bg-[var(--green-bg)] flex items-center justify-center mx-auto mb-3">
-              <CalendarPlus className="w-6 h-6 text-[var(--green)]" />
+              <CalendarPlus className="w-6 h-6 text-[var(--green-text)]" />
             </div>
             <p className="font-medium text-[var(--ink)] mb-1">Booking requested!</p>
             <p className="text-sm text-[var(--muted)] mb-4">

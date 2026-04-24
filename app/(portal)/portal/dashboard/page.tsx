@@ -238,7 +238,7 @@ export default async function DashboardPage() {
 
                   {/* Signal reason + action links — shown when watch/concern */}
                   {sig !== "healthy" && pet.signal.reason && (
-                    <div className={`flex items-start gap-1.5 mt-2 text-xs ${sig === "concern" ? "text-[var(--danger)]" : "text-[var(--warn)]"}`}>
+                    <div className={`flex items-start gap-1.5 mt-2 text-xs ${sig === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
                       <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
                       <span className="leading-snug">{pet.signal.reason}</span>
                     </div>
@@ -254,7 +254,7 @@ export default async function DashboardPage() {
                       {pet.overdueCount > 0 && (
                         <Link
                           href={`/portal/pets/${pet.id}/vaccinations`}
-                          className="text-xs font-medium text-[var(--warn)] hover:underline flex items-center gap-0.5"
+                          className="text-xs font-medium text-[var(--warn-text)] hover:underline flex items-center gap-0.5"
                         >
                           <Syringe className="w-3 h-3" />
                           Update vaccinations
