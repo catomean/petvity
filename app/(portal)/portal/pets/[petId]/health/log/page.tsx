@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets } from "@/lib/db/schema";
+import { pets, healthMetrics } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -24,6 +24,25 @@ export default async function LogHealthPage({ params }: Params) {
   if (!pet) notFound();
 
   const species = pet.species as SpeciesId;
+
+  // Check if there's already a log for today so we can pre-fill the form
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const existing = await db.query.healthMetrics.findFirst({
+    where: and(eq(healthMetrics.petId, petId), eq(healthMetrics.date, todayStr)),
+  });
+  const initialValues = existing
+    ? {
+        date: existing.date,
+        weightKg: existing.weightGrams != null ? (existing.weightGrams / 1000).toString() : "",
+        temperatureC: existing.temperatureCentidegrees != null ? (existing.temperatureCentidegrees / 100).toString() : "",
+        heartRateBpm: existing.heartRateBpm?.toString() ?? "",
+        energy: existing.energy?.toString() ?? "",
+        mood: existing.mood?.toString() ?? "",
+        anxiety: existing.anxiety?.toString() ?? "",
+        socialization: existing.socialization?.toString() ?? "",
+        notes: existing.notes ?? "",
+      }
+    : undefined;
 
   // Compute species-specific normal ranges in display units
   const weightRaw = getNormalRange("weight", species);
@@ -57,10 +76,12 @@ export default async function LogHealthPage({ params }: Params) {
       </Link>
 
       <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">
-        Log health check
+        {existing ? "Update today's check-in" : "Log health check"}
       </h1>
       <p className="text-sm text-[var(--muted)] mb-6">
-        Track as many or as few metrics as you have data for today.
+        {existing
+          ? "You already logged today — update any values below."
+          : "Track as many or as few metrics as you have data for today."}
       </p>
 
       <HealthLogForm
@@ -70,6 +91,7 @@ export default async function LogHealthPage({ params }: Params) {
         weightHint={weightHint}
         tempHint={tempHint}
         hrHint={hrHint}
+        initialValues={initialValues}
       />
     </div>
   );

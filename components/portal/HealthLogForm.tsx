@@ -7,6 +7,18 @@ import type { SpeciesId } from "@/lib/config/species";
 
 type PhysicalHint = { min: number; max: number; unit: string } | null;
 
+type InitialValues = {
+  date: string;
+  weightKg: string;
+  temperatureC: string;
+  heartRateBpm: string;
+  energy: string;
+  mood: string;
+  anxiety: string;
+  socialization: string;
+  notes: string;
+};
+
 type Props = {
   petId: string;
   petName: string;
@@ -14,25 +26,27 @@ type Props = {
   weightHint: PhysicalHint;
   tempHint: PhysicalHint;
   hrHint: PhysicalHint;
+  initialValues?: InitialValues;
 };
 
-export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint }: Props) {
+const EMPTY_FORM: InitialValues = {
+  date: new Date().toISOString().slice(0, 10),
+  weightKg: "",
+  temperatureC: "",
+  heartRateBpm: "",
+  energy: "",
+  mood: "",
+  anxiety: "",
+  socialization: "",
+  notes: "",
+};
+
+export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, initialValues }: Props) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const today = new Date().toISOString().slice(0, 10);
-  const [form, setForm] = useState({
-    date: today,
-    weightKg: "",
-    temperatureC: "",
-    heartRateBpm: "",
-    energy: "",
-    mood: "",
-    anxiety: "",
-    socialization: "",
-    notes: "",
-  });
+  const [form, setForm] = useState<InitialValues>(initialValues ?? EMPTY_FORM);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
