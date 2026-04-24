@@ -44,7 +44,7 @@ const STATUS_ICONS: Record<OrderStatus, React.ElementType> = {
   cancelled: XCircle,
 };
 
-const STATUS_CONFIG: Record<OrderStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
+const STATUS_CONFIG: Record<OrderStatus, { label: string; icon: React.ElementType; color: string; bg: string; className: string }> = {
   pending:   { ...ORDER_STATUS_CONFIG.pending,   icon: STATUS_ICONS.pending },
   confirmed: { ...ORDER_STATUS_CONFIG.confirmed, icon: STATUS_ICONS.confirmed },
   shipped:   { ...ORDER_STATUS_CONFIG.shipped,   icon: STATUS_ICONS.shipped },
@@ -116,7 +116,7 @@ function OrderRow({
         onClick={() => setExpanded((v) => !v)}
       >
         {/* Status badge */}
-        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${cfg.bg} ${cfg.color}`}>
+        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${cfg.className}`}>
           <Icon className="w-3 h-3" />
           {cfg.label}
         </span>

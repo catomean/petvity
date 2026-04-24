@@ -16,10 +16,7 @@ interface UserRow {
   isVerified: boolean | null;
 }
 
-// Labels/colors sourced from lib/config/users SSOT
-const ROLE_STYLES: Record<UserRole, string> = Object.fromEntries(
-  Object.entries(USER_ROLE_CONFIG).map(([k, v]) => [k, `${v.bg} ${v.color}`]),
-) as Record<UserRole, string>;
+// Labels/colors sourced from lib/config/users SSOT; className = bg + color combined
 
 export default function AdminUsersPage() {
   const [rows, setRows] = useState<UserRow[]>([]);
@@ -155,7 +152,7 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${ROLE_STYLES[row.role] ?? "bg-[var(--off)] text-[var(--ink2)]"}`}>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${USER_ROLE_CONFIG[row.role]?.className ?? "bg-[var(--off)] text-[var(--ink2)]"}`}>
                           {USER_ROLE_CONFIG[row.role]?.label ?? row.role}
                         </span>
                         <select
