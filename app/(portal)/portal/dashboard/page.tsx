@@ -11,7 +11,7 @@ import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin"
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import type { TwinTrend } from "@/lib/domain/digital-twin";
-import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope } from "lucide-react";
+import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe } from "lucide-react";
 
 // Icon mapping stays component-side (React components are UI, not config)
 const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
     const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now });
     const twin   = computeDigitalTwin(recentMetrics, now);
 
-    return { ...pet, signal, twin };
+    return { ...pet, signal, twin, overdueCount };
   });
 
   // Sort: concern first, then watch, then healthy
@@ -235,20 +235,31 @@ export default async function DashboardPage() {
                     </div>
                   )}
                   {sig !== "healthy" && (
-                    <div className="flex gap-3 mt-2 relative z-10">
+                    <div className="flex gap-3 mt-2 relative z-10 flex-wrap">
                       <Link
                         href={`/portal/pets/${pet.id}/health/log`}
                         className="text-xs font-medium text-[var(--teal)] hover:underline"
                       >
                         Log health
                       </Link>
-                      <Link
-                        href="/portal/find"
-                        className="text-xs font-medium text-[var(--muted)] hover:text-[var(--teal)] hover:underline flex items-center gap-0.5"
-                      >
-                        <Stethoscope className="w-3 h-3" />
-                        Find a vet
-                      </Link>
+                      {pet.overdueCount > 0 && (
+                        <Link
+                          href={`/portal/pets/${pet.id}/vaccinations`}
+                          className="text-xs font-medium text-[var(--warn)] hover:underline flex items-center gap-0.5"
+                        >
+                          <Syringe className="w-3 h-3" />
+                          Update vaccinations
+                        </Link>
+                      )}
+                      {pet.signal.outOfRangeMetrics.length > 0 && (
+                        <Link
+                          href="/portal/find"
+                          className="text-xs font-medium text-[var(--muted)] hover:text-[var(--teal)] hover:underline flex items-center gap-0.5"
+                        >
+                          <Stethoscope className="w-3 h-3" />
+                          Find a vet
+                        </Link>
+                      )}
                     </div>
                   )}
                 </div>
