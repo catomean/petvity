@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
+import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS } from "@/lib/config/adoptions";
 import type { ApplicationStatusId } from "@/lib/config/adoptions";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -51,11 +51,7 @@ interface FormState {
 
 const HOUSING_OPTIONS = [
   { value: "", label: "Select housing type…" },
-  { value: "house_with_garden", label: "House with garden" },
-  { value: "house_no_garden", label: "House without garden" },
-  { value: "apartment", label: "Apartment" },
-  { value: "farm", label: "Farm / rural property" },
-  { value: "other", label: "Other" },
+  ...HOUSING_TYPE_OPTIONS,
 ];
 
 function ageLabel(birthDate: string | null): string {

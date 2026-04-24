@@ -22,3 +22,16 @@ export const APPLICATION_STATUS_CONFIG = {
 } as const;
 
 export type ApplicationStatusId = keyof typeof APPLICATION_STATUS_CONFIG;
+
+/** Housing type values stored in adoptionApplications.housingType */
+export const HOUSING_TYPE_LABELS: Record<string, string> = {
+  house_with_garden: "House with garden",
+  house_no_garden:   "House without garden",
+  apartment:         "Apartment",
+  farm:              "Farm / rural property",
+  other:             "Other",
+};
+
+export const HOUSING_TYPE_OPTIONS = Object.entries(HOUSING_TYPE_LABELS).map(
+  ([value, label]) => ({ value, label }),
+);

@@ -1,4 +1,5 @@
 import { APP, APP_URL } from "@/lib/config/app";
+import { HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
 
 const base = (content: string) => `
 <!DOCTYPE html>
@@ -79,6 +80,9 @@ export function ownerWeekOne(data: { name: string }) {
       <ul>
         <li>Track vaccinations and get reminders before they expire</li>
         <li>Keep a complete health record for every vet visit</li>
+        <li>Find and book verified vets and sitters near you</li>
+        <li>Browse the marketplace for food, accessories, and health essentials</li>
+        <li>List or find pets for adoption</li>
         <li>Share your pet's public profile with family and friends</li>
       </ul>
       <a class="btn" href="${APP_URL}/portal/dashboard">Go to your dashboard</a>
@@ -256,7 +260,7 @@ export function adoptionApplicationReceived(data: {
       <h2>Someone wants to adopt ${data.petName}!</h2>
       <p>Hi ${data.ownerName},</p>
       <p><strong>${data.applicantName}</strong> has submitted an adoption application for <strong>${data.petName}</strong>.</p>
-      ${data.housingType ? `<p><strong>Housing:</strong> ${data.housingType.replace(/_/g, " ")}</p>` : ""}
+      ${data.housingType ? `<p><strong>Housing:</strong> ${HOUSING_TYPE_LABELS[data.housingType] ?? data.housingType.replace(/_/g, " ")}</p>` : ""}
       ${data.experience ? `<p style="background:#f0faf8;padding:12px 16px;border-radius:6px;border-left:4px solid #0D6E78;"><strong>Experience:</strong> ${data.experience}</p>` : ""}
       ${data.message ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;"><strong>Message:</strong> ${data.message}</p>` : ""}
       <a class="btn" href="${APP_URL}/portal/adoptions">Review application</a>
