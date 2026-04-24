@@ -37,3 +37,6 @@ export const RTL_LOCALES: LocaleCode[] = Object.values(LOCALE_CONFIG)
 export const LOCALE_OPTIONS = Object.values(LOCALE_CONFIG).map(
   ({ code, label, flag }) => ({ value: code, label: `${flag} ${label}` }),
 );
+
+/** Canonical default locale — used for links from non-localized contexts (e.g. portal). */
+export const DEFAULT_LOCALE: LocaleCode = "en";

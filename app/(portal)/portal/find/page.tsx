@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
 import { formatSitterServices } from "@/lib/config/professionals";
+import { DEFAULT_LOCALE } from "@/lib/config/locales";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -129,7 +130,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
         </div>
       )}
       <div className="mt-2">
-        <a href={`/en/pros/${vet.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
+        <a href={`/${DEFAULT_LOCALE}/pros/${vet.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
           View full profile →
         </a>
       </div>
@@ -184,7 +185,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
         </div>
       )}
       <div className="mt-2">
-        <a href={`/en/pros/${sitter.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
+        <a href={`/${DEFAULT_LOCALE}/pros/${sitter.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
           View full profile →
         </a>
       </div>

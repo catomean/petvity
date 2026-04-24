@@ -11,6 +11,7 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS, LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ApplicationStatusId, ListingStatusId } from "@/lib/config/adoptions";
+import { DEFAULT_LOCALE } from "@/lib/config/locales";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -234,7 +235,7 @@ export default function ListingDetailPage() {
           {/* Public profile link */}
           {listing.pet.handle && (
             <Link
-              href={`/en/pets/${listing.pet.handle}`}
+              href={`/${DEFAULT_LOCALE}/pets/${listing.pet.handle}`}
               className="text-sm text-[var(--teal)] hover:underline mt-3 inline-block no-underline"
             >
               View {listing.pet.name}&apos;s public profile →
