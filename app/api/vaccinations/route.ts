@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getInstance } from "@/lib/db";
 import { vaccinations, pets, vaccinationStatusEnum } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
+import { refreshSignalCache } from "@/lib/api/signal-cache";
 
 const createVaccinationSchema = z.object({
   petId: z.string().uuid(),
@@ -66,5 +67,9 @@ export async function POST(req: NextRequest) {
   }
 
   const [row] = await db.insert(vaccinations).values(parsed.data).returning();
+
+  // Refresh signal cache — a new overdue vaccination escalates the signal
+  await refreshSignalCache(pet.id);
+
   return NextResponse.json({ success: true, data: row }, { status: 201 });
 }

@@ -5,6 +5,7 @@ import { getInstance } from "@/lib/db";
 import { vaccinations, vaccinationStatusEnum } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 import { getVaccinationForOwner } from "@/lib/api/ownership";
+import { refreshSignalCache } from "@/lib/api/signal-cache";
 
 const patchSchema = z.object({
   name: z.string().min(1).max(150).optional(),
@@ -44,6 +45,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     .where(eq(vaccinations.id, vaccinationId))
     .returning();
 
+  // Refresh signal — status change (e.g. overdue → up_to_date) affects the signal
+  await refreshSignalCache(existing.petId);
+
   return NextResponse.json({ success: true, data: updated });
 }
 
@@ -59,6 +63,9 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   const db = getInstance();
   await db.delete(vaccinations).where(eq(vaccinations.id, vaccinationId));
+
+  // Refresh signal — removing a vaccination changes the overdue count
+  await refreshSignalCache(existing.petId);
 
   return NextResponse.json({ success: true });
 }
