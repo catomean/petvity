@@ -9,7 +9,7 @@ vi.mock("@/lib/db", () => ({ getInstance: vi.fn() }));
 
 /* ─── Imports after mocks ──────────────────────────────────────────────────── */
 
-import { POST } from "./route";
+import { GET, POST } from "./route";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 
@@ -25,6 +25,13 @@ const OWNER_SESSION = {
 const MOCK_PET = { id: PET_ID, ownerId: "owner-1", species: "dog", name: "Buddy" };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ petId: PET_ID }) };
+
+function makeGetRequest(days?: number) {
+  const url = days
+    ? `http://localhost/api/health/metrics/${PET_ID}?days=${days}`
+    : `http://localhost/api/health/metrics/${PET_ID}`;
+  return new NextRequest(url, { method: "GET" });
+}
 
 function makePostRequest(body: unknown) {
   return new NextRequest(`http://localhost/api/health/metrics/${PET_ID}`, {
@@ -46,6 +53,56 @@ const VALID_BODY = {
 };
 
 /* ─── Tests ────────────────────────────────────────────────────────────────── */
+
+describe("GET /api/health/metrics/[petId]", () => {
+  let db: ReturnType<typeof makeMockDb>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    db = makeMockDb();
+    vi.mocked(getInstance).mockReturnValue(db as any);
+    vi.mocked(requireSession).mockResolvedValue({ session: OWNER_SESSION as any, error: null });
+  });
+
+  it("returns 401 when unauthenticated", async () => {
+    vi.mocked(requireSession).mockResolvedValue({
+      session: null as any,
+      error: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
+    });
+    const res = await GET(makeGetRequest(), ROUTE_CONTEXT);
+    expect(res.status).toBe(401);
+  });
+
+  it("returns 404 when pet does not belong to the requesting user", async () => {
+    db._queryFindFirst.mockResolvedValueOnce(undefined);
+    const res = await GET(makeGetRequest(), ROUTE_CONTEXT);
+    expect(res.status).toBe(404);
+    const body = await res.json();
+    expect(body.error).toBe("Not found");
+  });
+
+  it("returns 200 with empty array when no metrics exist", async () => {
+    db._queryFindFirst.mockResolvedValueOnce(MOCK_PET);
+    db._queryFindMany.mockResolvedValueOnce([]);
+    const res = await GET(makeGetRequest(), ROUTE_CONTEXT);
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+    expect(body.data).toEqual([]);
+  });
+
+  it("returns 200 with metrics for the date range", async () => {
+    const mockMetric = { petId: PET_ID, date: "2026-04-23", weightGrams: 28500 };
+    db._queryFindFirst.mockResolvedValueOnce(MOCK_PET);
+    db._queryFindMany.mockResolvedValueOnce([mockMetric]);
+    const res = await GET(makeGetRequest(30), ROUTE_CONTEXT);
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+    expect(body.data).toHaveLength(1);
+    expect(body.data[0].weightGrams).toBe(28500);
+  });
+});
 
 describe("POST /api/health/metrics/[petId]", () => {
   let db: ReturnType<typeof makeMockDb>;
