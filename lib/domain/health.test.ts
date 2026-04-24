@@ -58,6 +58,18 @@ describe("computeWellnessScore", () => {
     expect(score!).toBeGreaterThan(lowScore!);
   });
 
+  it("scores 100 when physical metric is exactly at normal range boundary", () => {
+    // dog temperature range 3800–3900; value at max boundary (3900) must score 100, not ~67
+    const score = computeWellnessScore({ temperature: 3900 }, "dog");
+    expect(score).toBe(100);
+  });
+
+  it("scores 100 when emotional metric is exactly at normal range boundary", () => {
+    // dog energy range 3–5; value at min boundary (3) must score 100, not 50
+    const score = computeWellnessScore({ energy: 3 }, "dog");
+    expect(score).toBe(100);
+  });
+
   it("uses species-specific normal ranges when available", () => {
     // Species-specific ranges may differ; score for same value varies by species
     const dogScore = computeWellnessScore({ temperature: 3850 }, "dog");

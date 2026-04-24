@@ -46,23 +46,13 @@ export function computeWellnessScore(
 
   let totalScore = 0;
   for (const [metricId, storedValue] of valid) {
-    const def = HEALTH_METRIC_CONFIG[metricId];
     const range = getNormalRange(metricId, speciesId);
     const rangeSize = range.max - range.min;
 
-    let score: number;
-    if (def.scale) {
-      // 1–5 emotional metric
-      const normalised = (storedValue - 1) / 4; // 0–1
-      score = def.inverted ? (1 - normalised) * 100 : normalised * 100;
-    } else {
-      // Physical metric: score = distance from midpoint, clamped 0–100
-      const midpoint = (range.min + range.max) / 2;
-      const distance = Math.abs(storedValue - midpoint);
-      const maxDistance = rangeSize / 2 + rangeSize; // generous margin
-      score = Math.max(0, 100 - (distance / maxDistance) * 100);
-    }
-    totalScore += score;
+    // 100% within normalRange; decreases to 0 at 1 range-width beyond the boundary
+    const rangeWidth = rangeSize || 1;
+    const overshoot = Math.max(0, range.min - storedValue, storedValue - range.max);
+    totalScore += overshoot === 0 ? 100 : Math.max(0, 100 - (overshoot / rangeWidth) * 100);
   }
 
   return Math.round(totalScore / valid.length);
