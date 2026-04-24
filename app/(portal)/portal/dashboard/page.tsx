@@ -107,8 +107,18 @@ export default async function DashboardPage() {
               : loggedToday === userPets.length
                 ? `All ${userPets.length} pet${userPets.length !== 1 ? "s" : ""} checked in today ✓`
                 : loggedToday > 0
-                  ? `${loggedToday} of ${userPets.length} pets checked in today`
-                  : `${userPets.length} pet${userPets.length !== 1 ? "s" : ""} · log today's check-in`}
+                  ? (
+                    <>
+                      {`${loggedToday} of ${userPets.length} pets checked in · `}
+                      <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">log remaining</Link>
+                    </>
+                  )
+                  : (
+                    <>
+                      {`${userPets.length} pet${userPets.length !== 1 ? "s" : ""} · `}
+                      <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">log today&apos;s check-in</Link>
+                    </>
+                  )}
           </p>
         </div>
         <Link href="/portal/pets/new" className="btn-primary">

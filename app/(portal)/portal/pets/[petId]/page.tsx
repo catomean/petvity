@@ -168,9 +168,17 @@ export default async function PetProfilePage({ params }: Params) {
             <p className="text-sm text-[var(--ink2)] flex-1">
               {signalResult.reason}
             </p>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {/* When signal is watch or concern, surface a direct path to book a vet */}
-              {sig !== "healthy" && (
+            <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+              {sig !== "healthy" && overdueCount > 0 && (
+                <Link
+                  href={`/portal/pets/${pet.id}/vaccinations`}
+                  className="btn-outline text-sm"
+                >
+                  <Syringe className="w-4 h-4" />
+                  Update vaccinations
+                </Link>
+              )}
+              {sig !== "healthy" && signalResult.outOfRangeMetrics.length > 0 && (
                 <Link
                   href="/portal/find"
                   className="btn-outline text-sm"
