@@ -63,7 +63,7 @@ const FEATURE_SECTIONS = [
   {
     eyebrow: "Full medical history",
     title: "Everything your vet wishes you tracked.",
-    body: "Vet visits, vaccinations, medications, lab results, surgeries — all in one place, always searchable. Bring a complete history to every appointment instead of relying on memory.",
+    body: "Vet visits, vaccinations, medications, lab results, surgeries — all in one place, always at your fingertips. Bring a complete history to every appointment instead of relying on memory.",
     cta: "See what's tracked",
     visual: {
       records: [
