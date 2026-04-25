@@ -281,6 +281,27 @@ export function orderStatusUpdate(data: {
   };
 }
 
+export function sellerOrderNotification(data: {
+  sellerName: string;
+  buyerName: string;
+  items: { name: string; quantity: number; lineTotal: string }[];
+  subtotal: string;
+}) {
+  const itemRows = data.items
+    .map((i) => `<tr><td style="padding:6px 0;border-bottom:1px solid #f0ede8;">${i.name}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;">×${i.quantity}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;font-weight:500;">${i.lineTotal}</td></tr>`)
+    .join("");
+  return {
+    subject: `New order on ${APP.name} — ${data.items.length} ${data.items.length === 1 ? "item" : "items"} to fulfill`,
+    html: base(`
+      <h2>You have a new order ✨</h2>
+      <p>Hi ${data.sellerName}, <strong>${data.buyerName}</strong> just ordered from your listings.</p>
+      <table style="width:100%;border-collapse:collapse;margin:16px 0;">${itemRows}</table>
+      <p style="text-align:right;font-size:16px;font-weight:600;">Your subtotal: ${data.subtotal}</p>
+      <a class="btn" href="${APP_URL}/portal/my-products/orders">View order details</a>
+    `),
+  };
+}
+
 // ─── Adoption notifications ───────────────────────────────────────────────────
 
 export function adoptionApplicationReceived(data: {

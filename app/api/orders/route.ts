@@ -5,7 +5,7 @@ import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { orders, orderItems, products, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
-import { orderConfirmation } from "@/lib/email/templates";
+import { orderConfirmation, sellerOrderNotification } from "@/lib/email/templates";
 
 const createSchema = z.object({
   items: z.array(
@@ -145,27 +145,69 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Send order confirmation email (fire-and-forget)
-  try {
-    const [user] = await db
-      .select({ name: users.name, email: users.email })
-      .from(users)
-      .where(eq(users.id, session.user.id))
-      .limit(1);
+  // Look up the buyer once; reused for buyer confirmation + seller notifications
+  const [buyer] = await db
+    .select({ name: users.name, email: users.email })
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1);
+  const buyerLabel = buyer?.name ?? buyer?.email ?? "A customer";
 
-    if (user?.email) {
+  // Send order confirmation email to buyer (fire-and-forget)
+  try {
+    if (buyer?.email) {
       const emailItems = insertedItems.map((i) => ({
         name: productMap.get(i.productId)?.name ?? "Item",
         quantity: i.quantity,
         lineTotal: `$${((i.priceCents * i.quantity) / 100).toFixed(2)}`,
       }));
       const tpl = orderConfirmation({
-        customerName: user.name ?? user.email,
+        customerName: buyerLabel,
         orderTotal: `$${(totalCents / 100).toFixed(2)}`,
         items: emailItems,
         notes: notes ?? null,
       });
-      await sendEmail({ to: user.email, ...tpl });
+      await sendEmail({ to: buyer.email, ...tpl });
+    }
+  } catch {
+    // Never fail the order response due to email error
+  }
+
+  // Notify sellers whose products were ordered (fire-and-forget, one email per seller)
+  try {
+    const itemsBySeller = new Map<string, typeof insertedItems>();
+    for (const item of insertedItems) {
+      const sellerId = productMap.get(item.productId)?.sellerId ?? null;
+      if (!sellerId) continue;
+      const arr = itemsBySeller.get(sellerId) ?? [];
+      arr.push(item);
+      itemsBySeller.set(sellerId, arr);
+    }
+
+    if (itemsBySeller.size > 0) {
+      const sellerRows = await db
+        .select({ id: users.id, name: users.name, email: users.email })
+        .from(users)
+        .where(inArray(users.id, Array.from(itemsBySeller.keys())));
+
+      await Promise.all(
+        sellerRows.map(async (seller) => {
+          if (!seller.email) return;
+          const sellerItems = itemsBySeller.get(seller.id) ?? [];
+          const subtotalCents = sellerItems.reduce((s, i) => s + i.priceCents * i.quantity, 0);
+          const tpl = sellerOrderNotification({
+            sellerName: seller.name ?? seller.email,
+            buyerName: buyerLabel,
+            items: sellerItems.map((i) => ({
+              name: productMap.get(i.productId)?.name ?? "Item",
+              quantity: i.quantity,
+              lineTotal: `$${((i.priceCents * i.quantity) / 100).toFixed(2)}`,
+            })),
+            subtotal: `$${(subtotalCents / 100).toFixed(2)}`,
+          });
+          await sendEmail({ to: seller.email, ...tpl });
+        }),
+      );
     }
   } catch {
     // Never fail the order response due to email error
