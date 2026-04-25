@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X, Store, BadgeCheck } from "lucide-react";
 import { productCategoryLabel } from "@/lib/config/products";
 import { formatPrice } from "@/lib/utils/format";
+import { APP } from "@/lib/config/app";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -16,6 +17,8 @@ interface Product {
   imageUrl: string | null;
   category: string;
   stock: number | null;
+  sellerId: string | null;
+  sellerName: string | null;
 }
 
 interface CartItem {
@@ -302,8 +305,18 @@ export default function ShopPage() {
                   <span className="text-xs text-[var(--muted)] mb-0.5">
                     {productCategoryLabel(product.category)}
                   </span>
-                  <p className="font-medium text-[var(--ink)] text-sm leading-snug mb-1 flex-1">
+                  <p className="font-medium text-[var(--ink)] text-sm leading-snug mb-1">
                     {product.name}
+                  </p>
+                  <p className="flex items-center gap-1 text-xs text-[var(--muted)] mb-1 flex-1">
+                    {product.sellerId ? (
+                      <Store className="w-3 h-3 flex-shrink-0" />
+                    ) : (
+                      <BadgeCheck className="w-3 h-3 text-[var(--teal)] flex-shrink-0" />
+                    )}
+                    <span className="truncate">
+                      {product.sellerId ? product.sellerName ?? "Seller" : APP.name}
+                    </span>
                   </p>
                   <div className="flex items-center justify-between gap-2 mt-2">
                     <span className="font-semibold text-[var(--accent)]">

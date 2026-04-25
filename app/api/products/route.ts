@@ -3,7 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { products, productCategoryEnum } from "@/lib/db/schema";
+import { products, productCategoryEnum, users } from "@/lib/db/schema";
 
 const createSchema = z.object({
   name: z.string().min(1).max(200),
@@ -36,10 +36,21 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: true, data: rows });
   }
 
-  // Public: active products only (platform + verified seller listings)
+  // Public: active products only (platform + seller listings) with seller name for trust
   const rows = await db
-    .select()
+    .select({
+      id: products.id,
+      name: products.name,
+      description: products.description,
+      priceCents: products.priceCents,
+      imageUrl: products.imageUrl,
+      category: products.category,
+      stock: products.stock,
+      sellerId: products.sellerId,
+      sellerName: users.name,
+    })
     .from(products)
+    .leftJoin(users, eq(users.id, products.sellerId))
     .where(
       category
         ? and(
