@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Store, Plus, Pencil, X, Package, Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { Store, Plus, Pencil, X, Package, Eye, EyeOff, ShoppingBag } from "lucide-react";
 import { PRODUCT_CATEGORY_OPTIONS, productCategoryLabel } from "@/lib/config/products";
 import { formatPrice } from "@/lib/utils/format";
 
@@ -140,9 +141,14 @@ export default function MyProductsPage() {
             List items for sale in the Petvity marketplace.
           </p>
         </div>
-        <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Add product
-        </button>
+        <div className="flex items-center gap-2">
+          <Link href="/portal/my-products/orders" className="btn-outline flex items-center gap-2">
+            <ShoppingBag className="w-4 h-4" /> Orders
+          </Link>
+          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+            <Plus className="w-4 h-4" /> Add product
+          </button>
+        </div>
       </div>
 
       {/* Stats */}
