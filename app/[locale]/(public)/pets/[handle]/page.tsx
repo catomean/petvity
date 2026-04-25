@@ -145,7 +145,7 @@ export default async function PublicPetPage({ params }: Params) {
               {pet.breed ? ` · ${pet.breed}` : ""}
               {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
               {pet.birthDate
-                ? ` · Born ${formatDateShort(pet.birthDate)}`
+                ? ` · Born ${formatDateShort(pet.birthDate, locale)}`
                 : ""}
             </p>
             {pet.bio && (

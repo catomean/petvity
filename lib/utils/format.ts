@@ -1,9 +1,11 @@
 /**
  * Format a YYYY-MM-DD date string for display.
- * e.g. "2026-01-15" → "Jan 15, 2026"
+ * Uses the runtime locale (browser on client, server locale on SSR) — consistent
+ * with formatIsoDate / formatIsoDateTime. For per-request locale, pass it explicitly.
+ * e.g. "2026-01-15" → "Jan 15, 2026" (en) / "2026年1月15日" (ja)
  */
-export function formatDateShort(date: string): string {
-  return new Date(date + "T00:00:00").toLocaleDateString("en", {
+export function formatDateShort(date: string, locale?: string): string {
+  return new Date(date + "T00:00:00").toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",

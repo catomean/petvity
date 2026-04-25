@@ -1,5 +1,6 @@
 import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
+import { formatIsoDate } from "@/lib/utils/format";
 
 type HistoryRow = {
   id: string;
@@ -18,11 +19,7 @@ export function SignalHistoryTimeline({ rows }: { rows: HistoryRow[] }) {
       <ol className="relative border-s border-[var(--border)] space-y-4 ms-2">
         {rows.map((row) => {
           const sig = row.signal as PetWellnessSignal;
-          const date = row.recordedAt.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          });
+          const date = formatIsoDate(row.recordedAt.toISOString());
           return (
             <li key={row.id} className="ms-5">
               {/* Timeline dot — color matches signal level */}

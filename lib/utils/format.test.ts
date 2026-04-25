@@ -9,18 +9,26 @@ import {
 } from "./format";
 
 describe("formatDateShort", () => {
-  it("formats a date string as Mon DD, YYYY", () => {
-    const result = formatDateShort("2026-01-15");
+  it("formats a date string with locale-appropriate month name (en)", () => {
+    const result = formatDateShort("2026-01-15", "en");
     expect(result).toContain("15");
     expect(result).toContain("2026");
     expect(result).toMatch(/Jan/);
   });
 
-  it("handles December correctly", () => {
-    const result = formatDateShort("2025-12-31");
+  it("handles December correctly with explicit locale (en)", () => {
+    const result = formatDateShort("2025-12-31", "en");
     expect(result).toContain("31");
     expect(result).toContain("2025");
     expect(result).toMatch(/Dec/);
+  });
+
+  it("respects locale parameter (ja → Japanese month notation)", () => {
+    const result = formatDateShort("2026-01-15", "ja");
+    expect(result).toContain("15");
+    expect(result).toContain("2026");
+    // Japanese formats month with 月 character
+    expect(result).toMatch(/月/);
   });
 });
 
