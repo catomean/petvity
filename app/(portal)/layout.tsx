@@ -1,9 +1,8 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import SidebarNav from "@/components/portal/SidebarNav";
-import { routing } from "@/i18n/routing";
+import { getPortalLocale } from "@/lib/i18n/portal-locale";
 
 export default async function PortalLayout({
   children,
@@ -13,11 +12,7 @@ export default async function PortalLayout({
   const session = await auth();
   if (!session) redirect("/login");
 
-  const cookieStore = await cookies();
-  const rawLocale = cookieStore.get("NEXT_LOCALE")?.value;
-  const locale = (routing.locales as readonly string[]).includes(rawLocale ?? "")
-    ? rawLocale!
-    : routing.defaultLocale;
+  const locale = await getPortalLocale();
   const messages = (await import(`../../messages/${locale}.json`)).default;
 
   return (

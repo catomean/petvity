@@ -11,6 +11,7 @@ import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import { formatDateShort, formatPetAge } from "@/lib/utils/format";
+import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 import { SignalHistoryTimeline } from "@/components/portal/SignalHistoryTimeline";
@@ -35,6 +36,7 @@ export default async function PetProfilePage({ params }: Params) {
     .toISOString()
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
+  const locale = await getPortalLocale();
 
   const [recentMetrics, allVacc, activeMeds, [{ recordCount }], signalHistory] = await Promise.all([
     db.query.healthMetrics.findMany({
@@ -145,7 +147,7 @@ export default async function PetProfilePage({ params }: Params) {
                   {speciesDef?.label ?? pet.species}
                   {pet.breed ? ` · ${pet.breed}` : ""}
                   {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
-                  {age ? ` · ${age}` : pet.birthDate ? ` · Born ${formatDateShort(pet.birthDate)}` : ""}
+                  {age ? ` · ${age}` : pet.birthDate ? ` · Born ${formatDateShort(pet.birthDate, locale)}` : ""}
                 </p>
 
                 {pet.bio && (
@@ -206,7 +208,7 @@ export default async function PetProfilePage({ params }: Params) {
       <DigitalTwinCard twin={twin} petId={pet.id} petName={pet.name} />
 
       {/* Signal History — shown only once at least one transition has been recorded */}
-      <SignalHistoryTimeline rows={signalHistory} />
+      <SignalHistoryTimeline rows={signalHistory} locale={locale} />
 
       {/* Section tabs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">

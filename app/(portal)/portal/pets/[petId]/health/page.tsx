@@ -19,6 +19,7 @@ import { computePetSignal } from "@/lib/domain/pet-signal";
 import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { formatDateShort } from "@/lib/utils/format";
+import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { HealthTrendChart } from "@/components/portal/HealthTrendChart";
 
 type Params = { params: Promise<{ petId: string }> };
@@ -39,6 +40,7 @@ export default async function PetHealthPage({ params }: Params) {
   const todayStr = now.toISOString().slice(0, 10);
   const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const locale = await getPortalLocale();
 
   const [metrics, petVacc] = await Promise.all([
     db.query.healthMetrics.findMany({
@@ -87,7 +89,7 @@ export default async function PetHealthPage({ params }: Params) {
     .slice()
     .reverse()
     .map((m) => ({
-      date: formatDateShort(m.date),
+      date: formatDateShort(m.date, locale),
       weight: m.weightGrams != null ? HEALTH_METRIC_CONFIG.weight.toDisplay(m.weightGrams) : null,
       temperature: m.temperatureCentidegrees != null
         ? HEALTH_METRIC_CONFIG.temperature.toDisplay(m.temperatureCentidegrees)
@@ -187,7 +189,7 @@ export default async function PetHealthPage({ params }: Params) {
                 )}
               </div>
               <span className="text-xs text-[var(--muted)]">
-                {formatDateShort(latest.date)}
+                {formatDateShort(latest.date, locale)}
               </span>
             </div>
 
@@ -333,7 +335,7 @@ export default async function PetHealthPage({ params }: Params) {
                 <tbody>
                   {metrics.map((m) => (
                     <tr key={m.id} className="border-b border-[var(--border)] last:border-0 group">
-                      <td className="py-2 px-3 text-[var(--muted)]">{formatDateShort(m.date)}</td>
+                      <td className="py-2 px-3 text-[var(--muted)]">{formatDateShort(m.date, locale)}</td>
                       <td className="py-2 px-3">
                         {m.weightGrams != null
                           ? `${HEALTH_METRIC_CONFIG.weight.toDisplay(m.weightGrams)} kg`

@@ -71,8 +71,8 @@ export function formatPrice(cents: number): string {
  * Format an ISO datetime string for compact display.
  * e.g. "2026-01-15T10:30:00Z" → "Jan 15, 2026"
  */
-export function formatIsoDate(iso: string): string {
-  return new Date(iso).toLocaleDateString(undefined, {
+export function formatIsoDate(iso: string, locale?: string): string {
+  return new Date(iso).toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -83,8 +83,8 @@ export function formatIsoDate(iso: string): string {
  * Format an ISO datetime string with time for compact display.
  * e.g. "2026-01-15T10:30:00Z" → "Jan 15, 10:30 AM"
  */
-export function formatIsoDateTime(iso: string): string {
-  return new Date(iso).toLocaleString(undefined, {
+export function formatIsoDateTime(iso: string, locale?: string): string {
+  return new Date(iso).toLocaleString(locale, {
     month: "short",
     day: "numeric",
     hour: "2-digit",

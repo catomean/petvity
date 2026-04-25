@@ -10,7 +10,7 @@ type HistoryRow = {
   recordedAt: Date;
 };
 
-export function SignalHistoryTimeline({ rows }: { rows: HistoryRow[] }) {
+export function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow[]; locale?: string }) {
   if (rows.length === 0) return null;
 
   return (
@@ -19,7 +19,7 @@ export function SignalHistoryTimeline({ rows }: { rows: HistoryRow[] }) {
       <ol className="relative border-s border-[var(--border)] space-y-4 ms-2">
         {rows.map((row) => {
           const sig = row.signal as PetWellnessSignal;
-          const date = formatIsoDate(row.recordedAt.toISOString());
+          const date = formatIsoDate(row.recordedAt.toISOString(), locale);
           return (
             <li key={row.id} className="ms-5">
               {/* Timeline dot — color matches signal level */}
