@@ -16,6 +16,7 @@ import {
   ShoppingBag,
   ShoppingCart,
   Heart,
+  Store,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
@@ -44,6 +45,7 @@ export default function SidebarNav({ userName, userEmail, userRole }: Props) {
     { href: "/portal/bookings", icon: CalendarCheck, label: t("bookings") },
     { href: "/portal/shop", icon: ShoppingCart, label: t("shop") },
     { href: "/portal/orders", icon: ShoppingBag, label: t("orders") },
+    { href: "/portal/my-products", icon: Store, label: t("myProducts") },
     { href: "/portal/adopt", icon: Heart, label: t("adopt") },
   ];
 

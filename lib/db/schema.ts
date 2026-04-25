@@ -388,9 +388,12 @@ export const products = pgTable("products", {
   /** Inventory count; null = unlimited */
   stock: integer("stock"),
   isActive: boolean("is_active").notNull().default(true),
+  /** null = admin/platform product; non-null = user-listed product */
+  sellerId: uuid("seller_id").references(() => users.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
-});
+},
+(t) => [index("products_seller_id_idx").on(t.sellerId)]);
 
 export const orders = pgTable("orders", {
   id: uuid("id").primaryKey().defaultRandom(),

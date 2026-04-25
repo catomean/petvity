@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { z } from "zod";
-import { requireAdmin } from "@/lib/auth/guards";
+import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { products, productCategoryEnum } from "@/lib/db/schema";
 
@@ -17,9 +17,9 @@ const patchSchema = z.object({
 
 type Params = { params: Promise<{ productId: string }> };
 
-/** PATCH /api/products/[productId] — update product (admin only) */
+/** PATCH /api/products/[productId] — update product (owner or admin) */
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const { error } = await requireAdmin();
+  const { session, error } = await requireSession();
   if (error) return error;
 
   const { productId } = await params;
@@ -33,10 +33,17 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   }
 
   const db = getInstance();
+  const isAdmin = session.user.role === "admin";
+
+  // Owner can update their own listings; admin can update any product
+  const whereClause = isAdmin
+    ? eq(products.id, productId)
+    : and(eq(products.id, productId), eq(products.sellerId, session.user.id));
+
   const [updated] = await db
     .update(products)
     .set({ ...parsed.data, updatedAt: new Date() })
-    .where(eq(products.id, productId))
+    .where(whereClause)
     .returning();
 
   if (!updated) {
@@ -46,17 +53,23 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   return NextResponse.json({ success: true, data: updated });
 }
 
-/** DELETE /api/products/[productId] — soft-delete (deactivate) product (admin only) */
+/** DELETE /api/products/[productId] — soft-delete (owner or admin) */
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const { error } = await requireAdmin();
+  const { session, error } = await requireSession();
   if (error) return error;
 
   const { productId } = await params;
   const db = getInstance();
+  const isAdmin = session.user.role === "admin";
+
+  const whereClause = isAdmin
+    ? eq(products.id, productId)
+    : and(eq(products.id, productId), eq(products.sellerId, session.user.id));
+
   const [updated] = await db
     .update(products)
     .set({ isActive: false, updatedAt: new Date() })
-    .where(eq(products.id, productId))
+    .where(whereClause)
     .returning();
 
   if (!updated) {

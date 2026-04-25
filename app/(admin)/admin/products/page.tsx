@@ -47,7 +47,7 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     // Admin fetches all products including inactive
-    fetch("/api/products")
+    fetch("/api/admin/products")
       .then((r) => r.json())
       .then(({ data }) => { setProducts(data ?? []); setLoading(false); })
       .catch(() => setLoading(false));
@@ -99,7 +99,8 @@ export default function AdminProductsPage() {
     };
 
     const isEdit = editingId !== null;
-    const url = isEdit ? `/api/products/${editingId}` : "/api/products";
+    // ?platform=true creates a platform product (sellerId=null), not a user listing
+    const url = isEdit ? `/api/products/${editingId}` : "/api/products?platform=true";
     const method = isEdit ? "PATCH" : "POST";
 
     const res = await fetch(url, {

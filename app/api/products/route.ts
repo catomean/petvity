@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { eq, and } from "drizzle-orm";
 import { z } from "zod";
-import { requireAdmin } from "@/lib/auth/guards";
+import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { products, productCategoryEnum } from "@/lib/db/schema";
 
@@ -14,18 +14,38 @@ const createSchema = z.object({
   stock: z.number().int().min(0).nullable().optional(),
 });
 
-/** GET /api/products — list active products (public) */
+/** GET /api/products — list active products (public)
+ *  ?mine=true  → authenticated user's own listings (all statuses)
+ *  ?category=X → filter by category (public, active only)
+ */
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
+  const mine = searchParams.get("mine") === "true";
   const category = searchParams.get("category");
 
   const db = getInstance();
+
+  if (mine) {
+    const { session, error } = await requireSession();
+    if (error) return error;
+    const rows = await db
+      .select()
+      .from(products)
+      .where(eq(products.sellerId, session.user.id))
+      .orderBy(products.createdAt);
+    return NextResponse.json({ success: true, data: rows });
+  }
+
+  // Public: active products only (platform + verified seller listings)
   const rows = await db
     .select()
     .from(products)
     .where(
       category
-        ? and(eq(products.isActive, true), eq(products.category, category as typeof productCategoryEnum.enumValues[number]))
+        ? and(
+            eq(products.isActive, true),
+            eq(products.category, category as typeof productCategoryEnum.enumValues[number]),
+          )
         : eq(products.isActive, true),
     )
     .orderBy(products.name);
@@ -33,9 +53,12 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ success: true, data: rows });
 }
 
-/** POST /api/products — create product (admin only) */
+/** POST /api/products — create product
+ *  Any authenticated user can list a product (sellerId = their userId).
+ *  Admins can also create platform products (sellerId = null via ?platform=true).
+ */
 export async function POST(req: NextRequest) {
-  const { error } = await requireAdmin();
+  const { session, error } = await requireSession();
   if (error) return error;
 
   const body = await req.json().catch(() => null);
@@ -47,7 +70,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const isAdmin = session.user.role === "admin";
+  const platformProduct = isAdmin && req.nextUrl.searchParams.get("platform") === "true";
+
   const db = getInstance();
-  const [product] = await db.insert(products).values(parsed.data).returning();
+  const [product] = await db
+    .insert(products)
+    .values({
+      ...parsed.data,
+      sellerId: platformProduct ? null : session.user.id,
+    })
+    .returning();
+
   return NextResponse.json({ success: true, data: product }, { status: 201 });
 }
