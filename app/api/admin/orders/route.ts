@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
-import { desc, inArray } from "drizzle-orm";
+import { desc, inArray, eq } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { requireAdmin } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { orders, orderItems, products, users } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+
+const sellers = alias(users, "sellers");
 
 /** GET /api/admin/orders — all orders with items + customer info */
 export async function GET() {
@@ -45,9 +47,13 @@ export async function GET() {
       priceCents: orderItems.priceCents,
       productName: products.name,
       productImageUrl: products.imageUrl,
+      sellerId: products.sellerId,
+      sellerName: sellers.name,
+      sellerEmail: sellers.email,
     })
     .from(orderItems)
     .innerJoin(products, eq(products.id, orderItems.productId))
+    .leftJoin(sellers, eq(sellers.id, products.sellerId))
     .where(inArray(orderItems.orderId, orderIds));
 
   const itemsByOrder = new Map<string, typeof items>();

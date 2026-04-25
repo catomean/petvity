@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import {
   ShoppingBag, Clock, CheckCircle, Truck, Package, XCircle,
-  ChevronDown, ChevronUp, User,
+  ChevronDown, ChevronUp, User, Store, BadgeCheck,
 } from "lucide-react";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
 import { formatPrice, formatIsoDate, formatIsoDateTime } from "@/lib/utils/format";
+import { APP } from "@/lib/config/app";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -21,6 +22,9 @@ interface OrderItem {
   priceCents: number;
   productName: string;
   productImageUrl: string | null;
+  sellerId: string | null;
+  sellerName: string | null;
+  sellerEmail: string | null;
 }
 
 interface Order {
@@ -155,7 +159,33 @@ function OrderRow({
                     <Package className="w-3.5 h-3.5 text-[var(--faint)]" />
                   )}
                 </div>
-                <p className="flex-1 text-sm text-[var(--ink)] min-w-0 truncate">{item.productName}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[var(--ink)] truncate">{item.productName}</p>
+                  <p className="flex items-center gap-1 text-xs text-[var(--muted)] truncate">
+                    {item.sellerId ? (
+                      <>
+                        <Store className="w-3 h-3 flex-shrink-0" />
+                        <span className="truncate">
+                          Seller: {item.sellerName ?? item.sellerEmail ?? "Unknown"}
+                          {item.sellerEmail && (
+                            <a
+                              href={`mailto:${item.sellerEmail}`}
+                              onClick={(e) => e.stopPropagation()}
+                              className="ms-1 text-[var(--teal)] hover:underline"
+                            >
+                              ({item.sellerEmail})
+                            </a>
+                          )}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <BadgeCheck className="w-3 h-3 text-[var(--teal)] flex-shrink-0" />
+                        <span>Fulfilled by {APP.name}</span>
+                      </>
+                    )}
+                  </p>
+                </div>
                 <p className="text-xs text-[var(--muted)] flex-shrink-0">
                   {item.quantity} × {formatPrice(item.priceCents)}
                 </p>
