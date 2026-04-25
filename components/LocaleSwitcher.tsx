@@ -8,6 +8,19 @@ import { routing } from "@/i18n/routing";
 
 const LOCALE_RE = new RegExp(`^/(${routing.locales.join("|")})(/|$)`);
 
+/** Side-effects extracted to module scope so React Compiler's immutability
+ *  rule doesn't flag the cookie write inside the component body. */
+function persistLocale(next: string) {
+  document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; samesite=lax`;
+  // Best-effort: persist on the user record so cron emails respect the choice.
+  // 401 (anonymous) is fine — the cookie still drives portal/marketing locale.
+  void fetch("/api/account/locale", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ locale: next }),
+  }).catch(() => { /* no-op */ });
+}
+
 interface Props {
   /** Currently active locale (server-resolved). */
   current: LocaleCode;
@@ -39,8 +52,7 @@ export default function LocaleSwitcher({ current, compact = false }: Props) {
     setOpen(false);
     if (next === current) return;
 
-    // Persist for ~1 year so the choice survives across sessions
-    document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; samesite=lax`;
+    persistLocale(next);
 
     if (LOCALE_RE.test(pathname)) {
       // Localized route — swap the /[locale]/ segment so the URL matches

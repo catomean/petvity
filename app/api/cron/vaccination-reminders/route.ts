@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       petName: pets.name,
       ownerName: users.name,
       ownerEmail: users.email,
+      ownerLocale: users.locale,
     })
     .from(vaccinations)
     .innerJoin(pets, eq(pets.id, vaccinations.petId))
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
       ownerName: row.ownerName ?? "there",
       petName: row.petName,
       vaccinationName: row.vaccinationName,
-      dueDate: formatDateShort(row.nextDueDate),
+      dueDate: formatDateShort(row.nextDueDate, row.ownerLocale ?? undefined),
       petUrl: `${APP_URL}/portal/pets/${row.petId}/vaccinations`,
     });
 

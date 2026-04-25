@@ -91,6 +91,8 @@ export const users = pgTable("users", {
   role: userRoleEnum("role").notNull().default("pet_owner"),
   /** Set when a vet or sitter is manually verified by admin (Phase 2). */
   verifiedAt: timestamp("verified_at", { mode: "date" }),
+  /** Persisted UI locale — set by LocaleSwitcher; null = use defaultLocale. */
+  locale: varchar("locale", { length: 5 }),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 });
 

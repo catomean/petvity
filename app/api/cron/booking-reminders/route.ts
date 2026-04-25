@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
       startDate: bookings.startDate,
       ownerName: owner.name,
       ownerEmail: owner.email,
+      ownerLocale: owner.locale,
       professionalName: professional.name,
     })
     .from(bookings)
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
   for (const row of upcoming) {
     if (!row.ownerEmail) continue;
 
-    const dateLabel = row.startDate.toLocaleDateString("en-US", {
+    const dateLabel = row.startDate.toLocaleDateString(row.ownerLocale ?? undefined, {
       weekday: "long",
       month: "long",
       day: "numeric",
