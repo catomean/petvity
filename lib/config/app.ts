@@ -7,7 +7,7 @@ export const APP = {
 } as const;
 
 export const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://petvity.com";
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://petvity.vercel.app";
 
 export function getAdminEmails(): string[] {
   return (process.env.ADMIN_EMAILS ?? "")
