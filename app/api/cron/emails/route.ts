@@ -29,13 +29,14 @@ export async function POST(req: NextRequest) {
   // Fetch all user emails in one query to avoid N+1
   const userIds = [...new Set(pending.map((item) => item.userId))];
   const userRows = await db
-    .select({ id: users.id, name: users.name, email: users.email })
+    .select({ id: users.id, name: users.name, email: users.email, digestOptOut: users.digestOptOut })
     .from(users)
     .where(inArray(users.id, userIds));
   const userMap = new Map(userRows.map((u) => [u.id, u]));
 
   let sent = 0;
   let failed = 0;
+  let skipped = 0;
 
   for (const item of pending) {
     const templateFn = TEMPLATE_MAP[item.templateKey as TemplateKey];
@@ -43,6 +44,15 @@ export async function POST(req: NextRequest) {
 
     const user = userMap.get(item.userId);
     if (!user?.email) continue;
+
+    // Respect the user's opt-out — drop the queued item so it doesn't
+    // re-process tomorrow. Welcome emails are non-critical; no need to
+    // keep audit history of cancelled ones.
+    if (user.digestOptOut) {
+      await db.delete(emailQueue).where(eq(emailQueue.id, item.id));
+      skipped++;
+      continue;
+    }
 
     try {
       const { subject, html } = templateFn(item.payload);
@@ -63,5 +73,5 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return NextResponse.json({ success: true, data: { sent, failed } });
+  return NextResponse.json({ success: true, data: { sent, failed, skipped } });
 }

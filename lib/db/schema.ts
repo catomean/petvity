@@ -93,6 +93,8 @@ export const users = pgTable("users", {
   verifiedAt: timestamp("verified_at", { mode: "date" }),
   /** Persisted UI locale — set by LocaleSwitcher; null = use defaultLocale. */
   locale: varchar("locale", { length: 5 }),
+  /** When true, skip the welcome email digest (day-1/3/7 onboarding sequence). */
+  digestOptOut: boolean("digest_opt_out").notNull().default(false),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 });
 
@@ -140,7 +142,6 @@ export const ownerProfiles = pgTable("owner_profiles", {
   country: varchar("country", { length: 2 }),
   timezone: varchar("timezone", { length: 60 }),
   bio: text("bio"),
-  digestOptOut: boolean("digest_opt_out").notNull().default(false),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });

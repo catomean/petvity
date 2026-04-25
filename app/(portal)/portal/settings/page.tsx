@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { User, Lock, CheckCircle } from "lucide-react";
+import { User, Lock, CheckCircle, Mail } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 import { userRoleLabel } from "@/lib/config/users";
@@ -35,6 +35,38 @@ export default function SettingsPage() {
       startTransition(() => router.refresh());
     } else {
       setProfileMsg({ ok: false, text: data.error ?? "Update failed." });
+    }
+  }
+
+  /* ── Email preferences section ───────────────────────────────────────── */
+  const [digestOptOut, setDigestOptOut] = useState<boolean | null>(null);
+  const [emailSaving, setEmailSaving] = useState(false);
+  const [emailMsg, setEmailMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/account")
+      .then((r) => r.json())
+      .then(({ data }) => setDigestOptOut(Boolean(data?.digestOptOut)))
+      .catch(() => setDigestOptOut(false));
+  }, []);
+
+  async function toggleWelcomeDigest(next: boolean) {
+    setDigestOptOut(next);
+    setEmailMsg(null);
+    setEmailSaving(true);
+    const res = await fetch("/api/account", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ digestOptOut: next }),
+    });
+    const data = await res.json();
+    setEmailSaving(false);
+    if (data.success) {
+      setEmailMsg({ ok: true, text: next ? "Onboarding emails turned off." : "Onboarding emails turned on." });
+    } else {
+      // Roll back UI on failure
+      setDigestOptOut(!next);
+      setEmailMsg({ ok: false, text: data.error ?? "Update failed." });
     }
   }
 
@@ -143,6 +175,40 @@ export default function SettingsPage() {
             {profileSaving ? "Saving…" : "Save changes"}
           </button>
         </form>
+      </div>
+
+      {/* ── Email preferences ───────────────────────────────────────── */}
+      <div className="card p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
+            <Mail className="w-4 h-4 text-[var(--teal)]" />
+          </div>
+          <h2 className="font-semibold text-[var(--ink)]">Email preferences</h2>
+        </div>
+
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={digestOptOut === true}
+            disabled={digestOptOut === null || emailSaving}
+            onChange={(e) => toggleWelcomeDigest(e.target.checked)}
+            className="mt-0.5 w-4 h-4 rounded border-[var(--border)] text-[var(--teal)] focus:ring-[var(--teal)]"
+          />
+          <span className="text-sm">
+            <span className="font-medium text-[var(--ink)] block">Skip the onboarding email series</span>
+            <span className="text-[var(--muted)] block mt-0.5">
+              You&apos;ll still receive transactional emails for your pets — vaccination reminders,
+              health alerts, order confirmations — these are necessary for the service.
+            </span>
+          </span>
+        </label>
+
+        {emailMsg && (
+          <p className={`mt-3 ${emailMsg.ok ? "alert-success flex items-center gap-2" : "alert-error"}`}>
+            {emailMsg.ok && <CheckCircle className="w-4 h-4 flex-shrink-0" />}
+            {emailMsg.text}
+          </p>
+        )}
       </div>
 
       {/* ── Password ─────────────────────────────────────────────────── */}

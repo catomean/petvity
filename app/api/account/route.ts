@@ -15,6 +15,7 @@ const updateAccountSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   currentPassword: z.string().optional(),
   newPassword: z.string().min(PASSWORD_MIN_LENGTH).optional(),
+  digestOptOut: z.boolean().optional(),
 }).refine(
   (d) => !(d.newPassword && !d.currentPassword),
   { message: "Current password is required to set a new password", path: ["currentPassword"] },
@@ -76,6 +77,29 @@ export async function POST(req: NextRequest) {
   }
 }
 
+/** GET /api/account — returns the current user's editable preferences. */
+export async function GET() {
+  const { session, error } = await requireSession();
+  if (error) return error;
+
+  const db = getInstance();
+  const [user] = await db
+    .select({
+      name: users.name,
+      email: users.email,
+      locale: users.locale,
+      digestOptOut: users.digestOptOut,
+    })
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1);
+
+  if (!user) {
+    return NextResponse.json({ success: false, error: "Account not found" }, { status: 404 });
+  }
+  return NextResponse.json({ success: true, data: user });
+}
+
 export async function PATCH(req: NextRequest) {
   const { session, error } = await requireSession();
   if (error) return error;
@@ -100,6 +124,10 @@ export async function PATCH(req: NextRequest) {
 
     if (parsed.data.name) {
       updates.name = parsed.data.name.trim();
+    }
+
+    if (typeof parsed.data.digestOptOut === "boolean") {
+      updates.digestOptOut = parsed.data.digestOptOut;
     }
 
     if (parsed.data.newPassword) {
