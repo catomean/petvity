@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import SidebarNav from "@/components/portal/SidebarNav";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
+import type { LocaleCode } from "@/lib/config/locales";
 
 export default async function PortalLayout({
   children,
@@ -22,6 +23,7 @@ export default async function PortalLayout({
           userName={session.user.name}
           userEmail={session.user.email}
           userRole={session.user.role}
+          locale={locale as LocaleCode}
         />
         {/* Offset for desktop sidebar (w-60) and mobile top/bottom bars */}
         <div className="lg:ps-60">

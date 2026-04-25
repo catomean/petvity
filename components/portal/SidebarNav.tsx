@@ -25,13 +25,17 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
+import LocaleSwitcher from "@/components/LocaleSwitcher";
+import type { LocaleCode } from "@/lib/config/locales";
+
 interface Props {
   userName?: string | null;
   userEmail?: string | null;
   userRole?: string | null;
+  locale: LocaleCode;
 }
 
-export default function SidebarNav({ userName, userEmail, userRole }: Props) {
+export default function SidebarNav({ userName, userEmail, userRole, locale }: Props) {
   const pathname = usePathname();
   const t = useTranslations("portal");
   const initials = userName?.[0]?.toUpperCase() ?? "?";
@@ -117,6 +121,7 @@ export default function SidebarNav({ userName, userEmail, userRole }: Props) {
 
         {/* Bottom section */}
         <div className="px-3 pb-3 border-t border-[var(--border)] pt-3 space-y-0.5">
+          <LocaleSwitcher current={locale} />
           <Link
             href="/portal/settings"
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium no-underline transition-colors ${

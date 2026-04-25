@@ -7,10 +7,13 @@ import {
   PawPrint, Menu, X, ChevronDown, Search, ShoppingBag, Heart,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import LocaleSwitcher from "@/components/LocaleSwitcher";
+import type { LocaleCode } from "@/lib/config/locales";
 
 export default function MarketingNav() {
   const t = useTranslations("nav");
+  const locale = useLocale() as LocaleCode;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [featuresOpen, setFeaturesOpen] = useState(false);
@@ -171,6 +174,7 @@ export default function MarketingNav() {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
+          <div className="w-32"><LocaleSwitcher current={locale} /></div>
           <Link
             href="/login"
             className="text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] transition-colors no-underline"
@@ -261,6 +265,9 @@ export default function MarketingNav() {
               >
                 {t("getStartedFree")}
               </Link>
+              <div className="pt-2 border-t border-[var(--border)] mt-1">
+                <LocaleSwitcher current={locale} />
+              </div>
             </div>
           </div>
         </div>
