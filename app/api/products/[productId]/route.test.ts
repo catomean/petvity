@@ -5,13 +5,13 @@ import { makeMockDb } from "@/lib/test-helpers/db-mock";
 /* ─── Module mocks ─────────────────────────────────────────────────────────── */
 
 vi.mock("@/lib/db", () => ({ getInstance: vi.fn() }));
-vi.mock("@/lib/auth/guards", () => ({ requireAdmin: vi.fn() }));
+vi.mock("@/lib/auth/guards", () => ({ requireSession: vi.fn() }));
 
 /* ─── Imports after mocks ──────────────────────────────────────────────────── */
 
 import { PATCH, DELETE } from "./route";
 import { getInstance } from "@/lib/db";
-import { requireAdmin } from "@/lib/auth/guards";
+import { requireSession } from "@/lib/auth/guards";
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
@@ -50,13 +50,13 @@ describe("PATCH /api/products/[productId]", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(requireAdmin).mockResolvedValue({ session: { user: { id: "admin-1", role: "admin" } } as any, error: null });
+    vi.mocked(requireSession).mockResolvedValue({ session: { user: { id: "admin-1", role: "admin" } } as any, error: null });
   });
 
-  it("returns 401 when not admin", async () => {
-    vi.mocked(requireAdmin).mockResolvedValueOnce({
-      session: null,
-      error: NextResponse.json({ success: false, error: "Forbidden" }, { status: 401 }),
+  it("returns 401 when not authenticated", async () => {
+    vi.mocked(requireSession).mockResolvedValueOnce({
+      session: null as any,
+      error: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
     });
     const res = await PATCH(makePatchRequest({ name: "New Name" }), makeParams());
     expect(res.status).toBe(401);
@@ -90,13 +90,13 @@ describe("DELETE /api/products/[productId]", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(requireAdmin).mockResolvedValue({ session: { user: { id: "admin-1", role: "admin" } } as any, error: null });
+    vi.mocked(requireSession).mockResolvedValue({ session: { user: { id: "admin-1", role: "admin" } } as any, error: null });
   });
 
-  it("returns 401 when not admin", async () => {
-    vi.mocked(requireAdmin).mockResolvedValueOnce({
-      session: null,
-      error: NextResponse.json({ success: false, error: "Forbidden" }, { status: 401 }),
+  it("returns 401 when not authenticated", async () => {
+    vi.mocked(requireSession).mockResolvedValueOnce({
+      session: null as any,
+      error: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
     });
     const res = await DELETE(makeDeleteRequest(), makeParams());
     expect(res.status).toBe(401);
