@@ -43,8 +43,7 @@ export async function refreshSignalCache(petId: string, now = new Date()): Promi
   });
 
   // Only record a history row when the signal actually changes — not on every refresh.
-  // Wrapped in try/catch: the pet_signal_history table requires pnpm db:push before it
-  // exists in production. The history insert failing must not block the signal cache update.
+  // History insert is non-critical: a transient failure must not block the signal cache update.
   if (pet.lastKnownSignal !== signal.signal) {
     try {
       await db.insert(petSignalHistory).values({
@@ -55,7 +54,7 @@ export async function refreshSignalCache(petId: string, now = new Date()): Promi
         recordedAt: now,
       });
     } catch {
-      // Table not yet created — history not written, but cache update still proceeds
+      // Non-fatal — cache update still proceeds
     }
   }
 

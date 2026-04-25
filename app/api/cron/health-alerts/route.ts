@@ -113,12 +113,12 @@ export async function POST(req: NextRequest) {
   }
 
   // Bulk-insert signal history for all transitions — 0 or 1 query regardless of pet count.
-  // Wrapped in try/catch: table requires pnpm db:push before it exists in production.
+  // History insert is non-critical: a transient failure must not block the signal cache update.
   if (historyRows.length > 0) {
     try {
       await db.insert(petSignalHistory).values(historyRows);
     } catch {
-      // Table not yet created — history not written, but signal cache update still proceeds
+      // Non-fatal — cache update still proceeds
     }
   }
 
