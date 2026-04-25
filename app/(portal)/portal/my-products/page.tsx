@@ -283,6 +283,7 @@ export default function MyProductsPage() {
               {/* Icon placeholder */}
               <div className="w-12 h-12 rounded-xl bg-[var(--off)] flex items-center justify-center flex-shrink-0">
                 {p.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={p.imageUrl} alt={p.name} className="w-12 h-12 rounded-xl object-cover" />
                 ) : (
                   <Package className="w-5 h-5 text-[var(--muted)]" />
