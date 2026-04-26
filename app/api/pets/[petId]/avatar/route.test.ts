@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { NextRequest, NextResponse } from "next/server";
 import { makeMockDb } from "@/lib/test-helpers/db-mock";
 
@@ -43,6 +43,8 @@ function makeFormRequest(hasFile: boolean) {
 
 /* ─── Tests ──────────────────────────────────────────────────────────────── */
 
+const ORIGINAL_BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
+
 describe("POST /api/pets/[petId]/avatar", () => {
   let db: ReturnType<typeof makeMockDb>;
 
@@ -51,6 +53,14 @@ describe("POST /api/pets/[petId]/avatar", () => {
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
     vi.mocked(requireSession).mockResolvedValue({ session: OWNER_SESSION as any, error: null });
+    // Token must be set for the route to reach the upload path; individual tests
+    // override this to verify the missing-token branch.
+    process.env.BLOB_READ_WRITE_TOKEN = "test-token";
+  });
+
+  afterEach(() => {
+    if (ORIGINAL_BLOB_TOKEN === undefined) delete process.env.BLOB_READ_WRITE_TOKEN;
+    else process.env.BLOB_READ_WRITE_TOKEN = ORIGINAL_BLOB_TOKEN;
   });
 
   it("returns 401 when unauthenticated", async () => {
@@ -83,6 +93,48 @@ describe("POST /api/pets/[petId]/avatar", () => {
     const body = await res.json();
     expect(body.success).toBe(false);
     expect(body.error).toContain("file");
+  });
+
+  it("returns 503 when BLOB_READ_WRITE_TOKEN is not configured", async () => {
+    delete process.env.BLOB_READ_WRITE_TOKEN;
+    const res = await POST(makeFormRequest(true), ROUTE_CONTEXT);
+    expect(res.status).toBe(503);
+    const body = await res.json();
+    expect(body.error).toMatch(/aren't configured/);
+    // Must short-circuit before any DB or Blob work
+    expect(db.query.pets.findFirst).not.toHaveBeenCalled();
+    expect(vi.mocked(put)).not.toHaveBeenCalled();
+  });
+
+  it("returns 413 when the uploaded file exceeds the size cap", async () => {
+    db.query.pets.findFirst.mockResolvedValueOnce(MOCK_PET);
+    const huge = new File(["x".repeat(6 * 1024 * 1024)], "big.jpg", { type: "image/jpeg" });
+    const form = new FormData();
+    form.append("file", huge);
+    const req = new NextRequest(`http://localhost/api/pets/${PET_ID}/avatar`, { method: "POST", body: form });
+    const res = await POST(req, ROUTE_CONTEXT);
+    expect(res.status).toBe(413);
+    expect(vi.mocked(put)).not.toHaveBeenCalled();
+  });
+
+  it("returns 415 when the file type is not an accepted image format", async () => {
+    db.query.pets.findFirst.mockResolvedValueOnce(MOCK_PET);
+    const pdf = new File(["%PDF-1.4"], "doc.pdf", { type: "application/pdf" });
+    const form = new FormData();
+    form.append("file", pdf);
+    const req = new NextRequest(`http://localhost/api/pets/${PET_ID}/avatar`, { method: "POST", body: form });
+    const res = await POST(req, ROUTE_CONTEXT);
+    expect(res.status).toBe(415);
+    expect(vi.mocked(put)).not.toHaveBeenCalled();
+  });
+
+  it("returns 502 with a friendly message when the Blob upload throws", async () => {
+    db.query.pets.findFirst.mockResolvedValueOnce(MOCK_PET);
+    vi.mocked(put).mockRejectedValueOnce(new Error("Blob service unavailable"));
+    const res = await POST(makeFormRequest(true), ROUTE_CONTEXT);
+    expect(res.status).toBe(502);
+    const body = await res.json();
+    expect(body.error).toMatch(/try again/i);
   });
 
   it("returns 200 with blob URL on success", async () => {
