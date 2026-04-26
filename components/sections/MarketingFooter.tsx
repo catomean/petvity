@@ -44,9 +44,9 @@ export default async function MarketingFooter() {
     {
       heading: t("sections.legal"),
       links: [
-        { label: t("links.privacyPolicy"),  href: "#" },
-        { label: t("links.termsOfService"), href: "#" },
-        { label: t("links.cookiePolicy"),   href: "#" },
+        { label: t("links.privacyPolicy"),  href: "/legal/privacy" },
+        { label: t("links.termsOfService"), href: "/legal/terms" },
+        { label: t("links.cookiePolicy"),   href: "/legal/cookies" },
       ],
     },
   ];
@@ -102,13 +102,13 @@ export default async function MarketingFooter() {
             © {APP.foundingYear} {APP.name}. {t("bottom.rights")}
           </p>
           <div className="flex items-center gap-6">
-            <Link href="#" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
+            <Link href="/legal/privacy" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
               {t("bottom.privacy")}
             </Link>
-            <Link href="#" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
+            <Link href="/legal/terms" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
               {t("bottom.terms")}
             </Link>
-            <Link href="#" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
+            <Link href="/legal/cookies" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
               {t("bottom.cookies")}
             </Link>
           </div>

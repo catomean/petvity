@@ -243,3 +243,38 @@ body {
   padding: 10px 14px;
   font-size: 13px;
 }
+
+/* ── Long-form legal copy — Privacy / Terms / Cookies pages ─────────────── */
+.prose-legal h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 28px;
+  margin-bottom: 8px;
+}
+.prose-legal h2:first-child { margin-top: 0; }
+.prose-legal h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+.prose-legal p { font-size: 15px; }
+.prose-legal ul {
+  list-style: disc;
+  padding-inline-start: 22px;
+  font-size: 15px;
+}
+.prose-legal ul li { margin-bottom: 4px; }
+.prose-legal a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-legal code {
+  background: var(--off);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
