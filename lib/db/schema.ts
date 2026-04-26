@@ -199,7 +199,10 @@ export const healthMetrics = pgTable(
     anxiety: integer("anxiety"),
     socialization: integer("socialization"),
     notes: text("notes"),
-    loggedBy: uuid("logged_by").references(() => users.id),
+    /** SET NULL on user delete — the metric belongs to the pet (owner cascade
+     *  handles its lifecycle); deleting the *logger* (e.g. a vet who entered
+     *  it on the owner's behalf) must not erase the owner's history. */
+    loggedBy: uuid("logged_by").references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   },
   (t) => [uniqueIndex("health_metrics_pet_date_idx").on(t.petId, t.date)],

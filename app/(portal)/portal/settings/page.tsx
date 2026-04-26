@@ -3,7 +3,7 @@
 import { useState, useTransition, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { User, Lock, CheckCircle, Mail, AlertTriangle, X } from "lucide-react";
+import { User, Lock, CheckCircle, Mail, AlertTriangle, X, Download } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 import { userRoleLabel } from "@/lib/config/users";
@@ -309,6 +309,28 @@ export default function SettingsPage() {
             {pwSaving ? "Updating…" : "Update password"}
           </button>
         </form>
+      </div>
+
+      {/* ── Data export ─────────────────────────────────────────────── */}
+      <div className="card p-6">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
+            <Download className="w-4 h-4 text-[var(--teal)]" />
+          </div>
+          <h2 className="font-semibold text-[var(--ink)]">Your data</h2>
+        </div>
+        <p className="text-sm text-[var(--muted)] mb-4">
+          Download a copy of everything stored under your account — pets,
+          health logs, vaccinations, records, bookings, orders, listings,
+          and adoption applications. Delivered as a JSON file.
+        </p>
+        <a
+          href="/api/account/export"
+          download
+          className="btn-outline inline-flex items-center gap-2"
+        >
+          <Download className="w-4 h-4" /> Download my data
+        </a>
       </div>
 
       {/* ── Danger zone ─────────────────────────────────────────────── */}
