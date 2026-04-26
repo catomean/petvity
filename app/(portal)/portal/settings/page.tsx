@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useTransition, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { User, Lock, CheckCircle, Mail } from "lucide-react";
+import { User, Lock, CheckCircle, Mail, AlertTriangle, X } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 import { userRoleLabel } from "@/lib/config/users";
@@ -102,6 +102,39 @@ export default function SettingsPage() {
     } else {
       setPwMsg({ ok: false, text: data.error ?? "Password change failed." });
     }
+  }
+
+  /* ── Account deletion section ────────────────────────────────────────── */
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePw, setDeletePw] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteErr, setDeleteErr] = useState("");
+
+  function openDeleteModal() {
+    setDeletePw("");
+    setDeleteConfirm("");
+    setDeleteErr("");
+    setShowDeleteModal(true);
+  }
+
+  async function deleteAccount(e: React.FormEvent) {
+    e.preventDefault();
+    setDeleteErr("");
+    setDeleting(true);
+    const res = await fetch("/api/account", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentPassword: deletePw, confirm: deleteConfirm }),
+    });
+    const data = await res.json();
+    if (!data.success) {
+      setDeleting(false);
+      setDeleteErr(data.error ?? "Deletion failed.");
+      return;
+    }
+    // Account is gone — sign out and land on the marketing home in default locale.
+    await signOut({ callbackUrl: "/en" });
   }
 
   if (!session) return null;
@@ -277,6 +310,104 @@ export default function SettingsPage() {
           </button>
         </form>
       </div>
+
+      {/* ── Danger zone ─────────────────────────────────────────────── */}
+      <div className="card p-6 border-[var(--danger)]">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 rounded-lg bg-[var(--danger-bg)] flex items-center justify-center">
+            <AlertTriangle className="w-4 h-4 text-[var(--danger-text)]" />
+          </div>
+          <h2 className="font-semibold text-[var(--danger-text)]">Danger zone</h2>
+        </div>
+        <p className="text-sm text-[var(--muted)] mb-4">
+          Deleting your account permanently removes your profile and all related
+          data — pets, health logs, vaccinations, records, bookings, orders,
+          listings, and adoption applications. This cannot be undone.
+        </p>
+        <button
+          type="button"
+          onClick={openDeleteModal}
+          className="text-sm font-medium px-4 py-2 rounded-lg border border-[var(--danger)] text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors"
+        >
+          Delete my account
+        </button>
+      </div>
+
+      {/* ── Delete confirmation modal ───────────────────────────────── */}
+      {showDeleteModal && (
+        <div
+          className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+          onClick={(e) => e.target === e.currentTarget && setShowDeleteModal(false)}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-[var(--danger-text)] flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5" /> Delete account?
+              </h3>
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="p-1.5 rounded-lg hover:bg-[var(--off)] transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-sm text-[var(--ink2)] mb-4 leading-relaxed">
+              This permanently deletes your account, all your pets, health
+              records, orders, listings, and applications. <strong>This cannot
+              be undone.</strong>
+            </p>
+
+            <form onSubmit={deleteAccount} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                  Current password
+                </label>
+                <PasswordInput
+                  value={deletePw}
+                  onChange={setDeletePw}
+                  autoComplete="current-password"
+                  required
+                  placeholder="Confirm your password"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                  Type <span className="font-mono text-[var(--danger-text)]">DELETE</span> to confirm
+                </label>
+                <input
+                  className="form-input"
+                  value={deleteConfirm}
+                  onChange={(e) => setDeleteConfirm(e.target.value)}
+                  placeholder="DELETE"
+                  required
+                />
+              </div>
+
+              {deleteErr && <p className="alert-error">{deleteErr}</p>}
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteModal(false)}
+                  className="btn-outline"
+                  disabled={deleting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={deleting || deleteConfirm !== "DELETE" || !deletePw}
+                  className="text-sm font-medium px-4 py-2 rounded-lg bg-[var(--danger)] text-white hover:bg-red-700 disabled:opacity-60 transition-colors"
+                >
+                  {deleting ? "Deleting…" : "Delete forever"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

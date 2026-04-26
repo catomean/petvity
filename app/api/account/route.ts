@@ -158,3 +158,55 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ success: false, error: "Update failed" }, { status: 500 });
   }
 }
+
+const deleteAccountSchema = z.object({
+  /** For credentials accounts: re-confirm the password before deletion. */
+  currentPassword: z.string().optional(),
+  /** Require typing the literal string "DELETE" to guard against accidental clicks. */
+  confirm: z.literal("DELETE"),
+});
+
+/** DELETE /api/account — permanently delete the user and all related data.
+ *  GDPR right-to-erasure. Cascade FKs handle pets, health metrics, vaccinations,
+ *  medications, records, bookings, reviews, orders, products listed by them,
+ *  adoption listings/applications, signal history, and the email queue. */
+export async function DELETE(req: NextRequest) {
+  const { session, error } = await requireSession();
+  if (error) return error;
+
+  const body = await req.json().catch(() => null);
+  const parsed = deleteAccountSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { success: false, error: "Type DELETE in the confirmation field" },
+      { status: 400 },
+    );
+  }
+
+  const db = getInstance();
+  const user = await db.query.users.findFirst({ where: eq(users.id, session.user.id) });
+  if (!user) {
+    return NextResponse.json({ success: false, error: "Account not found" }, { status: 404 });
+  }
+
+  // For credentials accounts, require the current password as a re-auth check.
+  // OAuth accounts skip this since they have no local password.
+  if (user.password) {
+    if (!parsed.data.currentPassword) {
+      return NextResponse.json(
+        { success: false, error: "Current password is required" },
+        { status: 400 },
+      );
+    }
+    const valid = await bcrypt.compare(parsed.data.currentPassword, user.password);
+    if (!valid) {
+      return NextResponse.json(
+        { success: false, error: "Current password is incorrect" },
+        { status: 400 },
+      );
+    }
+  }
+
+  await db.delete(users).where(eq(users.id, session.user.id));
+  return NextResponse.json({ success: true });
+}

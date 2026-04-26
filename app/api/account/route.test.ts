@@ -18,7 +18,7 @@ vi.mock("bcryptjs", () => ({
 
 /* ─── Imports after mocks ──────────────────────────────────────────────────── */
 
-import { POST, PATCH } from "./route";
+import { POST, PATCH, DELETE } from "./route";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import bcrypt from "bcryptjs";
@@ -51,6 +51,14 @@ function makePostRequest(body: unknown) {
 function makePatchRequest(body: unknown) {
   return new NextRequest("http://localhost/api/account", {
     method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+function makeDeleteRequest(body: unknown) {
+  return new NextRequest("http://localhost/api/account", {
+    method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
@@ -208,5 +216,68 @@ describe("PATCH /api/account", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
+  });
+});
+
+describe("DELETE /api/account", () => {
+  let db: ReturnType<typeof makeMockDb>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    db = makeMockDb();
+    vi.mocked(getInstance).mockReturnValue(db as any);
+    vi.mocked(requireSession).mockResolvedValue({ session: OWNER_SESSION as any, error: null });
+  });
+
+  it("returns 401 when not authenticated", async () => {
+    vi.mocked(requireSession).mockResolvedValueOnce({
+      session: null as any,
+      error: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
+    });
+    const res = await DELETE(makeDeleteRequest({ confirm: "DELETE", currentPassword: "x" }));
+    expect(res.status).toBe(401);
+  });
+
+  it("returns 400 when confirm field is missing or wrong", async () => {
+    const res1 = await DELETE(makeDeleteRequest({ currentPassword: "x" }));
+    expect(res1.status).toBe(400);
+
+    const res2 = await DELETE(makeDeleteRequest({ confirm: "delete", currentPassword: "x" })); // wrong case
+    expect(res2.status).toBe(400);
+  });
+
+  it("returns 400 when password is missing for credentials account", async () => {
+    db._queryFindFirst.mockResolvedValueOnce(MOCK_USER_WITH_PASSWORD);
+    const res = await DELETE(makeDeleteRequest({ confirm: "DELETE" }));
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toMatch(/password is required/i);
+  });
+
+  it("returns 400 when current password is wrong", async () => {
+    vi.mocked(bcrypt.compare).mockResolvedValueOnce(false as never);
+    db._queryFindFirst.mockResolvedValueOnce(MOCK_USER_WITH_PASSWORD);
+    const res = await DELETE(makeDeleteRequest({ confirm: "DELETE", currentPassword: "wrong" }));
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error).toMatch(/incorrect/i);
+  });
+
+  it("skips password check for OAuth accounts (no local password)", async () => {
+    db._queryFindFirst.mockResolvedValueOnce(MOCK_USER_OAUTH);
+    const res = await DELETE(makeDeleteRequest({ confirm: "DELETE" }));
+    expect(res.status).toBe(200);
+    expect(db.delete).toHaveBeenCalled();
+    expect(bcrypt.compare).not.toHaveBeenCalled();
+  });
+
+  it("deletes the user when password is correct and confirm matches", async () => {
+    vi.mocked(bcrypt.compare).mockResolvedValueOnce(true as never);
+    db._queryFindFirst.mockResolvedValueOnce(MOCK_USER_WITH_PASSWORD);
+    const res = await DELETE(makeDeleteRequest({ confirm: "DELETE", currentPassword: "securepass123" }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.success).toBe(true);
+    expect(db.delete).toHaveBeenCalled();
   });
 });
