@@ -1,7 +1,11 @@
 import { APP, APP_URL } from "@/lib/config/app";
 import { HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
 
-const base = (content: string) => `
+/** When unsubscribeUrl is provided, an "Unsubscribe" link is rendered in the footer.
+ *  Only welcome-series emails should pass it; transactional emails (vaccination
+ *  reminders, health alerts, order confirmations) intentionally have no opt-out
+ *  affordance because they're necessary for the service the user signed up for. */
+const base = (content: string, unsubscribeUrl?: string) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,6 +32,7 @@ const base = (content: string) => `
     <div class="footer">
       <p>${APP.name} · <a href="${APP_URL}">${APP_URL.replace("https://", "")}</a></p>
       <p>Questions? <a href="mailto:${APP.supportEmail}">${APP.supportEmail}</a></p>
+      ${unsubscribeUrl ? `<p style="margin-top:12px;"><a href="${unsubscribeUrl}">Unsubscribe from onboarding emails</a></p>` : ""}
     </div>
   </div>
 </body>
@@ -35,7 +40,11 @@ const base = (content: string) => `
 
 // ─── Welcome ──────────────────────────────────────────────────────────────────
 
-export function ownerWelcome(data: { name: string }) {
+/** Welcome-series payload — unsubscribeUrl is injected at send time
+ *  (cron looks up user; immediate POST /api/account builds it from user.id). */
+type WelcomePayload = { name: string; unsubscribeUrl?: string };
+
+export function ownerWelcome(data: WelcomePayload) {
   return {
     subject: `Welcome to ${APP.name}!`,
     html: base(`
@@ -44,22 +53,22 @@ export function ownerWelcome(data: { name: string }) {
       <p>Add your first pet to begin tracking their health and well-being.</p>
       <a class="btn" href="${APP_URL}/portal/pets/new">Add your first pet</a>
       <p>If you have any questions, reply to this email and we'll be happy to help.</p>
-    `),
+    `, data.unsubscribeUrl),
   };
 }
 
-export function ownerAddPet(data: { name: string }) {
+export function ownerAddPet(data: WelcomePayload) {
   return {
     subject: `${APP.name}: Ready to add your first pet?`,
     html: base(`
       <h2>Hi ${data.name},</h2>
       <p>Adding your pet only takes a minute. Give them a name, choose their species, and you're ready to start tracking.</p>
       <a class="btn" href="${APP_URL}/portal/pets/new">Add a pet now</a>
-    `),
+    `, data.unsubscribeUrl),
   };
 }
 
-export function ownerHealthTracking(data: { name: string }) {
+export function ownerHealthTracking(data: WelcomePayload) {
   return {
     subject: `${APP.name}: Start tracking your pet's health`,
     html: base(`
@@ -67,11 +76,11 @@ export function ownerHealthTracking(data: { name: string }) {
       <p>Did you know you can track your pet's weight, temperature, mood, and energy levels right in ${APP.name}?</p>
       <p>Daily check-ins take less than 2 minutes and help you spot changes early.</p>
       <a class="btn" href="${APP_URL}/portal/checkin">Log today's check-in</a>
-    `),
+    `, data.unsubscribeUrl),
   };
 }
 
-export function ownerWeekOne(data: { name: string }) {
+export function ownerWeekOne(data: WelcomePayload) {
   return {
     subject: `${APP.name}: Your first week`,
     html: base(`
@@ -86,7 +95,7 @@ export function ownerWeekOne(data: { name: string }) {
         <li>Share your pet's public profile with family and friends</li>
       </ul>
       <a class="btn" href="${APP_URL}/portal/dashboard">Go to your dashboard</a>
-    `),
+    `, data.unsubscribeUrl),
   };
 }
 

@@ -30,6 +30,10 @@ const PRIVATE_API_PREFIXES = [
 // Non-localized auth pages — bypass intl routing entirely
 const AUTH_PATHS = ["/login", "/register", "/forgot-password", "/reset-password"];
 
+// Non-localized public pages — bypass intl routing AND don't redirect logged-in users.
+// /unsubscribe is here so the email link works whether the recipient is logged in or not.
+const PUBLIC_BYPASS_PATHS = ["/unsubscribe"];
+
 export default auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
@@ -63,6 +67,11 @@ export default auth((req) => {
   // Redirect already-logged-in users to their dashboard.
   if (AUTH_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
     if (session) return NextResponse.redirect(new URL(dest, req.url));
+    return NextResponse.next();
+  }
+
+  // ── Non-localized public pages — pass through regardless of auth state ──
+  if (PUBLIC_BYPASS_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
     return NextResponse.next();
   }
 

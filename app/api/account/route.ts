@@ -10,6 +10,7 @@ import { BCRYPT_SALT_ROUNDS, PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { sendEmail } from "@/lib/email";
 import { ownerWelcome } from "@/lib/email/templates";
 import { requireSession } from "@/lib/auth/guards";
+import { makeUnsubscribeUrl } from "@/lib/auth/unsubscribe-token";
 
 const updateAccountSchema = z.object({
   name: z.string().min(1).max(100).optional(),
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
     await enqueueWelcomeSequence(user.id, { name, email: email.toLowerCase() });
 
     // Send the welcome email immediately (don't wait for cron)
-    const welcome = ownerWelcome({ name });
+    const welcome = ownerWelcome({ name, unsubscribeUrl: makeUnsubscribeUrl(user.id) });
     await sendEmail({ to: email.toLowerCase(), ...welcome }).catch((err) =>
       console.error("[account] Welcome email failed:", err),
     );
