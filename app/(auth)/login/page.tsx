@@ -5,12 +5,12 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PasswordInput } from "@/components/portal/PasswordInput";
+import { safeReturnTo } from "@/lib/auth/safe-redirect";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawReturnTo = searchParams.get("returnTo") ?? "";
-  const returnTo = rawReturnTo.startsWith("/") ? rawReturnTo : "/portal/dashboard";
+  const returnTo = safeReturnTo(searchParams.get("returnTo"), "/portal/dashboard");
   const emailRef = useRef<HTMLInputElement>(null);
 
   const [email, setEmail] = useState("");

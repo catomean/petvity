@@ -7,6 +7,7 @@ import Link from "next/link";
 import { PawPrint, Stethoscope, Heart } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
+import { safeReturnTo } from "@/lib/auth/safe-redirect";
 
 type IntendedRole = "pet_owner" | "veterinarian" | "pet_sitter";
 
@@ -19,8 +20,10 @@ const ROLE_OPTIONS: { id: IntendedRole; icon: React.ElementType; label: string; 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const rawReturnTo = searchParams.get("returnTo") ?? searchParams.get("next") ?? "";
-  const returnTo = rawReturnTo.startsWith("/") ? rawReturnTo : "/portal/dashboard";
+  const returnTo = safeReturnTo(
+    searchParams.get("returnTo") ?? searchParams.get("next"),
+    "/portal/dashboard",
+  );
   const roleParam = searchParams.get("role");
   const nameRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
