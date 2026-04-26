@@ -8,12 +8,18 @@ import {
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 import { useTranslations, useLocale } from "next-intl";
+import { useSession } from "next-auth/react";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import type { LocaleCode } from "@/lib/config/locales";
 
 export default function MarketingNav() {
   const t = useTranslations("nav");
   const locale = useLocale() as LocaleCode;
+  const { status, data: session } = useSession();
+  // Returning users get one CTA pointing where they actually want to go.
+  // status === "loading" hides the CTAs until resolved — avoids flashing
+  // "Log in" then swapping to "Dashboard" once the session loads.
+  const dashboardHref = session?.user?.role === "admin" ? "/admin/users" : "/portal/dashboard";
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [featuresOpen, setFeaturesOpen] = useState(false);
@@ -175,15 +181,23 @@ export default function MarketingNav() {
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
           <div className="w-32"><LocaleSwitcher current={locale} /></div>
-          <Link
-            href="/login"
-            className="text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] transition-colors no-underline"
-          >
-            {t("logIn")}
-          </Link>
-          <Link href="/register" className="btn-primary text-sm py-2 px-4">
-            {t("getStartedFree")}
-          </Link>
+          {status === "loading" ? null : status === "authenticated" ? (
+            <Link href={dashboardHref} className="btn-primary text-sm py-2 px-4">
+              {t("goToDashboard")}
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] transition-colors no-underline"
+              >
+                {t("logIn")}
+              </Link>
+              <Link href="/register" className="btn-primary text-sm py-2 px-4">
+                {t("getStartedFree")}
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -251,20 +265,32 @@ export default function MarketingNav() {
               >
                 ❤️ {t("adopt")}
               </Link>
-              <Link
-                href="/login"
-                onClick={() => setMenuOpen(false)}
-                className="px-3 py-2.5 text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] no-underline"
-              >
-                {t("logIn")}
-              </Link>
-              <Link
-                href="/register"
-                onClick={() => setMenuOpen(false)}
-                className="btn-primary justify-center"
-              >
-                {t("getStartedFree")}
-              </Link>
+              {status === "loading" ? null : status === "authenticated" ? (
+                <Link
+                  href={dashboardHref}
+                  onClick={() => setMenuOpen(false)}
+                  className="btn-primary justify-center"
+                >
+                  {t("goToDashboard")}
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="px-3 py-2.5 text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] no-underline"
+                  >
+                    {t("logIn")}
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setMenuOpen(false)}
+                    className="btn-primary justify-center"
+                  >
+                    {t("getStartedFree")}
+                  </Link>
+                </>
+              )}
               <div className="pt-2 border-t border-[var(--border)] mt-1">
                 <LocaleSwitcher current={locale} />
               </div>
