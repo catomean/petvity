@@ -9,6 +9,7 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import MarketingNav from "@/components/sections/MarketingNav";
 import MarketingFooter from "@/components/sections/MarketingFooter";
+import { HeroCTA } from "@/components/sections/HeroCTA";
 import type { Metadata } from "next";
 import { APP } from "@/lib/config/app";
 
@@ -131,15 +132,7 @@ export default function HomePage() {
                 </strong>
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 mb-10">
-                <Link href="/register" className="btn-primary text-base px-7 py-3.5 justify-center">
-                  Get started free
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link href="#how-it-works" className="btn-outline text-base px-7 py-3.5 justify-center">
-                  See how it works
-                </Link>
-              </div>
+              <HeroCTA />
 
               {/* Trust strip */}
               <div className="flex flex-wrap gap-x-6 gap-y-2">
