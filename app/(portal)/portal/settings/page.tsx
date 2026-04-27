@@ -3,12 +3,14 @@
 import { useState, useTransition, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { User, Lock, CheckCircle, Mail, AlertTriangle, X, Download } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 import { userRoleLabel } from "@/lib/config/users";
 
 export default function SettingsPage() {
+  const t = useTranslations("portal");
   const { data: session, update: updateSession } = useSession();
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -30,11 +32,11 @@ export default function SettingsPage() {
     const data = await res.json();
     setProfileSaving(false);
     if (data.success) {
-      setProfileMsg({ ok: true, text: "Name updated." });
+      setProfileMsg({ ok: true, text: t("settingsNameUpdated") });
       await updateSession({ name: name.trim() });
       startTransition(() => router.refresh());
     } else {
-      setProfileMsg({ ok: false, text: data.error ?? "Update failed." });
+      setProfileMsg({ ok: false, text: data.error ?? t("settingsUpdateFailed") });
     }
   }
 
@@ -62,11 +64,11 @@ export default function SettingsPage() {
     const data = await res.json();
     setEmailSaving(false);
     if (data.success) {
-      setEmailMsg({ ok: true, text: next ? "Weekly digest unsubscribed." : "Weekly digest resubscribed." });
+      setEmailMsg({ ok: true, text: next ? t("settingsDigestUnsubscribed") : t("settingsDigestResubscribed") });
     } else {
       // Roll back UI on failure
       setDigestOptOut(!next);
-      setEmailMsg({ ok: false, text: data.error ?? "Update failed." });
+      setEmailMsg({ ok: false, text: data.error ?? t("settingsUpdateFailed") });
     }
   }
 
@@ -81,11 +83,11 @@ export default function SettingsPage() {
     e.preventDefault();
     setPwMsg(null);
     if (newPw !== confirmPw) {
-      setPwMsg({ ok: false, text: "Passwords don't match." });
+      setPwMsg({ ok: false, text: t("settingsPwNoMatch") });
       return;
     }
     if (newPw.length < PASSWORD_MIN_LENGTH) {
-      setPwMsg({ ok: false, text: `Password must be at least ${PASSWORD_MIN_LENGTH} characters.` });
+      setPwMsg({ ok: false, text: t("settingsPwTooShort", { min: PASSWORD_MIN_LENGTH }) });
       return;
     }
     setPwSaving(true);
@@ -97,10 +99,10 @@ export default function SettingsPage() {
     const data = await res.json();
     setPwSaving(false);
     if (data.success) {
-      setPwMsg({ ok: true, text: "Password changed successfully." });
+      setPwMsg({ ok: true, text: t("settingsPwChanged") });
       setCurrentPw(""); setNewPw(""); setConfirmPw("");
     } else {
-      setPwMsg({ ok: false, text: data.error ?? "Password change failed." });
+      setPwMsg({ ok: false, text: data.error ?? t("settingsPwChangeFailed") });
     }
   }
 
@@ -130,7 +132,7 @@ export default function SettingsPage() {
     const data = await res.json();
     if (!data.success) {
       setDeleting(false);
-      setDeleteErr(data.error ?? "Deletion failed.");
+      setDeleteErr(data.error ?? t("settingsDeletionFailed"));
       return;
     }
     // Account is gone — sign out and land on the marketing home in default locale.
@@ -142,8 +144,8 @@ export default function SettingsPage() {
   return (
     <div className="max-w-lg space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">Settings</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">Manage your account details</p>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("settingsTitle")}</h1>
+        <p className="text-sm text-[var(--muted)] mt-0.5">{t("settingsSubtitle")}</p>
       </div>
 
       {/* ── Profile ───────────────────────────────────────────────────── */}
@@ -152,17 +154,17 @@ export default function SettingsPage() {
           <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
             <User className="w-4 h-4 text-[var(--teal)]" />
           </div>
-          <h2 className="font-semibold text-[var(--ink)]">Profile</h2>
+          <h2 className="font-semibold text-[var(--ink)]">{t("settingsProfile")}</h2>
         </div>
 
         <form onSubmit={saveProfile} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Display name
+              {t("settingsDisplayName")}
             </label>
             <input
               className="form-input"
-              placeholder="Your name"
+              placeholder={t("settingsNamePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -171,20 +173,20 @@ export default function SettingsPage() {
 
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Email
+              {t("settingsEmail")}
             </label>
             <input
               className="form-input bg-[var(--off)] cursor-not-allowed"
               value={session.user?.email ?? ""}
               disabled
-              title="Email cannot be changed"
+              title={t("settingsEmailCannotChange")}
             />
-            <p className="text-xs text-[var(--muted)] mt-1">Email address cannot be changed.</p>
+            <p className="text-xs text-[var(--muted)] mt-1">{t("settingsEmailHint")}</p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Role
+              {t("settingsRole")}
             </label>
             <input
               className="form-input bg-[var(--off)] cursor-not-allowed"
@@ -205,7 +207,7 @@ export default function SettingsPage() {
             disabled={profileSaving}
             className="btn-primary disabled:opacity-60"
           >
-            {profileSaving ? "Saving…" : "Save changes"}
+            {profileSaving ? t("saving") : t("settingsSaveChanges")}
           </button>
         </form>
       </div>
@@ -216,7 +218,7 @@ export default function SettingsPage() {
           <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
             <Mail className="w-4 h-4 text-[var(--teal)]" />
           </div>
-          <h2 className="font-semibold text-[var(--ink)]">Email preferences</h2>
+          <h2 className="font-semibold text-[var(--ink)]">{t("settingsEmailPrefs")}</h2>
         </div>
 
         <label className="flex items-start gap-3 cursor-pointer">
@@ -228,11 +230,9 @@ export default function SettingsPage() {
             className="mt-0.5 w-4 h-4 rounded border-[var(--border)] text-[var(--teal)] focus:ring-[var(--teal)]"
           />
           <span className="text-sm">
-            <span className="font-medium text-[var(--ink)] block">Opt out of digest and onboarding emails</span>
+            <span className="font-medium text-[var(--ink)] block">{t("settingsDigestOptOut")}</span>
             <span className="text-[var(--muted)] block mt-0.5">
-              Stops the weekly wellness digest and the new-user onboarding series.
-              Vaccination reminders, health alerts, order and booking confirmations are
-              always sent — they&apos;re necessary for the service.
+              {t("settingsDigestOptOutDesc")}
             </span>
           </span>
         </label>
@@ -251,26 +251,26 @@ export default function SettingsPage() {
           <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
             <Lock className="w-4 h-4 text-[var(--teal)]" />
           </div>
-          <h2 className="font-semibold text-[var(--ink)]">Change password</h2>
+          <h2 className="font-semibold text-[var(--ink)]">{t("settingsChangePassword")}</h2>
         </div>
 
         <form onSubmit={savePassword} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Current password
+              {t("settingsCurrentPassword")}
             </label>
             <PasswordInput
               value={currentPw}
               onChange={setCurrentPw}
               autoComplete="current-password"
               required
-              placeholder="Your current password"
+              placeholder={t("settingsCurrentPwPlaceholder")}
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              New password
+              {t("settingsNewPassword")}
             </label>
             <PasswordInput
               value={newPw}
@@ -278,20 +278,20 @@ export default function SettingsPage() {
               autoComplete="new-password"
               required
               minLength={PASSWORD_MIN_LENGTH}
-              placeholder={`At least ${PASSWORD_MIN_LENGTH} characters`}
+              placeholder={t("settingsNewPwPlaceholder", { min: PASSWORD_MIN_LENGTH })}
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Confirm new password
+              {t("settingsConfirmPassword")}
             </label>
             <PasswordInput
               value={confirmPw}
               onChange={setConfirmPw}
               autoComplete="new-password"
               required
-              placeholder="Repeat your new password"
+              placeholder={t("settingsConfirmPwPlaceholder")}
             />
           </div>
 
@@ -307,7 +307,7 @@ export default function SettingsPage() {
             disabled={pwSaving}
             className="btn-primary disabled:opacity-60"
           >
-            {pwSaving ? "Updating…" : "Update password"}
+            {pwSaving ? t("settingsUpdating") : t("settingsUpdatePassword")}
           </button>
         </form>
       </div>
@@ -318,19 +318,17 @@ export default function SettingsPage() {
           <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
             <Download className="w-4 h-4 text-[var(--teal)]" />
           </div>
-          <h2 className="font-semibold text-[var(--ink)]">Your data</h2>
+          <h2 className="font-semibold text-[var(--ink)]">{t("settingsYourData")}</h2>
         </div>
         <p className="text-sm text-[var(--muted)] mb-4">
-          Download a copy of everything stored under your account — pets,
-          health logs, vaccinations, records, bookings, orders, listings,
-          and adoption applications. Delivered as a JSON file.
+          {t("settingsYourDataDesc")}
         </p>
         <a
           href="/api/account/export"
           download
           className="btn-outline inline-flex items-center gap-2"
         >
-          <Download className="w-4 h-4" /> Download my data
+          <Download className="w-4 h-4" /> {t("settingsDownloadData")}
         </a>
       </div>
 
@@ -340,19 +338,17 @@ export default function SettingsPage() {
           <div className="w-8 h-8 rounded-lg bg-[var(--danger-bg)] flex items-center justify-center">
             <AlertTriangle className="w-4 h-4 text-[var(--danger-text)]" />
           </div>
-          <h2 className="font-semibold text-[var(--danger-text)]">Danger zone</h2>
+          <h2 className="font-semibold text-[var(--danger-text)]">{t("settingsDangerZone")}</h2>
         </div>
         <p className="text-sm text-[var(--muted)] mb-4">
-          Deleting your account permanently removes your profile and all related
-          data — pets, health logs, vaccinations, records, bookings, orders,
-          listings, and adoption applications. This cannot be undone.
+          {t("settingsDangerDesc")}
         </p>
         <button
           type="button"
           onClick={openDeleteModal}
           className="text-sm font-medium px-4 py-2 rounded-lg border border-[var(--danger)] text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors"
         >
-          Delete my account
+          {t("settingsDeleteMyAccount")}
         </button>
       </div>
 
@@ -365,39 +361,37 @@ export default function SettingsPage() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-[var(--danger-text)] flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" /> Delete account?
+                <AlertTriangle className="w-5 h-5" /> {t("settingsDeleteAccountTitle")}
               </h3>
               <button
                 onClick={() => setShowDeleteModal(false)}
                 className="p-1.5 rounded-lg hover:bg-[var(--off)] transition-colors"
-                aria-label="Close"
+                aria-label={t("settingsClose")}
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <p className="text-sm text-[var(--ink2)] mb-4 leading-relaxed">
-              This permanently deletes your account, all your pets, health
-              records, orders, listings, and applications. <strong>This cannot
-              be undone.</strong>
+              {t("settingsDeleteModalDesc")}
             </p>
 
             <form onSubmit={deleteAccount} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                  Current password
+                  {t("settingsCurrentPassword")}
                 </label>
                 <PasswordInput
                   value={deletePw}
                   onChange={setDeletePw}
                   autoComplete="current-password"
                   required
-                  placeholder="Confirm your password"
+                  placeholder={t("settingsConfirmPwModal")}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                  Type <span className="font-mono text-[var(--danger-text)]">DELETE</span> to confirm
+                  {t("settingsTypeDeleteToConfirm")}
                 </label>
                 <input
                   className="form-input"
@@ -417,14 +411,14 @@ export default function SettingsPage() {
                   className="btn-outline"
                   disabled={deleting}
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={deleting || deleteConfirm !== "DELETE" || !deletePw}
                   className="text-sm font-medium px-4 py-2 rounded-lg bg-[var(--danger)] text-white hover:bg-red-700 disabled:opacity-60 transition-colors"
                 >
-                  {deleting ? "Deleting…" : "Delete forever"}
+                  {deleting ? t("settingsDeleting") : t("settingsDeleteForever")}
                 </button>
               </div>
             </form>
