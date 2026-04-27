@@ -6,8 +6,10 @@ import { SPECIES_OPTIONS, SEX_OPTIONS, getBreedOptions } from "@/lib/config/spec
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function NewPetPage() {
+  const t = useTranslations("portal");
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -27,7 +29,7 @@ export default function NewPetPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.species) { setError("Please select a species."); return; }
+    if (!form.species) { setError(t("newPetSelectSpecies")); return; }
     setSaving(true);
     setError("");
 
@@ -45,7 +47,7 @@ export default function NewPetPage() {
     setSaving(false);
 
     if (!data.success) {
-      setError(data.error ?? "Failed to add pet.");
+      setError(data.error ?? t("newPetFailed"));
     } else {
       router.push(`/portal/pets/${data.data.id}`);
     }
@@ -58,13 +60,11 @@ export default function NewPetPage() {
         className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
-        My Pets
+        {t("myPets")}
       </Link>
 
-      <h1 className="text-2xl font-bold text-[var(--ink)] mb-2">Add a pet</h1>
-      <p className="text-sm text-[var(--muted)] mb-6">
-        Create a profile to start tracking their health and wellbeing.
-      </p>
+      <h1 className="text-2xl font-bold text-[var(--ink)] mb-2">{t("addPet")}</h1>
+      <p className="text-sm text-[var(--muted)] mb-6">{t("newPetSubtitle")}</p>
 
       {error && <p className="alert-error mb-4">{error}</p>}
 
@@ -75,7 +75,7 @@ export default function NewPetPage() {
         {/* Species first — drives breed options */}
         <div>
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Species *
+            {t("petSpeciesLabel")} *
           </label>
           <select
             required
@@ -85,7 +85,7 @@ export default function NewPetPage() {
             }
             className="form-input"
           >
-            <option value="">Choose your pet type…</option>
+            <option value="">{t("newPetChooseType")}</option>
             {SPECIES_OPTIONS.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.label}
@@ -97,14 +97,14 @@ export default function NewPetPage() {
         {/* Name */}
         <div>
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Name *
+            {t("petNameLabel")} *
           </label>
           <input
             type="text"
             required
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder="e.g. Max, Luna, Bella…"
+            placeholder={t("newPetNamePlaceholder")}
             className="form-input"
           />
         </div>
@@ -113,14 +113,14 @@ export default function NewPetPage() {
         {breedOptions.length > 0 && (
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Breed
+              {t("petBreedLabel")}
             </label>
             <select
               value={form.breed}
               onChange={(e) => setForm({ ...form, breed: e.target.value })}
               className="form-input"
             >
-              <option value="">Unknown / not listed</option>
+              <option value="">{t("petBreedUnknown")}</option>
               {breedOptions.map((b) => (
                 <option key={b.value} value={b.value}>
                   {b.label}
@@ -134,7 +134,7 @@ export default function NewPetPage() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Birth date
+              {t("petBirthDate")}
             </label>
             <input
               type="date"
@@ -145,7 +145,7 @@ export default function NewPetPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Sex
+              {t("petSex")}
             </label>
             <select
               value={form.sex}
@@ -167,13 +167,13 @@ export default function NewPetPage() {
         {/* Bio */}
         <div>
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Bio <span className="text-[var(--faint)] font-normal">(optional)</span>
+            {t("petBioLabel")} <span className="text-[var(--faint)] font-normal">{t("listOptional")}</span>
           </label>
           <textarea
             rows={3}
             value={form.bio}
             onChange={(e) => setForm({ ...form, bio: e.target.value })}
-            placeholder="Tell us a little about your pet's personality…"
+            placeholder={t("newPetBioPlaceholder")}
             className="form-input resize-none"
           />
         </div>
@@ -192,11 +192,9 @@ export default function NewPetPage() {
           </div>
           <div>
             <span className="text-sm font-medium text-[var(--ink2)]">
-              Make this a public profile
+              {t("newPetPublicLabel")}
             </span>
-            <p className="text-xs text-[var(--muted)]">
-              Share your pet as a public influencer profile
-            </p>
+            <p className="text-xs text-[var(--muted)]">{t("newPetPublicDesc")}</p>
           </div>
         </label>
 
@@ -206,14 +204,14 @@ export default function NewPetPage() {
             disabled={saving}
             className="btn-primary disabled:opacity-60"
           >
-            {saving ? "Saving…" : "Add pet"}
+            {saving ? t("saving") : t("newPetAdd")}
           </button>
           <button
             type="button"
             onClick={() => router.back()}
             className="btn-outline"
           >
-            Cancel
+            {t("cancel")}
           </button>
         </div>
       </form>

@@ -6,6 +6,7 @@ import { SPECIES_OPTIONS, SEX_OPTIONS, getBreedOptions } from "@/lib/config/spec
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
 import { ChevronLeft, Trash2, Camera, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface PetData {
   id: string;
@@ -21,6 +22,7 @@ interface PetData {
 }
 
 export default function EditPetPage() {
+  const t = useTranslations("portal");
   const router = useRouter();
   const { petId } = useParams<{ petId: string }>();
 
@@ -91,7 +93,7 @@ export default function EditPetPage() {
       URL.revokeObjectURL(preview);
       setAvatarUrl(data.data.url);
     } else {
-      setAvatarError(data.error ?? "Upload failed. Try again.");
+      setAvatarError(data.error ?? t("editPetUploadFailed"));
       setAvatarUrl(null);
     }
     // Reset input so the same file can be re-selected
@@ -126,7 +128,7 @@ export default function EditPetPage() {
     setSaving(false);
 
     if (!data.success) {
-      setError(data.error ?? "Failed to save.");
+      setError(data.error ?? t("editPetSaveFailed"));
     } else {
       router.push(`/portal/pets/${petId}`);
     }
@@ -139,7 +141,7 @@ export default function EditPetPage() {
     if (data.success) {
       router.push("/portal/pets");
     } else {
-      setError("Failed to delete pet.");
+      setError(t("editPetDeleteFailed"));
       setDeleting(false);
     }
   }
@@ -147,7 +149,7 @@ export default function EditPetPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20 text-[var(--muted)] text-sm">
-        Loading…
+        {t("editPetLoading")}
       </div>
     );
   }
@@ -160,10 +162,10 @@ export default function EditPetPage() {
         className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
-        Back to profile
+        {t("editPetBack")}
       </Link>
 
-      <h1 className="text-2xl font-bold text-[var(--ink)] mb-6">Edit pet</h1>
+      <h1 className="text-2xl font-bold text-[var(--ink)] mb-6">{t("editPetTitle")}</h1>
 
       {error && <p className="alert-error mb-4">{error}</p>}
 
@@ -185,8 +187,8 @@ export default function EditPetPage() {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[var(--ink)] mb-1">Pet photo</p>
-          <p className="text-xs text-[var(--muted)] mb-3">JPG, PNG or WebP · max 4 MB</p>
+          <p className="text-sm font-medium text-[var(--ink)] mb-1">{t("editPetPhoto")}</p>
+          <p className="text-xs text-[var(--muted)] mb-3">{t("editPetPhotoHint")}</p>
           {avatarError && <p className="text-xs text-[var(--danger-text)] mb-2">{avatarError}</p>}
           <input
             ref={fileInputRef}
@@ -202,7 +204,7 @@ export default function EditPetPage() {
             className="btn-outline text-sm py-1.5 px-3 flex items-center gap-1.5 disabled:opacity-60"
           >
             <Camera className="w-3.5 h-3.5" />
-            {avatarUrl ? "Change photo" : "Upload photo"}
+            {avatarUrl ? t("editPetChangePhoto") : t("editPetUploadPhoto")}
           </button>
         </div>
       </div>
@@ -214,7 +216,7 @@ export default function EditPetPage() {
         {/* Name */}
         <div>
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Name *
+            {t("petNameLabel")} *
           </label>
           <input
             type="text"
@@ -228,29 +230,27 @@ export default function EditPetPage() {
         {/* Species (read-only after creation) */}
         <div>
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Species
+            {t("petSpeciesLabel")}
           </label>
           <div className="form-input bg-[var(--light)] text-[var(--muted)] cursor-not-allowed">
             {SPECIES_OPTIONS.find((s) => s.value === form.species)?.label ??
               form.species}
           </div>
-          <p className="text-xs text-[var(--muted)] mt-1">
-            Species cannot be changed after creation.
-          </p>
+          <p className="text-xs text-[var(--muted)] mt-1">{t("editPetSpeciesHint")}</p>
         </div>
 
         {/* Breed */}
         {breedOptions.length > 0 && (
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Breed
+              {t("petBreedLabel")}
             </label>
             <select
               value={form.breed}
               onChange={(e) => setForm({ ...form, breed: e.target.value })}
               className="form-input"
             >
-              <option value="">Unknown / not listed</option>
+              <option value="">{t("petBreedUnknown")}</option>
               {breedOptions.map((b) => (
                 <option key={b.value} value={b.value}>
                   {b.label}
@@ -264,7 +264,7 @@ export default function EditPetPage() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Birth date
+              {t("petBirthDate")}
             </label>
             <input
               type="date"
@@ -275,7 +275,7 @@ export default function EditPetPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Sex
+              {t("petSex")}
             </label>
             <select
               value={form.sex}
@@ -297,13 +297,13 @@ export default function EditPetPage() {
         {/* Bio */}
         <div>
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Bio
+            {t("petBioLabel")}
           </label>
           <textarea
             rows={3}
             value={form.bio}
             onChange={(e) => setForm({ ...form, bio: e.target.value })}
-            placeholder="Tell us about your pet…"
+            placeholder={t("editPetBioPlaceholder")}
             className="form-input resize-none"
           />
         </div>
@@ -311,7 +311,7 @@ export default function EditPetPage() {
         {/* Public handle */}
         <div>
           <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Public handle
+            {t("editPetHandle")}
           </label>
           <div className="flex items-center gap-2">
             <span className="text-sm text-[var(--muted)]">petvity.com/pets/</span>
@@ -329,9 +329,7 @@ export default function EditPetPage() {
               className="form-input flex-1"
             />
           </div>
-          <p className="text-xs text-[var(--muted)] mt-1">
-            Leave blank for no public profile.
-          </p>
+          <p className="text-xs text-[var(--muted)] mt-1">{t("editPetHandleHint")}</p>
         </div>
 
         {/* Public toggle */}
@@ -348,11 +346,9 @@ export default function EditPetPage() {
           </div>
           <div>
             <span className="text-sm font-medium text-[var(--ink2)]">
-              Public profile
+              {t("editPetPublicLabel")}
             </span>
-            <p className="text-xs text-[var(--muted)]">
-              Visible to anyone with the link
-            </p>
+            <p className="text-xs text-[var(--muted)]">{t("editPetPublicDesc")}</p>
           </div>
         </label>
 
@@ -362,10 +358,10 @@ export default function EditPetPage() {
             disabled={saving}
             className="btn-primary disabled:opacity-60"
           >
-            {saving ? "Saving…" : "Save changes"}
+            {saving ? t("saving") : t("editPetSave")}
           </button>
           <Link href={`/portal/pets/${petId}`} className="btn-outline">
-            Cancel
+            {t("cancel")}
           </Link>
         </div>
       </form>
@@ -373,12 +369,9 @@ export default function EditPetPage() {
       {/* Danger zone */}
       <div className="mt-8 card p-5 border-[var(--danger-bg)]">
         <h3 className="text-sm font-semibold text-[var(--danger-text)] mb-1">
-          Danger zone
+          {t("editPetDangerZone")}
         </h3>
-        <p className="text-sm text-[var(--muted)] mb-4">
-          Deleting a pet removes all their health data, records, and
-          vaccinations permanently.
-        </p>
+        <p className="text-sm text-[var(--muted)] mb-4">{t("editPetDangerDesc")}</p>
         {confirmDelete ? (
           <div className="flex gap-3">
             <button
@@ -387,13 +380,13 @@ export default function EditPetPage() {
               className="inline-flex items-center gap-2 bg-[var(--danger)] text-white border-none rounded-[10px] px-4 py-2 text-sm font-semibold cursor-pointer transition-opacity disabled:opacity-60"
             >
               <Trash2 className="w-4 h-4" />
-              {deleting ? "Deleting…" : "Yes, delete permanently"}
+              {deleting ? t("editPetDeleting") : t("editPetDeleteConfirm")}
             </button>
             <button
               onClick={() => setConfirmDelete(false)}
               className="btn-outline text-sm"
             >
-              Cancel
+              {t("cancel")}
             </button>
           </div>
         ) : (
@@ -402,7 +395,7 @@ export default function EditPetPage() {
             className="inline-flex items-center gap-2 text-[var(--danger-text)] border border-[var(--danger)] bg-transparent rounded-[10px] px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-[var(--danger-bg)] transition-colors"
           >
             <Trash2 className="w-4 h-4" />
-            Delete this pet
+            {t("editPetDeleteTrigger")}
           </button>
         )}
       </div>

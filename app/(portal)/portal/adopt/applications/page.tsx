@@ -8,6 +8,7 @@ import type { ApplicationStatusId, ListingStatusId } from "@/lib/config/adoption
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort, formatAdoptionFee } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 interface MyApplication {
   applicationId: string;
@@ -27,6 +28,7 @@ interface MyApplication {
 }
 
 export default function MyApplicationsPage() {
+  const t = useTranslations("portal");
   const [applications, setApplications] = useState<MyApplication[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,10 +58,10 @@ export default function MyApplicationsPage() {
           className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-1 transition-colors"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
-          Browse adoptions
+          {t("myAppsBack")}
         </Link>
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">My applications</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">Pets you&apos;ve applied to adopt</p>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("myAppsTitle")}</h1>
+        <p className="text-sm text-[var(--muted)] mt-0.5">{t("myAppsSubtitle")}</p>
       </div>
 
       {applications.length === 0 ? (
@@ -67,9 +69,9 @@ export default function MyApplicationsPage() {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <Heart className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-1">No applications yet</p>
-          <p className="text-sm text-[var(--muted)] mb-5">Browse available pets and submit your first adoption application.</p>
-          <Link href="/portal/adopt" className="btn-primary">Browse pets</Link>
+          <p className="font-medium text-[var(--ink)] mb-1">{t("myAppsEmpty")}</p>
+          <p className="text-sm text-[var(--muted)] mb-5">{t("myAppsEmptyDesc")}</p>
+          <Link href="/portal/adopt" className="btn-primary">{t("myAppsBrowse")}</Link>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -116,25 +118,25 @@ export default function MyApplicationsPage() {
                       {app.feeCents != null && (
                         <span className="flex items-center gap-1">
                           <DollarSign className="w-3 h-3" />
-                          {app.feeCents ? `${formatAdoptionFee(app.feeCents)} fee` : "Free"}
+                          {app.feeCents ? t("myAppsFee", { fee: formatAdoptionFee(app.feeCents) }) : t("adoptFree")}
                         </span>
                       )}
-                      <span>Applied {formatDateShort(app.createdAt)}</span>
+                      <span>{t("myAppsApplied", { date: formatDateShort(app.createdAt) })}</span>
                       {listingClosed && (
                         <span className="text-[var(--muted)]">
-                          Listing {LISTING_STATUS_CONFIG[app.listingStatus as ListingStatusId]?.label ?? app.listingStatus}
+                          {t("myAppsListingStatus", { status: LISTING_STATUS_CONFIG[app.listingStatus as ListingStatusId]?.label ?? app.listingStatus })}
                         </span>
                       )}
                     </div>
 
                     {app.applicationStatus === "approved" && (
                       <p className="text-sm text-[var(--green-text)] font-medium mt-2">
-                        Congratulations — the owner has approved your application!
+                        {t("myAppsApproved")}
                       </p>
                     )}
                     {app.applicationStatus === "rejected" && (
                       <p className="text-sm text-[var(--muted)] mt-2">
-                        This application was not successful.
+                        {t("myAppsRejected")}
                       </p>
                     )}
                   </div>
@@ -146,7 +148,7 @@ export default function MyApplicationsPage() {
                       href={`/portal/adopt/${app.listingId}`}
                       className="text-sm text-[var(--teal)] hover:underline"
                     >
-                      View listing →
+                      {t("myAppsViewListing")}
                     </Link>
                   </div>
                 )}
