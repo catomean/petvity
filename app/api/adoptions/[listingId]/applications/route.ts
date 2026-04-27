@@ -149,7 +149,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   if (parsed.data.status === "approved" || parsed.data.status === "rejected") {
     try {
       const [applicant] = await db
-        .select({ name: users.name, email: users.email })
+        .select({ name: users.name, email: users.email, locale: users.locale })
         .from(users)
         .where(eq(users.id, updated.applicantId))
         .limit(1);
@@ -166,7 +166,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
           petName: pet?.name ?? "the pet",
           status: parsed.data.status,
           ownerNote: null,
-        });
+        }, applicant.locale);
         await sendEmail({ to: applicant.email, ...tpl });
       }
     } catch {

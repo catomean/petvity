@@ -93,7 +93,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   // Notify listing owner (fire-and-forget)
   try {
     const [owner] = await db
-      .select({ name: users.name, email: users.email })
+      .select({ name: users.name, email: users.email, locale: users.locale })
       .from(users)
       .where(eq(users.id, listing.ownerId))
       .limit(1);
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest, { params }: Params) {
         message: parsed.data.message ?? null,
         experience: parsed.data.experience ?? null,
         housingType: parsed.data.housingType ?? null,
-      });
+      }, owner.locale);
       await sendEmail({ to: owner.email, ...tpl });
     }
   } catch {

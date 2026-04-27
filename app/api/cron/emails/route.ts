@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   // Fetch all user emails in one query to avoid N+1
   const userIds = [...new Set(pending.map((item) => item.userId))];
   const userRows = await db
-    .select({ id: users.id, name: users.name, email: users.email, digestOptOut: users.digestOptOut })
+    .select({ id: users.id, name: users.name, email: users.email, locale: users.locale, digestOptOut: users.digestOptOut })
     .from(users)
     .where(inArray(users.id, userIds));
   const userMap = new Map(userRows.map((u) => [u.id, u]));
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       // (rather than at enqueue time) lets us add it to existing queued items
       // without a backfill, and keeps the token rotation point in one place.
       const payload = { ...(item.payload as object), unsubscribeUrl: makeUnsubscribeUrl(user.id) };
-      const { subject, html } = templateFn(payload);
+      const { subject, html } = templateFn(payload, user.locale);
       await sendEmail({ to: user.email, subject, html });
 
       await db

@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
   const alertPets = allPets.filter((p) => alertPetIds.includes(p.id));
   const ownerIds = [...new Set(alertPets.map((p) => p.ownerId))];
   const ownerRows = await db
-    .select({ id: users.id, name: users.name, email: users.email })
+    .select({ id: users.id, name: users.name, email: users.email, locale: users.locale })
     .from(users)
     .where(inArray(users.id, ownerIds));
   const ownerMap = new Map(ownerRows.map((u) => [u.id, u]));
@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
       petName: pet.name,
       reason: result.reason,
       petUrl: `${APP_URL}/portal/pets/${pet.id}/health`,
-    });
+    }, owner.locale);
 
     try {
       await sendEmail({ to: owner.email, subject, html });

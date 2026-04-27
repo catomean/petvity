@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
 
   // Look up the buyer once; reused for buyer confirmation + seller notifications
   const [buyer] = await db
-    .select({ name: users.name, email: users.email })
+    .select({ name: users.name, email: users.email, locale: users.locale })
     .from(users)
     .where(eq(users.id, session.user.id))
     .limit(1);
@@ -166,7 +166,7 @@ export async function POST(req: NextRequest) {
         orderTotal: `$${(totalCents / 100).toFixed(2)}`,
         items: emailItems,
         notes: notes ?? null,
-      });
+      }, buyer.locale);
       await sendEmail({ to: buyer.email, ...tpl });
     }
   } catch {
@@ -186,7 +186,7 @@ export async function POST(req: NextRequest) {
 
     if (itemsBySeller.size > 0) {
       const sellerRows = await db
-        .select({ id: users.id, name: users.name, email: users.email })
+        .select({ id: users.id, name: users.name, email: users.email, locale: users.locale })
         .from(users)
         .where(inArray(users.id, Array.from(itemsBySeller.keys())));
 
@@ -204,7 +204,7 @@ export async function POST(req: NextRequest) {
               lineTotal: `$${((i.priceCents * i.quantity) / 100).toFixed(2)}`,
             })),
             subtotal: `$${(subtotalCents / 100).toFixed(2)}`,
-          });
+          }, seller.locale);
           await sendEmail({ to: seller.email, ...tpl });
         }),
       );

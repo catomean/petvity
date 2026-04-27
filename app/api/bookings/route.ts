@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
 
   // Resolve the professional's role + contact info for notification
   const [professional] = await db
-    .select({ role: users.role, email: users.email, name: users.name })
+    .select({ role: users.role, email: users.email, name: users.name, locale: users.locale })
     .from(users)
     .where(eq(users.id, professionalId))
     .limit(1);
@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
       startDate: formatDate(startDate),
       endDate: formatDate(endDate),
       notes,
-    }),
+    }, professional.locale),
   }).catch(() => {/* email failure must not break booking creation */});
 
   return NextResponse.json({ success: true, data: booking }, { status: 201 });

@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       medicationName: row.medicationName,
       endDate: formatDateShort(row.endDate, row.ownerLocale ?? undefined),
       petUrl: `${APP_URL}/portal/pets/${row.petId}/medications`,
-    });
+    }, row.ownerLocale);
 
     try {
       await sendEmail({ to: row.ownerEmail, subject, html });

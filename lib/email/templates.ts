@@ -1,13 +1,18 @@
 import { APP, APP_URL } from "@/lib/config/app";
 import { HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
+import { getEmailStrings, t } from "@/lib/email/i18n";
 
 /** When unsubscribeUrl is provided, an "Unsubscribe" link is rendered in the footer.
  *  Only welcome-series emails should pass it; transactional emails (vaccination
  *  reminders, health alerts, order confirmations) intentionally have no opt-out
  *  affordance because they're necessary for the service the user signed up for. */
-const base = (content: string, unsubscribeUrl?: string) => `
+const base = (content: string, locale?: string | null, unsubscribeUrl?: string) => {
+  const s = getEmailStrings(locale);
+  const dir = s.dir;
+  const rtlBodyStyle = dir === "rtl" ? ' style="direction:rtl;text-align:right;"' : "";
+  return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${locale ?? "en"}" dir="${dir}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,18 +30,19 @@ const base = (content: string, unsubscribeUrl?: string) => `
     .footer a { color: #888a96; }
   </style>
 </head>
-<body>
+<body${rtlBodyStyle}>
   <div class="wrap">
     <div class="header"><a href="${APP_URL}">${APP.name}</a></div>
-    <div class="body">${content}</div>
-    <div class="footer">
+    <div class="body"${rtlBodyStyle}>${content}</div>
+    <div class="footer"${rtlBodyStyle}>
       <p>${APP.name} · <a href="${APP_URL}">${APP_URL.replace("https://", "")}</a></p>
       <p>Questions? <a href="mailto:${APP.supportEmail}">${APP.supportEmail}</a></p>
-      ${unsubscribeUrl ? `<p style="margin-top:12px;"><a href="${unsubscribeUrl}">Unsubscribe from onboarding emails</a></p>` : ""}
+      ${unsubscribeUrl ? `<p style="margin-top:12px;"><a href="${unsubscribeUrl}">${s.unsubscribe}</a></p>` : ""}
     </div>
   </div>
 </body>
 </html>`;
+};
 
 // ─── Welcome ──────────────────────────────────────────────────────────────────
 
@@ -44,72 +50,71 @@ const base = (content: string, unsubscribeUrl?: string) => `
  *  (cron looks up user; immediate POST /api/account builds it from user.id). */
 type WelcomePayload = { name: string; unsubscribeUrl?: string };
 
-export function ownerWelcome(data: WelcomePayload) {
+export function ownerWelcome(data: WelcomePayload, locale?: string | null) {
+  const s = getEmailStrings(locale).ownerWelcome;
   return {
-    subject: `Welcome to ${APP.name}!`,
+    subject: s.subject,
     html: base(`
-      <h2>Welcome, ${data.name}!</h2>
-      <p>You're all set to start caring for your pets like family.</p>
-      <p>Add your first pet to begin tracking their health and well-being.</p>
-      <a class="btn" href="${APP_URL}/portal/pets/new">Add your first pet</a>
-      <p>If you have any questions, reply to this email and we'll be happy to help.</p>
-    `, data.unsubscribeUrl),
+      <h2>${t(s.h2, { name: data.name })}</h2>
+      <p>${s.p1}</p>
+      <p>${s.p2}</p>
+      <a class="btn" href="${APP_URL}/portal/pets/new">${s.button}</a>
+      <p>${s.p3}</p>
+    `, locale, data.unsubscribeUrl),
   };
 }
 
-export function ownerAddPet(data: WelcomePayload) {
+export function ownerAddPet(data: WelcomePayload, locale?: string | null) {
+  const s = getEmailStrings(locale).ownerAddPet;
   return {
-    subject: `${APP.name}: Ready to add your first pet?`,
+    subject: s.subject,
     html: base(`
-      <h2>Hi ${data.name},</h2>
-      <p>Adding your pet only takes a minute. Give them a name, choose their species, and you're ready to start tracking.</p>
-      <a class="btn" href="${APP_URL}/portal/pets/new">Add a pet now</a>
-    `, data.unsubscribeUrl),
+      <h2>${t(s.h2, { name: data.name })}</h2>
+      <p>${s.p1}</p>
+      <a class="btn" href="${APP_URL}/portal/pets/new">${s.button}</a>
+    `, locale, data.unsubscribeUrl),
   };
 }
 
-export function ownerHealthTracking(data: WelcomePayload) {
+export function ownerHealthTracking(data: WelcomePayload, locale?: string | null) {
+  const s = getEmailStrings(locale).ownerHealthTracking;
   return {
-    subject: `${APP.name}: Start tracking your pet's health`,
+    subject: s.subject,
     html: base(`
-      <h2>Hi ${data.name},</h2>
-      <p>Did you know you can track your pet's weight, temperature, mood, and energy levels right in ${APP.name}?</p>
-      <p>Daily check-ins take less than 2 minutes and help you spot changes early.</p>
-      <a class="btn" href="${APP_URL}/portal/checkin">Log today's check-in</a>
-    `, data.unsubscribeUrl),
+      <h2>${t(s.h2, { name: data.name })}</h2>
+      <p>${s.p1}</p>
+      <p>${s.p2}</p>
+      <a class="btn" href="${APP_URL}/portal/checkin">${s.button}</a>
+    `, locale, data.unsubscribeUrl),
   };
 }
 
-export function ownerWeekOne(data: WelcomePayload) {
+export function ownerWeekOne(data: WelcomePayload, locale?: string | null) {
+  const s = getEmailStrings(locale).ownerWeekOne;
+  const bulletHtml = s.bullets.map((b) => `<li>${b}</li>`).join("");
   return {
-    subject: `${APP.name}: Your first week`,
+    subject: s.subject,
     html: base(`
-      <h2>Hi ${data.name},</h2>
-      <p>One week in — great job! Here's what ${APP.name} can do for your pet:</p>
-      <ul>
-        <li>Track vaccinations and get reminders before they expire</li>
-        <li>Keep a complete health record for every vet visit</li>
-        <li>Find and book verified vets and sitters near you</li>
-        <li>Browse the marketplace for food, accessories, and health essentials</li>
-        <li>List or find pets for adoption</li>
-        <li>Share your pet's public profile with family and friends</li>
-      </ul>
-      <a class="btn" href="${APP_URL}/portal/dashboard">Go to your dashboard</a>
-    `, data.unsubscribeUrl),
+      <h2>${t(s.h2, { name: data.name })}</h2>
+      <p>${s.p1}</p>
+      <ul>${bulletHtml}</ul>
+      <a class="btn" href="${APP_URL}/portal/dashboard">${s.button}</a>
+    `, locale, data.unsubscribeUrl),
   };
 }
 
 // ─── Password reset ───────────────────────────────────────────────────────────
 
-export function passwordReset(data: { resetUrl: string }) {
+export function passwordReset(data: { resetUrl: string }, locale?: string | null) {
+  const s = getEmailStrings(locale).passwordReset;
   return {
-    subject: `Reset your ${APP.name} password`,
+    subject: s.subject,
     html: base(`
-      <h2>Reset your password</h2>
-      <p>Click the button below to reset your password. This link expires in 1 hour.</p>
-      <a class="btn" href="${data.resetUrl}">Reset password</a>
-      <p>If you didn't request a password reset, you can ignore this email.</p>
-    `),
+      <h2>${s.h2}</h2>
+      <p>${s.p1}</p>
+      <a class="btn" href="${data.resetUrl}">${s.button}</a>
+      <p>${s.p2}</p>
+    `, locale),
   };
 }
 
@@ -120,18 +125,19 @@ export function petHealthAlert(data: {
   petName: string;
   reason: string;
   petUrl: string;
-}) {
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).petHealthAlert;
   return {
-    subject: `${APP.name}: ${data.petName} may need attention`,
+    subject: t(s.subject, { petName: data.petName }),
     html: base(`
-      <h2>Hi ${data.ownerName},</h2>
-      <p>We noticed something that may need your attention for <strong>${data.petName}</strong>:</p>
+      <h2>${t(s.h2, { name: data.ownerName })}</h2>
+      <p>${t(s.p1, { petName: data.petName })}</p>
       <p style="background:#fff3cd;padding:12px 16px;border-radius:6px;border-left:4px solid #d4820a;">
         ${data.reason}
       </p>
-      <a class="btn" href="${data.petUrl}">View ${data.petName}'s health</a>
-      <p style="margin-top:8px;">If you'd like a professional opinion, you can <a href="${APP_URL}/portal/find" style="color:#2a7a8a;">find a vet or sitter near you</a> directly on Petvity.</p>
-    `),
+      <a class="btn" href="${data.petUrl}">${t(s.button, { petName: data.petName })}</a>
+      <p style="margin-top:8px;">${t(s.proTip, { findUrl: `${APP_URL}/portal/find` })}</p>
+    `, locale),
   };
 }
 
@@ -143,16 +149,17 @@ export function vaccinationReminder(data: {
   vaccinationName: string;
   dueDate: string;
   petUrl: string;
-}) {
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).vaccinationReminder;
   return {
-    subject: `${APP.name}: ${data.petName}'s ${data.vaccinationName} is due soon`,
+    subject: t(s.subject, { petName: data.petName, vaccName: data.vaccinationName }),
     html: base(`
-      <h2>Vaccination reminder</h2>
-      <p>Hi ${data.ownerName},</p>
-      <p><strong>${data.petName}'s ${data.vaccinationName}</strong> vaccination is due on <strong>${data.dueDate}</strong>.</p>
-      <p>Book a vet appointment soon to keep your pet protected.</p>
-      <a class="btn" href="${data.petUrl}">View vaccination schedule</a>
-    `),
+      <h2>${s.h2}</h2>
+      <p>${t(s.greeting, { name: data.ownerName })}</p>
+      <p>${t(s.p1, { petName: data.petName, vaccName: data.vaccinationName, dueDate: data.dueDate })}</p>
+      <p>${s.p2}</p>
+      <a class="btn" href="${data.petUrl}">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -162,16 +169,17 @@ export function medicationEndingReminder(data: {
   medicationName: string;
   endDate: string;
   petUrl: string;
-}) {
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).medicationEndingReminder;
   return {
-    subject: `${APP.name}: ${data.petName}'s ${data.medicationName} ends tomorrow`,
+    subject: t(s.subject, { petName: data.petName, medName: data.medicationName }),
     html: base(`
-      <h2>Medication ending tomorrow</h2>
-      <p>Hi ${data.ownerName},</p>
-      <p><strong>${data.petName}'s ${data.medicationName}</strong> course ends on <strong>${data.endDate}</strong>.</p>
-      <p>Check with your vet if a refill or follow-up is needed before the course ends.</p>
-      <a class="btn" href="${data.petUrl}">View medications</a>
-    `),
+      <h2>${s.h2}</h2>
+      <p>${t(s.greeting, { name: data.ownerName })}</p>
+      <p>${t(s.p1, { petName: data.petName, medName: data.medicationName, endDate: data.endDate })}</p>
+      <p>${s.p2}</p>
+      <a class="btn" href="${data.petUrl}">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -183,15 +191,16 @@ export function bookingReminder(data: {
   professionalName: string;
   startDate: string;
   bookingsUrl: string;
-}) {
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).bookingReminder;
   return {
-    subject: `${APP.name}: Reminder — ${data.petName}'s appointment tomorrow`,
+    subject: t(s.subject, { petName: data.petName }),
     html: base(`
-      <h2>Appointment reminder</h2>
-      <p>Hi ${data.ownerName},</p>
-      <p>This is a reminder that <strong>${data.petName}</strong> has an appointment with <strong>${data.professionalName}</strong> tomorrow on <strong>${data.startDate}</strong>.</p>
-      <a class="btn" href="${data.bookingsUrl}">View booking details</a>
-    `),
+      <h2>${s.h2}</h2>
+      <p>${t(s.greeting, { name: data.ownerName })}</p>
+      <p>${t(s.p1, { petName: data.petName, professional: data.professionalName, date: data.startDate })}</p>
+      <a class="btn" href="${data.bookingsUrl}">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -202,20 +211,24 @@ export function bookingRequestReceived(data: {
   startDate: string;
   endDate: string;
   notes?: string | null;
-}) {
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).bookingRequestReceived;
+  const dateRange = data.startDate !== data.endDate
+    ? `${data.startDate} – ${data.endDate}`
+    : data.startDate;
   return {
-    subject: `New booking request from ${data.ownerName} for ${data.petName}`,
+    subject: t(s.subject, { ownerName: data.ownerName, petName: data.petName }),
     html: base(`
-      <h2>New booking request</h2>
-      <p>Hi ${data.professionalName},</p>
-      <p><strong>${data.ownerName}</strong> has requested a booking for <strong>${data.petName}</strong>.</p>
+      <h2>${s.h2}</h2>
+      <p>${t(s.greeting, { name: data.professionalName })}</p>
+      <p>${t(s.p1, { ownerName: data.ownerName, petName: data.petName })}</p>
       <p style="background:#f0faf8;padding:12px 16px;border-radius:6px;border-left:4px solid #0D6E78;">
-        <strong>Dates:</strong> ${data.startDate}${data.startDate !== data.endDate ? ` – ${data.endDate}` : ""}<br/>
-        ${data.notes ? `<strong>Notes:</strong> ${data.notes}` : ""}
+        <strong>${s.datesLabel}:</strong> ${dateRange}<br/>
+        ${data.notes ? `<strong>${s.notesLabel}:</strong> ${data.notes}` : ""}
       </p>
-      <a class="btn" href="${APP_URL}/portal/bookings">Review booking</a>
-      <p>Please confirm or decline this request.</p>
-    `),
+      <a class="btn" href="${APP_URL}/portal/bookings">${s.button}</a>
+      <p>${s.p2}</p>
+    `, locale),
   };
 }
 
@@ -224,21 +237,17 @@ export function bookingStatusChanged(data: {
   petName: string;
   status: "confirmed" | "cancelled" | "completed";
   startDate: string;
-}) {
-  const messages = {
-    confirmed: { heading: "Booking confirmed!", body: `Your appointment for <strong>${data.petName}</strong> on <strong>${data.startDate}</strong> has been confirmed.` },
-    cancelled:  { heading: "Booking cancelled", body: `Your booking for <strong>${data.petName}</strong> on <strong>${data.startDate}</strong> has been cancelled.` },
-    completed:  { heading: "Session completed", body: `Your session for <strong>${data.petName}</strong> on <strong>${data.startDate}</strong> has been marked as completed. Leave a review to share your experience!` },
-  };
-  const { heading, body } = messages[data.status];
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).bookingStatusChanged;
+  const variant = s[data.status];
   return {
-    subject: `${APP.name}: ${heading}`,
+    subject: variant.subject,
     html: base(`
-      <h2>${heading}</h2>
-      <p>Hi ${data.ownerName},</p>
-      <p>${body}</p>
-      <a class="btn" href="${APP_URL}/portal/bookings">View my bookings</a>
-    `),
+      <h2>${variant.h2}</h2>
+      <p>${t(s.greeting, { name: data.ownerName })}</p>
+      <p>${t(variant.body, { petName: data.petName, date: data.startDate })}</p>
+      <a class="btn" href="${APP_URL}/portal/bookings">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -249,20 +258,21 @@ export function orderConfirmation(data: {
   orderTotal: string;
   items: { name: string; quantity: number; lineTotal: string }[];
   notes?: string | null;
-}) {
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).orderConfirmation;
   const itemRows = data.items
     .map((i) => `<tr><td style="padding:6px 0;border-bottom:1px solid #f0ede8;">${i.name}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;">×${i.quantity}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;font-weight:500;">${i.lineTotal}</td></tr>`)
     .join("");
   return {
-    subject: `Your ${APP.name} order is confirmed`,
+    subject: s.subject,
     html: base(`
-      <h2>Order confirmed ✓</h2>
-      <p>Hi ${data.customerName}, your order has been received and is being prepared.</p>
+      <h2>${s.h2}</h2>
+      <p>${t(s.p1, { name: data.customerName })}</p>
       <table style="width:100%;border-collapse:collapse;margin:16px 0;">${itemRows}</table>
-      <p style="text-align:right;font-size:16px;font-weight:600;">Total: ${data.orderTotal}</p>
-      ${data.notes ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;font-size:14px;"><strong>Your note:</strong> ${data.notes}</p>` : ""}
-      <a class="btn" href="${APP_URL}/portal/orders">View my orders</a>
-    `),
+      <p style="text-align:right;font-size:16px;font-weight:600;">${s.totalLabel}: ${data.orderTotal}</p>
+      ${data.notes ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;font-size:14px;"><strong>${s.noteLabel}:</strong> ${data.notes}</p>` : ""}
+      <a class="btn" href="${APP_URL}/portal/orders">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -270,23 +280,18 @@ export function orderStatusUpdate(data: {
   customerName: string;
   status: "confirmed" | "shipped" | "delivered" | "cancelled";
   orderTotal: string;
-}) {
-  const messages = {
-    confirmed: { heading: "Order confirmed", body: "Your order has been confirmed and is being prepared for shipment." },
-    shipped:   { heading: "Order shipped!", body: "Great news — your order is on its way." },
-    delivered: { heading: "Order delivered", body: "Your order has been marked as delivered. Enjoy!" },
-    cancelled: { heading: "Order cancelled", body: "Your order has been cancelled." },
-  };
-  const { heading, body } = messages[data.status];
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).orderStatusUpdate;
+  const variant = s[data.status];
   return {
-    subject: `${APP.name}: ${heading}`,
+    subject: variant.subject,
     html: base(`
-      <h2>${heading}</h2>
-      <p>Hi ${data.customerName},</p>
-      <p>${body}</p>
-      <p style="color:#888;font-size:14px;">Order total: ${data.orderTotal}</p>
-      <a class="btn" href="${APP_URL}/portal/orders">View my orders</a>
-    `),
+      <h2>${variant.h2}</h2>
+      <p>${t(s.greeting, { name: data.customerName })}</p>
+      <p>${variant.body}</p>
+      <p style="color:#888;font-size:14px;">${s.totalLabel}: ${data.orderTotal}</p>
+      <a class="btn" href="${APP_URL}/portal/orders">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -295,19 +300,22 @@ export function sellerOrderNotification(data: {
   buyerName: string;
   items: { name: string; quantity: number; lineTotal: string }[];
   subtotal: string;
-}) {
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).sellerOrderNotification;
+  const count = data.items.length;
+  const itemWord = count === 1 ? s.itemWord_one : s.itemWord_other;
   const itemRows = data.items
     .map((i) => `<tr><td style="padding:6px 0;border-bottom:1px solid #f0ede8;">${i.name}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;">×${i.quantity}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;font-weight:500;">${i.lineTotal}</td></tr>`)
     .join("");
   return {
-    subject: `New order on ${APP.name} — ${data.items.length} ${data.items.length === 1 ? "item" : "items"} to fulfill`,
+    subject: t(s.subject, { app: APP.name, count, itemWord }),
     html: base(`
-      <h2>You have a new order ✨</h2>
-      <p>Hi ${data.sellerName}, <strong>${data.buyerName}</strong> just ordered from your listings.</p>
+      <h2>${s.h2}</h2>
+      <p>${t(s.p1, { sellerName: data.sellerName, buyerName: data.buyerName })}</p>
       <table style="width:100%;border-collapse:collapse;margin:16px 0;">${itemRows}</table>
-      <p style="text-align:right;font-size:16px;font-weight:600;">Your subtotal: ${data.subtotal}</p>
-      <a class="btn" href="${APP_URL}/portal/my-products/orders">View order details</a>
-    `),
+      <p style="text-align:right;font-size:16px;font-weight:600;">${s.subtotalLabel}: ${data.subtotal}</p>
+      <a class="btn" href="${APP_URL}/portal/my-products/orders">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -320,18 +328,22 @@ export function adoptionApplicationReceived(data: {
   message?: string | null;
   experience?: string | null;
   housingType?: string | null;
-}) {
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).adoptionApplicationReceived;
+  const housingLabel = data.housingType
+    ? HOUSING_TYPE_LABELS[data.housingType] ?? data.housingType.replace(/_/g, " ")
+    : null;
   return {
-    subject: `New adoption application for ${data.petName}`,
+    subject: t(s.subject, { petName: data.petName }),
     html: base(`
-      <h2>Someone wants to adopt ${data.petName}!</h2>
-      <p>Hi ${data.ownerName},</p>
-      <p><strong>${data.applicantName}</strong> has submitted an adoption application for <strong>${data.petName}</strong>.</p>
-      ${data.housingType ? `<p><strong>Housing:</strong> ${HOUSING_TYPE_LABELS[data.housingType] ?? data.housingType.replace(/_/g, " ")}</p>` : ""}
-      ${data.experience ? `<p style="background:#f0faf8;padding:12px 16px;border-radius:6px;border-left:4px solid #0D6E78;"><strong>Experience:</strong> ${data.experience}</p>` : ""}
-      ${data.message ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;"><strong>Message:</strong> ${data.message}</p>` : ""}
-      <a class="btn" href="${APP_URL}/portal/adoptions">Review application</a>
-    `),
+      <h2>${t(s.h2, { petName: data.petName })}</h2>
+      <p>${t(s.greeting, { name: data.ownerName })}</p>
+      <p>${t(s.p1, { applicantName: data.applicantName, petName: data.petName })}</p>
+      ${housingLabel ? `<p><strong>${s.housingLabel}:</strong> ${housingLabel}</p>` : ""}
+      ${data.experience ? `<p style="background:#f0faf8;padding:12px 16px;border-radius:6px;border-left:4px solid #0D6E78;"><strong>${s.experienceLabel}:</strong> ${data.experience}</p>` : ""}
+      ${data.message ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;"><strong>${s.messageLabel}:</strong> ${data.message}</p>` : ""}
+      <a class="btn" href="${APP_URL}/portal/adoptions">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -340,22 +352,18 @@ export function adoptionApplicationStatusChanged(data: {
   petName: string;
   status: "approved" | "rejected";
   ownerNote?: string | null;
-}) {
-  const isApproved = data.status === "approved";
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).adoptionApplicationStatusChanged;
+  const variant = s[data.status];
   return {
-    subject: isApproved
-      ? `Your application to adopt ${data.petName} was approved! 🎉`
-      : `Update on your application to adopt ${data.petName}`,
+    subject: t(variant.subject, { petName: data.petName }),
     html: base(`
-      <h2>${isApproved ? "Application approved! 🎉" : "Application update"}</h2>
-      <p>Hi ${data.applicantName},</p>
-      ${isApproved
-        ? `<p>Congratulations! Your adoption application for <strong>${data.petName}</strong> has been <strong style="color:#16A34A;">approved</strong>. The owner will be in touch to arrange the next steps.</p>`
-        : `<p>Your adoption application for <strong>${data.petName}</strong> has been reviewed. Unfortunately, the owner has decided to proceed with another applicant at this time.</p>`
-      }
-      ${data.ownerNote ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;"><strong>Message from owner:</strong> ${data.ownerNote}</p>` : ""}
-      <a class="btn" href="${APP_URL}/portal/adopt">Browse more pets</a>
-    `),
+      <h2>${variant.h2}</h2>
+      <p>${t(s.greeting, { name: data.applicantName })}</p>
+      <p>${t(variant.body, { petName: data.petName })}</p>
+      ${data.ownerNote ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;"><strong>${s.ownerNoteLabel}:</strong> ${data.ownerNote}</p>` : ""}
+      <a class="btn" href="${APP_URL}/portal/adopt">${s.button}</a>
+    `, locale),
   };
 }
 
@@ -368,7 +376,7 @@ export type TemplateKey =
   | "owner_week_one";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const TEMPLATE_MAP: Record<TemplateKey, (data: any) => { subject: string; html: string }> = {
+export const TEMPLATE_MAP: Record<TemplateKey, (data: any, locale?: string | null) => { subject: string; html: string }> = {
   owner_welcome: ownerWelcome,
   owner_add_pet: ownerAddPet,
   owner_health_tracking: ownerHealthTracking,

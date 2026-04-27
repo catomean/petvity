@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       professionalName: row.professionalName ?? "your provider",
       startDate: dateLabel,
       bookingsUrl: `${APP_URL}/portal/bookings`,
-    });
+    }, row.ownerLocale);
 
     try {
       await sendEmail({ to: row.ownerEmail, subject, html });

@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
       process.stderr.write(`[forgot-password] Reset URL: ${resetUrl}\n`);
     }
 
-    const { subject, html } = passwordReset({ resetUrl });
+    const { subject, html } = passwordReset({ resetUrl }, user.locale);
     await sendEmail({ to: normalised, subject, html }).catch((err) =>
       console.error("[forgot-password] Email send failed:", err),
     );

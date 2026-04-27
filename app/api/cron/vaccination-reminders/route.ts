@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
       vaccinationName: row.vaccinationName,
       dueDate: formatDateShort(row.nextDueDate, row.ownerLocale ?? undefined),
       petUrl: `${APP_URL}/portal/pets/${row.petId}/vaccinations`,
-    });
+    }, row.ownerLocale);
 
     try {
       await sendEmail({ to: row.ownerEmail, subject, html });

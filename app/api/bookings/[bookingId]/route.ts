@@ -76,7 +76,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   if (shouldNotifyOwner) {
     Promise.all([
-      db.select({ email: users.email, name: users.name }).from(users).where(eq(users.id, booking.ownerId)).limit(1),
+      db.select({ email: users.email, name: users.name, locale: users.locale }).from(users).where(eq(users.id, booking.ownerId)).limit(1),
       db.select({ name: pets.name }).from(pets).where(eq(pets.id, booking.petId)).limit(1),
     ]).then(([[owner], [petRow]]) => {
       if (!owner) return;
@@ -89,7 +89,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
           petName: petRow?.name ?? "your pet",
           status: status as "confirmed" | "cancelled" | "completed",
           startDate: formatDate(booking.startDate),
-        }),
+        }, owner.locale),
       }).catch(() => {/* email failure must not affect response */});
     }).catch(() => {/* lookup failure must not affect response */});
   }

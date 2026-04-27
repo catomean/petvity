@@ -73,7 +73,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   if ((EMAIL_STATUSES as readonly string[]).includes(status)) {
     try {
       const [customer] = await db
-        .select({ name: users.name, email: users.email })
+        .select({ name: users.name, email: users.email, locale: users.locale })
         .from(users)
         .where(eq(users.id, order.userId))
         .limit(1);
@@ -83,7 +83,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
           customerName: customer.name ?? customer.email,
           status: status as EmailStatus,
           orderTotal: `$${(order.totalCents / 100).toFixed(2)}`,
-        });
+        }, customer.locale);
         await sendEmail({ to: customer.email, ...tpl });
       }
     } catch {
