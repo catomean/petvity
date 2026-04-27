@@ -9,6 +9,7 @@ import type { ProductCategoryId } from "@/lib/config/products";
 import { ShoppingBag, PawPrint, ChevronLeft, Package, ShoppingCart } from "lucide-react";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 export const revalidate = 60;
 
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PublicProductDetailPage({ params }: Params) {
   const { locale, productId } = await params;
+  const t = await getTranslations({ locale, namespace: "public" });
   const db = getInstance();
 
   const [row] = await db
@@ -72,10 +74,10 @@ export default async function PublicProductDetailPage({ params }: Params) {
             href="/login"
             className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors"
           >
-            Sign in
+            {t("signIn")}
           </Link>
           <Link href="/register" className="btn-primary text-sm py-2 px-4">
-            Join free
+            {t("joinFree")}
           </Link>
         </div>
       </nav>
@@ -87,7 +89,7 @@ export default async function PublicProductDetailPage({ params }: Params) {
           className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
-          Browse shop
+          {t("browseShop")}
         </Link>
 
         {/* Product card */}
@@ -114,12 +116,12 @@ export default async function PublicProductDetailPage({ params }: Params) {
               </span>
               {outOfStock && (
                 <span className="text-xs font-medium text-[var(--danger)] bg-[var(--danger-bg)] px-2.5 py-1 rounded-full">
-                  Out of stock
+                  {t("shopOutOfStock")}
                 </span>
               )}
               {row.stock !== null && row.stock > 0 && (
                 <span className="text-xs text-[var(--muted)]">
-                  {row.stock} left
+                  {t("shopStockLeft", { count: row.stock })}
                 </span>
               )}
             </div>
@@ -133,7 +135,7 @@ export default async function PublicProductDetailPage({ params }: Params) {
             {/* Seller */}
             {row.sellerName && (
               <p className="text-sm text-[var(--muted)] mb-4">
-                Listed by <span className="font-medium text-[var(--ink2)]">{row.sellerName}</span>
+                {t("shopListedBy", { seller: row.sellerName })}
               </p>
             )}
 
@@ -152,12 +154,12 @@ export default async function PublicProductDetailPage({ params }: Params) {
         <div className="bg-white rounded-2xl border border-[var(--border)] p-6 text-center shadow-sm">
           <ShoppingBag className="w-8 h-8 text-[var(--accent)] mx-auto mb-3" />
           <p className="font-semibold text-[var(--ink)] mb-1">
-            {outOfStock ? "Get notified when back in stock" : `Ready to buy ${row.name}?`}
+            {outOfStock ? t("shopGetNotified") : t("shopReadyToBuy", { name: row.name })}
           </p>
           <p className="text-sm text-[var(--muted)] mb-5">
             {outOfStock
-              ? `Sign in to your ${APP.name} account to save this item and get restocking alerts.`
-              : `Create a free ${APP.name} account to add this to your cart and check out.`}
+              ? t("shopNotifyDesc", { app: APP.name })
+              : t("shopBuyDesc", { app: APP.name })}
           </p>
           <div className="flex gap-3 justify-center">
             <Link
@@ -165,10 +167,10 @@ export default async function PublicProductDetailPage({ params }: Params) {
               className="btn-primary flex items-center gap-2"
             >
               <ShoppingCart className="w-4 h-4" />
-              {outOfStock ? "Sign up for alerts" : "Sign up to buy"}
+              {outOfStock ? t("shopSignUpAlerts") : t("shopSignUpBuy")}
             </Link>
             <Link href="/login" className="btn-outline">
-              Sign in
+              {t("signIn")}
             </Link>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { BadgeCheck, MapPin, Phone, Star, Stethoscope, Home } from "lucide-react
 import Link from "next/link";
 import type { Metadata } from "next";
 import { formatSitterServices } from "@/lib/config/professionals";
+import { getTranslations } from "next-intl/server";
 
 /** Cache professional profiles for 60 s — profiles don't change frequently. */
 export const revalidate = 60;
@@ -51,6 +52,7 @@ const formatServices = formatSitterServices;
 
 export default async function PublicProPage({ params }: Params) {
   const { userId, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "public" });
   const db = getInstance();
 
   // Query both profile types in parallel; one will be null
@@ -123,7 +125,7 @@ export default async function PublicProPage({ params }: Params) {
           {APP.name}
         </Link>
         <Link href="/login" className="btn-primary text-sm py-2 px-4">
-          Book on {APP.name}
+          {t("proBookOn", { app: APP.name })}
         </Link>
       </nav>
 
@@ -142,17 +144,17 @@ export default async function PublicProPage({ params }: Params) {
               <div className="pb-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="text-xl font-bold text-[var(--ink)]">
-                    {profile.name ?? (isVet ? "Veterinarian" : "Pet Sitter")}
+                    {profile.name ?? (isVet ? t("proVet") : t("proSitter"))}
                   </h1>
                   {profile.isVerified && (
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--teal)] bg-[var(--teal-light)] px-2 py-0.5 rounded-full">
                       <BadgeCheck className="w-3 h-3" />
-                      Verified
+                      {t("proVerified")}
                     </span>
                   )}
                 </div>
                 <p className="text-sm text-[var(--muted)]">
-                  {isVet ? "Veterinarian" : "Pet Sitter"}
+                  {isVet ? t("proVet") : t("proSitter")}
                   {isVet && vetRow.specialty ? ` · ${vetRow.specialty}` : ""}
                 </p>
               </div>
@@ -164,7 +166,7 @@ export default async function PublicProPage({ params }: Params) {
                 ? "bg-[var(--green-bg)] text-[var(--green-text)]"
                 : "bg-[var(--off)] text-[var(--muted)]"
             }`}>
-              {profile.isAcceptingClients ? "Accepting new clients" : "Not accepting clients"}
+              {profile.isAcceptingClients ? t("proAccepting") : t("proNotAccepting")}
             </span>
 
             {/* Rating summary */}
@@ -173,7 +175,7 @@ export default async function PublicProPage({ params }: Params) {
                 <StarRow rating={Math.round(avgRating)} />
                 <span className="text-sm font-medium text-[var(--ink)]">{avgRating.toFixed(1)}</span>
                 <span className="text-sm text-[var(--muted)]">
-                  ({reviewRows.length} {reviewRows.length === 1 ? "review" : "reviews"})
+                  {t("proReviewCount", { count: reviewRows.length })}
                 </span>
               </div>
             )}
@@ -212,7 +214,7 @@ export default async function PublicProPage({ params }: Params) {
                 )}
                 {sitterRow.pricePerDay != null && (
                   <p className="text-sm font-semibold text-[var(--accent)] mt-1">
-                    ${(sitterRow.pricePerDay / 100).toFixed(0)}/day
+                    {t("proPerDay", { price: (sitterRow.pricePerDay / 100).toFixed(0) })}
                   </p>
                 )}
               </div>
@@ -224,7 +226,7 @@ export default async function PublicProPage({ params }: Params) {
         {reviewRows.length > 0 && (
           <section>
             <h2 className="text-base font-semibold text-[var(--ink)] mb-3">
-              Reviews ({reviewRows.length})
+              {t("proReviewsTitle", { count: reviewRows.length })}
             </h2>
             <div className="space-y-3">
               {reviewRows.map((r) => (
@@ -235,13 +237,13 @@ export default async function PublicProPage({ params }: Params) {
                         {(r.reviewerName ?? "?")[0].toUpperCase()}
                       </div>
                       <span className="text-sm font-medium text-[var(--ink)]">
-                        {r.reviewerName ?? "Pet Owner"}
+                        {r.reviewerName ?? t("proPetOwner")}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <StarRow rating={r.rating} />
                       <span className="text-xs text-[var(--muted)]">
-                        {new Date(r.createdAt).toLocaleDateString("en-US", {
+                        {new Date(r.createdAt).toLocaleDateString(locale, {
                           year: "numeric", month: "short", day: "numeric",
                         })}
                       </span>
@@ -259,13 +261,13 @@ export default async function PublicProPage({ params }: Params) {
         {/* CTA */}
         <div className="bg-white rounded-2xl border border-[var(--border)] p-6 text-center">
           <p className="font-medium text-[var(--ink)] mb-1">
-            Ready to book {profile.name?.split(" ")[0] ?? "this professional"}?
+            {t("proReadyToBook", { name: profile.name?.split(" ")[0] ?? profile.name ?? "" })}
           </p>
           <p className="text-sm text-[var(--muted)] mb-4">
-            Sign in to {APP.name} to request an appointment.
+            {t("proBookDesc", { app: APP.name })}
           </p>
           <Link href="/login" className="btn-primary">
-            Sign in to book
+            {t("proSignInBook")}
           </Link>
         </div>
       </div>

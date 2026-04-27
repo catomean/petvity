@@ -8,6 +8,7 @@ import type { ProductCategoryId } from "@/lib/config/products";
 import { ShoppingBag, PawPrint, Package } from "lucide-react";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: `Shop · ${APP.name}`,
@@ -30,6 +31,7 @@ type Props = {
 export default async function PublicShopPage({ params, searchParams }: Props) {
   const { locale } = await params;
   const { category } = await searchParams;
+  const t = await getTranslations({ locale, namespace: "public" });
 
   const activeCategory =
     category && Object.keys(PRODUCT_CATEGORY_CONFIG).includes(category)
@@ -75,10 +77,10 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
             href="/login"
             className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors"
           >
-            Sign in
+            {t("signIn")}
           </Link>
           <Link href="/register" className="btn-primary text-sm py-2 px-4">
-            Join free
+            {t("joinFree")}
           </Link>
         </div>
       </nav>
@@ -90,14 +92,14 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
             <ShoppingBag className="w-7 h-7 text-[var(--accent)]" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
-            Pet marketplace
+            {t("shopHeroTitle")}
           </h1>
           <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-6">
-            Browse food, toys, accessories, and more from pet lovers in the community.
+            {t("shopHeroDesc")}
           </p>
           <Link href="/register" className="btn-primary inline-flex items-center gap-2">
             <ShoppingBag className="w-4 h-4" />
-            Start shopping
+            {t("shopHeroButton")}
           </Link>
         </div>
       </div>
@@ -113,7 +115,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                 : "bg-[var(--off)] text-[var(--ink2)] hover:bg-[var(--teal-light)]"
             }`}
           >
-            All
+            {t("shopAll")}
           </Link>
           {CATEGORIES.map(([id, cfg]) => (
             <Link
@@ -137,23 +139,21 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
         {rows.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-2xl mb-3">🛍️</p>
-            <p className="font-medium text-[var(--ink)] mb-1">No products here yet</p>
+            <p className="font-medium text-[var(--ink)] mb-1">{t("shopEmptyTitle")}</p>
             <p className="text-sm text-[var(--muted)] mb-5">
               {activeCategory
-                ? `No ${PRODUCT_CATEGORY_CONFIG[activeCategory].label.toLowerCase()} products listed yet.`
-                : "Be the first to list a product in the marketplace."}
+                ? t("shopEmptyCategory", { category: PRODUCT_CATEGORY_CONFIG[activeCategory].label.toLowerCase() })
+                : t("shopEmptyAny")}
             </p>
             <Link href="/register" className="btn-primary">
-              Start selling
+              {t("shopEmptyAction")}
             </Link>
           </div>
         ) : (
           <>
             <p className="text-sm text-[var(--muted)] mb-5">
-              {rows.length} {rows.length === 1 ? "product" : "products"}
-              {activeCategory
-                ? ` in ${PRODUCT_CATEGORY_CONFIG[activeCategory].label}`
-                : ""}
+              {t("shopCount", { count: rows.length })}
+              {activeCategory ? ` ${t("shopInCategory", { category: PRODUCT_CATEGORY_CONFIG[activeCategory].label })}` : ""}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {rows.map((product) => {
@@ -191,17 +191,17 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                       )}
                       <p className="text-xs text-[var(--muted)] mt-1.5">
                         {catCfg?.label ?? product.category}
-                        {product.sellerName ? ` · by ${product.sellerName}` : ""}
+                        {product.sellerName ? ` · ${t("shopSoldBy", { seller: product.sellerName })}` : ""}
                       </p>
                       {product.stock === 0 && (
-                        <p className="text-xs text-[var(--danger)] mt-1">Out of stock</p>
+                        <p className="text-xs text-[var(--danger)] mt-1">{t("shopOutOfStock")}</p>
                       )}
                       <div className="flex items-center justify-between mt-auto pt-3">
                         <span className="text-lg font-bold text-[var(--ink)]">
                           {formatPrice(product.priceCents)}
                         </span>
                         <span className="btn-primary text-xs py-1.5 px-3">
-                          View
+                          {t("shopView")}
                         </span>
                       </div>
                     </div>
@@ -216,13 +216,13 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
       {/* Seller CTA footer */}
       <div className="border-t border-[var(--border)] bg-white">
         <div className="max-w-5xl mx-auto px-6 py-10 text-center">
-          <p className="font-medium text-[var(--ink)] mb-2">Have pet products to sell?</p>
+          <p className="font-medium text-[var(--ink)] mb-2">{t("shopCtaTitle")}</p>
           <p className="text-sm text-[var(--muted)] mb-5">
-            Join {APP.name} and reach thousands of pet owners looking for quality supplies.
+            {t("shopCtaDesc", { app: APP.name })}
           </p>
           <Link href="/register" className="btn-primary inline-flex items-center gap-2">
             <Package className="w-4 h-4" />
-            Start selling — it&apos;s free
+            {t("shopCtaButton")}
           </Link>
         </div>
       </div>
