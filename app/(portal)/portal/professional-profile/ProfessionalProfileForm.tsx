@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Stethoscope, Home, CheckCircle, Save } from "lucide-react";
 import { SITTER_SERVICES } from "@/lib/config/professionals";
+import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -35,6 +36,7 @@ interface Props {
 }
 
 export default function ProfessionalProfileForm({ role, initialData }: Props) {
+  const t = useTranslations("portal");
   const isVet = role === "veterinarian";
   const apiUrl = isVet ? "/api/vets/me" : "/api/sitters/me";
   const hasProfile = initialData !== null;
@@ -113,7 +115,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
     if (data.success) {
       setSuccess(true);
     } else {
-      setError(data.error ?? "Failed to save profile.");
+      setError(data.error ?? t("profSaveFailed"));
     }
   }
 
@@ -127,7 +129,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
   }
 
   const Icon = isVet ? Stethoscope : Home;
-  const title = isVet ? "Veterinarian Profile" : "Pet Sitter Profile";
+  const title = isVet ? t("profVetTitle") : t("profSitterTitle");
 
   return (
     <div className="max-w-2xl">
@@ -140,16 +142,14 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
           <h1 className="text-2xl font-semibold text-[var(--ink)]">{title}</h1>
         </div>
         <p className="text-sm text-[var(--muted)] ms-12">
-          {hasProfile
-            ? "Update your public profile visible to pet owners."
-            : "Set up your profile so pet owners can find you."}
+          {hasProfile ? t("profSubtitleUpdate") : t("profSubtitleSetup")}
         </p>
       </div>
 
       {success && (
         <div className="alert-success mb-5 flex items-center gap-2">
           <CheckCircle className="w-4 h-4 flex-shrink-0" />
-          Profile saved successfully.
+          {t("profSaveSuccess")}
         </div>
       )}
       {error && <p className="alert-error mb-5">{error}</p>}
@@ -158,17 +158,13 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
         {/* ── Shared: bio ── */}
         <div className="card p-5 space-y-4">
           <h2 className="font-medium text-[var(--ink)] text-sm uppercase tracking-wide text-[var(--muted)]">
-            About
+            {t("profAbout")}
           </h2>
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Bio</label>
+            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("petBioLabel")}</label>
             <textarea
               className="form-input min-h-[100px] resize-y"
-              placeholder={
-                isVet
-                  ? "Describe your experience, qualifications, and areas of expertise…"
-                  : "Tell pet owners about yourself and your experience with animals…"
-              }
+              placeholder={isVet ? t("profVetBioPlaceholder") : t("profSitterBioPlaceholder")}
               value={isVet ? vetForm.bio : sitterForm.bio}
               onChange={(e) =>
                 isVet
@@ -183,60 +179,60 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
         {isVet && (
           <div className="card p-5 space-y-4">
             <h2 className="font-medium text-sm uppercase tracking-wide text-[var(--muted)]">
-              Practice
+              {t("profPractice")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Specialty</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profSpecialty")}</label>
                 <input
                   className="form-input"
-                  placeholder="e.g. Small Animals, Exotic Pets, Surgery, Dentistry"
+                  placeholder={t("profSpecialtyPlaceholder")}
                   value={vetForm.specialty}
                   onChange={(e) => setVetForm((f) => ({ ...f, specialty: e.target.value }))}
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Clinic name</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profClinicName")}</label>
                 <input
                   className="form-input"
-                  placeholder="e.g. Sunshine Animal Hospital"
+                  placeholder={t("profClinicNamePlaceholder")}
                   value={vetForm.clinicName}
                   onChange={(e) => setVetForm((f) => ({ ...f, clinicName: e.target.value }))}
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Clinic address</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profClinicAddress")}</label>
                 <input
                   className="form-input"
-                  placeholder="Street address"
+                  placeholder={t("profClinicAddressPlaceholder")}
                   value={vetForm.clinicAddress}
                   onChange={(e) => setVetForm((f) => ({ ...f, clinicAddress: e.target.value }))}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">City</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profCity")}</label>
                 <input
                   className="form-input"
-                  placeholder="City"
+                  placeholder={t("profCityPlaceholder")}
                   value={vetForm.city}
                   onChange={(e) => setVetForm((f) => ({ ...f, city: e.target.value }))}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Country (ISO2)</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profCountry")}</label>
                 <input
                   className="form-input"
-                  placeholder="e.g. DE, US, FR"
+                  placeholder={t("profCountryPlaceholder")}
                   maxLength={2}
                   value={vetForm.country}
                   onChange={(e) => setVetForm((f) => ({ ...f, country: e.target.value }))}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Phone</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profPhone")}</label>
                 <input
                   className="form-input"
-                  placeholder="+1 555 000 0000"
+                  placeholder={t("profPhonePlaceholder")}
                   value={vetForm.phone}
                   onChange={(e) => setVetForm((f) => ({ ...f, phone: e.target.value }))}
                 />
@@ -249,11 +245,11 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
         {!isVet && (
           <div className="card p-5 space-y-4">
             <h2 className="font-medium text-sm uppercase tracking-wide text-[var(--muted)]">
-              Services
+              {t("profServices")}
             </h2>
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-2">
-                Services offered
+                {t("profServicesOffered")}
               </label>
               <div className="flex flex-wrap gap-2">
                 {SITTER_SERVICES.map(({ value, label }) => {
@@ -278,42 +274,42 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                  Daily rate ($)
+                  {t("profDailyRate")}
                 </label>
                 <input
                   type="number"
                   min="0"
                   step="0.01"
                   className="form-input"
-                  placeholder="e.g. 45.00"
+                  placeholder={t("profDailyRatePlaceholder")}
                   value={sitterForm.pricePerDay}
                   onChange={(e) => setSitterForm((f) => ({ ...f, pricePerDay: e.target.value }))}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">City</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profCity")}</label>
                 <input
                   className="form-input"
-                  placeholder="City"
+                  placeholder={t("profCityPlaceholder")}
                   value={sitterForm.city}
                   onChange={(e) => setSitterForm((f) => ({ ...f, city: e.target.value }))}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Country (ISO2)</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profCountry")}</label>
                 <input
                   className="form-input"
-                  placeholder="e.g. DE, US, FR"
+                  placeholder={t("profCountryPlaceholder")}
                   maxLength={2}
                   value={sitterForm.country}
                   onChange={(e) => setSitterForm((f) => ({ ...f, country: e.target.value }))}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Phone</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profPhone")}</label>
                 <input
                   className="form-input"
-                  placeholder="+1 555 000 0000"
+                  placeholder={t("profPhonePlaceholder")}
                   value={sitterForm.phone}
                   onChange={(e) => setSitterForm((f) => ({ ...f, phone: e.target.value }))}
                 />
@@ -336,18 +332,18 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
               }
             />
             <span className="text-sm font-medium text-[var(--ink)]">
-              Currently accepting new clients
+              {t("profAcceptingClients")}
             </span>
           </label>
           <p className="text-xs text-[var(--muted)] mt-1.5 ms-7">
-            Uncheck this to pause your listing while you are at capacity.
+            {t("profAcceptingClientsHint")}
           </p>
         </div>
 
         <div className="flex gap-3">
           <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2 disabled:opacity-60">
             <Save className="w-4 h-4" />
-            {saving ? "Saving…" : "Save profile"}
+            {saving ? t("saving") : t("profSaveProfile")}
           </button>
         </div>
       </form>
