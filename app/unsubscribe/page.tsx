@@ -72,12 +72,11 @@ export default async function UnsubscribePage({ searchParams }: Search) {
                 You&apos;re unsubscribed
               </h1>
               <p className="text-sm text-[var(--muted)] text-center mb-1">
-                You won&apos;t receive any more onboarding emails.
+                You won&apos;t receive the weekly wellness digest or onboarding emails.
               </p>
               <p className="text-xs text-[var(--muted)] text-center mb-6">
-                You&apos;ll still get transactional emails for your pets — vaccination
-                reminders, health alerts, order confirmations — these are necessary
-                for the service.
+                You&apos;ll still get vaccination reminders, health alerts, and order
+                confirmations — those are necessary for the service.
               </p>
               <p className="text-center">
                 <Link href="/portal/settings" className="text-sm text-[var(--teal)] hover:underline">
@@ -91,12 +90,12 @@ export default async function UnsubscribePage({ searchParams }: Search) {
                 <Mail className="w-6 h-6 text-[var(--teal)]" />
               </div>
               <h1 className="text-xl font-semibold text-[var(--ink)] text-center mb-2">
-                Unsubscribe from onboarding emails?
+                Unsubscribe from digest emails?
               </h1>
               <p className="text-sm text-[var(--muted)] text-center mb-6">
-                You&apos;ll stop receiving the welcome series. Transactional emails
-                for your pets (vaccination reminders, health alerts, order
-                confirmations) will continue.
+                You&apos;ll stop receiving the weekly wellness digest and the new-user
+                onboarding series. Vaccination reminders, health alerts, and order
+                confirmations will continue.
               </p>
               <form action={unsubscribeAction} className="space-y-3">
                 <input type="hidden" name="u" value={u} />

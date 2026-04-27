@@ -50,7 +50,7 @@ export default function SettingsPage() {
       .catch(() => setDigestOptOut(false));
   }, []);
 
-  async function toggleWelcomeDigest(next: boolean) {
+  async function toggleWeeklyDigest(next: boolean) {
     setDigestOptOut(next);
     setEmailMsg(null);
     setEmailSaving(true);
@@ -62,7 +62,7 @@ export default function SettingsPage() {
     const data = await res.json();
     setEmailSaving(false);
     if (data.success) {
-      setEmailMsg({ ok: true, text: next ? "Onboarding emails turned off." : "Onboarding emails turned on." });
+      setEmailMsg({ ok: true, text: next ? "Weekly digest unsubscribed." : "Weekly digest resubscribed." });
     } else {
       // Roll back UI on failure
       setDigestOptOut(!next);
@@ -224,14 +224,15 @@ export default function SettingsPage() {
             type="checkbox"
             checked={digestOptOut === true}
             disabled={digestOptOut === null || emailSaving}
-            onChange={(e) => toggleWelcomeDigest(e.target.checked)}
+            onChange={(e) => toggleWeeklyDigest(e.target.checked)}
             className="mt-0.5 w-4 h-4 rounded border-[var(--border)] text-[var(--teal)] focus:ring-[var(--teal)]"
           />
           <span className="text-sm">
-            <span className="font-medium text-[var(--ink)] block">Skip the onboarding email series</span>
+            <span className="font-medium text-[var(--ink)] block">Opt out of digest and onboarding emails</span>
             <span className="text-[var(--muted)] block mt-0.5">
-              You&apos;ll still receive transactional emails for your pets — vaccination reminders,
-              health alerts, order confirmations — these are necessary for the service.
+              Stops the weekly wellness digest and the new-user onboarding series.
+              Vaccination reminders, health alerts, order and booking confirmations are
+              always sent — they&apos;re necessary for the service.
             </span>
           </span>
         </label>
