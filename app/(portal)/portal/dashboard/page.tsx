@@ -114,7 +114,8 @@ export default async function DashboardPage() {
                   )
                   : (
                     <>
-                      {`${userPets.length} · `}
+                      {t("partialCheckedIn", { done: 0, total: userPets.length })}
+                      {" · "}
                       <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">{t("logTodayCheckin")}</Link>
                     </>
                   )}
