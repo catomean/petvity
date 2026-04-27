@@ -9,6 +9,8 @@ import { HEALTH_METRIC_CONFIG, getNormalRange } from "@/lib/config/health-metric
 import type { SpeciesId } from "@/lib/config/species";
 import { HealthLogForm } from "@/components/portal/HealthLogForm";
 import { formatRelativeDate } from "@/lib/utils/format";
+import { getTranslations } from "next-intl/server";
+import { getPortalLocale } from "@/lib/i18n/portal-locale";
 
 type Params = { params: Promise<{ petId: string }>; searchParams: Promise<{ date?: string }> };
 
@@ -19,6 +21,9 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
   const { petId } = await params;
   const { date: dateParam } = await searchParams;
   const db = getInstance();
+
+  const locale = await getPortalLocale();
+  const t = await getTranslations({ locale, namespace: "portal" });
 
   const pet = await db.query.pets.findFirst({
     where: and(eq(pets.id, petId), eq(pets.ownerId, session.user.id)),
@@ -95,18 +100,18 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
         className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
-        Health
+        {t("healthBack")}
       </Link>
 
       <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">
-        {isEditing ? "Edit past entry" : existing ? "Update today's check-in" : "Log health check"}
+        {isEditing ? t("editPastEntry") : existing ? t("updateTodaysCheckin") : t("logHealthCheck")}
       </h1>
       <p className="text-sm text-[var(--muted)] mb-4">
         {isEditing
-          ? `Editing entry for ${formatRelativeDate(targetDate).toLowerCase()}.`
+          ? t("editingEntryFor", { date: formatRelativeDate(targetDate).toLowerCase() })
           : existing
-            ? "You already logged today — update any values below."
-            : "Track as many or as few metrics as you have data for today."}
+            ? t("alreadyLoggedToday")
+            : t("logAsManyMetrics")}
       </p>
 
       {/* Previous log context — helps owners notice trends */}
@@ -120,7 +125,7 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
           parts.push(`${prevLog.heartRateBpm} bpm`);
         return parts.length > 0 ? (
           <p className="text-xs text-[var(--muted)] bg-[var(--off)] border border-[var(--border)] rounded-lg px-3 py-2 mb-6">
-            <span className="font-medium text-[var(--ink2)]">Last logged {formatRelativeDate(prevLog.date)}:</span>
+            <span className="font-medium text-[var(--ink2)]">{t("lastLoggedContext", { date: formatRelativeDate(prevLog.date) })}</span>
             {" "}{parts.join(" · ")}
           </p>
         ) : null;

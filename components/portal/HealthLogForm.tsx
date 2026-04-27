@@ -72,7 +72,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
     setSaving(false);
 
     if (!data.success) {
-      setError(data.error ?? "Failed to save.");
+      setError(data.error ?? t("saveFailed"));
     } else {
       router.push(`/portal/pets/${petId}`);
     }
@@ -91,7 +91,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
       label: "Weight",
       unit: "kg",
       step: "0.01",
-      placeholder: weightHint ? `${weightHint.min}–${weightHint.max} ${weightHint.unit}` : "e.g. 8.5",
+      placeholder: weightHint ? `${weightHint.min}–${weightHint.max} kg` : "e.g. 8.5",
       hint: weightHint,
     },
     {
@@ -99,7 +99,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
       label: "Temperature",
       unit: "°C",
       step: "0.1",
-      placeholder: tempHint ? `${tempHint.min}–${tempHint.max} ${tempHint.unit}` : "e.g. 38.5",
+      placeholder: tempHint ? `${tempHint.min}–${tempHint.max} °C` : "e.g. 38.5",
       hint: tempHint,
     },
     {
@@ -119,7 +119,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
       {/* Date */}
       <div className="card p-5">
         <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-          Date
+          {t("logDate")}
         </label>
         <input
           type="date"
@@ -132,7 +132,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
       {/* Physical */}
       <div className="card p-5">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
-          Physical measurements
+          {t("physicalMeasurements")}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {physicalFields.map(({ key, label, unit, step, placeholder, hint }) => (
@@ -152,7 +152,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
               />
               {hint && (
                 <p className="text-xs text-[var(--muted)] mt-1">
-                  Normal for {petName}: {hint.min}–{hint.max} {hint.unit}
+                  {t("normalRange", { petName, min: hint.min, max: hint.max, unit: hint.unit })}
                 </p>
               )}
             </div>
@@ -163,7 +163,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
       {/* Emotional */}
       <div className="card p-5">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
-          Emotional wellbeing
+          {t("emotionalWellbeing")}
         </h3>
         <div className="grid grid-cols-2 gap-4">
           {EMOTIONAL_METRICS.map((metricId) => {
@@ -179,7 +179,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
                   onChange={(e) => setForm({ ...form, [metricId]: e.target.value })}
                   className="form-input"
                 >
-                  <option value="">Not logged</option>
+                  <option value="">{t("notLogged")}</option>
                   {Array.from(
                     { length: (def.scale?.max ?? 5) - (def.scale?.min ?? 1) + 1 },
                     (_, i) => (def.scale?.min ?? 1) + i,
@@ -199,13 +199,13 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
       {/* Notes */}
       <div className="card p-5">
         <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-          Notes <span className="text-[var(--faint)] font-normal">(optional)</span>
+          {t("logNotes")} <span className="text-[var(--faint)] font-normal">{t("notesOptional")}</span>
         </label>
         <textarea
           rows={3}
           value={form.notes}
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
-          placeholder="Any observations, symptoms, or mood notes…"
+          placeholder={t("notesPlaceholder")}
           className="form-input resize-none"
         />
       </div>

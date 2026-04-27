@@ -16,10 +16,15 @@ import { computePetSignal } from "@/lib/domain/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { formatRelativeDate } from "@/lib/utils/format";
 import { Plus, ChevronRight, PawPrint } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { getPortalLocale } from "@/lib/i18n/portal-locale";
 
 export default async function PetsPage() {
   const session = await auth();
   if (!session) return null;
+
+  const locale = await getPortalLocale();
+  const t = await getTranslations({ locale, namespace: "portal" });
 
   const db = getInstance();
   const now = new Date();
@@ -84,16 +89,16 @@ export default async function PetsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--ink)]">My Pets</h1>
+          <h1 className="text-2xl font-bold text-[var(--ink)]">{t("myPets")}</h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">
             {userPets.length === 0
-              ? "Add your first pet to get started"
-              : `${userPets.length} pet${userPets.length !== 1 ? "s" : ""}`}
+              ? t("noPetsAction")
+              : t("petsCount", { count: userPets.length })}
           </p>
         </div>
         <Link href="/portal/pets/new" className="btn-primary">
           <Plus className="w-4 h-4" />
-          Add pet
+          {t("addPet")}
         </Link>
       </div>
 
@@ -103,14 +108,14 @@ export default async function PetsPage() {
             <PawPrint className="w-9 h-9 text-[var(--teal)]" />
           </div>
           <h2 className="text-lg font-semibold text-[var(--ink)] mb-2">
-            No pets yet
+            {t("noPetsYet")}
           </h2>
           <p className="text-sm text-[var(--muted)] mb-6 max-w-xs mx-auto">
-            Create profiles for each of your pets to start tracking their health.
+            {t("petsEmptyDesc")}
           </p>
           <Link href="/portal/pets/new" className="btn-primary">
             <Plus className="w-4 h-4" />
-            Add your first pet
+            {t("addYourFirstPet")}
           </Link>
         </div>
       ) : (
@@ -148,7 +153,7 @@ export default async function PetsPage() {
                   </p>
                   {lastDate && (
                     <p className="text-xs text-[var(--faint)] mt-0.5">
-                      Last check-in {formatRelativeDate(lastDate)}
+                      {t("lastCheckin", { date: formatRelativeDate(lastDate) })}
                     </p>
                   )}
                 </div>
@@ -158,7 +163,7 @@ export default async function PetsPage() {
                   </span>
                   {pet.isPublic && (
                     <span className="text-xs bg-[var(--teal-light)] text-[var(--teal)] px-2.5 py-1 rounded-full font-medium hidden sm:inline">
-                      Public
+                      {t("publicBadge")}
                     </span>
                   )}
                   <ChevronRight className="w-4 h-4 text-[var(--faint)] group-hover:text-[var(--teal)] transition-colors" />
@@ -175,7 +180,7 @@ export default async function PetsPage() {
             <div className="w-14 h-14 rounded-2xl border-2 border-dashed border-current flex items-center justify-center flex-shrink-0">
               <Plus className="w-5 h-5" />
             </div>
-            <span className="text-sm font-medium">Add another pet</span>
+            <span className="text-sm font-medium">{t("addAnotherPet")}</span>
           </Link>
         </div>
       )}
