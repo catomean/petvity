@@ -20,6 +20,7 @@ import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { formatDateShort } from "@/lib/utils/format";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
+import { getTranslations } from "next-intl/server";
 import { HealthTrendChart } from "@/components/portal/HealthTrendChart";
 import { SignalHistoryTimeline } from "@/components/portal/SignalHistoryTimeline";
 
@@ -42,6 +43,7 @@ export default async function PetHealthPage({ params }: Params) {
   const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const locale = await getPortalLocale();
+  const t = await getTranslations({ locale, namespace: "portal" });
 
   const [metrics, petVacc, signalHistory] = await Promise.all([
     db.query.healthMetrics.findMany({
@@ -125,14 +127,14 @@ export default async function PetHealthPage({ params }: Params) {
             {pet.name}
           </Link>
           <h1 className="text-2xl font-semibold text-[var(--ink)] mt-1">
-            Health
+            {t("healthBack")}
           </h1>
         </div>
         <Link
           href={`/portal/pets/${petId}/health/log`}
           className="btn-primary text-sm"
         >
-          Log today
+          {t("logToday")}
         </Link>
       </div>
 
@@ -141,12 +143,12 @@ export default async function PetHealthPage({ params }: Params) {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <BarChart3 className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-2">No health data yet</p>
+          <p className="font-medium text-[var(--ink)] mb-2">{t("healthEmptyTitle")}</p>
           <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">
-            Log your first check-in to see trends, charts, and your pet&apos;s Digital Twin.
+            {t("healthEmptyDesc")}
           </p>
           <Link href={`/portal/pets/${petId}/health/log`} className="btn-primary">
-            Log first check-in
+            {t("healthLogFirst")}
           </Link>
         </div>
       ) : (
@@ -169,7 +171,7 @@ export default async function PetHealthPage({ params }: Params) {
                     className="inline-flex items-center gap-1 text-xs font-medium text-[var(--warn-text)] hover:underline mt-1 no-underline"
                   >
                     <Syringe className="w-3 h-3" />
-                    Update vaccinations
+                    {t("updateVaccinations")}
                   </Link>
                 )}
               </div>
@@ -180,7 +182,7 @@ export default async function PetHealthPage({ params }: Params) {
           <div className="card p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <h2 className="font-semibold text-[var(--ink)]">Latest reading</h2>
+                <h2 className="font-semibold text-[var(--ink)]">{t("healthLatestReading")}</h2>
                 {wellnessScore !== null && (
                   <span
                     className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
@@ -191,7 +193,7 @@ export default async function PetHealthPage({ params }: Params) {
                           : "bg-[var(--danger-bg)] text-[var(--danger-text)]"
                     }`}
                   >
-                    Wellness {wellnessScore}%
+                    {t("healthWellnessScore", { score: wellnessScore })}
                   </span>
                 )}
               </div>
@@ -204,7 +206,7 @@ export default async function PetHealthPage({ params }: Params) {
               {/* Physical */}
               <div>
                 <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--muted)] mb-3">
-                  Physical
+                  {t("healthPhysical")}
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {PHYSICAL_METRICS.map((metricId) => {
@@ -228,7 +230,7 @@ export default async function PetHealthPage({ params }: Params) {
                         </div>
                         {range && (
                           <p className="text-xs text-[var(--danger-text)] mt-1">
-                            Normal: {def.toDisplay(range.min)}–{def.toDisplay(range.max)} {display.unit}
+                            {t("healthNormalRange", { min: def.toDisplay(range.min), max: def.toDisplay(range.max), unit: display.unit })}
                           </p>
                         )}
                       </div>
@@ -240,7 +242,7 @@ export default async function PetHealthPage({ params }: Params) {
               {/* Emotional */}
               <div>
                 <h3 className="text-xs font-medium uppercase tracking-wider text-[var(--muted)] mb-3">
-                  Emotional
+                  {t("healthEmotional")}
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {EMOTIONAL_METRICS.map((metricId) => {
@@ -264,7 +266,7 @@ export default async function PetHealthPage({ params }: Params) {
                         </div>
                         {range && (
                           <p className="text-xs text-[var(--danger-text)] mt-1">
-                            Normal: {range.min}–{range.max} {display.unit}
+                            {t("healthNormalRange", { min: range.min, max: range.max, unit: display.unit })}
                           </p>
                         )}
                       </div>
@@ -279,30 +281,30 @@ export default async function PetHealthPage({ params }: Params) {
           {metrics.length >= 2 && (
             <>
               <h2 className="font-semibold text-[var(--ink)] -mb-2">
-                30-day trends
+                {t("health30DayTrends")}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <HealthTrendChart
                   data={chartData}
-                  lines={[{ dataKey: "weight", name: "Weight", color: HEALTH_METRIC_CONFIG.weight.chartColor }]}
+                  lines={[{ dataKey: "weight", name: t("healthWeightLabel"), color: HEALTH_METRIC_CONFIG.weight.chartColor }]}
                   unit=" kg"
-                  title="Weight"
+                  title={t("healthWeightLabel")}
                   normalMin={HEALTH_METRIC_CONFIG.weight.toDisplay(weightRange.min)}
                   normalMax={HEALTH_METRIC_CONFIG.weight.toDisplay(weightRange.max)}
                 />
                 <HealthTrendChart
                   data={chartData}
-                  lines={[{ dataKey: "temperature", name: "Temp", color: HEALTH_METRIC_CONFIG.temperature.chartColor }]}
+                  lines={[{ dataKey: "temperature", name: t("healthTempShort"), color: HEALTH_METRIC_CONFIG.temperature.chartColor }]}
                   unit="°C"
-                  title="Temperature"
+                  title={t("healthTemperatureLabel")}
                   normalMin={HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRange.min)}
                   normalMax={HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRange.max)}
                 />
                 <HealthTrendChart
                   data={chartData}
-                  lines={[{ dataKey: "heart_rate", name: "HR", color: HEALTH_METRIC_CONFIG.heart_rate.chartColor }]}
+                  lines={[{ dataKey: "heart_rate", name: t("healthHrShort"), color: HEALTH_METRIC_CONFIG.heart_rate.chartColor }]}
                   unit=" bpm"
-                  title="Heart Rate"
+                  title={t("healthHeartRateLabel")}
                   normalMin={hrRange.min}
                   normalMax={hrRange.max}
                 />
@@ -316,7 +318,7 @@ export default async function PetHealthPage({ params }: Params) {
                   color: HEALTH_METRIC_CONFIG[id].chartColor,
                 }))}
                 unit="/5"
-                title="Emotional wellbeing"
+                title={t("emotionalWellbeing")}
                 integerScale
               />
             </>
@@ -328,17 +330,17 @@ export default async function PetHealthPage({ params }: Params) {
           {/* History table */}
           <div className="card p-5">
             <h2 className="font-semibold text-[var(--ink)] mb-4">
-              History (last 30 days)
+              {t("healthHistoryTitle")}
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-[var(--border)]">
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Date</th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Weight</th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Temp</th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Energy</th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">Mood</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthColDate")}</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthWeightLabel")}</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthTempShort")}</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthColEnergy")}</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthColMood")}</th>
                     <th className="py-2 px-3 w-8" />
                   </tr>
                 </thead>
@@ -362,7 +364,7 @@ export default async function PetHealthPage({ params }: Params) {
                         <Link
                           href={`/portal/pets/${pet.id}/health/log?date=${m.date}`}
                           className="p-1 rounded hover:bg-[var(--teal-light)] text-[var(--faint)] hover:text-[var(--teal)] transition-colors opacity-0 group-hover:opacity-100"
-                          title={`Edit entry for ${m.date}`}
+                          title={t("healthEditEntry", { date: m.date })}
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </Link>
