@@ -367,6 +367,41 @@ export function adoptionApplicationStatusChanged(data: {
   };
 }
 
+// ─── Professional verification ───────────────────────────────────────────────
+
+export function professionalVerified(data: {
+  professionalName: string;
+  profileUrl: string;
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).professionalVerification.verified;
+  return {
+    subject: t(s.subject, { app: APP.name }),
+    html: base(`
+      <h2>${s.h2}</h2>
+      <p>${t(s.greeting, { name: data.professionalName })}</p>
+      <p>${t(s.body, { app: APP.name })}</p>
+      <a class="btn" href="${data.profileUrl}">${s.button}</a>
+      <p style="background:#f0faf8;padding:12px 16px;border-radius:6px;border-left:4px solid #0D6E78;font-size:14px;">${s.tip}</p>
+    `, locale),
+  };
+}
+
+export function professionalUnverified(data: {
+  professionalName: string;
+  profileUrl: string;
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).professionalVerification.unverified;
+  return {
+    subject: t(s.subject, { app: APP.name }),
+    html: base(`
+      <h2>${s.h2}</h2>
+      <p>${t(s.greeting, { name: data.professionalName })}</p>
+      <p>${t(s.body, { app: APP.name })}</p>
+      <a class="btn" href="${data.profileUrl}">${s.button}</a>
+    `, locale),
+  };
+}
+
 // ─── Template key → function map ─────────────────────────────────────────────
 
 export type TemplateKey =

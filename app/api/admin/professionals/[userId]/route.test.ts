@@ -6,12 +6,14 @@ import { makeMockDb } from "@/lib/test-helpers/db-mock";
 
 vi.mock("@/lib/auth/guards", () => ({ requireAdmin: vi.fn() }));
 vi.mock("@/lib/db", () => ({ getInstance: vi.fn() }));
+vi.mock("@/lib/email", () => ({ sendEmail: vi.fn().mockResolvedValue(undefined) }));
 
 /* ─── Imports after mocks ──────────────────────────────────────────────────── */
 
 import { PATCH } from "./route";
 import { requireAdmin } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
+import { sendEmail } from "@/lib/email";
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
@@ -99,5 +101,45 @@ describe("PATCH /api/admin/professionals/[userId]", () => {
     expect(res.status).toBe(404);
     const body = await res.json();
     expect(body.error).toContain("profile not found");
+  });
+
+  it("sends a verification email to the professional when isVerified becomes true", async () => {
+    db._queueSelectResult([{ role: "veterinarian", name: "Dr. Chen", email: "chen@example.com", locale: "zh" }]);
+    db._updateReturning.mockResolvedValueOnce([{ isVerified: true }]);
+    await PATCH(makePatchRequest({ isVerified: true }), ROUTE_CONTEXT);
+
+    // Allow fire-and-forget to settle
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(sendEmail).toHaveBeenCalledOnce();
+    const call = vi.mocked(sendEmail).mock.calls[0][0];
+    expect(call.to).toBe("chen@example.com");
+    // Verified email in zh — should contain the zh subject, not the en one
+    expect(call.subject).not.toContain("Your profile");
+    expect(call.subject).toContain("已通过认证");
+  });
+
+  it("sends an unverification email when isVerified becomes false", async () => {
+    db._queueSelectResult([{ role: "pet_sitter", name: "Sam", email: "sam@example.com", locale: null }]);
+    db._updateReturning.mockResolvedValueOnce([{ isVerified: false }]);
+    await PATCH(makePatchRequest({ isVerified: false }), ROUTE_CONTEXT);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(sendEmail).toHaveBeenCalledOnce();
+    const call = vi.mocked(sendEmail).mock.calls[0][0];
+    expect(call.to).toBe("sam@example.com");
+    // Unverified email falls back to English (locale: null)
+    expect(call.subject).toContain("professional profile");
+  });
+
+  it("does not send an email when user has no email address", async () => {
+    db._queueSelectResult([{ role: "veterinarian", name: "Dr. X", email: null, locale: null }]);
+    db._updateReturning.mockResolvedValueOnce([{ isVerified: true }]);
+    await PATCH(makePatchRequest({ isVerified: true }), ROUTE_CONTEXT);
+
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(sendEmail).not.toHaveBeenCalled();
   });
 });

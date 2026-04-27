@@ -179,6 +179,23 @@ const strings = {
         body: "Your adoption application for <strong>{{petName}}</strong> has been reviewed. Unfortunately, the owner has decided to proceed with another applicant at this time.",
       },
     },
+    professionalVerification: {
+      verified: {
+        subject: "Your profile is now verified on {{app}}!",
+        h2: "You're verified! ✓",
+        greeting: "Hi {{name}},",
+        body: "Great news! Your professional profile on {{app}} has been verified. Your listing now displays a verified badge, and clients can find and book you directly.",
+        tip: "Make sure your profile is complete — set your availability and add recent experience to attract more clients.",
+        button: "View your public profile",
+      },
+      unverified: {
+        subject: "Update on your {{app}} professional profile",
+        h2: "Profile status update",
+        greeting: "Hi {{name}},",
+        body: "Your professional profile on {{app}} has been updated. If you believe this is an error or have questions, please contact our support team.",
+        button: "View your profile",
+      },
+    },
   },
 
   de: {
@@ -322,6 +339,23 @@ const strings = {
         subject: "Update zu deiner Adoptionsanfrage für {{petName}}",
         h2: "Update zur Anfrage",
         body: "Deine Adoptionsanfrage für <strong>{{petName}}</strong> wurde geprüft. Der Besitzer hat sich leider für einen anderen Interessenten entschieden.",
+      },
+    },
+    professionalVerification: {
+      verified: {
+        subject: "Dein Profil auf {{app}} wurde verifiziert!",
+        h2: "Verifiziert! ✓",
+        greeting: "Hallo {{name}},",
+        body: "Tolle Neuigkeit! Dein Fachprofil auf {{app}} wurde verifiziert. Dein Eintrag zeigt jetzt ein Verifizierungszeichen und Kunden können dich direkt finden und buchen.",
+        tip: "Stelle sicher, dass dein Profil vollständig ist – gib deine Verfügbarkeit an und füge aktuelle Erfahrungen hinzu, um mehr Kunden zu gewinnen.",
+        button: "Öffentliches Profil ansehen",
+      },
+      unverified: {
+        subject: "Update zu deinem {{app}}-Fachprofil",
+        h2: "Profilstatus-Update",
+        greeting: "Hallo {{name}},",
+        body: "Dein Fachprofil auf {{app}} wurde aktualisiert. Falls du glaubst, dass dies ein Fehler ist, oder Fragen hast, wende dich bitte an unseren Support.",
+        button: "Profil ansehen",
       },
     },
   },
@@ -469,6 +503,23 @@ const strings = {
         body: "Ta demande d'adoption pour <strong>{{petName}}</strong> a été examinée. Malheureusement, le propriétaire a choisi de poursuivre avec un autre candidat.",
       },
     },
+    professionalVerification: {
+      verified: {
+        subject: "Ton profil est maintenant vérifié sur {{app}} !",
+        h2: "Tu es vérifié(e) ! ✓",
+        greeting: "Bonjour {{name}},",
+        body: "Bonne nouvelle ! Ton profil professionnel sur {{app}} a été vérifié. Ton annonce affiche maintenant un badge de vérification et les clients peuvent te trouver et te réserver directement.",
+        tip: "Assure-toi que ton profil est complet — indique tes disponibilités et ajoute de l'expérience récente pour attirer plus de clients.",
+        button: "Voir ton profil public",
+      },
+      unverified: {
+        subject: "Mise à jour de ton profil professionnel sur {{app}}",
+        h2: "Mise à jour du statut du profil",
+        greeting: "Bonjour {{name}},",
+        body: "Ton profil professionnel sur {{app}} a été mis à jour. Si tu penses qu'il s'agit d'une erreur ou si tu as des questions, contacte notre équipe de support.",
+        button: "Voir ton profil",
+      },
+    },
   },
 
   es: {
@@ -612,6 +663,23 @@ const strings = {
         subject: "Actualización sobre tu solicitud para adoptar a {{petName}}",
         h2: "Actualización de solicitud",
         body: "Tu solicitud de adopción para <strong>{{petName}}</strong> ha sido revisada. Lamentablemente, el propietario ha decidido continuar con otro solicitante.",
+      },
+    },
+    professionalVerification: {
+      verified: {
+        subject: "¡Tu perfil está verificado en {{app}}!",
+        h2: "¡Estás verificado/a! ✓",
+        greeting: "Hola {{name}},",
+        body: "¡Buenas noticias! Tu perfil profesional en {{app}} ha sido verificado. Tu anuncio ahora muestra una insignia de verificación y los clientes pueden encontrarte y reservarte directamente.",
+        tip: "Asegúrate de que tu perfil esté completo — indica tu disponibilidad y añade experiencia reciente para atraer más clientes.",
+        button: "Ver tu perfil público",
+      },
+      unverified: {
+        subject: "Actualización sobre tu perfil profesional en {{app}}",
+        h2: "Actualización del estado del perfil",
+        greeting: "Hola {{name}},",
+        body: "Tu perfil profesional en {{app}} ha sido actualizado. Si crees que es un error o tienes alguna pregunta, contacta a nuestro equipo de soporte.",
+        button: "Ver tu perfil",
       },
     },
   },
@@ -759,6 +827,23 @@ const strings = {
         body: "<strong>{{petName}}</strong>の里親申請を審査しました。残念ながら、オーナーは別の申請者を選ぶことにしました。",
       },
     },
+    professionalVerification: {
+      verified: {
+        subject: "{{app}}のプロフィールが認証されました！",
+        h2: "認証完了！ ✓",
+        greeting: "{{name}}さん、こんにちは。",
+        body: "おめでとうございます！{{app}}のプロフェッショナルプロフィールが認証されました。あなたのリストには認証バッジが表示され、クライアントが直接検索・予約できるようになりました。",
+        tip: "プロフィールが完全であることを確認してください — 対応可能時間を設定し、最近の経験を追加してより多くのクライアントを引き付けましょう。",
+        button: "公開プロフィールを見る",
+      },
+      unverified: {
+        subject: "{{app}}のプロフェッショナルプロフィールの更新",
+        h2: "プロフィールステータスの更新",
+        greeting: "{{name}}さん、こんにちは。",
+        body: "{{app}}のプロフェッショナルプロフィールが更新されました。誤りと思われる場合、またはご質問がある場合は、サポートチームまでご連絡ください。",
+        button: "プロフィールを見る",
+      },
+    },
   },
 
   zh: {
@@ -902,6 +987,23 @@ const strings = {
         subject: "关于您领养{{petName}}申请的更新",
         h2: "申请更新",
         body: "您领养<strong>{{petName}}</strong>的申请已审核。遗憾的是，主人决定选择其他申请人。",
+      },
+    },
+    professionalVerification: {
+      verified: {
+        subject: "您在{{app}}上的资料已通过认证！",
+        h2: "已认证！ ✓",
+        greeting: "您好，{{name}}，",
+        body: "好消息！您在{{app}}上的专业资料已通过认证。您的列表现在显示认证徽章，客户可以直接找到并预约您。",
+        tip: "请确保您的资料完整——设置您的可用时间并添加近期经验，以吸引更多客户。",
+        button: "查看公开资料",
+      },
+      unverified: {
+        subject: "关于您在{{app}}专业资料的更新",
+        h2: "资料状态更新",
+        greeting: "您好，{{name}}，",
+        body: "您在{{app}}上的专业资料已更新。如果您认为这是错误或有任何问题，请联系我们的支持团队。",
+        button: "查看资料",
       },
     },
   },
@@ -1049,6 +1151,23 @@ const strings = {
         body: "<strong>{{petName}}</strong>의 입양 신청이 검토되었습니다. 안타깝게도 보호자가 다른 신청자를 선택하기로 결정했습니다.",
       },
     },
+    professionalVerification: {
+      verified: {
+        subject: "{{app}}에서 귀하의 프로필이 인증되었습니다!",
+        h2: "인증 완료! ✓",
+        greeting: "안녕하세요, {{name}}님,",
+        body: "좋은 소식입니다! {{app}}의 전문가 프로필이 인증되었습니다. 이제 귀하의 목록에 인증 배지가 표시되고, 고객이 직접 귀하를 찾아 예약할 수 있습니다.",
+        tip: "프로필을 완성해 주세요 — 가능한 시간을 설정하고 최근 경험을 추가하여 더 많은 고객을 유치하세요.",
+        button: "공개 프로필 보기",
+      },
+      unverified: {
+        subject: "{{app}} 전문가 프로필 업데이트",
+        h2: "프로필 상태 업데이트",
+        greeting: "안녕하세요, {{name}}님,",
+        body: "{{app}}의 전문가 프로필이 업데이트되었습니다. 오류라고 생각하시거나 질문이 있으시면 고객 지원팀에 문의해 주세요.",
+        button: "프로필 보기",
+      },
+    },
   },
 
   tr: {
@@ -1194,6 +1313,23 @@ const strings = {
         body: "<strong>{{petName}}</strong> için sahiplenme başvurunuz incelendi. Ne yazık ki sahip başka bir başvuru sahibiyle devam etmeye karar verdi.",
       },
     },
+    professionalVerification: {
+      verified: {
+        subject: "Profiliniz {{app}}'de doğrulandı!",
+        h2: "Doğrulandınız! ✓",
+        greeting: "Merhaba {{name}},",
+        body: "Harika haber! {{app}}'deki profesyonel profiliniz doğrulandı. İlanınız artık doğrulama rozeti gösteriyor ve müşteriler sizi doğrudan bulup rezervasyon yapabilir.",
+        tip: "Profilinizin eksiksiz olduğundan emin olun — müsaitliğinizi ayarlayın ve daha fazla müşteri çekmek için son deneyimlerinizi ekleyin.",
+        button: "Herkese açık profilimi görüntüle",
+      },
+      unverified: {
+        subject: "{{app}} profesyonel profiliniz hakkında güncelleme",
+        h2: "Profil durumu güncellemesi",
+        greeting: "Merhaba {{name}},",
+        body: "{{app}}'deki profesyonel profiliniz güncellendi. Bunun bir hata olduğunu düşünüyorsanız veya sorularınız varsa lütfen destek ekibimizle iletişime geçin.",
+        button: "Profilimi görüntüle",
+      },
+    },
   },
 
   ar: {
@@ -1337,6 +1473,23 @@ const strings = {
         subject: "تحديث بشأن طلبك لتبني {{petName}}",
         h2: "تحديث الطلب",
         body: "تمت مراجعة طلب تبني <strong>{{petName}}</strong>. للأسف، قرر المالك المضي قدماً مع مقدم طلب آخر.",
+      },
+    },
+    professionalVerification: {
+      verified: {
+        subject: "تم التحقق من ملفك الشخصي على {{app}}!",
+        h2: "تم التحقق! ✓",
+        greeting: "مرحباً {{name}}،",
+        body: "أخبار رائعة! تم التحقق من ملفك الشخصي المهني على {{app}}. يعرض إعلانك الآن شارة التحقق ويمكن للعملاء العثور عليك وحجزك مباشرةً.",
+        tip: "تأكد من اكتمال ملفك الشخصي — حدد أوقات توفرك وأضف تجاربك الأخيرة لجذب المزيد من العملاء.",
+        button: "عرض ملفك الشخصي العام",
+      },
+      unverified: {
+        subject: "تحديث بشأن ملفك الشخصي المهني على {{app}}",
+        h2: "تحديث حالة الملف الشخصي",
+        greeting: "مرحباً {{name}}،",
+        body: "تم تحديث ملفك الشخصي المهني على {{app}}. إذا كنت تعتقد أن هذا خطأ أو لديك أي أسئلة، يرجى التواصل مع فريق الدعم.",
+        button: "عرض ملفك الشخصي",
       },
     },
   },

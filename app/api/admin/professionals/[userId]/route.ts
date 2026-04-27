@@ -4,10 +4,26 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { users, vetProfiles, sitterProfiles } from "@/lib/db/schema";
+import { sendEmail } from "@/lib/email";
+import { professionalVerified, professionalUnverified } from "@/lib/email/templates";
+import { APP_URL } from "@/lib/config/app";
 
 const patchSchema = z.object({
   isVerified: z.boolean(),
 });
+
+function notifyProfessional(opts: {
+  user: { name: string | null; email: string | null; locale: string | null };
+  isVerified: boolean;
+  profileUrl: string;
+}) {
+  if (!opts.user.email) return;
+  const data = { professionalName: opts.user.name ?? opts.user.email, profileUrl: opts.profileUrl };
+  const tpl = opts.isVerified
+    ? professionalVerified(data, opts.user.locale)
+    : professionalUnverified(data, opts.user.locale);
+  sendEmail({ to: opts.user.email, ...tpl }).catch(() => {/* fire-and-forget */});
+}
 
 type Params = { params: Promise<{ userId: string }> };
 
@@ -32,7 +48,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   // Determine which profile table to update based on the user's role
   const [user] = await db
-    .select({ role: users.role })
+    .select({ role: users.role, name: users.name, email: users.email, locale: users.locale })
     .from(users)
     .where(eq(users.id, userId))
     .limit(1);
@@ -54,6 +70,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         { status: 404 },
       );
     }
+    notifyProfessional({ user, isVerified, profileUrl: `${APP_URL}/portal/professional-profile` });
     return NextResponse.json({ success: true, data: { isVerified: updated.isVerified } });
   }
 
@@ -70,6 +87,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         { status: 404 },
       );
     }
+    notifyProfessional({ user, isVerified, profileUrl: `${APP_URL}/portal/professional-profile` });
     return NextResponse.json({ success: true, data: { isVerified: updated.isVerified } });
   }
 

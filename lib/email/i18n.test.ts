@@ -54,7 +54,7 @@ describe("getEmailStrings", () => {
       "medicationEndingReminder", "bookingReminder", "bookingRequestReceived",
       "bookingStatusChanged", "orderConfirmation", "orderStatusUpdate",
       "sellerOrderNotification", "adoptionApplicationReceived",
-      "adoptionApplicationStatusChanged",
+      "adoptionApplicationStatusChanged", "professionalVerification",
     ] as const;
 
     for (const locale of SUPPORTED_LOCALES) {
