@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Store, Plus, Pencil, X, Package, Eye, EyeOff, ShoppingBag } from "lucide-react";
 import { PRODUCT_CATEGORY_OPTIONS, productCategoryLabel } from "@/lib/config/products";
 import { formatPrice } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -35,6 +36,7 @@ const EMPTY_FORM: FormState = {
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
 export default function MyProductsPage() {
+  const t = useTranslations("portal");
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -84,7 +86,7 @@ export default function MyProductsPage() {
     setSaving(true);
 
     const priceCents = Math.round(parseFloat(form.priceDollars) * 100);
-    if (!priceCents || priceCents <= 0) { setError("Enter a valid price."); setSaving(false); return; }
+    if (!priceCents || priceCents <= 0) { setError(t("myProductsInvalidPrice")); setSaving(false); return; }
 
     const body = {
       name: form.name.trim(),
@@ -103,7 +105,7 @@ export default function MyProductsPage() {
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? "Failed to save."); return; }
+    if (!data.success) { setError(data.error ?? t("myProductsSaveFailed")); return; }
 
     if (isEdit) {
       setItems((prev) => prev.map((p) => p.id === editingId ? data.data : p));
@@ -136,17 +138,15 @@ export default function MyProductsPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--ink)]">My Products</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">
-            List items for sale in the Petvity marketplace.
-          </p>
+          <h1 className="text-2xl font-bold text-[var(--ink)]">{t("myProductsTitle")}</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{t("myProductsSubtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
           <Link href="/portal/my-products/orders" className="btn-outline flex items-center gap-2">
-            <ShoppingBag className="w-4 h-4" /> Orders
+            <ShoppingBag className="w-4 h-4" /> {t("orders")}
           </Link>
           <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Add product
+            <Plus className="w-4 h-4" /> {t("myProductsAdd")}
           </button>
         </div>
       </div>
@@ -155,15 +155,15 @@ export default function MyProductsPage() {
       {items.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div className="card p-4">
-            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">Total listings</p>
+            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">{t("myProductsTotalListings")}</p>
             <p className="text-2xl font-bold text-[var(--ink)] mt-1">{items.length}</p>
           </div>
           <div className="card p-4">
-            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">Active</p>
+            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">{t("myProductsActive")}</p>
             <p className="text-2xl font-bold text-[var(--teal)] mt-1">{activeCount}</p>
           </div>
           <div className="card p-4 col-span-2 sm:col-span-1">
-            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">Hidden</p>
+            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">{t("myProductsHidden")}</p>
             <p className="text-2xl font-bold text-[var(--ink2)] mt-1">{items.length - activeCount}</p>
           </div>
         </div>
@@ -175,7 +175,7 @@ export default function MyProductsPage() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-semibold text-[var(--ink)]">
-                {editingId ? "Edit product" : "New product"}
+                {editingId ? t("myProductsEditTitle") : t("myProductsNewTitle")}
               </h2>
               <button onClick={closeForm} className="p-1.5 rounded-lg hover:bg-[var(--off)] transition-colors">
                 <X className="w-4 h-4" />
@@ -184,29 +184,29 @@ export default function MyProductsPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">Product name *</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsNameLabel")} *</label>
                 <input
                   className="form-input"
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  placeholder="e.g. Premium dog treats"
+                  placeholder={t("myProductsNamePlaceholder")}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">Description</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsDescLabel")}</label>
                 <textarea
                   className="form-input min-h-[80px]"
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                  placeholder="Describe your product…"
+                  placeholder={t("myProductsDescPlaceholder")}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">Price ($) *</label>
+                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsPriceLabel")} *</label>
                   <input
                     className="form-input"
                     type="number"
@@ -219,20 +219,20 @@ export default function MyProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">Stock</label>
+                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsStockLabel")}</label>
                   <input
                     className="form-input"
                     type="number"
                     min="0"
                     value={form.stock}
                     onChange={(e) => setForm((f) => ({ ...f, stock: e.target.value }))}
-                    placeholder="Leave blank = unlimited"
+                    placeholder={t("myProductsStockPlaceholder")}
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">Category</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsCategoryLabel")}</label>
                 <select
                   className="form-input"
                   value={form.category}
@@ -245,7 +245,7 @@ export default function MyProductsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">Image URL</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsImageUrl")}</label>
                 <input
                   className="form-input"
                   type="url"
@@ -258,9 +258,9 @@ export default function MyProductsPage() {
               {error && <p className="alert-error">{error}</p>}
 
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={closeForm} className="btn-outline">Cancel</button>
+                <button type="button" onClick={closeForm} className="btn-outline">{t("cancel")}</button>
                 <button type="submit" disabled={saving} className="btn-primary">
-                  {saving ? "Saving…" : editingId ? "Save changes" : "List product"}
+                  {saving ? t("saving") : editingId ? t("editPetSave") : t("myProductsList")}
                 </button>
               </div>
             </form>
@@ -270,16 +270,14 @@ export default function MyProductsPage() {
 
       {/* Product list */}
       {loading ? (
-        <div className="card p-8 text-center text-[var(--muted)]">Loading…</div>
+        <div className="card p-8 text-center text-[var(--muted)]">{t("editPetLoading")}</div>
       ) : items.length === 0 ? (
         <div className="card p-12 text-center">
           <Store className="w-10 h-10 text-[var(--faint)] mx-auto mb-3" />
-          <p className="font-medium text-[var(--ink)]">No products listed yet</p>
-          <p className="text-sm text-[var(--muted)] mt-1 mb-5">
-            List your pet products, accessories, or supplies in the marketplace.
-          </p>
+          <p className="font-medium text-[var(--ink)]">{t("myProductsEmpty")}</p>
+          <p className="text-sm text-[var(--muted)] mt-1 mb-5">{t("myProductsEmptyDesc")}</p>
           <button onClick={openAdd} className="btn-primary inline-flex items-center gap-2">
-            <Plus className="w-4 h-4" /> List your first product
+            <Plus className="w-4 h-4" /> {t("myProductsListFirst")}
           </button>
         </div>
       ) : (
@@ -300,19 +298,19 @@ export default function MyProductsPage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-semibold text-[var(--ink)] truncate">{p.name}</p>
                   {!p.isActive && (
-                    <span className="text-xs bg-[var(--off)] text-[var(--muted)] px-2 py-0.5 rounded-full">Hidden</span>
+                    <span className="text-xs bg-[var(--off)] text-[var(--muted)] px-2 py-0.5 rounded-full">{t("myProductsHidden")}</span>
                   )}
                 </div>
                 <p className="text-xs text-[var(--muted)] mt-0.5">
                   {productCategoryLabel(p.category)} · {formatPrice(p.priceCents)}
-                  {p.stock != null && ` · ${p.stock} in stock`}
+                  {p.stock != null && ` · ${t("myProductsInStock", { count: p.stock })}`}
                 </p>
               </div>
 
               <div className="flex items-center gap-1 flex-shrink-0">
                 <button
                   onClick={() => toggleActive(p)}
-                  title={p.isActive ? "Hide from marketplace" : "Show in marketplace"}
+                  title={p.isActive ? t("myProductsHideTitle") : t("myProductsShowTitle")}
                   className="p-2 rounded-lg hover:bg-[var(--off)] transition-colors text-[var(--muted)]"
                 >
                   {p.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}

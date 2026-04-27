@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Heart, ChevronLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Pet {
   id: string;
@@ -42,6 +43,7 @@ function TriState({
   value: boolean | null;
   onChange: (v: boolean | null) => void;
 }) {
+  const t = useTranslations("portal");
   return (
     <div>
       <p className="text-sm font-medium text-[var(--ink2)] mb-2">{label}</p>
@@ -60,7 +62,7 @@ function TriState({
                   : "bg-white text-[var(--muted)] border-[var(--border)] hover:border-[var(--teal)]"
               }`}
             >
-              {opt === "yes" ? "Yes" : opt === "no" ? "No" : "Unknown"}
+              {opt === "yes" ? t("listAdoptYes") : opt === "no" ? t("listAdoptNo") : t("listAdoptUnknown")}
             </button>
           );
         })}
@@ -70,6 +72,7 @@ function TriState({
 }
 
 export default function ListForAdoptionPage() {
+  const t = useTranslations("portal");
   const { petId } = useParams<{ petId: string }>();
   const router = useRouter();
 
@@ -116,7 +119,7 @@ export default function ListForAdoptionPage() {
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? "Failed to create listing."); return; }
+    if (!data.success) { setError(data.error ?? t("listAdoptFailed")); return; }
     router.push(`/portal/adoptions`);
   }
 
@@ -132,8 +135,8 @@ export default function ListForAdoptionPage() {
   if (!pet) {
     return (
       <div className="card py-16 text-center">
-        <p className="font-medium text-[var(--ink)]">Pet not found</p>
-        <Link href="/portal/pets" className="btn-primary mt-4">My pets</Link>
+        <p className="font-medium text-[var(--ink)]">{t("listAdoptPetNotFound")}</p>
+        <Link href="/portal/pets" className="btn-primary mt-4">{t("myPets")}</Link>
       </div>
     );
   }
@@ -153,10 +156,8 @@ export default function ListForAdoptionPage() {
           <Heart className="w-5 h-5 text-[var(--teal)]" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">List {pet.name} for adoption</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">
-            Help {pet.name} find a loving new home
-          </p>
+          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("listAdoptTitle", { name: pet.name })}</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{t("listAdoptSubtitle", { name: pet.name })}</p>
         </div>
       </div>
 
@@ -167,12 +168,12 @@ export default function ListForAdoptionPage() {
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              Listing headline <span className="text-[var(--danger-text)]">*</span>
+              {t("listAdoptHeadline")} <span className="text-[var(--danger-text)]">*</span>
             </label>
             <input
               className="form-input"
               required
-              placeholder={`e.g. ${pet.name} looking for a loving forever home`}
+              placeholder={t("listAdoptHeadlinePlaceholder", { name: pet.name })}
               value={form.title}
               onChange={(e) => field("title", e.target.value)}
             />
@@ -181,12 +182,12 @@ export default function ListForAdoptionPage() {
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-              About {pet.name}
-              <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+              {t("listAdoptAbout", { name: pet.name })}
+              <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
             </label>
             <textarea
               className="form-input min-h-[120px] resize-y"
-              placeholder={`Describe ${pet.name}'s personality, habits, and what kind of home they'd thrive in…`}
+              placeholder={t("listAdoptAboutPlaceholder", { name: pet.name })}
               value={form.description}
               onChange={(e) => field("description", e.target.value)}
             />
@@ -196,19 +197,19 @@ export default function ListForAdoptionPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Location <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("listAdoptLocation")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
-                placeholder="City, Country"
+                placeholder={t("listAdoptLocationPlaceholder")}
                 value={form.location}
                 onChange={(e) => field("location", e.target.value)}
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Adoption fee ($)
-                <span className="text-[var(--muted)] font-normal ms-1">(blank = free)</span>
+                {t("listAdoptFeeLabel")}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listAdoptFeeHint")}</span>
               </label>
               <input
                 className="form-input"
@@ -225,22 +226,22 @@ export default function ListForAdoptionPage() {
           {/* Traits */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <TriState
-              label="Good with kids?"
+              label={t("listAdoptGoodWithKids")}
               value={form.goodWithKids}
               onChange={(v) => field("goodWithKids", v)}
             />
             <TriState
-              label="Good with dogs?"
+              label={t("listAdoptGoodWithDogs")}
               value={form.goodWithDogs}
               onChange={(v) => field("goodWithDogs", v)}
             />
             <TriState
-              label="Good with cats?"
+              label={t("listAdoptGoodWithCats")}
               value={form.goodWithCats}
               onChange={(v) => field("goodWithCats", v)}
             />
             <div>
-              <p className="text-sm font-medium text-[var(--ink2)] mb-2">Experience required?</p>
+              <p className="text-sm font-medium text-[var(--ink2)] mb-2">{t("listAdoptExpRequired")}</p>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -248,7 +249,7 @@ export default function ListForAdoptionPage() {
                   checked={form.requiresExperience}
                   onChange={(e) => field("requiresExperience", e.target.checked)}
                 />
-                <span className="text-sm text-[var(--ink2)]">Experienced owners only</span>
+                <span className="text-sm text-[var(--ink2)]">{t("listAdoptExpOwners")}</span>
               </label>
             </div>
           </div>
@@ -257,10 +258,10 @@ export default function ListForAdoptionPage() {
           <div className="flex gap-3 pt-2">
             <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2 disabled:opacity-60">
               <Heart className="w-4 h-4" />
-              {saving ? "Creating…" : "Create listing"}
+              {saving ? t("listAdoptCreating") : t("listAdoptCreate")}
             </button>
             <Link href={`/portal/pets/${petId}`} className="btn-outline">
-              Cancel
+              {t("cancel")}
             </Link>
           </div>
         </form>

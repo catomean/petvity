@@ -13,6 +13,7 @@ import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS, LISTING_STATUS_CONFIG,
 import type { ApplicationStatusId, ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
 import { formatPetAge, formatAdoptionFee } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -51,16 +52,17 @@ interface FormState {
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
-const HOUSING_OPTIONS = [
-  { value: "", label: "Select housing type…" },
-  ...HOUSING_TYPE_OPTIONS,
-];
+// Populated inside the component after t() is available
+function buildHousingOptions(selectLabel: string) {
+  return [{ value: "", label: selectLabel }, ...HOUSING_TYPE_OPTIONS];
+}
 
 
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
 export default function ListingDetailPage() {
+  const t = useTranslations("portal");
   const { listingId } = useParams<{ listingId: string }>();
 
   const [listing, setListing] = useState<Listing | null>(null);
@@ -103,7 +105,7 @@ export default function ListingDetailPage() {
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? "Failed to submit."); return; }
+    if (!data.success) { setError(data.error ?? t("listingSubmitFailed")); return; }
     setApplied(true);
     setShowForm(false);
   }
@@ -120,8 +122,8 @@ export default function ListingDetailPage() {
   if (!listing) {
     return (
       <div className="card py-16 text-center">
-        <p className="font-medium text-[var(--ink)] mb-1">Listing not found</p>
-        <Link href="/portal/adopt" className="btn-primary mt-4">Back to listings</Link>
+        <p className="font-medium text-[var(--ink)] mb-1">{t("listingNotFound")}</p>
+        <Link href="/portal/adopt" className="btn-primary mt-4">{t("listingBackToListings")}</Link>
       </div>
     );
   }
@@ -138,7 +140,7 @@ export default function ListingDetailPage() {
         className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
       >
         <ChevronLeft className="w-3.5 h-3.5" />
-        All listings
+        {t("listingAllListings")}
       </Link>
 
       {/* Hero card */}
@@ -184,7 +186,7 @@ export default function ListingDetailPage() {
             )}
             <span className="flex items-center gap-1.5">
               <DollarSign className="w-4 h-4 flex-shrink-0" />
-              {listing.feeCents ? `${formatAdoptionFee(listing.feeCents)} adoption fee` : "Free"}
+              {listing.feeCents ? t("listingAdoptionFee", { price: formatAdoptionFee(listing.feeCents) }) : t("adoptFree")}
             </span>
           </div>
 
@@ -222,7 +224,7 @@ export default function ListingDetailPage() {
               href={`/${DEFAULT_LOCALE}/pets/${listing.pet.handle}`}
               className="text-sm text-[var(--teal)] hover:underline mt-3 inline-block no-underline"
             >
-              View {listing.pet.name}&apos;s public profile →
+              {t("listingViewProfile", { name: listing.pet.name })}
             </Link>
           )}
         </div>
@@ -232,10 +234,8 @@ export default function ListingDetailPage() {
       {applied ? (
         <div className="card p-6 text-center border-2 border-[var(--green)]">
           <CheckCircle className="w-10 h-10 text-[var(--green-text)] mx-auto mb-3" />
-          <p className="font-semibold text-[var(--ink)] mb-1">Application submitted!</p>
-          <p className="text-sm text-[var(--muted)]">
-            The owner will review your application and get in touch.
-          </p>
+          <p className="font-semibold text-[var(--ink)] mb-1">{t("listingApplicationSubmitted")}</p>
+          <p className="text-sm text-[var(--muted)]">{t("listingOwnerWillReview")}</p>
         </div>
       ) : existingStatus ? (
         <div className={`card p-6 border-2 ${
@@ -251,23 +251,23 @@ export default function ListingDetailPage() {
             </span>
             <p className="text-sm font-medium text-[var(--ink)]">
               {existingStatus === "approved"
-                ? `Your application to adopt ${listing.pet.name} was approved!`
+                ? t("listingStatusApproved", { name: listing.pet.name })
                 : existingStatus === "rejected"
-                ? "Your application was not accepted this time."
+                ? t("listingStatusRejected")
                 : existingStatus === "withdrawn"
-                ? "You withdrew this application."
-                : `Your application for ${listing.pet.name} is under review.`}
+                ? t("listingStatusWithdrawn")
+                : t("listingStatusPending", { name: listing.pet.name })}
             </p>
           </div>
           <p className="text-sm text-[var(--muted)]">
             {existingStatus === "approved"
-              ? "The owner will be in touch with next steps."
+              ? t("listingStatusApprovedDesc")
               : existingStatus === "pending"
-              ? "The owner will review your application and get in touch."
-              : "You can browse other available pets below."}
+              ? t("listingOwnerWillReview")
+              : t("listingStatusOtherDesc")}
           </p>
           <Link href="/portal/adopt" className="text-sm text-[var(--teal)] hover:underline mt-3 inline-block no-underline">
-            Browse other listings →
+            {t("listingBrowseOther")}
           </Link>
         </div>
       ) : isAvailable ? (
@@ -277,7 +277,7 @@ export default function ListingDetailPage() {
               <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
                 <Heart className="w-4 h-4 text-[var(--teal)]" />
               </div>
-              <h2 className="font-semibold text-[var(--ink)]">Apply to adopt {listing.pet.name}</h2>
+              <h2 className="font-semibold text-[var(--ink)]">{t("listingApplyTitle", { name: listing.pet.name })}</h2>
             </div>
 
             {error && <p className="alert-error mb-4">{error}</p>}
@@ -285,14 +285,14 @@ export default function ListingDetailPage() {
             <form onSubmit={handleApply} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                  Housing type <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                  {t("listingHousingType")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
                 </label>
                 <select
                   className="form-input"
                   value={form.housingType}
                   onChange={(e) => setForm((f) => ({ ...f, housingType: e.target.value }))}
                 >
-                  {HOUSING_OPTIONS.map(({ value, label }) => (
+                  {buildHousingOptions(t("listingSelectHousingType")).map(({ value, label }) => (
                     <option key={value} value={value}>{label}</option>
                   ))}
                 </select>
@@ -300,12 +300,12 @@ export default function ListingDetailPage() {
 
               <div>
                 <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                  Your experience with pets
-                  <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                  {t("listingExperienceLabel")}
+                  <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
                 </label>
                 <textarea
                   className="form-input min-h-[80px] resize-y"
-                  placeholder="Tell the owner about your experience with pets…"
+                  placeholder={t("listingExperiencePlaceholder")}
                   value={form.experience}
                   onChange={(e) => setForm((f) => ({ ...f, experience: e.target.value }))}
                 />
@@ -313,12 +313,12 @@ export default function ListingDetailPage() {
 
               <div>
                 <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                  Message to the owner
-                  <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                  {t("listingMessageLabel")}
+                  <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
                 </label>
                 <textarea
                   className="form-input min-h-[80px] resize-y"
-                  placeholder={`Why would ${listing.pet.name} be a great fit for you?`}
+                  placeholder={t("listingMessagePlaceholder", { name: listing.pet.name })}
                   value={form.message}
                   onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                 />
@@ -327,10 +327,10 @@ export default function ListingDetailPage() {
               <div className="flex gap-3 pt-1">
                 <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2 disabled:opacity-60">
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                  {saving ? "Submitting…" : "Submit application"}
+                  {saving ? t("listingSubmitting") : t("listingSubmitApplication")}
                 </button>
                 <button type="button" onClick={() => setShowForm(false)} className="btn-outline">
-                  Cancel
+                  {t("cancel")}
                 </button>
               </div>
             </form>
@@ -341,14 +341,12 @@ export default function ListingDetailPage() {
             className="btn-primary w-full flex items-center justify-center gap-2 py-3 text-base"
           >
             <Heart className="w-5 h-5" />
-            Apply to adopt {listing.pet.name}
+            {t("listingApplyTitle", { name: listing.pet.name })}
           </button>
         )
       ) : (
         <div className="card p-5 text-center bg-[var(--off)]">
-          <p className="text-sm text-[var(--muted)]">
-            This listing is no longer accepting applications.
-          </p>
+          <p className="text-sm text-[var(--muted)]">{t("listingClosed")}</p>
         </div>
       )}
     </div>
