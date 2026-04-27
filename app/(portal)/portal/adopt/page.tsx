@@ -10,6 +10,7 @@ import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG, SEX_LABELS, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -50,6 +51,7 @@ const SPECIES_OPTIONS = [{ value: "", label: "All species" }, ...SPECIES_OPTS];
 /* ─── Listing Card ───────────────────────────────────────────────────────── */
 
 function ListingCard({ listing }: { listing: AdoptionListing }) {
+  const t = useTranslations("portal");
   const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
   const age = formatPetAgeShort(listing.pet.birthDate);
 
@@ -71,7 +73,7 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
           <span>{emoji}</span>
         )}
         <div className="absolute top-2 end-2 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-xs font-medium text-[var(--ink2)]">
-          {listing.feeCents ? `${formatAdoptionFee(listing.feeCents)} fee` : "Free"}
+          {listing.feeCents ? t("adoptFee", { price: formatAdoptionFee(listing.feeCents) }) : t("adoptFree")}
         </div>
       </div>
 
@@ -115,6 +117,7 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
 export default function AdoptPage() {
+  const t = useTranslations("portal");
   const [listings, setListings] = useState<AdoptionListing[]>([]);
   const [loading, setLoading] = useState(true);
   const [species, setSpecies] = useState("");
@@ -141,21 +144,21 @@ export default function AdoptPage() {
         <div>
           <h1 className="text-2xl font-semibold text-[var(--ink)] flex items-center gap-2">
             <Heart className="w-6 h-6 text-[var(--danger-text)]" />
-            Adopt a Pet
+            {t("adoptTitle")}
           </h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">Find a pet looking for a loving home</p>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{t("adoptSubtitle")}</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <Link href="/portal/adopt/applications" className="btn-ghost text-sm flex items-center gap-2">
-            My applications
+            {t("adoptMyApplications")}
           </Link>
           <Link href="/portal/adoptions" className="btn-ghost text-sm flex items-center gap-2">
             <Users className="w-4 h-4" />
-            My listings
+            {t("adoptMyListings")}
           </Link>
           <Link href="/portal/pets" className="btn-outline text-sm flex items-center gap-2">
             <PawPrint className="w-4 h-4" />
-            List a pet
+            {t("adoptListAPet")}
           </Link>
         </div>
       </div>
@@ -166,7 +169,7 @@ export default function AdoptPage() {
           <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
           <input
             type="text"
-            placeholder="Filter by location…"
+            placeholder={t("adoptFilterLocation")}
             className="form-input ps-9 text-sm"
             value={locationQ}
             onChange={(e) => setLocationQ(e.target.value)}
@@ -198,14 +201,12 @@ export default function AdoptPage() {
           <div className="w-16 h-16 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <Sparkles className="w-8 h-8 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-1">No listings found</p>
+          <p className="font-medium text-[var(--ink)] mb-1">{t("adoptNoListings")}</p>
           <p className="text-sm text-[var(--muted)] mb-5">
-            {species || locationQ
-              ? "Try adjusting your filters."
-              : "No pets are listed for adoption yet. Be the first to help one find a home."}
+            {species || locationQ ? t("adoptNoListingsFiltered") : t("adoptNoListingsEmpty")}
           </p>
           <Link href="/portal/pets" className="btn-primary">
-            List a pet for adoption
+            {t("adoptListForAdoption")}
           </Link>
         </div>
       ) : (

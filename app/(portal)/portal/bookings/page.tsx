@@ -7,6 +7,7 @@ import { BOOKING_STATUS_CONFIG } from "@/lib/config/orders";
 import type { BookingStatusId } from "@/lib/config/orders";
 import { userRoleLabel } from "@/lib/config/users";
 import { formatIsoDate } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -50,6 +51,7 @@ function StatusBadge({ status }: { status: BookingRow["status"] }) {
 /* ─── Component ──────────────────────────────────────────────────────────── */
 
 export default function BookingsPage() {
+  const t = useTranslations("portal");
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [reviewTarget, setReviewTarget] = useState<BookingRow | null>(null);
@@ -90,10 +92,8 @@ export default function BookingsPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">Bookings</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">
-          Manage your upcoming appointments and past sessions.
-        </p>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("bookings")}</h1>
+        <p className="text-sm text-[var(--muted)] mt-0.5">{t("bookingsSubtitle")}</p>
       </div>
 
       {loading ? (
@@ -107,18 +107,16 @@ export default function BookingsPage() {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <CalendarCheck className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-2">No bookings yet</p>
-          <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">
-            Browse verified vets and pet sitters near you, then book an appointment directly from their profile.
-          </p>
-          <Link href="/portal/find" className="btn-primary">Find a vet or sitter</Link>
+          <p className="font-medium text-[var(--ink)] mb-2">{t("bookingsEmpty")}</p>
+          <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">{t("bookingsEmptyDesc")}</p>
+          <Link href="/portal/find" className="btn-primary">{t("bookingsFindPro")}</Link>
         </div>
       ) : (
         <div className="space-y-8">
           {upcoming.length > 0 && (
             <section>
               <h2 className="text-sm font-semibold text-[var(--muted)] uppercase tracking-wide mb-3">
-                Upcoming
+                {t("bookingsUpcoming")}
               </h2>
               <div className="space-y-3">
                 {upcoming.map((b) => (
@@ -136,7 +134,7 @@ export default function BookingsPage() {
           {past.length > 0 && (
             <section>
               <h2 className="text-sm font-semibold text-[var(--muted)] uppercase tracking-wide mb-3">
-                Past
+                {t("bookingsPast")}
               </h2>
               <div className="space-y-3">
                 {past.map((b) => (
@@ -176,6 +174,7 @@ function BookingCard({
   onDelete: (id: string) => void;
   onReview: (b: BookingRow) => void;
 }) {
+  const t = useTranslations("portal");
   const [actionsOpen, setActionsOpen] = useState(false);
   const roleLabel = userRoleLabel(b.professionalRole);
   const canReview = b.status === "completed" && !b.reviewId;
@@ -192,7 +191,7 @@ function BookingCard({
             {b.reviewId && (
               <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[var(--teal-light)] text-[var(--teal)]">
                 <Star className="w-3 h-3 fill-current" />
-                Reviewed
+                {t("bookingsReviewed")}
               </span>
             )}
           </div>
@@ -201,7 +200,7 @@ function BookingCard({
             {b.startDate !== b.endDate && ` – ${formatIsoDate(b.endDate)}`}
           </p>
           {b.ownerName && (
-            <p className="text-sm text-[var(--ink2)] mt-0.5">Owner: {b.ownerName}</p>
+            <p className="text-sm text-[var(--ink2)] mt-0.5">{t("bookingsOwner", { name: b.ownerName })}</p>
           )}
           {b.notes && (
             <p className="text-sm text-[var(--muted)] mt-1.5 line-clamp-2">{b.notes}</p>
@@ -215,7 +214,7 @@ function BookingCard({
               className="btn-outline text-sm flex items-center gap-1.5 px-3 py-1.5"
             >
               <Star className="w-3.5 h-3.5" />
-              Review
+              {t("bookingsReview")}
             </button>
           )}
 
@@ -225,7 +224,7 @@ function BookingCard({
                 onClick={() => setActionsOpen((o) => !o)}
                 className="btn-outline text-sm flex items-center gap-1.5 px-3 py-1.5"
               >
-                Actions <ChevronDown className="w-3.5 h-3.5" />
+                {t("bookingsActions")} <ChevronDown className="w-3.5 h-3.5" />
               </button>
               {actionsOpen && (
                 <div className="absolute end-0 top-full mt-1 w-44 bg-white border border-[var(--border)] rounded-xl shadow-lg z-10 py-1">
@@ -234,7 +233,7 @@ function BookingCard({
                       className="w-full text-start px-3 py-2 text-sm text-[var(--green-text)] hover:bg-[var(--green-bg)] transition-colors"
                       onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "confirmed"); }}
                     >
-                      Confirm booking
+                      {t("bookingsConfirm")}
                     </button>
                   )}
                   {b.status === "confirmed" && (
@@ -242,21 +241,21 @@ function BookingCard({
                       className="w-full text-start px-3 py-2 text-sm text-[var(--teal)] hover:bg-[var(--teal-light)] transition-colors"
                       onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "completed"); }}
                     >
-                      Mark completed
+                      {t("bookingsMarkCompleted")}
                     </button>
                   )}
                   <button
                     className="w-full text-start px-3 py-2 text-sm text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors"
                     onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "cancelled"); }}
                   >
-                    Cancel booking
+                    {t("bookingsCancel")}
                   </button>
                   {b.status === "pending" && (
                     <button
                       className="w-full text-start px-3 py-2 text-sm text-[var(--muted)] hover:bg-[var(--off)] transition-colors"
                       onClick={() => { setActionsOpen(false); onDelete(b.id); }}
                     >
-                      Delete
+                      {t("listDelete")}
                     </button>
                   )}
                 </div>
@@ -303,6 +302,7 @@ function ReviewModal({
   onClose: () => void;
   onSubmitted: () => void;
 }) {
+  const t = useTranslations("portal");
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [saving, setSaving] = useState(false);
@@ -310,7 +310,7 @@ function ReviewModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (rating === 0) { setError("Please select a rating."); return; }
+    if (rating === 0) { setError(t("bookingsRatingRequired")); return; }
     setSaving(true);
     setError("");
     const res = await fetch("/api/reviews", {
@@ -321,7 +321,7 @@ function ReviewModal({
     const data = await res.json();
     setSaving(false);
     if (data.success) onSubmitted();
-    else setError(data.error ?? "Failed to submit review.");
+    else setError(data.error ?? t("bookingsReviewFailed"));
   }
 
   const roleLabel = userRoleLabel(b.professionalRole);
@@ -331,7 +331,7 @@ function ReviewModal({
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--border)]">
           <div>
-            <h2 className="font-semibold text-[var(--ink)]">Leave a Review</h2>
+            <h2 className="font-semibold text-[var(--ink)]">{t("bookingsLeaveReview")}</h2>
             <p className="text-xs text-[var(--muted)] mt-0.5">
               {b.petName ?? "Pet"} · {roleLabel}
             </p>
@@ -345,15 +345,15 @@ function ReviewModal({
           {error && <p className="alert-error">{error}</p>}
 
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-2">Rating *</label>
+            <label className="block text-sm font-medium text-[var(--ink2)] mb-2">{t("bookingsRatingLabel")} *</label>
             <StarPicker value={rating} onChange={setRating} />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Comment</label>
+            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("bookingsCommentLabel")}</label>
             <textarea
               className="form-input min-h-[88px] resize-none"
-              placeholder="Share your experience…"
+              placeholder={t("bookingsCommentPlaceholder")}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               maxLength={1000}
@@ -361,9 +361,9 @@ function ReviewModal({
           </div>
 
           <div className="flex gap-3 pb-1">
-            <button type="button" onClick={onClose} className="btn-outline flex-1">Cancel</button>
+            <button type="button" onClick={onClose} className="btn-outline flex-1">{t("cancel")}</button>
             <button type="submit" disabled={saving || rating === 0} className="btn-primary flex-1 disabled:opacity-60">
-              {saving ? "Submitting…" : "Submit review"}
+              {saving ? t("bookingsSubmitting") : t("bookingsSubmitReview")}
             </button>
           </div>
         </form>

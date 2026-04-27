@@ -6,6 +6,7 @@ import { ShoppingBag, Package, Clock, CheckCircle, Truck, XCircle, ChevronDown, 
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
 import { formatPrice, formatIsoDate } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -42,6 +43,7 @@ const STATUS_ICONS: Record<OrderStatusId, React.ElementType> = {
 /* ─── Order Card ─────────────────────────────────────────────────────────── */
 
 function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) => void }) {
+  const t = useTranslations("portal");
   const [expanded, setExpanded] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const cfg = ORDER_STATUS_CONFIG[order.status];
@@ -65,10 +67,10 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
           </div>
           <div className="min-w-0">
             <p className="font-medium text-[var(--ink)] text-sm">
-              Order · {formatIsoDate(order.createdAt)}
+              {t("ordersOrderLabel")} · {formatIsoDate(order.createdAt)}
             </p>
             <p className="text-xs text-[var(--muted)]">
-              {order.items.length} {order.items.length === 1 ? "item" : "items"} · {formatPrice(order.totalCents)}
+              {t("ordersItemCount", { count: order.items.length })} · {formatPrice(order.totalCents)}
             </p>
           </div>
         </div>
@@ -107,19 +109,19 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
 
           {order.notes && (
             <p className="text-xs text-[var(--muted)] pt-1 border-t border-[var(--border)]">
-              Note: {order.notes}
+              {t("ordersNote", { text: order.notes })}
             </p>
           )}
 
           <div className="flex items-center justify-between pt-2 border-t border-[var(--border)]">
-            <span className="text-sm font-semibold text-[var(--ink)]">Total: {formatPrice(order.totalCents)}</span>
+            <span className="text-sm font-semibold text-[var(--ink)]">{t("ordersTotal", { price: formatPrice(order.totalCents) })}</span>
             {order.status === "pending" && (
               <button
                 onClick={handleCancel}
                 disabled={cancelling}
                 className="text-xs text-[var(--danger-text)] hover:underline disabled:opacity-60"
               >
-                {cancelling ? "Cancelling…" : "Cancel order"}
+                {cancelling ? t("ordersCancelling") : t("ordersCancelOrder")}
               </button>
             )}
           </div>
@@ -132,6 +134,7 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
 export default function OrdersPage() {
+  const t = useTranslations("portal");
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -159,12 +162,12 @@ export default function OrdersPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">Orders</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">Your purchase history</p>
+          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("orders")}</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{t("ordersSubtitle")}</p>
         </div>
         <Link href="/portal/shop" className="btn-outline flex items-center gap-2">
           <ShoppingBag className="w-4 h-4" />
-          Shop
+          {t("shop")}
         </Link>
       </div>
 
@@ -177,9 +180,9 @@ export default function OrdersPage() {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-1">No orders yet</p>
-          <p className="text-sm text-[var(--muted)] mb-5">Browse the shop to find products for your pet.</p>
-          <Link href="/portal/shop" className="btn-primary">Browse shop</Link>
+          <p className="font-medium text-[var(--ink)] mb-1">{t("ordersEmpty")}</p>
+          <p className="text-sm text-[var(--muted)] mb-5">{t("ordersEmptyDesc")}</p>
+          <Link href="/portal/shop" className="btn-primary">{t("ordersBrowseShop")}</Link>
         </div>
       ) : (
         <div className="space-y-3">

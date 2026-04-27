@@ -9,6 +9,7 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG, HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
 import { formatAdoptionFee } from "@/lib/utils/format";
+import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -49,6 +50,7 @@ function ApplicationRow({
   /** Called when this application is approved so the listing card can sync state. */
   onApproved?: () => void;
 }) {
+  const t = useTranslations("portal");
   const [busy, setBusy] = useState(false);
 
   async function setStatus(status: Application["status"]) {
@@ -99,7 +101,7 @@ function ApplicationRow({
             className="text-xs font-medium text-[var(--green-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
           >
             {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
-            Approve
+            {t("adoptionsApprove")}
           </button>
           <button
             onClick={() => setStatus("rejected")}
@@ -107,7 +109,7 @@ function ApplicationRow({
             className="text-xs font-medium text-[var(--danger-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
           >
             <XCircle className="w-3 h-3" />
-            Reject
+            {t("adoptionsReject")}
           </button>
         </div>
       )}
@@ -124,6 +126,7 @@ function ListingCard({
   listing: AdoptionListing;
   onStatusChange: (id: string, status: AdoptionListing["status"]) => void;
 }) {
+  const t = useTranslations("portal");
   const [expanded, setExpanded] = useState(false);
   const [applications, setApplications] = useState<Application[]>([]);
   const [appsLoading, setAppsLoading] = useState(false);
@@ -196,7 +199,7 @@ function ListingCard({
           <p className="text-xs text-[var(--muted)] mt-0.5">
             {listing.pet.name}
             {listing.location ? ` · ${listing.location}` : ""}
-            {listing.feeCents ? ` · ${formatAdoptionFee(listing.feeCents)} fee` : " · Free"}
+            {listing.feeCents ? ` · ${t("adoptFee", { price: formatAdoptionFee(listing.feeCents) })}` : ` · ${t("adoptFree")}`}
           </p>
         </div>
 
@@ -217,7 +220,7 @@ function ListingCard({
               href={`/portal/adopt/${listing.id}`}
               className="text-xs font-medium text-[var(--teal)] hover:underline"
             >
-              View listing
+              {t("adoptionsViewListing")}
             </Link>
             {listing.status === "available" && (
               <>
@@ -226,14 +229,14 @@ function ListingCard({
                   disabled={busy}
                   className="text-xs font-medium text-[var(--warn-text)] hover:underline disabled:opacity-60"
                 >
-                  Mark on hold
+                  {t("adoptionsMarkOnHold")}
                 </button>
                 <button
                   onClick={() => setStatus("adopted")}
                   disabled={busy}
                   className="text-xs font-medium text-[var(--green-text)] hover:underline disabled:opacity-60"
                 >
-                  Mark as adopted
+                  {t("adoptionsMarkAdopted")}
                 </button>
               </>
             )}
@@ -243,7 +246,7 @@ function ListingCard({
                 disabled={busy}
                 className="text-xs font-medium text-[var(--teal)] hover:underline disabled:opacity-60"
               >
-                Re-open
+                {t("adoptionsReopen")}
               </button>
             )}
             {(listing.status === "available" || listing.status === "on_hold") && (
@@ -252,7 +255,7 @@ function ListingCard({
                 disabled={busy}
                 className="text-xs font-medium text-[var(--danger-text)] hover:underline disabled:opacity-60"
               >
-                Withdraw listing
+                {t("adoptionsWithdraw")}
               </button>
             )}
           </div>
@@ -260,14 +263,14 @@ function ListingCard({
           {/* Applications */}
           <div>
             <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide px-4 py-2">
-              Applications
+              {t("adoptionsApplications")}
             </p>
             {appsLoading ? (
               <div className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--muted)]">
                 <Loader2 className="w-4 h-4 animate-spin" /> Loading…
               </div>
             ) : applications.length === 0 ? (
-              <p className="text-sm text-[var(--muted)] px-4 py-3">No applications yet.</p>
+              <p className="text-sm text-[var(--muted)] px-4 py-3">{t("adoptionsNoApplications")}</p>
             ) : (
               applications.map((app) => (
                 <ApplicationRow
@@ -291,6 +294,7 @@ function ListingCard({
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
 export default function AdoptionsPage() {
+  const t = useTranslations("portal");
   const [listings, setListings] = useState<AdoptionListing[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -319,12 +323,12 @@ export default function AdoptionsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">My Adoption Listings</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">Manage listings and review applications</p>
+          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("adoptionsTitle")}</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{t("adoptionsSubtitle")}</p>
         </div>
         <Link href="/portal/adopt" className="btn-outline flex items-center gap-2 text-sm">
           <Heart className="w-4 h-4" />
-          Browse adoptions
+          {t("adoptionsBrowse")}
         </Link>
       </div>
 
@@ -337,11 +341,9 @@ export default function AdoptionsPage() {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <Heart className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-1">No adoption listings yet</p>
-          <p className="text-sm text-[var(--muted)] mb-5">
-            Go to a pet&apos;s profile and select &ldquo;List for adoption&rdquo; to create a listing.
-          </p>
-          <Link href="/portal/pets" className="btn-primary">Go to my pets</Link>
+          <p className="font-medium text-[var(--ink)] mb-1">{t("adoptionsEmpty")}</p>
+          <p className="text-sm text-[var(--muted)] mb-5">{t("adoptionsEmptyDesc")}</p>
+          <Link href="/portal/pets" className="btn-primary">{t("adoptionsGoToMyPets")}</Link>
         </div>
       ) : (
         <div className="space-y-3">

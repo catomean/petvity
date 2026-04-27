@@ -102,7 +102,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <p className="font-semibold text-[var(--ink)]">{vet.name ?? "Veterinarian"}</p>
+              <p className="font-semibold text-[var(--ink)]">{vet.name ?? t("findVetFallback")}</p>
               {vet.isVerified && <VerifiedBadge />}
               <AcceptingBadge accepting={vet.isAcceptingClients} />
               <StarRating avg={vet.avgRating} count={vet.reviewCount} />
@@ -135,7 +135,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
       )}
       <div className="mt-2">
         <a href={`/${DEFAULT_LOCALE}/pros/${vet.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
-          View full profile →
+          {t("findViewProfile")}
         </a>
       </div>
     </div>
@@ -153,14 +153,14 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <p className="font-semibold text-[var(--ink)]">{sitter.name ?? "Pet Sitter"}</p>
+              <p className="font-semibold text-[var(--ink)]">{sitter.name ?? t("findSitterFallback")}</p>
               {sitter.isVerified && <VerifiedBadge />}
               <AcceptingBadge accepting={sitter.isAcceptingClients} />
               <StarRating avg={sitter.avgRating} count={sitter.reviewCount} />
             </div>
             {sitter.pricePerDay != null && (
               <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">
-                ${(sitter.pricePerDay / 100).toFixed(0)}/day
+                ${(sitter.pricePerDay / 100).toFixed(0)}{t("findPerDay")}
               </p>
             )}
           </div>
@@ -191,7 +191,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
       )}
       <div className="mt-2">
         <a href={`/${DEFAULT_LOCALE}/pros/${sitter.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
-          View full profile →
+          {t("findViewProfile")}
         </a>
       </div>
     </div>
@@ -240,10 +240,8 @@ export default function FindPage() {
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">Find a Professional</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">
-          Connect with verified veterinarians and trusted pet sitters.
-        </p>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("findTitle")}</h1>
+        <p className="text-sm text-[var(--muted)] mt-0.5">{t("findSubtitle")}</p>
       </div>
 
       {/* Tabs + search */}
@@ -284,11 +282,11 @@ export default function FindPage() {
         filteredVets.length === 0 ? (
           <EmptyState
             icon={Stethoscope}
-            title="No veterinarians listed yet"
+            title={t("findNoVets")}
             body={cityFilter
-              ? `No vets found in "${cityFilter}". Try a different city or clear the filter.`
-              : "No vets have joined yet. Are you a veterinarian? Create your professional profile and start accepting clients today."}
-            cta={cityFilter ? undefined : { label: "Register as a veterinarian", href: "/register?role=vet" }}
+              ? t("findNoVetsCity", { city: cityFilter })
+              : t("findNoVetsBody")}
+            cta={cityFilter ? undefined : { label: t("findRegisterVet"), href: "/register?role=vet" }}
           />
         ) : (
           <div className="space-y-3">
@@ -301,11 +299,11 @@ export default function FindPage() {
         filteredSitters.length === 0 ? (
           <EmptyState
             icon={Home}
-            title="No pet sitters listed yet"
+            title={t("findNoSitters")}
             body={cityFilter
-              ? `No sitters found in "${cityFilter}". Try a different city or clear the filter.`
-              : "No sitters have joined yet. Do you offer pet sitting or boarding? Create your profile and connect with pet owners near you."}
-            cta={cityFilter ? undefined : { label: "Register as a pet sitter", href: "/register?role=sitter" }}
+              ? t("findNoSittersCity", { city: cityFilter })
+              : t("findNoSittersBody")}
+            cta={cityFilter ? undefined : { label: t("findRegisterSitter"), href: "/register?role=sitter" }}
           />
         ) : (
           <div className="space-y-3">
@@ -348,7 +346,7 @@ function BookingModal({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!petId || !startDate || !endDate) {
-      setError("Please fill in all required fields.");
+      setError(t("findBookingRequired"));
       return;
     }
     setSaving(true);
@@ -369,7 +367,7 @@ function BookingModal({
     if (data.success) {
       setSuccess(true);
     } else {
-      setError(data.error ?? "Failed to create booking.");
+      setError(data.error ?? t("findBookingFailed"));
     }
   }
 
@@ -378,7 +376,7 @@ function BookingModal({
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--border)]">
           <h2 className="font-semibold text-[var(--ink)]">
-            Book {target.name ?? "Professional"}
+            {t("findBookTitle", { name: target.name ?? t("findProfessional") })}
           </h2>
           <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
             <X className="w-5 h-5" />
@@ -390,18 +388,16 @@ function BookingModal({
             <div className="w-12 h-12 rounded-full bg-[var(--green-bg)] flex items-center justify-center mx-auto mb-3">
               <CalendarPlus className="w-6 h-6 text-[var(--green-text)]" />
             </div>
-            <p className="font-medium text-[var(--ink)] mb-1">Booking requested!</p>
-            <p className="text-sm text-[var(--muted)] mb-4">
-              The professional will confirm your appointment.
-            </p>
-            <button onClick={onClose} className="btn-primary w-full">Done</button>
+            <p className="font-medium text-[var(--ink)] mb-1">{t("findBookingSuccess")}</p>
+            <p className="text-sm text-[var(--muted)] mb-4">{t("findBookingSuccessDesc")}</p>
+            <button onClick={onClose} className="btn-primary w-full">{t("findDone")}</button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="px-5 py-4 space-y-4">
             {error && <p className="alert-error">{error}</p>}
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Pet *</label>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("findPetLabel")} *</label>
               {pets.length === 0 ? (
                 <p className="text-sm text-[var(--muted)]">
                   {t("noPets")} <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">{t("noPetsAction")}</Link>
@@ -422,7 +418,7 @@ function BookingModal({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Start date *</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("findStartDate")} *</label>
                 <input
                   type="datetime-local"
                   className="form-input"
@@ -432,7 +428,7 @@ function BookingModal({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">End date *</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("findEndDate")} *</label>
                 <input
                   type="datetime-local"
                   className="form-input"
@@ -444,19 +440,19 @@ function BookingModal({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Notes</label>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("logNotes")}</label>
               <textarea
                 className="form-input min-h-[72px] resize-none"
-                placeholder="Any special requirements or information…"
+                placeholder={t("findBookingNotesPlaceholder")}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />
             </div>
 
             <div className="flex gap-3 pb-1">
-              <button type="button" onClick={onClose} className="btn-outline flex-1">Cancel</button>
+              <button type="button" onClick={onClose} className="btn-outline flex-1">{t("cancel")}</button>
               <button type="submit" disabled={saving || pets.length === 0} className="btn-primary flex-1 disabled:opacity-60">
-                {saving ? "Booking…" : "Request booking"}
+                {saving ? t("findBookingInProgress") : t("findRequestBooking")}
               </button>
             </div>
           </form>
