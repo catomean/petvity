@@ -62,7 +62,7 @@ describe("refreshSignalCache", () => {
     const db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
 
-    db._queryFindFirst.mockResolvedValueOnce(makePet({ lastKnownSignal: null }));
+    db._queryFindFirst.mockResolvedValueOnce(makePet()); // lastKnownSignal defaults to null
     db._queryFindMany
       .mockResolvedValueOnce([]) // no metrics → "watch"
       .mockResolvedValueOnce([]); // no vaccinations

@@ -1,10 +1,10 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
+import { pets, healthMetrics, vaccinations, petSignalHistory } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { AlertTriangle, BarChart3, ChevronLeft, Pencil, Syringe } from "lucide-react";
+import { AlertTriangle, BarChart3, ChevronLeft, History, Pencil, Syringe } from "lucide-react";
 import {
   HEALTH_METRIC_CONFIG,
   HEALTH_CHART_WINDOW_DAYS,
@@ -16,9 +16,10 @@ import type { MetricId } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
 import { getMetricDisplay, computeWellnessScore, WELLNESS_SCORE_THRESHOLDS } from "@/lib/domain/health";
 import { computePetSignal } from "@/lib/domain/pet-signal";
-import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { SIGNAL_METRIC_WINDOW_DAYS, SIGNAL_LABELS, SIGNAL_BG_CLASSES } from "@/lib/config/pet-signal";
+import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
-import { formatDateShort } from "@/lib/utils/format";
+import { formatDateShort, formatIsoDate } from "@/lib/utils/format";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { HealthTrendChart } from "@/components/portal/HealthTrendChart";
 
@@ -42,12 +43,18 @@ export default async function PetHealthPage({ params }: Params) {
   const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const locale = await getPortalLocale();
 
-  const [metrics, petVacc] = await Promise.all([
+  const [metrics, petVacc, signalHistory] = await Promise.all([
     db.query.healthMetrics.findMany({
       where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
       orderBy: [desc(healthMetrics.date)],
     }),
     db.select().from(vaccinations).where(eq(vaccinations.petId, pet.id)),
+    db
+      .select()
+      .from(petSignalHistory)
+      .where(eq(petSignalHistory.petId, pet.id))
+      .orderBy(desc(petSignalHistory.recordedAt))
+      .limit(20),
   ]);
 
   const latest = metrics[0];
@@ -313,6 +320,39 @@ export default async function PetHealthPage({ params }: Params) {
                 integerScale
               />
             </>
+          )}
+
+          {/* Signal history — transitions only, most recent first */}
+          {signalHistory.length > 0 && (
+            <div className="card p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <History className="w-4 h-4 text-[var(--muted)]" />
+                <h2 className="font-semibold text-[var(--ink)]">Signal history</h2>
+              </div>
+              <div className="space-y-2">
+                {signalHistory.map((entry) => {
+                  const sig = (entry.signal ?? "watch") as PetWellnessSignal;
+                  return (
+                    <div key={entry.id} className="flex items-start gap-3 py-2 border-b border-[var(--border)] last:border-0">
+                      <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 mt-0.5 ${SIGNAL_BG_CLASSES[sig]}`}>
+                        {SIGNAL_LABELS[sig]}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        {entry.reason && (
+                          <p className="text-sm text-[var(--ink2)] leading-snug">{entry.reason}</p>
+                        )}
+                        <p className="text-xs text-[var(--muted)] mt-0.5">
+                          {formatIsoDate(entry.recordedAt.toISOString(), locale)}
+                          {entry.source === "cron" && (
+                            <span className="ms-1.5 opacity-60">· auto</span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           )}
 
           {/* History table */}
