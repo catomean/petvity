@@ -6,6 +6,10 @@ import {
   formatRelativeDate,
   formatPetAgeShort,
   formatPetAge,
+  formatPrice,
+  formatAdoptionFee,
+  formatIsoDate,
+  formatIsoDateTime,
 } from "./format";
 
 describe("formatDateShort", () => {
@@ -109,6 +113,78 @@ describe("formatPetAge", () => {
   it("returns 'Ny Nmo old' when years + remaining months", () => {
     // 2023-10-24 → ~30 months → 2 years 6 months
     expect(formatPetAge("2023-10-24")).toBe("2y 6mo old");
+  });
+});
+
+describe("formatPrice", () => {
+  it("formats zero as $0.00", () => {
+    expect(formatPrice(0)).toBe("$0.00");
+  });
+
+  it("formats a whole-dollar amount with two decimal places", () => {
+    expect(formatPrice(1000)).toBe("$10.00");
+    expect(formatPrice(100)).toBe("$1.00");
+  });
+
+  it("formats cents correctly", () => {
+    expect(formatPrice(2999)).toBe("$29.99");
+    expect(formatPrice(1)).toBe("$0.01");
+    expect(formatPrice(50)).toBe("$0.50");
+  });
+
+  it("handles large amounts", () => {
+    expect(formatPrice(100000)).toBe("$1000.00");
+  });
+});
+
+describe("formatAdoptionFee", () => {
+  it("returns 'Free' for null", () => {
+    expect(formatAdoptionFee(null)).toBe("Free");
+  });
+
+  it("returns 'Free' for zero", () => {
+    expect(formatAdoptionFee(0)).toBe("Free");
+  });
+
+  it("returns whole-dollar amount for non-zero fee", () => {
+    expect(formatAdoptionFee(2500)).toBe("$25");
+    expect(formatAdoptionFee(10000)).toBe("$100");
+    expect(formatAdoptionFee(5000)).toBe("$50");
+  });
+
+  it("rounds sub-dollar amounts to nearest dollar", () => {
+    expect(formatAdoptionFee(250)).toBe("$3");
+    expect(formatAdoptionFee(150)).toBe("$2");
+  });
+});
+
+describe("formatIsoDate", () => {
+  it("extracts date portion from ISO string (en locale)", () => {
+    const result = formatIsoDate("2026-01-15T10:30:00Z", "en");
+    expect(result).toContain("15");
+    expect(result).toContain("2026");
+    expect(result).toMatch(/Jan/);
+  });
+
+  it("uses runtime locale when none supplied", () => {
+    const result = formatIsoDate("2026-06-20T00:00:00Z");
+    expect(result).toContain("2026");
+    expect(typeof result).toBe("string");
+  });
+});
+
+describe("formatIsoDateTime", () => {
+  it("includes month, day, hour, and minute (en locale)", () => {
+    const result = formatIsoDateTime("2026-01-15T14:30:00Z", "en");
+    expect(result).toContain("15");
+    expect(result).toMatch(/Jan/);
+    expect(result).toMatch(/\d{1,2}:\d{2}/);
+  });
+
+  it("returns a non-empty string for any valid ISO input", () => {
+    const result = formatIsoDateTime("2026-06-20T09:05:00Z");
+    expect(typeof result).toBe("string");
+    expect(result.length).toBeGreaterThan(0);
   });
 });
 
