@@ -622,5 +622,30 @@
       "adoption": "Adoption",
       "adoptionDesc": "Aidez les animaux à trouver un foyer aimant au-delà des frontières."
     }
+  },
+  "public": {
+    "signIn": "Se connecter",
+    "joinFree": "Rejoindre gratuitement",
+    "adoptHeroTitle": "Trouvez votre nouveau meilleur ami",
+    "adoptHeroDesc": "Des animaux cherchent un foyer aimant pour toujours. Gratuit à parcourir — rien qu'avec le cœur.",
+    "adoptListButton": "Proposer un animal à l'adoption",
+    "adoptEmptyTitle": "Aucun animal listé pour l'instant",
+    "adoptEmptyDesc": "Soyez le premier à aider un animal à trouver un foyer.",
+    "adoptEmptyAction": "Créer une annonce",
+    "adoptCount": "{count, plural, one {# animal cherche un foyer} other {# animaux cherchent un foyer}}",
+    "adoptCtaTitle": "Vous avez un animal qui cherche un foyer ?",
+    "adoptCtaDesc": "Créez un compte gratuit pour lister votre animal et toucher des familles prêtes à adopter.",
+    "adoptCtaButton": "Proposer un animal — c'est gratuit",
+    "allListings": "Toutes les annonces",
+    "adoptionFee": "Frais d'adoption : {price}",
+    "freeAdoption": "Adoption gratuite",
+    "viewFullProfile": "Voir le profil complet de {name} →",
+    "interestedIn": "Intéressé par l'adoption de {name} ?",
+    "signUpDesc": "Créez un compte {app} gratuit pour soumettre une demande d'adoption.",
+    "signUpButton": "S'inscrire pour postuler",
+    "trackYourPet": "Suivez votre animal",
+    "bornDate": "Né(e) le {date}",
+    "typicalLifespan": "Durée de vie typique : {min}–{max} ans",
+    "trackOwn": "Suivez la santé de votre animal sur {app}"
   }
 }

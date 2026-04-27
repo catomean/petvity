@@ -622,5 +622,30 @@
       "adoption": "里親・譲渡",
       "adoptionDesc": "国境を越えてペットが愛ある家庭を見つけるお手伝い。"
     }
+  },
+  "public": {
+    "signIn": "ログイン",
+    "joinFree": "無料で参加",
+    "adoptHeroTitle": "新しい親友を見つけよう",
+    "adoptHeroDesc": "愛情あふれる永遠のおうちを探しています。無料で閲覧 — 心だけで。",
+    "adoptListButton": "ペットの里親募集を掲載",
+    "adoptEmptyTitle": "まだリストがありません",
+    "adoptEmptyDesc": "最初にペットのおうち探しをお手伝いしましょう。",
+    "adoptEmptyAction": "掲載する",
+    "adoptCount": "{count}匹が里親を募集中",
+    "adoptCtaTitle": "里親を探しているペットはいますか？",
+    "adoptCtaDesc": "無料アカウントを作成して、里親候補のご家族にアプローチしましょう。",
+    "adoptCtaButton": "ペットを掲載 — 無料です",
+    "allListings": "すべての掲載",
+    "adoptionFee": "譲渡費用 {price}",
+    "freeAdoption": "無償譲渡",
+    "viewFullProfile": "{name}の公開プロフィールを見る →",
+    "interestedIn": "{name}の里親になりませんか？",
+    "signUpDesc": "無料の {app} アカウントを作成して、里親申請を送りましょう。",
+    "signUpButton": "登録して申請する",
+    "trackYourPet": "ペットを記録する",
+    "bornDate": "{date}生まれ",
+    "typicalLifespan": "平均寿命：{min}〜{max}歳",
+    "trackOwn": "{app}であなたのペットの健康を記録しよう"
   }
 }

@@ -9,6 +9,7 @@ import type { SpeciesId, SexId } from "@/lib/config/species";
 import { Heart, MapPin, PawPrint } from "lucide-react";
 import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: `Adopt a Pet · ${APP.name}`,
@@ -27,6 +28,7 @@ function speciesEmoji(species: string): string {
 
 export default async function PublicAdoptPage({ params }: Params) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "public" });
   const db = getInstance();
 
   const listings = await db
@@ -67,10 +69,10 @@ export default async function PublicAdoptPage({ params }: Params) {
         </Link>
         <div className="flex items-center gap-3">
           <Link href="/login" className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors">
-            Sign in
+            {t("signIn")}
           </Link>
           <Link href="/register" className="btn-primary text-sm py-2 px-4">
-            Join free
+            {t("joinFree")}
           </Link>
         </div>
       </nav>
@@ -82,14 +84,14 @@ export default async function PublicAdoptPage({ params }: Params) {
             <Heart className="w-7 h-7 text-[var(--teal)]" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
-            Find your new best friend
+            {t("adoptHeroTitle")}
           </h1>
           <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-6">
-            Pets looking for a loving forever home. No fees to browse — just heart.
+            {t("adoptHeroDesc")}
           </p>
           <Link href="/register" className="btn-primary inline-flex items-center gap-2">
             <Heart className="w-4 h-4" />
-            List a pet for adoption
+            {t("adoptListButton")}
           </Link>
         </div>
       </div>
@@ -99,18 +101,18 @@ export default async function PublicAdoptPage({ params }: Params) {
         {listings.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-2xl mb-3">🐾</p>
-            <p className="font-medium text-[var(--ink)] mb-1">No pets listed yet</p>
+            <p className="font-medium text-[var(--ink)] mb-1">{t("adoptEmptyTitle")}</p>
             <p className="text-sm text-[var(--muted)] mb-5">
-              Be the first to help a pet find a home.
+              {t("adoptEmptyDesc")}
             </p>
             <Link href="/register" className="btn-primary">
-              Create a listing
+              {t("adoptEmptyAction")}
             </Link>
           </div>
         ) : (
           <>
             <p className="text-sm text-[var(--muted)] mb-5">
-              {listings.length} {listings.length === 1 ? "pet" : "pets"} looking for a home
+              {t("adoptCount", { count: listings.length })}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {listings.map((listing) => {
@@ -178,13 +180,13 @@ export default async function PublicAdoptPage({ params }: Params) {
       {/* CTA footer */}
       <div className="border-t border-[var(--border)] bg-white">
         <div className="max-w-5xl mx-auto px-6 py-10 text-center">
-          <p className="font-medium text-[var(--ink)] mb-2">Have a pet looking for a home?</p>
+          <p className="font-medium text-[var(--ink)] mb-2">{t("adoptCtaTitle")}</p>
           <p className="text-sm text-[var(--muted)] mb-5">
-            Create a free account to list your pet and reach families ready to adopt.
+            {t("adoptCtaDesc")}
           </p>
           <Link href="/register" className="btn-primary inline-flex items-center gap-2">
             <PawPrint className="w-4 h-4" />
-            List a pet — it&apos;s free
+            {t("adoptCtaButton")}
           </Link>
         </div>
       </div>

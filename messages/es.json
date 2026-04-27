@@ -622,5 +622,30 @@
       "adoption": "Adopción",
       "adoptionDesc": "Ayuda a las mascotas a encontrar hogares amorosos más allá de las fronteras."
     }
+  },
+  "public": {
+    "signIn": "Iniciar sesión",
+    "joinFree": "Únete gratis",
+    "adoptHeroTitle": "Encuentra a tu nuevo mejor amigo",
+    "adoptHeroDesc": "Mascotas que buscan un hogar amoroso para siempre. Sin cargos por buscar — solo corazón.",
+    "adoptListButton": "Publicar una mascota en adopción",
+    "adoptEmptyTitle": "Aún no hay mascotas publicadas",
+    "adoptEmptyDesc": "Sé el primero en ayudar a una mascota a encontrar hogar.",
+    "adoptEmptyAction": "Crear un anuncio",
+    "adoptCount": "{count, plural, one {# mascota busca hogar} other {# mascotas buscan hogar}}",
+    "adoptCtaTitle": "¿Tienes una mascota que busca hogar?",
+    "adoptCtaDesc": "Crea una cuenta gratuita para publicar tu mascota y llegar a familias dispuestas a adoptar.",
+    "adoptCtaButton": "Publicar una mascota — es gratis",
+    "allListings": "Todos los anuncios",
+    "adoptionFee": "Tarifa de adopción: {price}",
+    "freeAdoption": "Adopción gratuita",
+    "viewFullProfile": "Ver el perfil completo de {name} →",
+    "interestedIn": "¿Te interesa adoptar a {name}?",
+    "signUpDesc": "Crea una cuenta gratuita en {app} para enviar una solicitud de adopción.",
+    "signUpButton": "Regístrate para solicitar",
+    "trackYourPet": "Monitorea a tu mascota",
+    "bornDate": "Nacido/a el {date}",
+    "typicalLifespan": "Vida útil típica: {min}–{max} años",
+    "trackOwn": "Monitorea la salud de tu mascota en {app}"
   }
 }

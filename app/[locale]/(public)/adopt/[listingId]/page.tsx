@@ -13,6 +13,7 @@ import { LISTING_STATUS_CONFIG, LISTING_TRAIT_CONFIG } from "@/lib/config/adopti
 import type { ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
 import { formatPetAge, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 /** Cache adoption listing detail for 30 s — status changes propagate quickly. */
 export const revalidate = 30;
@@ -39,6 +40,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PublicListingDetailPage({ params }: Params) {
   const { locale, listingId } = await params;
+  const t = await getTranslations({ locale, namespace: "public" });
   const db = getInstance();
 
   const [row] = await db
@@ -86,10 +88,10 @@ export default async function PublicListingDetailPage({ params }: Params) {
         </Link>
         <div className="flex items-center gap-3">
           <Link href="/login" className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors">
-            Sign in
+            {t("signIn")}
           </Link>
           <Link href="/register" className="btn-primary text-sm py-2 px-4">
-            Join free
+            {t("joinFree")}
           </Link>
         </div>
       </nav>
@@ -101,7 +103,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
           className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
-          All listings
+          {t("allListings")}
         </Link>
 
         {/* Main card */}
@@ -147,7 +149,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
               )}
               <span className="flex items-center gap-1.5">
                 <DollarSign className="w-4 h-4 flex-shrink-0" />
-                {row.feeCents ? `${formatAdoptionFee(row.feeCents)} adoption fee` : "Free adoption"}
+                {row.feeCents ? t("adoptionFee", { price: formatAdoptionFee(row.feeCents) }) : t("freeAdoption")}
               </span>
             </div>
 
@@ -185,7 +187,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
                 href={`/${locale}/pets/${row.pet.handle}`}
                 className="text-sm text-[var(--teal)] hover:underline mt-3 inline-block no-underline"
               >
-                View {row.pet.name}&apos;s full profile →
+                {t("viewFullProfile", { name: row.pet.name })}
               </Link>
             )}
           </div>
@@ -196,10 +198,10 @@ export default async function PublicListingDetailPage({ params }: Params) {
           <div className="bg-white rounded-2xl border border-[var(--border)] p-6 text-center shadow-sm">
             <Heart className="w-8 h-8 text-[var(--teal)] mx-auto mb-3" />
             <p className="font-semibold text-[var(--ink)] mb-1">
-              Interested in adopting {row.pet.name}?
+              {t("interestedIn", { name: row.pet.name })}
             </p>
             <p className="text-sm text-[var(--muted)] mb-5">
-              Create a free {APP.name} account to submit an adoption application.
+              {t("signUpDesc", { app: APP.name })}
             </p>
             <div className="flex gap-3 justify-center">
               <Link
@@ -207,10 +209,10 @@ export default async function PublicListingDetailPage({ params }: Params) {
                 className="btn-primary flex items-center gap-2"
               >
                 <Heart className="w-4 h-4" />
-                Sign up to apply
+                {t("signUpButton")}
               </Link>
               <Link href="/login" className="btn-outline">
-                Sign in
+                {t("signIn")}
               </Link>
             </div>
           </div>

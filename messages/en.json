@@ -622,5 +622,30 @@
       "adoption": "Adoption",
       "adoptionDesc": "Help pets find loving homes across borders."
     }
+  },
+  "public": {
+    "signIn": "Sign in",
+    "joinFree": "Join free",
+    "adoptHeroTitle": "Find your new best friend",
+    "adoptHeroDesc": "Pets looking for a loving forever home. No fees to browse — just heart.",
+    "adoptListButton": "List a pet for adoption",
+    "adoptEmptyTitle": "No pets listed yet",
+    "adoptEmptyDesc": "Be the first to help a pet find a home.",
+    "adoptEmptyAction": "Create a listing",
+    "adoptCount": "{count, plural, one {# pet looking for a home} other {# pets looking for a home}}",
+    "adoptCtaTitle": "Have a pet looking for a home?",
+    "adoptCtaDesc": "Create a free account to list your pet and reach families ready to adopt.",
+    "adoptCtaButton": "List a pet — it's free",
+    "allListings": "All listings",
+    "adoptionFee": "{price} adoption fee",
+    "freeAdoption": "Free adoption",
+    "viewFullProfile": "View {name}'s full profile →",
+    "interestedIn": "Interested in adopting {name}?",
+    "signUpDesc": "Create a free {app} account to submit an adoption application.",
+    "signUpButton": "Sign up to apply",
+    "trackYourPet": "Track your pet",
+    "bornDate": "Born {date}",
+    "typicalLifespan": "Typical lifespan: {min}–{max} years",
+    "trackOwn": "Track your own pet's health on {app}"
   }
 }

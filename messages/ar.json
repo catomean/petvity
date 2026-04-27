@@ -622,5 +622,30 @@
       "adoption": "التبني",
       "adoptionDesc": "ساعد الحيوانات الأليفة في إيجاد منازل محبة عبر الحدود."
     }
+  },
+  "public": {
+    "signIn": "تسجيل الدخول",
+    "joinFree": "انضم مجانًا",
+    "adoptHeroTitle": "ابحث عن صديقك الجديد المفضل",
+    "adoptHeroDesc": "حيوانات تبحث عن منزل دافئ للأبد. التصفح مجاني — قلبك يكفي.",
+    "adoptListButton": "أضف حيوانًا للتبني",
+    "adoptEmptyTitle": "لا يوجد حيوانات مدرجة بعد",
+    "adoptEmptyDesc": "كن أول من يساعد حيوانًا في إيجاد منزل.",
+    "adoptEmptyAction": "إنشاء إعلان",
+    "adoptCount": "{count} حيوان يبحث عن منزل",
+    "adoptCtaTitle": "هل لديك حيوان يبحث عن منزل؟",
+    "adoptCtaDesc": "أنشئ حسابًا مجانيًا لإدراج حيوانك والتواصل مع عائلات مستعدة للتبني.",
+    "adoptCtaButton": "أضف حيوانًا — مجانًا",
+    "allListings": "جميع الإعلانات",
+    "adoptionFee": "رسوم التبني {price}",
+    "freeAdoption": "تبني مجاني",
+    "viewFullProfile": "← عرض الملف الشخصي الكامل لـ {name}",
+    "interestedIn": "هل أنت مهتم بتبني {name}؟",
+    "signUpDesc": "أنشئ حسابًا مجانيًا في {app} لتقديم طلب تبني.",
+    "signUpButton": "سجّل للتقديم",
+    "trackYourPet": "تتبع حيوانك",
+    "bornDate": "ولد في {date}",
+    "typicalLifespan": "العمر الافتراضي: {min}–{max} سنة",
+    "trackOwn": "تتبع صحة حيوانك الأليف على {app}"
   }
 }

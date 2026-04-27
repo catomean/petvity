@@ -622,5 +622,30 @@
       "adoption": "Sahiplenme",
       "adoptionDesc": "Hayvanların sınırları aşarak sevgi dolu yuvalara kavuşmasına yardım edin."
     }
+  },
+  "public": {
+    "signIn": "Giriş yap",
+    "joinFree": "Ücretsiz katıl",
+    "adoptHeroTitle": "Yeni en iyi arkadaşınızı bulun",
+    "adoptHeroDesc": "Sevgi dolu kalıcı bir yuva arayan hayvanlar. Ücretsiz göz atın — sadece yürek yeter.",
+    "adoptListButton": "Sahiplendirme ilanı ekle",
+    "adoptEmptyTitle": "Henüz ilan yok",
+    "adoptEmptyDesc": "Bir hayvanın yuva bulmasına yardım eden ilk kişi siz olun.",
+    "adoptEmptyAction": "İlan oluştur",
+    "adoptCount": "{count} hayvan yuva arıyor",
+    "adoptCtaTitle": "Yuva arayan bir hayvanınız mı var?",
+    "adoptCtaDesc": "Ücretsiz hesap oluşturun, hayvanınızı listeleyin ve sahiplenmeye hazır ailelere ulaşın.",
+    "adoptCtaButton": "İlan ver — ücretsiz",
+    "allListings": "Tüm ilanlar",
+    "adoptionFee": "{price} sahiplenme ücreti",
+    "freeAdoption": "Ücretsiz sahiplenme",
+    "viewFullProfile": "{name} adlı evcil hayvanın profilini görün →",
+    "interestedIn": "{name} adlı hayvanı sahiplenmek ister misiniz?",
+    "signUpDesc": "Ücretsiz {app} hesabı oluşturun ve sahiplenme başvurusu gönderin.",
+    "signUpButton": "Kaydolup başvur",
+    "trackYourPet": "Evcil hayvanınızı takip edin",
+    "bornDate": "{date} doğumlu",
+    "typicalLifespan": "Tipik ömür: {min}–{max} yıl",
+    "trackOwn": "{app}'te kendi evcil hayvanınızın sağlığını takip edin"
   }
 }

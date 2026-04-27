@@ -14,6 +14,7 @@ import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { formatDateShort } from "@/lib/utils/format";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 /** Cache public pet profiles for 60 s (ISR stale-while-revalidate). */
 export const revalidate = 60;
@@ -60,6 +61,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PublicPetPage({ params }: Params) {
   const { handle, locale } = await params;
+  const [t, tNav] = await Promise.all([
+    getTranslations({ locale, namespace: "public" }),
+    getTranslations({ locale, namespace: "nav" }),
+  ]);
   const db = getInstance();
 
   const pet = await db.query.pets.findFirst({
@@ -105,7 +110,7 @@ export default async function PublicPetPage({ params }: Params) {
           {APP.name}
         </Link>
         <Link href="/register" className="btn-primary text-sm py-2 px-4">
-          Track your pet
+          {t("trackYourPet")}
         </Link>
       </nav>
 
@@ -145,7 +150,7 @@ export default async function PublicPetPage({ params }: Params) {
               {pet.breed ? ` · ${pet.breed}` : ""}
               {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
               {pet.birthDate
-                ? ` · Born ${formatDateShort(pet.birthDate, locale)}`
+                ? ` · ${t("bornDate", { date: formatDateShort(pet.birthDate, locale) })}`
                 : ""}
             </p>
             {pet.bio && (
@@ -198,8 +203,7 @@ export default async function PublicPetPage({ params }: Params) {
           {/* Species info */}
           {speciesDef && (
             <div className="border-t border-[var(--border)] px-6 py-4 bg-[var(--off)] text-sm text-center text-[var(--muted)]">
-              Typical lifespan: {speciesDef.typicalLifespanYears.min}–
-              {speciesDef.typicalLifespanYears.max} years
+              {t("typicalLifespan", { min: speciesDef.typicalLifespanYears.min, max: speciesDef.typicalLifespanYears.max })}
             </div>
           )}
         </div>
@@ -207,10 +211,10 @@ export default async function PublicPetPage({ params }: Params) {
         {/* CTA */}
         <div className="mt-6 text-center">
           <p className="text-sm text-[var(--muted)] mb-3">
-            Track your own pet&apos;s health on {APP.name}
+            {t("trackOwn", { app: APP.name })}
           </p>
           <Link href="/register" className="btn-primary">
-            Get started free
+            {tNav("getStartedFree")}
           </Link>
         </div>
       </div>

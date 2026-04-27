@@ -622,5 +622,30 @@
       "adoption": "领养",
       "adoptionDesc": "帮助宠物跨越国界找到充满爱的家。"
     }
+  },
+  "public": {
+    "signIn": "登录",
+    "joinFree": "免费加入",
+    "adoptHeroTitle": "寻找您的新好友",
+    "adoptHeroDesc": "寻找充满爱的永久家园的宠物。浏览免费 — 只需一颗心。",
+    "adoptListButton": "发布宠物领养信息",
+    "adoptEmptyTitle": "暂无宠物信息",
+    "adoptEmptyDesc": "第一个帮助宠物找到家园。",
+    "adoptEmptyAction": "发布信息",
+    "adoptCount": "{count}只宠物正在寻找家园",
+    "adoptCtaTitle": "有宠物正在寻找家园吗？",
+    "adoptCtaDesc": "创建免费账号，发布您的宠物信息，联系准备领养的家庭。",
+    "adoptCtaButton": "发布宠物 — 免费",
+    "allListings": "所有信息",
+    "adoptionFee": "领养费用 {price}",
+    "freeAdoption": "免费领养",
+    "viewFullProfile": "查看 {name} 的完整档案 →",
+    "interestedIn": "有兴趣领养 {name} 吗？",
+    "signUpDesc": "创建免费的 {app} 账号，提交领养申请。",
+    "signUpButton": "注册并申请",
+    "trackYourPet": "追踪您的宠物",
+    "bornDate": "出生于 {date}",
+    "typicalLifespan": "典型寿命：{min}–{max}年",
+    "trackOwn": "在 {app} 上追踪您自己宠物的健康状况"
   }
 }

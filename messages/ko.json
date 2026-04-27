@@ -622,5 +622,30 @@
       "adoption": "입양",
       "adoptionDesc": "국경을 넘어 반려동물이 사랑하는 가정을 찾도록 도와주세요."
     }
+  },
+  "public": {
+    "signIn": "로그인",
+    "joinFree": "무료 가입",
+    "adoptHeroTitle": "새로운 친구를 찾아보세요",
+    "adoptHeroDesc": "영원한 사랑의 보금자리를 찾는 반려동물들. 무료 열람 — 마음만 있으면 됩니다.",
+    "adoptListButton": "반려동물 입양 공고 등록",
+    "adoptEmptyTitle": "등록된 반려동물이 없습니다",
+    "adoptEmptyDesc": "반려동물이 집을 찾도록 첫 번째로 도와보세요.",
+    "adoptEmptyAction": "공고 등록하기",
+    "adoptCount": "{count}마리의 반려동물이 입양을 기다립니다",
+    "adoptCtaTitle": "보금자리가 필요한 반려동물이 있나요?",
+    "adoptCtaDesc": "무료 계정을 만들어 반려동물을 등록하고 입양 가정을 만나보세요.",
+    "adoptCtaButton": "반려동물 등록 — 무료",
+    "allListings": "전체 공고",
+    "adoptionFee": "입양 비용 {price}",
+    "freeAdoption": "무료 입양",
+    "viewFullProfile": "{name}의 전체 프로필 보기 →",
+    "interestedIn": "{name}을/를 입양하고 싶으신가요?",
+    "signUpDesc": "무료 {app} 계정을 만들어 입양 신청서를 제출하세요.",
+    "signUpButton": "가입 후 신청하기",
+    "trackYourPet": "반려동물 건강 추적",
+    "bornDate": "{date} 출생",
+    "typicalLifespan": "평균 수명: {min}–{max}년",
+    "trackOwn": "{app}에서 반려동물의 건강을 추적하세요"
   }
 }

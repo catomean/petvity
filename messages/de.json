@@ -622,5 +622,30 @@
       "adoption": "Adoption",
       "adoptionDesc": "Tieren helfen, liebevolle Zuhause über Grenzen hinweg zu finden."
     }
+  },
+  "public": {
+    "signIn": "Anmelden",
+    "joinFree": "Kostenlos registrieren",
+    "adoptHeroTitle": "Finden Sie Ihren neuen besten Freund",
+    "adoptHeroDesc": "Tiere suchen ein liebevolles Zuhause für immer. Kostenlos stöbern — nur mit Herz.",
+    "adoptListButton": "Tier zur Adoption anbieten",
+    "adoptEmptyTitle": "Noch keine Tiere gelistet",
+    "adoptEmptyDesc": "Helfen Sie als Erster einem Tier, ein Zuhause zu finden.",
+    "adoptEmptyAction": "Inserat erstellen",
+    "adoptCount": "{count, plural, one {# Tier sucht ein Zuhause} other {# Tiere suchen ein Zuhause}}",
+    "adoptCtaTitle": "Haben Sie ein Tier, das ein Zuhause sucht?",
+    "adoptCtaDesc": "Erstellen Sie ein kostenloses Konto und erreichen Sie adoptionsbereite Familien.",
+    "adoptCtaButton": "Tier inserieren — kostenlos",
+    "allListings": "Alle Inserate",
+    "adoptionFee": "{price} Adoptionsgebühr",
+    "freeAdoption": "Kostenlose Adoption",
+    "viewFullProfile": "Vollständiges Profil von {name} ansehen →",
+    "interestedIn": "Möchten Sie {name} adoptieren?",
+    "signUpDesc": "Erstellen Sie ein kostenloses {app}-Konto, um eine Adoptionsbewerbung einzureichen.",
+    "signUpButton": "Registrieren und bewerben",
+    "trackYourPet": "Ihr Tier verfolgen",
+    "bornDate": "Geboren {date}",
+    "typicalLifespan": "Typische Lebensdauer: {min}–{max} Jahre",
+    "trackOwn": "Verfolgen Sie die Gesundheit Ihres Tieres auf {app}"
   }
 }
