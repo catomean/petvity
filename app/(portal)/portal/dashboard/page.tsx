@@ -13,6 +13,8 @@ import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId } from "@/lib/config/species";
 import type { TwinTrend } from "@/lib/domain/digital-twin";
 import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { getPortalLocale } from "@/lib/i18n/portal-locale";
 
 // Icon mapping stays component-side (React components are UI, not config)
 const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
@@ -22,15 +24,12 @@ const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>
   insufficient_data: Minus,
 };
 
-function greeting(name?: string | null) {
-  const h = new Date().getHours();
-  const time = h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
-  return `${time}, ${name?.split(" ")[0] ?? "there"} 👋`;
-}
-
 export default async function DashboardPage() {
   const session = await auth();
   if (!session) return null;
+
+  const locale = await getPortalLocale();
+  const t = await getTranslations({ locale, namespace: "portal" });
 
   const db = getInstance();
   const userPets = await db
@@ -98,31 +97,32 @@ export default async function DashboardPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-[var(--ink)]">
-            {greeting(session.user.name)}
+            {t(new Date().getHours() < 12 ? "greetingMorning" : new Date().getHours() < 18 ? "greetingAfternoon" : "greetingEvening", { name: session.user.name?.split(" ")[0] ?? "" })}
           </h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">
             {userPets.length === 0
-              ? "Add your first pet to get started"
+              ? t("checkinNoPets")
               : loggedToday === userPets.length
-                ? `All ${userPets.length} pet${userPets.length !== 1 ? "s" : ""} checked in today ✓`
+                ? t("allCheckedIn", { total: userPets.length })
                 : loggedToday > 0
                   ? (
                     <>
-                      {`${loggedToday} of ${userPets.length} pets checked in · `}
-                      <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">log remaining</Link>
+                      {t("partialCheckedIn", { done: loggedToday, total: userPets.length })}
+                      {" · "}
+                      <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">{t("logRemaining")}</Link>
                     </>
                   )
                   : (
                     <>
-                      {`${userPets.length} pet${userPets.length !== 1 ? "s" : ""} · `}
-                      <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">log today&apos;s check-in</Link>
+                      {`${userPets.length} · `}
+                      <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">{t("logTodayCheckin")}</Link>
                     </>
                   )}
           </p>
         </div>
         <Link href="/portal/pets/new" className="btn-primary">
           <Plus className="w-4 h-4" />
-          Add pet
+          {t("addPetButton")}
         </Link>
       </div>
 
@@ -132,13 +132,13 @@ export default async function DashboardPage() {
           <div className="w-20 h-20 rounded-3xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
             <PawPrint className="w-9 h-9 text-[var(--teal)]" />
           </div>
-          <h2 className="text-lg font-semibold text-[var(--ink)] mb-2">Meet your first pet</h2>
+          <h2 className="text-lg font-semibold text-[var(--ink)] mb-2">{t("meetFirstPet")}</h2>
           <p className="text-sm text-[var(--muted)] max-w-xs mx-auto mb-6 leading-relaxed">
-            Create a profile for your pet and start tracking their health, emotions, and wellbeing.
+            {t("meetFirstPetDesc")}
           </p>
           <Link href="/portal/pets/new" className="btn-primary">
             <Plus className="w-4 h-4" />
-            Add a pet
+            {t("addFirstPet")}
           </Link>
         </div>
       ) : (
@@ -204,11 +204,11 @@ export default async function DashboardPage() {
                         className="relative z-10 inline-flex items-center gap-1.5 text-xs font-medium text-[var(--accent)] hover:text-[var(--accent-dark)] transition-colors no-underline"
                       >
                         <CalendarDays className="w-3 h-3" />
-                        Log today
+                        {t("logToday")}
                       </Link>
                       {twin.daysAgo !== null && twin.daysAgo > 0 && (
                         <span className="text-[11px] text-[var(--muted)]">
-                          {twin.daysAgo === 1 ? "1d ago" : `${twin.daysAgo}d ago`}
+                          {t("daysAgo", { count: twin.daysAgo })}
                         </span>
                       )}
                     </div>
@@ -249,7 +249,7 @@ export default async function DashboardPage() {
                         href={`/portal/pets/${pet.id}/health/log`}
                         className="text-xs font-medium text-[var(--teal)] hover:underline"
                       >
-                        Log health
+                        {t("logHealth")}
                       </Link>
                       {pet.overdueCount > 0 && (
                         <Link
@@ -257,7 +257,7 @@ export default async function DashboardPage() {
                           className="text-xs font-medium text-[var(--warn-text)] hover:underline flex items-center gap-0.5"
                         >
                           <Syringe className="w-3 h-3" />
-                          Update vaccinations
+                          {t("updateVaccinations")}
                         </Link>
                       )}
                       {pet.signal.outOfRangeMetrics.length > 0 && (
@@ -266,7 +266,7 @@ export default async function DashboardPage() {
                           className="text-xs font-medium text-[var(--muted)] hover:text-[var(--teal)] hover:underline flex items-center gap-0.5"
                         >
                           <Stethoscope className="w-3 h-3" />
-                          Find a vet
+                          {t("findAVet")}
                         </Link>
                       )}
                     </div>
@@ -284,7 +284,7 @@ export default async function DashboardPage() {
             <div className="w-12 h-12 rounded-2xl border-2 border-dashed border-current flex items-center justify-center">
               <Plus className="w-5 h-5" />
             </div>
-            <span className="text-sm font-medium">Add another pet</span>
+            <span className="text-sm font-medium">{t("addAnotherPet")}</span>
           </Link>
         </div>
       )}

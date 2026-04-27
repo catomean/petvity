@@ -10,10 +10,15 @@ import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
+import { getTranslations } from "next-intl/server";
+import { getPortalLocale } from "@/lib/i18n/portal-locale";
 
 export default async function CheckinPage() {
   const session = await auth();
   if (!session) return null;
+
+  const locale = await getPortalLocale();
+  const t = await getTranslations({ locale, namespace: "portal" });
 
   const db = getInstance();
   const now = new Date();
@@ -79,13 +84,13 @@ export default async function CheckinPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-[var(--ink)] mb-1">Daily check-in</h1>
+      <h1 className="text-2xl font-semibold text-[var(--ink)] mb-1">{t("checkinTitle")}</h1>
       <p className="text-[var(--muted)] mb-6 text-sm">
         {userPets.length === 0
-          ? "Add a pet to start logging health data."
+          ? t("checkinNoPets")
           : pendingCount === 0
-            ? `All ${userPets.length} pet${userPets.length !== 1 ? "s" : ""} checked in today ✓`
-            : `${pendingCount} of ${userPets.length} pet${userPets.length !== 1 ? "s" : ""} still need${pendingCount === 1 ? "s" : ""} a check-in`}
+            ? t("checkinAllDone", { total: userPets.length })
+            : t("checkinProgress", { done: userPets.length - pendingCount, total: userPets.length })}
       </p>
 
       {userPets.length === 0 ? (
@@ -93,10 +98,10 @@ export default async function CheckinPage() {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <CalendarDays className="w-7 h-7 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-1">No pets yet</p>
-          <p className="text-sm text-[var(--muted)] mb-5">Add a pet to start logging health data.</p>
+          <p className="font-medium text-[var(--ink)] mb-1">{t("noPetsYet")}</p>
+          <p className="text-sm text-[var(--muted)] mb-5">{t("checkinNoPets")}</p>
           <Link href="/portal/pets/new" className="btn-primary">
-            Add a pet
+            {t("addPet")}
           </Link>
         </div>
       ) : (
@@ -142,7 +147,7 @@ export default async function CheckinPage() {
                 {done ? (
                   <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--green-text)] flex-shrink-0">
                     <CheckCircle className="w-3.5 h-3.5" />
-                    Logged today
+                    {t("loggedToday")}
                   </span>
                 ) : (
                   <span className={`${SIGNAL_BG_CLASSES[sig]} flex-shrink-0 hidden sm:inline-flex`}>
