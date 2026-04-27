@@ -91,7 +91,12 @@ const FEATURE_SECTIONS = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <MarketingNav />
@@ -518,7 +523,7 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-              <Link href="/register" className="btn-outline text-sm justify-center mt-2">
+              <Link href={`/${locale}/shop`} className="btn-outline text-sm justify-center mt-2">
                 Browse shop <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -546,7 +551,7 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-              <Link href="/register" className="btn-outline text-sm justify-center mt-2">
+              <Link href={`/${locale}/adopt`} className="btn-outline text-sm justify-center mt-2">
                 Browse adoptions <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
