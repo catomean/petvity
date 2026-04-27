@@ -17,6 +17,7 @@ import {
   ShoppingCart,
   Heart,
   Store,
+  ClipboardList,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
@@ -51,6 +52,7 @@ export default function SidebarNav({ userName, userEmail, userRole, locale }: Pr
     { href: "/portal/orders", icon: ShoppingBag, label: t("orders") },
     { href: "/portal/my-products", icon: Store, label: t("myProducts") },
     { href: "/portal/adopt", icon: Heart, label: t("adopt") },
+    { href: "/portal/adoptions", icon: ClipboardList, label: t("myAdoptions") },
   ];
 
   // Mobile tab bar: max 5 items — standard for reliable touch targets.
