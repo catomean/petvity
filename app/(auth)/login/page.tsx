@@ -72,7 +72,7 @@ function LoginForm() {
             </label>
             <Link
               href="/forgot-password"
-              className="text-xs text-[var(--muted)] hover:text-[var(--teal)] no-underline transition-colors"
+              className="text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline transition-colors"
             >
               Forgot password?
             </Link>

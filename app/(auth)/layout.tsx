@@ -37,14 +37,14 @@ export default function AuthLayout({
 
           {/* Hero copy */}
           <div className="mt-auto mb-8">
-            <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-4">
+            <p className="text-white/90 text-sm font-semibold uppercase tracking-widest mb-4">
               Pet wellness platform
             </p>
             <h2 className="text-[2.2rem] font-extrabold text-white leading-[1.1] tracking-tight mb-4">
               Your pet&apos;s health,
               <br />understood.
             </h2>
-            <p className="text-white/65 text-base leading-relaxed">
+            <p className="text-white/85 text-base leading-relaxed">
               Track wellness. Get insights. Build a deeper
               bond through care and data.
             </p>
@@ -57,14 +57,14 @@ export default function AuthLayout({
                 <div className="w-8 h-8 bg-white/15 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Icon className="w-4 h-4 text-white/80" />
                 </div>
-                <span className="text-white/75 text-sm">{text}</span>
+                <span className="text-white/90 text-sm">{text}</span>
               </li>
             ))}
           </ul>
 
           {/* Trust */}
           <div className="pt-5 border-t border-white/15">
-            <p className="text-white/35 text-xs tracking-wide">
+            <p className="text-white/70 text-xs tracking-wide">
               Multi-species · 9 languages · GDPR compliant
             </p>
           </div>

@@ -192,7 +192,7 @@ function RegisterForm() {
         </Link>
       </p>
 
-      <p className="mt-5 text-center text-xs text-[var(--faint)] leading-relaxed">
+      <p className="mt-5 text-center text-xs text-[var(--muted)] leading-relaxed">
         By continuing, you agree to our Terms of Service and Privacy Policy.
       </p>
     </>
