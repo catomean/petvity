@@ -5,7 +5,7 @@ import { makeMockDb } from "@/lib/test-helpers/db-mock";
 /* ─── Module mocks ─────────────────────────────────────────────────────────── */
 
 vi.mock("@/lib/db", () => ({ getInstance: vi.fn() }));
-vi.mock("@/lib/email", () => ({ sendEmail: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/lib/email", () => ({ sendEmail: vi.fn().mockResolvedValue({ sent: true }) }));
 
 /* ─── Imports after mocks ──────────────────────────────────────────────────── */
 
@@ -124,7 +124,7 @@ describe("POST /api/cron/weekly-digest", () => {
   it("is non-fatal — continues to next owner when sendEmail throws", async () => {
     vi.mocked(sendEmail)
       .mockRejectedValueOnce(new Error("SMTP error"))
-      .mockResolvedValueOnce(undefined);
+      .mockResolvedValueOnce({ sent: true });
 
     db._queueSelectResult([
       makeRow({ userId: "user-1", userEmail: "alice@example.com", petId: "pet-1" }),
