@@ -14,17 +14,17 @@ describe("unsubscribe-token", () => {
   });
 
   it("verifies a token issued for the same user", () => {
-    const token = makeUnsubscribeToken("user-1");
+    const token = makeUnsubscribeToken("user-1")!;
     expect(verifyUnsubscribeToken("user-1", token)).toBe(true);
   });
 
   it("rejects a token issued for a different user", () => {
-    const token = makeUnsubscribeToken("user-1");
+    const token = makeUnsubscribeToken("user-1")!;
     expect(verifyUnsubscribeToken("user-2", token)).toBe(false);
   });
 
   it("rejects a tampered token", () => {
-    const token = makeUnsubscribeToken("user-1");
+    const token = makeUnsubscribeToken("user-1")!;
     const tampered = token.slice(0, -1) + (token.endsWith("a") ? "b" : "a");
     expect(verifyUnsubscribeToken("user-1", tampered)).toBe(false);
   });

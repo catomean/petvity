@@ -61,7 +61,6 @@ describe("ownership helpers", () => {
       it("returns null when the join produces a row with no record key (defense)", async () => {
         const db = makeMockDb();
         vi.mocked(getInstance).mockReturnValue(db as any);
-        // @ts-expect-error — simulating a malformed projection
         db._queueSelectResult([{}]);
 
         const result = await fn(RECORD_ID, USER_ID);
