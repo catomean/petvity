@@ -12,6 +12,7 @@ import { VACCINATION_STATUS_CONFIG, computeVaccinationDisplayStatus } from "@/li
 import type { VaccinationStatusId } from "@/lib/config/vaccinations";
 import { VACCINATION_DUE_SOON_DAYS } from "@/lib/config/pet-signal";
 import { useHealthList } from "@/hooks/useHealthList";
+import { useTranslations } from "next-intl";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Partial<Record<VaccinationStatusId, React.ElementType>> = {
@@ -80,6 +81,7 @@ function buildBody(form: FormState, petId: string, isEdit: boolean) {
 }
 
 export default function VaccinationsPage() {
+  const t = useTranslations("portal");
   const { petId } = useParams<{ petId: string }>();
 
   /* todayStr is needed both in the filter callback and in row rendering */
@@ -135,8 +137,8 @@ export default function VaccinationsPage() {
             <ChevronLeft className="w-3.5 h-3.5" />
             {petName || "Pet"}
           </Link>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">Vaccinations</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">Track immunisations and upcoming boosters</p>
+          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("vaccTitle")}</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{t("vaccSubtitle")}</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {rows.length > 0 && !showForm && (
@@ -145,20 +147,20 @@ export default function VaccinationsPage() {
                 <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
                 <input
                   type="text"
-                  placeholder="Search vaccines…"
+                  placeholder={t("vaccSearch")}
                   className="form-input text-sm py-1.5 ps-8 w-40"
                   value={searchQ}
                   onChange={(e) => setSearchQ(e.target.value)}
-                  aria-label="Search vaccinations"
+                  aria-label={t("vaccSearch")}
                 />
               </div>
               <select
                 className="form-input text-sm py-1.5"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                aria-label="Filter by status"
+                aria-label={t("listStatusLabel")}
               >
-                <option value="all">All statuses</option>
+                <option value="all">{t("vaccAllTypes")}</option>
                 {(Object.entries(VACCINATION_STATUS_CONFIG) as [VaccinationStatus, { label: string }][]).map(
                   ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
                 )}
@@ -168,7 +170,7 @@ export default function VaccinationsPage() {
           {!showForm && (
             <button onClick={openAdd} className="btn-primary flex items-center gap-2">
               <Plus className="w-4 h-4" />
-              Add
+              {t("vaccAdd")}
             </button>
           )}
         </div>
@@ -183,7 +185,7 @@ export default function VaccinationsPage() {
                 <Syringe className="w-4 h-4 text-[var(--teal)]" />
               </div>
               <h2 className="font-semibold text-[var(--ink)]">
-                {editingId ? "Edit vaccination" : "New vaccination"}
+                {editingId ? t("vaccEditTitle") : t("vaccNewTitle")}
               </h2>
             </div>
             <button type="button" onClick={closeForm} className="btn-ghost p-1 rounded-lg">
@@ -196,11 +198,11 @@ export default function VaccinationsPage() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Vaccine name <span className="text-[var(--danger-text)]">*</span>
+                {t("vaccName")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 className="form-input"
-                placeholder="e.g. Rabies, DHPP, Bordetella"
+                placeholder={t("vaccNamePlaceholder")}
                 required
                 value={form.name}
                 onChange={(e) => field("name", e.target.value)}
@@ -209,7 +211,7 @@ export default function VaccinationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Date administered <span className="text-[var(--danger-text)]">*</span>
+                {t("vaccDateAdministered")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 type="date"
@@ -222,8 +224,8 @@ export default function VaccinationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Next due date
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("vaccNextDue")}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 type="date"
@@ -234,7 +236,7 @@ export default function VaccinationsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Status</label>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("listStatusLabel")}</label>
               <select
                 className="form-input"
                 value={form.status}
@@ -248,12 +250,12 @@ export default function VaccinationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Administered by
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("listAdministeredByLabel")}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
-                placeholder="Vet or clinic name"
+                placeholder={t("listAdministeredByPlaceholder")}
                 value={form.vetName}
                 onChange={(e) => field("vetName", e.target.value)}
               />
@@ -261,12 +263,12 @@ export default function VaccinationsPage() {
 
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Batch / lot number
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("vaccBatchNumber")}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
-                placeholder="For your records"
+                placeholder={t("vaccBatchPlaceholder")}
                 value={form.batchNumber}
                 onChange={(e) => field("batchNumber", e.target.value)}
               />
@@ -274,13 +276,13 @@ export default function VaccinationsPage() {
 
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Notes
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("logNotes")}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <textarea
                 rows={2}
                 className="form-input resize-none"
-                placeholder="Reactions, observations, or reminders…"
+                placeholder={t("vaccNotesPlaceholder")}
                 value={form.notes}
                 onChange={(e) => field("notes", e.target.value)}
               />
@@ -288,9 +290,9 @@ export default function VaccinationsPage() {
 
             <div className="sm:col-span-2 flex gap-3 pt-1">
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
-                {saving ? "Saving…" : editingId ? "Update vaccination" : "Save vaccination"}
+                {saving ? t("saving") : editingId ? t("vaccUpdate") : t("vaccSave")}
               </button>
-              <button type="button" onClick={closeForm} className="btn-outline">Cancel</button>
+              <button type="button" onClick={closeForm} className="btn-outline">{t("cancel")}</button>
             </div>
           </form>
         </div>
@@ -303,33 +305,33 @@ export default function VaccinationsPage() {
             <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
               <Syringe className="w-6 h-6 text-[var(--teal)]" />
             </div>
-            <p className="font-medium text-[var(--ink)] mb-1">No vaccinations yet</p>
-            <p className="text-sm text-[var(--muted)] mb-5">Keep track of immunisations and upcoming boosters.</p>
+            <p className="font-medium text-[var(--ink)] mb-1">{t("vaccEmptyTitle")}</p>
+            <p className="text-sm text-[var(--muted)] mb-5">{t("vaccEmptyDesc")}</p>
             {!showForm && (
               <button onClick={openAdd} className="btn-primary">
                 <Plus className="w-4 h-4" />
-                Add first vaccination
+                {t("vaccAddFirst")}
               </button>
             )}
           </div>
         ) : filteredRows.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="font-medium text-[var(--ink)] mb-1">No vaccinations match</p>
+            <p className="font-medium text-[var(--ink)] mb-1">{t("vaccNoMatch")}</p>
             <button
               onClick={() => { setStatusFilter("all"); setSearchQ(""); }}
               className="text-sm text-[var(--teal)] hover:underline mt-1"
             >
-              Clear filters
+              {t("listClearFilters")}
             </button>
           </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
               <tr>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Vaccine</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">Given</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">Next due</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Status</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">{t("vaccColVaccine")}</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">{t("vaccColGiven")}</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">{t("vaccColNextDue")}</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">{t("listStatusLabel")}</th>
                 <th className="py-3 px-4 w-20" />
               </tr>
             </thead>
@@ -370,13 +372,13 @@ export default function VaccinationsPage() {
                             onClick={() => handleDelete(v.id)}
                             className="text-xs font-medium text-[var(--danger-text)] hover:underline"
                           >
-                            Confirm
+                            {t("listConfirm")}
                           </button>
                           <button
                             onClick={() => setDeletingId(null)}
                             className="text-xs text-[var(--muted)] hover:underline ms-1"
                           >
-                            Cancel
+                            {t("cancel")}
                           </button>
                         </div>
                       ) : (
@@ -386,20 +388,20 @@ export default function VaccinationsPage() {
                               onClick={() => openEdit(v)}
                               className="text-xs font-medium text-[var(--teal)] hover:underline me-1 whitespace-nowrap"
                             >
-                              Log dose
+                              {t("vaccLogDose")}
                             </button>
                           )}
                           <button
                             onClick={() => openEdit(v)}
                             className="p-1.5 rounded-lg hover:bg-[var(--teal-light)] text-[var(--muted)] hover:text-[var(--teal)] transition-colors"
-                            title="Edit"
+                            title={t("listEdit")}
                           >
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeletingId(v.id)}
                             className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger-text)] transition-colors"
-                            title="Delete"
+                            title={t("listDelete")}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>

@@ -11,6 +11,7 @@ import { formatDateShort } from "@/lib/utils/format";
 import { MEDICATION_STATUS_CONFIG } from "@/lib/config/medications";
 import type { MedicationStatusId } from "@/lib/config/medications";
 import { useHealthList } from "@/hooks/useHealthList";
+import { useTranslations } from "next-intl";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Record<MedicationStatusId, React.ElementType> = {
@@ -95,6 +96,7 @@ function matchesFilterAndSearch(m: Medication, filter: string, q: string): boole
 }
 
 export default function MedicationsPage() {
+  const t = useTranslations("portal");
   const { petId } = useParams<{ petId: string }>();
 
   const {
@@ -135,8 +137,8 @@ export default function MedicationsPage() {
             <ChevronLeft className="w-3.5 h-3.5" />
             {petName || "Pet"}
           </Link>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">Medications</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">Track prescriptions, dosages, and treatment history</p>
+          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("medsTitle")}</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{t("medsSubtitle")}</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {rows.length > 0 && !showForm && (
@@ -145,20 +147,20 @@ export default function MedicationsPage() {
                 <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
                 <input
                   type="text"
-                  placeholder="Search medications…"
+                  placeholder={t("medsSearch")}
                   className="form-input text-sm py-1.5 ps-8 w-44"
                   value={searchQ}
                   onChange={(e) => setSearchQ(e.target.value)}
-                  aria-label="Search medications"
+                  aria-label={t("medsSearch")}
                 />
               </div>
               <select
                 className="form-input text-sm py-1.5"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                aria-label="Filter by status"
+                aria-label={t("listStatusLabel")}
               >
-                <option value="all">All statuses</option>
+                <option value="all">{t("listAllStatuses")}</option>
                 {(Object.entries(MEDICATION_STATUS_CONFIG) as [MedicationStatus, { label: string }][]).map(
                   ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
                 )}
@@ -168,7 +170,7 @@ export default function MedicationsPage() {
           {!showForm && (
             <button onClick={openAdd} className="btn-primary flex items-center gap-2">
               <Plus className="w-4 h-4" />
-              Add
+              {t("medsAdd")}
             </button>
           )}
         </div>
@@ -183,7 +185,7 @@ export default function MedicationsPage() {
                 <Pill className="w-4 h-4 text-[var(--teal)]" />
               </div>
               <h2 className="font-semibold text-[var(--ink)]">
-                {editingId ? "Edit medication" : "New medication"}
+                {editingId ? t("medsEditTitle") : t("medsNewTitle")}
               </h2>
             </div>
             <button type="button" onClick={closeForm} className="btn-ghost p-1 rounded-lg">
@@ -196,7 +198,7 @@ export default function MedicationsPage() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Medication name <span className="text-[var(--danger-text)]">*</span>
+                {t("medsMedName")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 className="form-input"
@@ -209,7 +211,7 @@ export default function MedicationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Dosage <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("medsDosage")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
@@ -221,7 +223,7 @@ export default function MedicationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Frequency <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("medsFrequency")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
@@ -233,7 +235,7 @@ export default function MedicationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Start date <span className="text-[var(--danger-text)]">*</span>
+                {t("medsStartDate")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 type="date"
@@ -246,7 +248,7 @@ export default function MedicationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                End date <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("medsEndDate")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 type="date"
@@ -257,7 +259,7 @@ export default function MedicationsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Status</label>
+              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("listStatusLabel")}</label>
               <select
                 className="form-input"
                 value={form.status}
@@ -271,11 +273,11 @@ export default function MedicationsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Prescribed by <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("medsPrescribedBy")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
-                placeholder="Vet or clinic name"
+                placeholder={t("medsVetPlaceholder")}
                 value={form.prescribedBy}
                 onChange={(e) => field("prescribedBy", e.target.value)}
               />
@@ -283,11 +285,11 @@ export default function MedicationsPage() {
 
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Notes <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("logNotes")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <textarea
                 className="form-input min-h-[80px] resize-y"
-                placeholder="Instructions, side effects to watch for, refill notes…"
+                placeholder={t("medsNotesPlaceholder")}
                 value={form.notes}
                 onChange={(e) => field("notes", e.target.value)}
               />
@@ -295,9 +297,9 @@ export default function MedicationsPage() {
 
             <div className="sm:col-span-2 flex gap-3 pt-1">
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
-                {saving ? "Saving…" : editingId ? "Update medication" : "Save medication"}
+                {saving ? t("saving") : editingId ? t("medsUpdate") : t("medsSave")}
               </button>
-              <button type="button" onClick={closeForm} className="btn-outline">Cancel</button>
+              <button type="button" onClick={closeForm} className="btn-outline">{t("cancel")}</button>
             </div>
           </form>
         </div>
@@ -310,33 +312,33 @@ export default function MedicationsPage() {
             <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
               <Pill className="w-6 h-6 text-[var(--teal)]" />
             </div>
-            <p className="font-medium text-[var(--ink)] mb-1">No medications logged</p>
-            <p className="text-sm text-[var(--muted)] mb-5">Track prescriptions and treatments to keep your pet&apos;s history complete.</p>
+            <p className="font-medium text-[var(--ink)] mb-1">{t("medsEmptyTitle")}</p>
+            <p className="text-sm text-[var(--muted)] mb-5">{t("medsEmptyDesc")}</p>
             {!showForm && (
               <button onClick={openAdd} className="btn-primary">
                 <Plus className="w-4 h-4" />
-                Add first medication
+                {t("medsAddFirst")}
               </button>
             )}
           </div>
         ) : filteredRows.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="font-medium text-[var(--ink)] mb-1">No medications match</p>
+            <p className="font-medium text-[var(--ink)] mb-1">{t("medsNoMatch")}</p>
             <button
               onClick={() => { setStatusFilter("all"); setSearchQ(""); }}
               className="text-sm text-[var(--teal)] hover:underline mt-1"
             >
-              Clear filters
+              {t("listClearFilters")}
             </button>
           </div>
         ) : (
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
               <tr>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Medication</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">Dosage / Frequency</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">Duration</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Status</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">{t("medsColMedication")}</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">{t("medsColDosage")}</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">{t("medsColDuration")}</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">{t("listStatusLabel")}</th>
                 <th className="py-3 px-4 w-20" />
               </tr>
             </thead>
@@ -378,13 +380,13 @@ export default function MedicationsPage() {
                             onClick={() => handleDelete(m.id)}
                             className="text-xs font-medium text-[var(--danger-text)] hover:underline"
                           >
-                            Confirm
+                            {t("listConfirm")}
                           </button>
                           <button
                             onClick={() => setDeletingId(null)}
                             className="text-xs text-[var(--muted)] hover:underline ms-1"
                           >
-                            Cancel
+                            {t("cancel")}
                           </button>
                         </div>
                       ) : (
@@ -392,14 +394,14 @@ export default function MedicationsPage() {
                           <button
                             onClick={() => openEdit(m)}
                             className="p-1.5 rounded-lg hover:bg-[var(--teal-light)] text-[var(--muted)] hover:text-[var(--teal)] transition-colors"
-                            title="Edit"
+                            title={t("listEdit")}
                           >
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeletingId(m.id)}
                             className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger-text)] transition-colors"
-                            title="Delete"
+                            title={t("listDelete")}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>

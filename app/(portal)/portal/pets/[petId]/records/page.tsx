@@ -12,6 +12,7 @@ import { formatDateShort } from "@/lib/utils/format";
 import { HEALTH_RECORD_TYPE_CONFIG, HEALTH_RECORD_TYPE_OPTIONS } from "@/lib/config/health-records";
 import type { HealthRecordTypeId } from "@/lib/config/health-records";
 import { useHealthList } from "@/hooks/useHealthList";
+import { useTranslations } from "next-intl";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const RECORD_TYPE_ICONS: Record<HealthRecordTypeId, React.ElementType> = {
@@ -92,6 +93,7 @@ function matchesFilterAndSearch(r: HealthRecord, filter: string, q: string): boo
 }
 
 export default function HealthRecordsPage() {
+  const t = useTranslations("portal");
   const { petId } = useParams<{ petId: string }>();
 
   const {
@@ -132,10 +134,8 @@ export default function HealthRecordsPage() {
             <ChevronLeft className="w-3.5 h-3.5" />
             {petName || "Pet"}
           </Link>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">Health Records</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">
-            Vet visits, treatments, lab results and more
-          </p>
+          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("recordsTitle")}</h1>
+          <p className="text-sm text-[var(--muted)] mt-0.5">{t("recordsSubtitle")}</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {records.length > 0 && !showForm && (
@@ -144,20 +144,20 @@ export default function HealthRecordsPage() {
                 <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
                 <input
                   type="text"
-                  placeholder="Search records…"
+                  placeholder={t("recordsSearch")}
                   className="form-input text-sm py-1.5 ps-8 w-44"
                   value={searchQ}
                   onChange={(e) => setSearchQ(e.target.value)}
-                  aria-label="Search records"
+                  aria-label={t("recordsSearch")}
                 />
               </div>
               <select
                 className="form-input text-sm py-1.5"
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                aria-label="Filter by type"
+                aria-label={t("recordsAllTypes")}
               >
-                <option value="all">All types</option>
+                <option value="all">{t("recordsAllTypes")}</option>
                 {HEALTH_RECORD_TYPE_OPTIONS.map(({ value, label }) => (
                   <option key={value} value={value}>{label}</option>
                 ))}
@@ -167,7 +167,7 @@ export default function HealthRecordsPage() {
           {!showForm && (
             <button onClick={openAdd} className="btn-primary flex items-center gap-2">
               <Plus className="w-4 h-4" />
-              Add record
+              {t("recordsAdd")}
             </button>
           )}
         </div>
@@ -182,7 +182,7 @@ export default function HealthRecordsPage() {
                 <FileText className="w-4 h-4 text-[var(--teal)]" />
               </div>
               <h2 className="font-semibold text-[var(--ink)]">
-                {editingId ? "Edit health record" : "New health record"}
+                {editingId ? t("recordsEditTitle") : t("recordsNewTitle")}
               </h2>
             </div>
             <button
@@ -199,7 +199,7 @@ export default function HealthRecordsPage() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Type <span className="text-[var(--danger-text)]">*</span>
+                {t("recordsTypeLabel")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <select
                 className="form-input"
@@ -214,7 +214,7 @@ export default function HealthRecordsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Date <span className="text-[var(--danger-text)]">*</span>
+                {t("recordsDateLabel")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 type="date"
@@ -227,7 +227,7 @@ export default function HealthRecordsPage() {
 
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Title / summary <span className="text-[var(--danger-text)]">*</span>
+                {t("recordsTitleLabel")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
                 className="form-input"
@@ -240,12 +240,12 @@ export default function HealthRecordsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Vet / practitioner
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("recordsVetLabel")}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
-                placeholder="Dr. Smith"
+                placeholder={t("recordsDrPlaceholder")}
                 value={form.vetName}
                 onChange={(e) => field("vetName", e.target.value)}
               />
@@ -253,12 +253,12 @@ export default function HealthRecordsPage() {
 
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Clinic / hospital
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("recordsClinicLabel")}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
-                placeholder="City Animal Clinic"
+                placeholder={t("recordsClinicPlaceholder")}
                 value={form.clinic}
                 onChange={(e) => field("clinic", e.target.value)}
               />
@@ -266,12 +266,12 @@ export default function HealthRecordsPage() {
 
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                Notes
-                <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
+                {t("recordsNotesLabel")}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <textarea
                 className="form-input min-h-[80px] resize-y"
-                placeholder="Diagnosis, treatment details, follow-up instructions…"
+                placeholder={t("recordsNotesPlaceholder")}
                 value={form.notes}
                 onChange={(e) => field("notes", e.target.value)}
               />
@@ -279,10 +279,10 @@ export default function HealthRecordsPage() {
 
             <div className="sm:col-span-2 flex gap-3 pt-1">
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
-                {saving ? "Saving…" : editingId ? "Update record" : "Save record"}
+                {saving ? t("saving") : editingId ? t("recordsUpdate") : t("recordsSave")}
               </button>
               <button type="button" onClick={closeForm} className="btn-outline">
-                Cancel
+                {t("cancel")}
               </button>
             </div>
           </form>
@@ -295,25 +295,23 @@ export default function HealthRecordsPage() {
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <FileText className="w-6 h-6 text-[var(--teal)]" />
           </div>
-          <p className="font-medium text-[var(--ink)] mb-1">No records yet</p>
-          <p className="text-sm text-[var(--muted)] mb-5">
-            Log vet visits, treatments, and lab results to build a complete health history.
-          </p>
+          <p className="font-medium text-[var(--ink)] mb-1">{t("recordsEmptyTitle")}</p>
+          <p className="text-sm text-[var(--muted)] mb-5">{t("recordsEmptyDesc")}</p>
           {!showForm && (
             <button onClick={openAdd} className="btn-primary">
               <Plus className="w-4 h-4" />
-              Add first record
+              {t("recordsAddFirst")}
             </button>
           )}
         </div>
       ) : filteredRecords.length === 0 ? (
         <div className="card py-12 text-center">
-          <p className="font-medium text-[var(--ink)] mb-1">No records match</p>
+          <p className="font-medium text-[var(--ink)] mb-1">{t("recordsNoMatch")}</p>
           <button
             onClick={() => { setTypeFilter("all"); setSearchQ(""); }}
             className="text-sm text-[var(--teal)] hover:underline mt-1"
           >
-            Clear filters
+            {t("listClearFilters")}
           </button>
         </div>
       ) : (
@@ -343,13 +341,13 @@ export default function HealthRecordsPage() {
                             onClick={() => handleDelete(r.id)}
                             className="text-xs font-medium text-[var(--danger-text)] hover:underline"
                           >
-                            Confirm
+                            {t("listConfirm")}
                           </button>
                           <button
                             onClick={() => setDeletingId(null)}
                             className="text-xs text-[var(--muted)] hover:underline ms-1"
                           >
-                            Cancel
+                            {t("cancel")}
                           </button>
                         </>
                       ) : (
@@ -357,14 +355,14 @@ export default function HealthRecordsPage() {
                           <button
                             onClick={() => openEdit(r)}
                             className="p-1.5 rounded-lg hover:bg-[var(--teal-light)] text-[var(--muted)] hover:text-[var(--teal)] transition-colors"
-                            title="Edit"
+                            title={t("listEdit")}
                           >
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeletingId(r.id)}
                             className="p-1.5 rounded-lg hover:bg-[var(--danger-bg)] text-[var(--muted)] hover:text-[var(--danger-text)] transition-colors"
-                            title="Delete"
+                            title={t("listDelete")}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
