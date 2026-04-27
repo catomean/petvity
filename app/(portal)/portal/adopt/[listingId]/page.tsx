@@ -12,7 +12,7 @@ import type { SpeciesId, SexId } from "@/lib/config/species";
 import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS, LISTING_STATUS_CONFIG, LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import type { ApplicationStatusId, ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
-import { formatPetAge } from "@/lib/utils/format";
+import { formatPetAge, formatAdoptionFee } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -184,7 +184,7 @@ export default function ListingDetailPage() {
             )}
             <span className="flex items-center gap-1.5">
               <DollarSign className="w-4 h-4 flex-shrink-0" />
-              {listing.feeCents === null ? "Free" : `$${(listing.feeCents / 100).toFixed(0)} adoption fee`}
+              {listing.feeCents ? `${formatAdoptionFee(listing.feeCents)} adoption fee` : "Free"}
             </span>
           </div>
 

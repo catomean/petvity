@@ -6,6 +6,7 @@ import { getInstance } from "@/lib/db";
 import { orders, orderItems, products, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { orderConfirmation, sellerOrderNotification } from "@/lib/email/templates";
+import { formatPrice } from "@/lib/utils/format";
 
 const createSchema = z.object({
   items: z.array(
@@ -159,11 +160,11 @@ export async function POST(req: NextRequest) {
       const emailItems = insertedItems.map((i) => ({
         name: productMap.get(i.productId)?.name ?? "Item",
         quantity: i.quantity,
-        lineTotal: `$${((i.priceCents * i.quantity) / 100).toFixed(2)}`,
+        lineTotal: formatPrice(i.priceCents * i.quantity),
       }));
       const tpl = orderConfirmation({
         customerName: buyerLabel,
-        orderTotal: `$${(totalCents / 100).toFixed(2)}`,
+        orderTotal: formatPrice(totalCents),
         items: emailItems,
         notes: notes ?? null,
       }, buyer.locale);
@@ -201,9 +202,9 @@ export async function POST(req: NextRequest) {
             items: sellerItems.map((i) => ({
               name: productMap.get(i.productId)?.name ?? "Item",
               quantity: i.quantity,
-              lineTotal: `$${((i.priceCents * i.quantity) / 100).toFixed(2)}`,
+              lineTotal: formatPrice(i.priceCents * i.quantity),
             })),
-            subtotal: `$${(subtotalCents / 100).toFixed(2)}`,
+            subtotal: formatPrice(subtotalCents),
           }, seller.locale);
           await sendEmail({ to: seller.email, ...tpl });
         }),

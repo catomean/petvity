@@ -68,6 +68,15 @@ export function formatPrice(cents: number): string {
 }
 
 /**
+ * Format an adoption fee. Returns "Free" for null/0, whole dollars otherwise.
+ * e.g. null → "Free"; 2500 → "$25"
+ */
+export function formatAdoptionFee(feeCents: number | null): string {
+  if (feeCents === null || feeCents === 0) return "Free";
+  return `$${Math.round(feeCents / 100)}`;
+}
+
+/**
  * Format an ISO datetime string for compact display.
  * e.g. "2026-01-15T10:30:00Z" → "Jan 15, 2026"
  */

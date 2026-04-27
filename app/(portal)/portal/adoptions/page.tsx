@@ -8,6 +8,7 @@ import {
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG, HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
+import { formatAdoptionFee } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -195,7 +196,7 @@ function ListingCard({
           <p className="text-xs text-[var(--muted)] mt-0.5">
             {listing.pet.name}
             {listing.location ? ` · ${listing.location}` : ""}
-            {listing.feeCents !== null ? ` · $${(listing.feeCents / 100).toFixed(0)} fee` : " · Free"}
+            {listing.feeCents ? ` · ${formatAdoptionFee(listing.feeCents)} fee` : " · Free"}
           </p>
         </div>
 

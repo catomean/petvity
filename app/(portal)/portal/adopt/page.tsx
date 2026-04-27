@@ -9,7 +9,7 @@ import {
 import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG, SEX_LABELS, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
-import { formatPetAgeShort } from "@/lib/utils/format";
+import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -46,10 +46,6 @@ interface AdoptionListing {
 const SPECIES_OPTIONS = [{ value: "", label: "All species" }, ...SPECIES_OPTS];
 
 
-function feeLabel(feeCents: number | null): string {
-  if (feeCents === null) return "Free";
-  return `$${(feeCents / 100).toFixed(0)} fee`;
-}
 
 /* ─── Listing Card ───────────────────────────────────────────────────────── */
 
@@ -75,7 +71,7 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
           <span>{emoji}</span>
         )}
         <div className="absolute top-2 end-2 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-xs font-medium text-[var(--ink2)]">
-          {feeLabel(listing.feeCents)}
+          {listing.feeCents ? `${formatAdoptionFee(listing.feeCents)} fee` : "Free"}
         </div>
       </div>
 

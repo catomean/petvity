@@ -9,6 +9,7 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ListingStatusId } from "@/lib/config/adoptions";
+import { formatAdoptionFee } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -119,7 +120,7 @@ function ListingRow({
         <div className="hidden lg:flex items-center gap-1 w-24">
           <DollarSign className="w-3.5 h-3.5 text-[var(--muted)] flex-shrink-0" />
           <span className="text-xs text-[var(--muted)]">
-            {listing.feeCents === null ? "Free" : `$${(listing.feeCents / 100).toFixed(0)}`}
+            {formatAdoptionFee(listing.feeCents)}
           </span>
         </div>
 

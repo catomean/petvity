@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { LISTING_STATUS_CONFIG, LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import type { ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
-import { formatPetAge } from "@/lib/utils/format";
+import { formatPetAge, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
 
 /** Cache adoption listing detail for 30 s — status changes propagate quickly. */
@@ -147,7 +147,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
               )}
               <span className="flex items-center gap-1.5">
                 <DollarSign className="w-4 h-4 flex-shrink-0" />
-                {row.feeCents === null ? "Free adoption" : `$${(row.feeCents / 100).toFixed(0)} adoption fee`}
+                {row.feeCents ? `${formatAdoptionFee(row.feeCents)} adoption fee` : "Free adoption"}
               </span>
             </div>
 

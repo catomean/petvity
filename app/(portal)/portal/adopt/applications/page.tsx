@@ -7,7 +7,7 @@ import { APPLICATION_STATUS_CONFIG, LISTING_STATUS_CONFIG } from "@/lib/config/a
 import type { ApplicationStatusId, ListingStatusId } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { formatDateShort } from "@/lib/utils/format";
+import { formatDateShort, formatAdoptionFee } from "@/lib/utils/format";
 
 interface MyApplication {
   applicationId: string;
@@ -116,7 +116,7 @@ export default function MyApplicationsPage() {
                       {app.feeCents != null && (
                         <span className="flex items-center gap-1">
                           <DollarSign className="w-3 h-3" />
-                          {app.feeCents === 0 ? "Free" : `$${(app.feeCents / 100).toFixed(0)} fee`}
+                          {app.feeCents ? `${formatAdoptionFee(app.feeCents)} fee` : "Free"}
                         </span>
                       )}
                       <span>Applied {formatDateShort(app.createdAt)}</span>

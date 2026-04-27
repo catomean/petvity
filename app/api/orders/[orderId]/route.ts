@@ -6,6 +6,7 @@ import { getInstance } from "@/lib/db";
 import { orders, orderStatusEnum, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { orderStatusUpdate } from "@/lib/email/templates";
+import { formatPrice } from "@/lib/utils/format";
 
 const patchSchema = z.object({
   status: z.enum(orderStatusEnum.enumValues),
@@ -82,7 +83,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         const tpl = orderStatusUpdate({
           customerName: customer.name ?? customer.email,
           status: status as EmailStatus,
-          orderTotal: `$${(order.totalCents / 100).toFixed(2)}`,
+          orderTotal: formatPrice(order.totalCents),
         }, customer.locale);
         await sendEmail({ to: customer.email, ...tpl });
       }

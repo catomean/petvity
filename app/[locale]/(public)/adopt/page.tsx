@@ -7,7 +7,7 @@ import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import { Heart, MapPin, PawPrint } from "lucide-react";
-import { formatPetAgeShort } from "@/lib/utils/format";
+import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -24,9 +24,6 @@ function speciesEmoji(species: string): string {
   return SPECIES_CONFIG[species as SpeciesId]?.emoji ?? "🐾";
 }
 
-function feeLabel(feeCents: number | null): string {
-  return feeCents === null ? "Free" : `$${(feeCents / 100).toFixed(0)}`;
-}
 
 export default async function PublicAdoptPage({ params }: Params) {
   const { locale } = await params;
@@ -138,7 +135,7 @@ export default async function PublicAdoptPage({ params }: Params) {
                         <span>{emoji}</span>
                       )}
                       <div className="absolute top-2 end-2 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-xs font-medium text-[var(--ink2)]">
-                        {feeLabel(listing.feeCents)}
+                        {formatAdoptionFee(listing.feeCents)}
                       </div>
                     </div>
 
