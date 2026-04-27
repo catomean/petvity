@@ -12,6 +12,7 @@ import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import { formatDateShort, formatPetAge } from "@/lib/utils/format";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
+import { getTranslations } from "next-intl/server";
 import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 import { SignalHistoryTimeline } from "@/components/portal/SignalHistoryTimeline";
@@ -37,6 +38,7 @@ export default async function PetProfilePage({ params }: Params) {
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
   const locale = await getPortalLocale();
+  const t = await getTranslations({ locale, namespace: "portal" });
 
   const [recentMetrics, allVacc, activeMeds, [{ recordCount }], signalHistory] = await Promise.all([
     db.query.healthMetrics.findMany({
@@ -75,28 +77,28 @@ export default async function PetProfilePage({ params }: Params) {
     {
       href: `/portal/pets/${pet.id}/health`,
       icon: Activity,
-      label: "Health",
-      desc: "Metrics & charts",
+      label: t("healthBack"),
+      desc: t("petNavHealthDesc"),
     },
     {
       href: `/portal/pets/${pet.id}/records`,
       icon: FileText,
-      label: "Records",
-      desc: recordCount > 0 ? `${recordCount} record${recordCount !== 1 ? "s" : ""}` : "Health history",
+      label: t("petNavRecords"),
+      desc: recordCount > 0 ? t("petNavRecordsCount", { count: recordCount }) : t("petNavHealthHistory"),
     },
     {
       href: `/portal/pets/${pet.id}/vaccinations`,
       icon: Syringe,
-      label: "Vaccinations",
+      label: t("petNavVaccinations"),
       desc: overdueCount > 0
-        ? `${allVacc.length} logged · ${overdueCount} overdue`
-        : `${allVacc.length} logged`,
+        ? t("petNavVaccOverdue", { count: allVacc.length, overdue: overdueCount })
+        : t("petNavVaccLogged", { count: allVacc.length }),
     },
     {
       href: `/portal/pets/${pet.id}/medications`,
       icon: Pill,
-      label: "Medications",
-      desc: activeMeds.length > 0 ? `${activeMeds.length} active` : "None active",
+      label: t("petNavMedications"),
+      desc: activeMeds.length > 0 ? t("petNavMedsActive", { count: activeMeds.length }) : t("petNavMedsNone"),
     },
   ];
 
@@ -108,7 +110,7 @@ export default async function PetProfilePage({ params }: Params) {
         className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
-        My Pets
+        {t("myPets")}
       </Link>
 
       {/* Hero header */}
@@ -147,7 +149,7 @@ export default async function PetProfilePage({ params }: Params) {
                   {speciesDef?.label ?? pet.species}
                   {pet.breed ? ` · ${pet.breed}` : ""}
                   {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
-                  {age ? ` · ${age}` : pet.birthDate ? ` · Born ${formatDateShort(pet.birthDate, locale)}` : ""}
+                  {age ? ` · ${age}` : pet.birthDate ? ` · ${t("petBorn", { date: formatDateShort(pet.birthDate, locale) })}` : ""}
                 </p>
 
                 {pet.bio && (
@@ -164,7 +166,7 @@ export default async function PetProfilePage({ params }: Params) {
               className="btn-outline text-sm flex-shrink-0"
             >
               <Pencil className="w-3.5 h-3.5" />
-              Edit
+              {t("editButton")}
             </Link>
           </div>
 
@@ -180,7 +182,7 @@ export default async function PetProfilePage({ params }: Params) {
                   className="btn-outline text-sm"
                 >
                   <Syringe className="w-4 h-4" />
-                  Update vaccinations
+                  {t("updateVaccinations")}
                 </Link>
               )}
               {sig !== "healthy" && signalResult.outOfRangeMetrics.length > 0 && (
@@ -189,7 +191,7 @@ export default async function PetProfilePage({ params }: Params) {
                   className="btn-outline text-sm"
                 >
                   <Stethoscope className="w-4 h-4" />
-                  Find a vet
+                  {t("findAVet")}
                 </Link>
               )}
               <Link
@@ -197,7 +199,7 @@ export default async function PetProfilePage({ params }: Params) {
                 className="btn-primary text-sm"
               >
                 <CalendarDays className="w-4 h-4" />
-                Log today
+                {t("logToday")}
               </Link>
             </div>
           </div>
@@ -233,7 +235,7 @@ export default async function PetProfilePage({ params }: Params) {
         className="flex items-center gap-3 px-4 py-3 rounded-xl border border-dashed border-[var(--border)] text-sm text-[var(--muted)] hover:border-[var(--danger)] hover:text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
       >
         <Heart className="w-4 h-4 flex-shrink-0" />
-        List {pet.name} for adoption
+        {t("listForAdoption", { petName: pet.name })}
       </Link>
     </div>
   );
