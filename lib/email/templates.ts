@@ -402,6 +402,52 @@ export function professionalUnverified(data: {
   };
 }
 
+// ─── Weekly wellness digest ───────────────────────────────────────────────────
+
+export function weeklyDigest(data: {
+  ownerName: string;
+  pets: { name: string; signal: "healthy" | "watch" | "concern"; url: string }[];
+  settingsUrl: string;
+}, locale?: string | null) {
+  const s = getEmailStrings(locale).weeklyDigest;
+
+  const signalColor: Record<string, string> = {
+    healthy: "#16A34A",
+    watch: "#D97706",
+    concern: "#DC2626",
+  };
+  const signalLabel: Record<string, string> = {
+    healthy: s.signalHealthy,
+    watch: s.signalWatch,
+    concern: s.signalConcern,
+  };
+
+  const petCards = data.pets
+    .map(
+      (pet) => `
+    <div style="border:1px solid #e5e0d8;border-radius:8px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <strong style="font-size:15px;">${pet.name}</strong><br/>
+        <a href="${pet.url}" style="font-size:13px;color:#2a7a8a;">${t(s.viewPet, { name: pet.name })}</a>
+      </div>
+      <span style="background:${signalColor[pet.signal]}22;color:${signalColor[pet.signal]};font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;white-space:nowrap;">${signalLabel[pet.signal]}</span>
+    </div>`,
+    )
+    .join("");
+
+  return {
+    subject: s.subject,
+    html: base(`
+      <h2>${s.h2}</h2>
+      <p>${t(s.greeting, { name: data.ownerName })}</p>
+      <p>${s.intro}</p>
+      ${petCards}
+      <a class="btn" href="${APP_URL}/portal/dashboard">${s.button}</a>
+      <p style="font-size:13px;color:#888;margin-top:16px;"><a href="${data.settingsUrl}" style="color:#888;">${s.managePrefs}</a></p>
+    `, locale),
+  };
+}
+
 // ─── Template key → function map ─────────────────────────────────────────────
 
 export type TemplateKey =

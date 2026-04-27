@@ -144,6 +144,9 @@ app/
     cron/emails        → Process welcome email queue (Bearer CRON_SECRET)
     cron/health-alerts → Flag out-of-range metrics (Bearer CRON_SECRET)
     cron/vaccination-reminders → Remind about due vaccines (Bearer CRON_SECRET)
+    cron/medication-reminders  → Remind about medication courses ending tomorrow (Bearer CRON_SECRET)
+    cron/booking-reminders     → Remind about bookings starting tomorrow (Bearer CRON_SECRET)
+    cron/weekly-digest         → Weekly wellness digest per owner (Bearer CRON_SECRET)
 
 components/
   portal/
@@ -357,6 +360,9 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 | `/api/cron/emails` | `0 7 * * *` | Process welcome email queue |
 | `/api/cron/health-alerts` | `0 8 * * *` | Flag out-of-range metrics, email owners |
 | `/api/cron/vaccination-reminders` | `0 9 * * *` | Remind about vaccines due in 30 days |
+| `/api/cron/medication-reminders` | `0 10 * * *` | Remind about medication courses ending tomorrow |
+| `/api/cron/booking-reminders` | `0 11 * * *` | Remind about bookings starting tomorrow |
+| `/api/cron/weekly-digest` | `0 9 * * 0` | Weekly wellness digest for all opted-in owners |
 
 ---
 
