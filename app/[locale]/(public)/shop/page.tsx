@@ -160,9 +160,10 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                 const catCfg =
                   PRODUCT_CATEGORY_CONFIG[product.category as ProductCategoryId];
                 return (
-                  <div
+                  <Link
                     key={product.id}
-                    className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden hover:shadow-md transition-shadow group flex flex-col"
+                    href={`/${locale}/shop/${product.id}`}
+                    className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden hover:shadow-md transition-shadow group flex flex-col no-underline"
                   >
                     {/* Image */}
                     <div className="aspect-square bg-[var(--off)] flex items-center justify-center text-5xl overflow-hidden">
@@ -199,15 +200,12 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                         <span className="text-lg font-bold text-[var(--ink)]">
                           {formatPrice(product.priceCents)}
                         </span>
-                        <Link
-                          href="/login"
-                          className="btn-primary text-xs py-1.5 px-3 no-underline"
-                        >
-                          Buy
-                        </Link>
+                        <span className="btn-primary text-xs py-1.5 px-3">
+                          View
+                        </span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>

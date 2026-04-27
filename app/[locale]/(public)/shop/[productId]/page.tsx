@@ -1,0 +1,178 @@
+import { notFound } from "next/navigation";
+import { getInstance } from "@/lib/db";
+import { products, users } from "@/lib/db/schema";
+import { and, eq } from "drizzle-orm";
+import Link from "next/link";
+import { APP } from "@/lib/config/app";
+import { PRODUCT_CATEGORY_CONFIG } from "@/lib/config/products";
+import type { ProductCategoryId } from "@/lib/config/products";
+import { ShoppingBag, PawPrint, ChevronLeft, Package, ShoppingCart } from "lucide-react";
+import { formatPrice } from "@/lib/utils/format";
+import type { Metadata } from "next";
+
+export const revalidate = 60;
+
+type Params = { params: Promise<{ locale: string; productId: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { productId } = await params;
+  const db = getInstance();
+  const [row] = await db
+    .select({ name: products.name, description: products.description, priceCents: products.priceCents })
+    .from(products)
+    .where(and(eq(products.id, productId), eq(products.isActive, true)))
+    .limit(1);
+
+  if (!row) return { title: APP.name };
+  return {
+    title: `${row.name} · ${APP.name} Shop`,
+    description: row.description ?? `${row.name} — ${formatPrice(row.priceCents)} on ${APP.name}`,
+  };
+}
+
+export default async function PublicProductDetailPage({ params }: Params) {
+  const { locale, productId } = await params;
+  const db = getInstance();
+
+  const [row] = await db
+    .select({
+      id: products.id,
+      name: products.name,
+      description: products.description,
+      priceCents: products.priceCents,
+      imageUrl: products.imageUrl,
+      category: products.category,
+      stock: products.stock,
+      sellerName: users.name,
+      sellerEmail: users.email,
+    })
+    .from(products)
+    .leftJoin(users, eq(users.id, products.sellerId))
+    .where(and(eq(products.id, productId), eq(products.isActive, true)))
+    .limit(1);
+
+  if (!row) notFound();
+
+  const catCfg = PRODUCT_CATEGORY_CONFIG[row.category as ProductCategoryId];
+  const outOfStock = row.stock === 0;
+
+  return (
+    <div className="min-h-screen bg-[var(--off)]">
+      {/* Nav */}
+      <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
+        <Link
+          href={`/${locale}`}
+          className="font-bold text-[var(--teal)] text-lg no-underline flex items-center gap-2"
+        >
+          <PawPrint className="w-5 h-5" />
+          {APP.name}
+        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/login"
+            className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors"
+          >
+            Sign in
+          </Link>
+          <Link href="/register" className="btn-primary text-sm py-2 px-4">
+            Join free
+          </Link>
+        </div>
+      </nav>
+
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        {/* Back */}
+        <Link
+          href={`/${locale}/shop`}
+          className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
+        >
+          <ChevronLeft className="w-3.5 h-3.5" />
+          Browse shop
+        </Link>
+
+        {/* Product card */}
+        <div className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm mb-5">
+          {/* Image */}
+          <div className="aspect-video bg-[var(--off)] flex items-center justify-center text-8xl overflow-hidden">
+            {row.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={row.imageUrl}
+                alt={row.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span>{catCfg?.emoji ?? "📦"}</span>
+            )}
+          </div>
+
+          <div className="p-6">
+            {/* Category + stock */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-medium bg-[var(--off)] text-[var(--ink2)] px-2.5 py-1 rounded-full">
+                {catCfg?.emoji} {catCfg?.label ?? row.category}
+              </span>
+              {outOfStock && (
+                <span className="text-xs font-medium text-[var(--danger)] bg-[var(--danger-bg)] px-2.5 py-1 rounded-full">
+                  Out of stock
+                </span>
+              )}
+              {row.stock !== null && row.stock > 0 && (
+                <span className="text-xs text-[var(--muted)]">
+                  {row.stock} left
+                </span>
+              )}
+            </div>
+
+            {/* Name + price */}
+            <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">{row.name}</h1>
+            <p className="text-3xl font-bold text-[var(--teal)] mb-4">
+              {formatPrice(row.priceCents)}
+            </p>
+
+            {/* Seller */}
+            {row.sellerName && (
+              <p className="text-sm text-[var(--muted)] mb-4">
+                Listed by <span className="font-medium text-[var(--ink2)]">{row.sellerName}</span>
+              </p>
+            )}
+
+            {/* Description */}
+            {row.description && (
+              <div className="border-t border-[var(--border)] pt-4">
+                <p className="text-sm text-[var(--ink2)] leading-relaxed whitespace-pre-line">
+                  {row.description}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Buy CTA */}
+        <div className="bg-white rounded-2xl border border-[var(--border)] p-6 text-center shadow-sm">
+          <ShoppingBag className="w-8 h-8 text-[var(--accent)] mx-auto mb-3" />
+          <p className="font-semibold text-[var(--ink)] mb-1">
+            {outOfStock ? "Get notified when back in stock" : `Ready to buy ${row.name}?`}
+          </p>
+          <p className="text-sm text-[var(--muted)] mb-5">
+            {outOfStock
+              ? `Sign in to your ${APP.name} account to save this item and get restocking alerts.`
+              : `Create a free ${APP.name} account to add this to your cart and check out.`}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Link
+              href={`/register?returnTo=/portal/shop`}
+              className="btn-primary flex items-center gap-2"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {outOfStock ? "Sign up for alerts" : "Sign up to buy"}
+            </Link>
+            <Link href="/login" className="btn-outline">
+              Sign in
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
