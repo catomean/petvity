@@ -67,6 +67,7 @@ export default function ListingDetailPage() {
 
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
   const [applied, setApplied] = useState(false);
   const [existingStatus, setExistingStatus] = useState<ApplicationStatusId | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -74,19 +75,23 @@ export default function ListingDetailPage() {
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormState>({ message: "", experience: "", housingType: "" });
 
-  useEffect(() => {
+  function loadListing() {
+    setLoading(true);
+    setFetchError("");
     Promise.all([
-      fetch(`/api/adoptions/${listingId}`).then((r) => r.json()),
+      fetch(`/api/adoptions/${listingId}`).then((r) => { if (!r.ok) throw new Error(); return r.json(); }),
       fetch("/api/adoptions?applied=1").then((r) => r.json()).catch(() => ({ data: [] })),
     ]).then(([listingRes, appsRes]) => {
       setListing(listingRes.data ?? null);
-      // Check if the user has already applied to this listing
       const apps: { listingId: string; applicationStatus: ApplicationStatusId }[] = appsRes.data ?? [];
       const match = apps.find((a) => a.listingId === listingId);
       if (match) setExistingStatus(match.applicationStatus);
       setLoading(false);
-    }).catch(() => setLoading(false));
-  }, [listingId]);
+    }).catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(loadListing, [listingId]);
 
   async function handleApply(e: React.FormEvent) {
     e.preventDefault();
@@ -115,6 +120,15 @@ export default function ListingDetailPage() {
       <div className="animate-pulse space-y-4">
         <div className="h-8 bg-[var(--off)] rounded w-48" />
         <div className="card h-80" />
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="card py-12 text-center">
+        <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+        <button onClick={loadListing} className="btn-outline text-sm">{t("retry")}</button>
       </div>
     );
   }

@@ -78,16 +78,22 @@ export default function ListForAdoptionPage() {
 
   const [pet, setPet] = useState<Pet | null>(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  function loadPet() {
+    setLoading(true);
+    setFetchError("");
     fetch(`/api/pets/${petId}`)
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then(({ data }) => { setPet(data ?? null); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, [petId]);
+      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(loadPet, [petId]);
 
   function field<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -128,6 +134,15 @@ export default function ListForAdoptionPage() {
       <div className="animate-pulse space-y-4">
         <div className="h-8 bg-[var(--off)] rounded w-48" />
         <div className="card h-80" />
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="card py-12 text-center">
+        <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+        <button onClick={loadPet} className="btn-outline text-sm">{t("retry")}</button>
       </div>
     );
   }
