@@ -12,91 +12,72 @@ import MarketingFooter from "@/components/sections/MarketingFooter";
 import { HeroCTA } from "@/components/sections/HeroCTA";
 import type { Metadata } from "next";
 import { APP } from "@/lib/config/app";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: `${APP.name} — The global platform for pet care`,
-  description: "Track your pet's health signals, connect with vets and sitters, shop essentials, and manage adoption — all in one place. Free forever.",
-  openGraph: {
-    title: `${APP.name} — The global platform for pet care`,
-    description: "Track your pet's health signals, connect with vets and sitters, shop essentials, and manage adoption — all in one place. Free forever.",
-    type: "website",
-  },
-};
+type Params = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
+  const title = t("metaTitle", { app: APP.name });
+  const description = t("metaDesc");
+  return {
+    title,
+    description,
+    openGraph: { title, description, type: "website" },
+  };
+}
 
 const SPECIES_DISPLAY = Object.values(SPECIES_CONFIG).filter(
   (s) => s.id !== "other"
 ) as (typeof SPECIES_CONFIG)[SpeciesId][];
 
-const TESTIMONIALS = [
-  {
-    quote:
-      "Petvity flagged Luna's energy dropping for three days in a row. I took her in — caught an ear infection before it got serious. My vet was genuinely impressed I noticed so quickly.",
-    name: "Sarah M.",
-    pet: "Luna, Border Collie · 4 years old",
-    initials: "SM",
-    color: "bg-[var(--teal-light)] text-[var(--teal)]",
-  },
-  {
-    quote:
-      "I was always second-guessing myself as a first-time cat owner. Now I have data. Mochi's mood scores helped me realise she was stressed by the new furniture — who knew.",
-    name: "James T.",
-    pet: "Mochi, Persian Cat · 2 years old",
-    initials: "JT",
-    color: "bg-amber-50 text-amber-700",
-  },
-  {
-    quote:
-      "Two rabbits, two vaccination schedules, one app. The reminders alone save me a dozen panicked searches per month. It just works.",
-    name: "Amara O.",
-    pet: "Pepper & Basil, Rabbits",
-    initials: "AO",
-    color: "bg-purple-50 text-purple-700",
-  },
-];
-
-const FEATURE_SECTIONS = [
-  {
-    eyebrow: "Daily health tracking",
-    title: "Know what's normal. Catch what isn't.",
-    body: "Log weight, temperature, heart rate, energy, and mood in under a minute. Petvity compares every entry against species-specific normal ranges — automatically flagging anything worth watching.",
-    cta: "Start tracking",
-    visual: {
-      heading: "Today's check-in",
-      metrics: [
-        { label: "Weight", value: "32.4 kg", ok: true },
-        { label: "Temperature", value: "38.4 °C", ok: true },
-        { label: "Heart rate", value: "72 bpm", ok: true },
-        { label: "Energy", value: "4 / 5", ok: true },
-        { label: "Mood", value: "5 / 5", ok: true },
-        { label: "Anxiety", value: "2 / 5", ok: true },
-      ],
-      badge: { label: "Healthy", cls: "bg-[var(--green-bg)] text-[var(--green-text)]" },
-    },
-    flip: false,
-  },
-  {
-    eyebrow: "Full medical history",
-    title: "Everything your vet wishes you tracked.",
-    body: "Vet visits, vaccinations, medications, lab results, surgeries — all in one place, always at your fingertips. Bring a complete history to every appointment instead of relying on memory.",
-    cta: "See what's tracked",
-    visual: {
-      records: [
-        { icon: "💉", label: "Rabies booster", meta: "Due in 47 days", cls: "text-purple-600 bg-purple-50" },
-        { icon: "🩺", label: "Annual wellness exam", meta: "3 months ago", cls: "text-[var(--teal)] bg-[var(--teal-light)]" },
-        { icon: "💊", label: "Heartgard · monthly", meta: "Active", cls: "text-[var(--accent)] bg-[var(--accent-light)]" },
-        { icon: "🔬", label: "Full blood panel", meta: "All values normal", cls: "text-blue-600 bg-blue-50" },
-      ],
-    },
-    flip: true,
-  },
-];
-
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function HomePage({ params }: Params) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
+
+  const trustItems = [
+    t("trustNoCreditCard"),
+    t("trustUnlimitedPets"),
+    t("trustCancelAnytime"),
+  ];
+
+  const TESTIMONIALS = [
+    {
+      quote: t("t1Quote"),
+      name: "Sarah M.",
+      pet: t("t1Pet"),
+      initials: "SM",
+      color: "bg-[var(--teal-light)] text-[var(--teal)]",
+    },
+    {
+      quote: t("t2Quote"),
+      name: "James T.",
+      pet: t("t2Pet"),
+      initials: "JT",
+      color: "bg-amber-50 text-amber-700",
+    },
+    {
+      quote: t("t3Quote"),
+      name: "Amara O.",
+      pet: t("t3Pet"),
+      initials: "AO",
+      color: "bg-purple-50 text-purple-700",
+    },
+  ];
+
+  const PRICING_FEATURES = [
+    t("pricingF1"),
+    t("pricingF2"),
+    t("pricingF3"),
+    t("pricingF4"),
+    t("pricingF5"),
+    t("pricingF6"),
+    t("pricingF7"),
+    t("pricingF8"),
+    t("pricingF9"),
+  ];
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <MarketingNav />
@@ -119,32 +100,27 @@ export default async function HomePage({
             <div>
               <div className="inline-flex items-center gap-2 bg-[var(--teal-light)] text-[var(--teal)] text-xs font-semibold px-3 py-1.5 rounded-full mb-7 border border-[var(--teal-mid)]">
                 <Zap className="w-3 h-3" />
-                10 species · Digital Twin · Free forever
+                {t("heroBadge")}
               </div>
 
               <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
-                Your pet has a signal.
+                {t("heroTitle1")}
                 <br />
-                <span className="text-[var(--teal)]">Now you can read it.</span>
+                <span className="text-[var(--teal)]">{t("heroTitle2")}</span>
               </h1>
 
               <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed mb-9 max-w-lg">
-                One daily check-in builds a living Digital Twin — physical vitals
-                plus emotional state, compared against species-specific norms.
-                When something shifts,{" "}
-                <strong className="text-[var(--ink2)] font-medium">
-                  Petvity tells you what, and connects you to a vet who can act on it.
-                </strong>
+                {t("heroSubtitle", { app: APP.name })}
               </p>
 
               <HeroCTA />
 
               {/* Trust strip */}
               <div className="flex flex-wrap gap-x-6 gap-y-2">
-                {["No credit card", "Unlimited pets", "Cancel anytime"].map((t) => (
-                  <span key={t} className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)]">
+                {trustItems.map((item) => (
+                  <span key={item} className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)]">
                     <CheckCircle className="w-3.5 h-3.5 text-[var(--green-text)] flex-shrink-0" />
-                    {t}
+                    {item}
                   </span>
                 ))}
               </div>
@@ -216,7 +192,7 @@ export default async function HomePage({
       <div className="border-y border-[var(--border)] bg-[var(--off)]">
         <div className="section-inner py-6">
           <p className="text-center text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--faint)] mb-5">
-            Every pet, one platform
+            {t("speciesEyebrow")}
           </p>
           <div className="flex flex-wrap justify-center gap-2.5">
             {SPECIES_DISPLAY.map((s) => (
@@ -237,75 +213,94 @@ export default async function HomePage({
         <div className="section-inner">
           <div className="text-center mb-20">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
-              Built for real pet care
+              {t("featuresEyebrow")}
             </p>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
-              The complete toolkit
+              {t("featuresTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
-              From daily check-ins to full medical histories — everything
-              your vet wishes you kept track of.
+              {t("featuresDesc")}
             </p>
           </div>
 
           <div className="space-y-24">
-            {FEATURE_SECTIONS.map(({ eyebrow, title, body, cta, visual, flip }) => (
-              <div
-                key={title}
-                className={`grid lg:grid-cols-2 gap-12 lg:gap-16 items-center ${flip ? "lg:[direction:rtl]" : ""}`}
-              >
-                <div className={flip ? "lg:[direction:ltr]" : ""}>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">{eyebrow}</p>
-                  <h3 className="text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight mb-5 leading-tight">
-                    {title}
-                  </h3>
-                  <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">{body}</p>
-                  <Link href="/register" className="btn-primary">
-                    {cta}
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
+            {/* Tracking section */}
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">{t("trackingEyebrow")}</p>
+                <h3 className="text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight mb-5 leading-tight">
+                  {t("trackingTitle")}
+                </h3>
+                <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">{t("trackingBody")}</p>
+                <Link href="/register" className="btn-primary">
+                  {t("trackingCta")}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
 
-                {/* Visual */}
-                <div className={flip ? "lg:[direction:ltr]" : ""}>
-                  {"metrics" in visual && visual.metrics ? (
-                    <div className="card shadow-[var(--shadow-md)] p-5">
-                      <div className="flex items-center justify-between mb-4">
-                        <p className="text-sm font-semibold text-[var(--ink)]">{visual.heading}</p>
-                        {visual.badge && (
-                          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${visual.badge.cls}`}>
-                            {visual.badge.label}
-                          </span>
-                        )}
+              <div>
+                <div className="card shadow-[var(--shadow-md)] p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-sm font-semibold text-[var(--ink)]">Today&apos;s check-in</p>
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[var(--green-bg)] text-[var(--green-text)]">
+                      Healthy
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {[
+                      { label: "Weight", value: "32.4 kg" },
+                      { label: "Temperature", value: "38.4 °C" },
+                      { label: "Heart rate", value: "72 bpm" },
+                      { label: "Energy", value: "4 / 5" },
+                      { label: "Mood", value: "5 / 5" },
+                      { label: "Anxiety", value: "2 / 5" },
+                    ].map(({ label, value }) => (
+                      <div key={label} className="bg-[var(--off)] rounded-xl p-3 text-center">
+                        <p className="text-[10px] text-[var(--muted)] mb-1 uppercase tracking-wide">{label}</p>
+                        <p className="text-sm font-bold text-[var(--ink)]">{value}</p>
+                        <div className="w-1.5 h-1.5 bg-[var(--green)] rounded-full mx-auto mt-1.5" />
                       </div>
-                      <div className="grid grid-cols-3 gap-2.5">
-                        {visual.metrics.map(({ label, value, ok }) => (
-                          <div key={label} className="bg-[var(--off)] rounded-xl p-3 text-center">
-                            <p className="text-[10px] text-[var(--muted)] mb-1 uppercase tracking-wide">{label}</p>
-                            <p className="text-sm font-bold text-[var(--ink)]">{value}</p>
-                            {ok && <div className="w-1.5 h-1.5 bg-[var(--green)] rounded-full mx-auto mt-1.5" />}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="card shadow-[var(--shadow-md)] p-5 space-y-2.5">
-                      {visual.records.map(({ icon, label, meta, cls }) => (
-                        <div key={label} className="flex items-center gap-3 p-3 rounded-xl bg-[var(--off)]">
-                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0 ${cls}`}>
-                            {icon}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-[var(--ink)] truncate">{label}</p>
-                            <p className="text-xs text-[var(--muted)]">{meta}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Records section */}
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center lg:[direction:rtl]">
+              <div className="lg:[direction:ltr]">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">{t("recordsEyebrow")}</p>
+                <h3 className="text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight mb-5 leading-tight">
+                  {t("recordsTitle")}
+                </h3>
+                <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">{t("recordsBody")}</p>
+                <Link href="/register" className="btn-primary">
+                  {t("recordsCta")}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="lg:[direction:ltr]">
+                <div className="card shadow-[var(--shadow-md)] p-5 space-y-2.5">
+                  {[
+                    { icon: "💉", label: "Rabies booster", meta: "Due in 47 days", cls: "text-purple-600 bg-purple-50" },
+                    { icon: "🩺", label: "Annual wellness exam", meta: "3 months ago", cls: "text-[var(--teal)] bg-[var(--teal-light)]" },
+                    { icon: "💊", label: "Heartgard · monthly", meta: "Active", cls: "text-[var(--accent)] bg-[var(--accent-light)]" },
+                    { icon: "🔬", label: "Full blood panel", meta: "All values normal", cls: "text-blue-600 bg-blue-50" },
+                  ].map(({ icon, label, meta, cls }) => (
+                    <div key={label} className="flex items-center gap-3 p-3 rounded-xl bg-[var(--off)]">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0 ${cls}`}>
+                        {icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-[var(--ink)] truncate">{label}</p>
+                        <p className="text-xs text-[var(--muted)]">{meta}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -328,7 +323,7 @@ export default async function HomePage({
                 <div className="p-5">
                   {/* Twin state badge */}
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">Digital Twin</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">{t("twinMockLabel")}</p>
                     <span className="inline-flex items-center gap-1.5 bg-[var(--green-bg)] text-[var(--green-text)] text-xs font-bold px-3 py-1 rounded-full">
                       <Brain className="w-3 h-3" />
                       Thriving
@@ -338,7 +333,7 @@ export default async function HomePage({
                   {/* Trend */}
                   <div className="flex items-center gap-1.5 mb-5">
                     <TrendingUp className="w-3.5 h-3.5 text-[var(--green-text)]" />
-                    <p className="text-xs text-[var(--green-text)] font-medium">Improving over the last 7 days</p>
+                    <p className="text-xs text-[var(--green-text)] font-medium">{t("twinMockTrend")}</p>
                   </div>
 
                   {/* Metric bars */}
@@ -365,27 +360,26 @@ export default async function HomePage({
                   </div>
 
                   {/* History note */}
-                  <p className="text-[11px] text-[var(--faint)] mt-4 text-center">Based on 28 check-ins · last 30 days</p>
+                  <p className="text-[11px] text-[var(--faint)] mt-4 text-center">{t("twinMockHistory")}</p>
                 </div>
               </div>
             </div>
 
             {/* Copy */}
             <div className="order-1 lg:order-2">
-              <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3">Digital twin</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3">{t("twinEyebrow")}</p>
               <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-6 leading-tight">
-                See how your pet
-                <br /><span className="text-violet-600">feels</span>, not just
-                <br />how they measure
+                {t("twinTitle1")}
+                <br /><span className="text-violet-600">{t("twinTitle2")}</span>, {t("twinTitle3")}
               </h2>
               <p className="text-lg text-[var(--muted)] leading-relaxed mb-5">
-                Vitals tell you what. The Digital Twin tells you how. It combines mood, energy, anxiety, and socialization into a single living portrait — updated every time you log a check-in.
+                {t("twinP1")}
               </p>
               <p className="text-base text-[var(--muted)] leading-relaxed mb-8">
-                Four emotional states — <strong className="text-[var(--ink2)] font-medium">Thriving</strong>, <strong className="text-[var(--ink2)] font-medium">Doing Well</strong>, <strong className="text-[var(--ink2)] font-medium">Needs Attention</strong>, or <strong className="text-[var(--ink2)] font-medium">Struggling</strong> — plus a trend indicator so you can see whether things are improving or declining before they become a problem.
+                {t("twinP2")}
               </p>
               <Link href="/register" className="btn-primary">
-                See your pet&apos;s twin
+                {t("twinCta")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -399,52 +393,50 @@ export default async function HomePage({
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
-                Intelligent scoring
+                {t("signalsEyebrow")}
               </p>
               <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-6 leading-tight">
-                Know your pet&apos;s
-                <br />status at a glance
+                {t("signalsTitle1")}
+                <br />{t("signalsTitle2")}
               </h2>
               <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">
-                Every day, Petvity compares your pet&apos;s metrics against
-                species-specific normal ranges. Three states. No guesswork.
-                One clear signal.
+                {t("signalsP")}
               </p>
               <Link href="/register" className="btn-primary">
-                Try it free <ArrowRight className="w-4 h-4" />
+                {t("signalsCta")} <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
             <div className="space-y-4">
               {[
                 {
-                  signal: "Healthy",
-                  desc: "All metrics in range. Vaccinations current. Keep doing what you're doing.",
+                  signalKey: "signalHealthy" as const,
+                  descKey: "signalHealthyDesc" as const,
                   badge: "bg-[var(--green-bg)] text-[var(--green-text)]",
                   border: "border-[#bbf7d0]",
                   icon: CheckCircle,
                 },
                 {
-                  signal: "Watch",
-                  desc: "One metric slightly outside normal range, or a booster coming due soon.",
+                  signalKey: "signalWatch" as const,
+                  descKey: "signalWatchDesc" as const,
                   badge: "bg-[var(--warn-bg)] text-[var(--warn-text)]",
                   border: "border-[#fde68a]",
                   icon: TrendingUp,
                 },
                 {
-                  signal: "Needs attention",
-                  desc: "Multiple out-of-range readings, or an overdue vaccination. Book a vet visit.",
+                  signalKey: "signalConcern" as const,
+                  descKey: "signalConcernDesc" as const,
                   badge: "bg-[var(--danger-bg)] text-[var(--danger-text)]",
                   border: "border-[#fca5a5]",
                   icon: Activity,
                 },
-              ].map(({ signal, desc, badge, border, icon: Icon }) => (
-                <div key={signal} className={`card border-2 ${border} p-5 flex items-start gap-4`}>
+              ].map(({ signalKey, descKey, badge, border, icon: Icon }) => (
+                <div key={signalKey} className={`card border-2 ${border} p-5 flex items-start gap-4`}>
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 mt-0.5 ${badge} flex items-center gap-1`}>
                     <Icon className="w-3 h-3" />
-                    {signal}
+                    {t(signalKey)}
                   </span>
-                  <p className="text-sm text-[var(--ink2)] leading-relaxed">{desc}</p>
+                  <p className="text-sm text-[var(--ink2)] leading-relaxed">{t(descKey)}</p>
                 </div>
               ))}
             </div>
@@ -457,13 +449,13 @@ export default async function HomePage({
         <div className="section-inner">
           <div className="text-center mb-16">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
-              The full platform
+              {t("ecosystemEyebrow")}
             </p>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
-              Everything pet care needs
+              {t("ecosystemTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
-              Health tracking is just the start. Petvity is the only platform that covers the complete care journey — from daily check-ins to finding a vet to giving a pet a home.
+              {t("ecosystemDesc")}
             </p>
           </div>
 
@@ -474,16 +466,16 @@ export default async function HomePage({
                 <Stethoscope className="w-6 h-6 text-[var(--teal)]" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">Find a Vet or Sitter</h3>
+                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("vetTitle")}</h3>
                 <p className="text-sm text-[var(--muted)] leading-relaxed">
-                  Search verified veterinarians and pet sitters near you. Read reviews, check availability, and book directly — without leaving the app.
+                  {t("vetDesc")}
                 </p>
               </div>
               <div className="space-y-2.5 mt-auto">
                 {[
-                  { icon: "🔍", text: "Search by specialty or location" },
-                  { icon: "⭐", text: "Verified reviews from real bookings" },
-                  { icon: "📅", text: "Book and manage appointments" },
+                  { icon: "🔍", text: t("vetBullet1") },
+                  { icon: "⭐", text: t("vetBullet2") },
+                  { icon: "📅", text: t("vetBullet3") },
                 ].map(({ icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5">
                     <span className="text-base w-5 flex-shrink-0">{icon}</span>
@@ -492,7 +484,7 @@ export default async function HomePage({
                 ))}
               </div>
               <Link href="/register" className="btn-outline text-sm justify-center mt-2">
-                Find a pro <ArrowRight className="w-3.5 h-3.5" />
+                {t("vetCta")} <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
@@ -502,9 +494,9 @@ export default async function HomePage({
                 <ShoppingBag className="w-6 h-6 text-[var(--accent)]" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">Pet Care Marketplace</h3>
+                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("mktTitle")}</h3>
                 <p className="text-sm text-[var(--muted)] leading-relaxed">
-                  Shop food, supplements, toys, and accessories — all in the same app you use to track health. No switching between sites.
+                  {t("mktDesc")}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2 mt-auto">
@@ -524,7 +516,7 @@ export default async function HomePage({
                 ))}
               </div>
               <Link href={`/${locale}/shop`} className="btn-outline text-sm justify-center mt-2">
-                Browse shop <ArrowRight className="w-3.5 h-3.5" />
+                {t("mktCta")} <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
@@ -534,16 +526,16 @@ export default async function HomePage({
                 <Heart className="w-6 h-6 text-pink-500" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">Pet Adoption</h3>
+                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("adoptTitle")}</h3>
                 <p className="text-sm text-[var(--muted)] leading-relaxed">
-                  List a pet for adoption or find your next companion. Full application workflow, cross-border listings, and direct messaging between owners.
+                  {t("adoptDesc")}
                 </p>
               </div>
               <div className="space-y-2.5 mt-auto">
                 {[
-                  { icon: "📋", text: "Structured adoption applications" },
-                  { icon: "🌍", text: "Cross-border listings supported" },
-                  { icon: "✅", text: "Owner-managed approvals" },
+                  { icon: "📋", text: t("adoptBullet1") },
+                  { icon: "🌍", text: t("adoptBullet2") },
+                  { icon: "✅", text: t("adoptBullet3") },
                 ].map(({ icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5">
                     <span className="text-base w-5 flex-shrink-0">{icon}</span>
@@ -552,7 +544,7 @@ export default async function HomePage({
                 ))}
               </div>
               <Link href={`/${locale}/adopt`} className="btn-outline text-sm justify-center mt-2">
-                Browse adoptions <ArrowRight className="w-3.5 h-3.5" />
+                {t("adoptCta")} <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
@@ -564,10 +556,10 @@ export default async function HomePage({
         <div className="section-inner">
           <div className="text-center mb-14">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
-              From pet owners
+              {t("testimonialsEyebrow")}
             </p>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight">
-              They caught it early
+              {t("testimonialsTitle")}
             </h2>
           </div>
 
@@ -603,22 +595,22 @@ export default async function HomePage({
         <div className="section-inner">
           <div className="text-center mb-16">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
-              Simple by design
+              {t("howEyebrow")}
             </p>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
-              Up and running in minutes
+              {t("howTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)]">
-              No training. No setup fee. Just sign up and start.
+              {t("howDesc")}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto">
             {[
-              { n: "01", title: "Create your free account", desc: "Email and password. 30 seconds." },
-              { n: "02", title: "Add your pet", desc: "Name, species, breed, birthdate, photo. Dogs, cats, horses, and more." },
-              { n: "03", title: "Log your first check-in", desc: "Record vitals and mood. The wellness signal and Digital Twin update instantly." },
-            ].map(({ n, title, desc }, i) => (
+              { n: "01", titleKey: "step1Title" as const, descKey: "step1Desc" as const },
+              { n: "02", titleKey: "step2Title" as const, descKey: "step2Desc" as const },
+              { n: "03", titleKey: "step3Title" as const, descKey: "step3Desc" as const },
+            ].map(({ n, titleKey, descKey }, i) => (
               <div key={n} className="text-center relative">
                 {i < 2 && (
                   <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--border)]" />
@@ -626,8 +618,8 @@ export default async function HomePage({
                 <div className="w-14 h-14 rounded-2xl bg-[var(--teal)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-5 shadow-[0_4px_12px_rgb(13_110_120/0.25)]">
                   {n}
                 </div>
-                <h3 className="font-bold text-[var(--ink)] mb-2 text-base">{title}</h3>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">{desc}</p>
+                <h3 className="font-bold text-[var(--ink)] mb-2 text-base">{t(titleKey)}</h3>
+                <p className="text-sm text-[var(--muted)] leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
           </div>
@@ -637,11 +629,10 @@ export default async function HomePage({
       {/* ── Pricing ──────────────────────────────────────────────────────── */}
       <section id="pricing" className="py-24 md:py-32">
         <div className="section-inner text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">Pricing</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">Free, forever</h2>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">{t("pricingEyebrow")}</p>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">{t("pricingTitle")}</h2>
           <p className="text-lg text-[var(--muted)] max-w-lg mx-auto mb-12 leading-relaxed">
-            Every feature — health tracking, digital twin, vet network, marketplace,
-            and adoption listings — is included free with no pet limits.
+            {t("pricingDesc")}
           </p>
 
           <div className="card max-w-sm mx-auto p-8 text-left shadow-[var(--shadow-lg)]">
@@ -649,20 +640,10 @@ export default async function HomePage({
               <span className="text-5xl font-extrabold text-[var(--ink)] tracking-tight">$0</span>
               <span className="text-[var(--muted)] text-base">/ month</span>
             </div>
-            <p className="text-sm text-[var(--muted)] mb-7">No credit card required</p>
+            <p className="text-sm text-[var(--muted)] mb-7">{t("pricingNoCreditCard")}</p>
 
             <ul className="space-y-3.5 mb-8">
-              {[
-                "Unlimited pets",
-                "7 health metrics with digital twin",
-                "Vaccination scheduler & reminders",
-                "Full health records & medications",
-                "Find & book vets and pet sitters",
-                "Pet care marketplace",
-                "Adoption listings & applications",
-                "Public shareable pet profiles",
-                "9 languages including Arabic",
-              ].map((item) => (
+              {PRICING_FEATURES.map((item) => (
                 <li key={item} className="flex items-center gap-3">
                   <CheckCircle className="w-4 h-4 text-[var(--green-text)] flex-shrink-0" />
                   <span className="text-sm text-[var(--ink2)]">{item}</span>
@@ -671,7 +652,7 @@ export default async function HomePage({
             </ul>
 
             <Link href="/register" className="btn-primary w-full justify-center py-3 text-base">
-              Create free account
+              {t("pricingCta")}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -687,18 +668,17 @@ export default async function HomePage({
         <div className="section-inner relative text-center">
           <CalendarDays className="w-12 h-12 text-[var(--teal-light)] mx-auto mb-6 opacity-80" />
           <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-5">
-            Start reading
-            <br />your pet&apos;s signal
+            {t("finalTitle1")}
+            <br />{t("finalTitle2")}
           </h2>
           <p className="text-lg text-[var(--teal-mid)] mb-10 max-w-xl mx-auto leading-relaxed">
-            Free forever. No credit card. Add your first pet in under a minute —
-            and see your Digital Twin on your first check-in.
+            {t("finalDesc")}
           </p>
           <Link
             href="/register"
             className="inline-flex items-center gap-2 bg-white text-[var(--teal)] font-bold text-base px-8 py-4 rounded-xl hover:bg-[var(--teal-light)] transition-colors no-underline shadow-[0_4px_20px_rgb(0_0_0/0.15)]"
           >
-            Get started free — it&apos;s $0
+            {t("finalCta")}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
