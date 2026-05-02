@@ -57,7 +57,6 @@ describe("computeDigitalTwin", () => {
     );
     const m = result.metrics.find((x) => x.id === "anxiety");
     expect(m?.fillPercent).toBe(100);
-    expect(m?.label).toBe("Calm");
   });
 
   it("inverts anxiety — anxiety=5 contributes 0% fill", () => {

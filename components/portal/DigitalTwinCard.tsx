@@ -89,7 +89,7 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className={`text-xl font-bold ${cfg.text}`}>{tTwin(twin.id)}</p>
-                <p className="text-sm text-[var(--ink2)] mt-0.5">{twin.summary}</p>
+                <p className="text-sm text-[var(--ink2)] mt-0.5">{tTwin(twin.summaryKey as Parameters<typeof tTwin>[0])}</p>
               </div>
               <div className="text-right flex-shrink-0">
                 <span className={`text-3xl font-extrabold tabular-nums ${cfg.text}`}>
@@ -112,14 +112,16 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 {twin.metrics.map((m) => {
                   const Icon = METRIC_ICONS[m.id] ?? Brain;
+                  const metricLabelKey = `metric${m.id.charAt(0).toUpperCase()}${m.id.slice(1)}` as Parameters<typeof tTwin>[0];
+                  const scaleKey = `${m.id}Scale${m.rawValue}` as Parameters<typeof tTwin>[0];
                   return (
                     <div key={m.id} className="space-y-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                           <Icon className="w-3.5 h-3.5 text-[var(--muted)]" />
-                          <span className="text-xs font-medium text-[var(--ink2)]">{m.label}</span>
+                          <span className="text-xs font-medium text-[var(--ink2)]">{tTwin(metricLabelKey)}</span>
                         </div>
-                        <span className="text-xs text-[var(--muted)]">{m.valueLabel}</span>
+                        <span className="text-xs text-[var(--muted)]">{tTwin(scaleKey)}</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[var(--border)]">
                         <div

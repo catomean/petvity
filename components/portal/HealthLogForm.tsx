@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG, EMOTIONAL_SCALE_LABELS } from "@/lib/config/health-metrics";
+import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG } from "@/lib/config/health-metrics";
 type PhysicalHint = { min: number; max: number; unit: string } | null;
 
 type InitialValues = {
@@ -41,6 +41,7 @@ const EMPTY_FORM: InitialValues = {
 
 export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, initialValues }: Props) {
   const t = useTranslations("portal");
+  const tTwin = useTranslations("twin");
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -168,11 +169,11 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
         <div className="grid grid-cols-2 gap-4">
           {EMOTIONAL_METRICS.map((metricId) => {
             const def = HEALTH_METRIC_CONFIG[metricId];
-            const labels = EMOTIONAL_SCALE_LABELS[metricId] ?? [];
+            const labelKey = `metric${metricId.charAt(0).toUpperCase()}${metricId.slice(1)}Label` as Parameters<typeof t>[0];
             return (
               <div key={metricId}>
                 <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-                  {def.label}
+                  {t(labelKey)}
                 </label>
                 <select
                   value={form[metricId as keyof typeof form]}
@@ -185,7 +186,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
                     (_, i) => (def.scale?.min ?? 1) + i,
                   ).map((v) => (
                     <option key={v} value={v}>
-                      {v} — {labels[v - 1] ?? ""}
+                      {v} — {tTwin(`${metricId}Scale${v}` as Parameters<typeof tTwin>[0])}
                     </option>
                   ))}
                 </select>

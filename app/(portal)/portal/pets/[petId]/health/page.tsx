@@ -45,6 +45,16 @@ export default async function PetHealthPage({ params }: Params) {
   const locale = await getPortalLocale();
   const t = await getTranslations({ locale, namespace: "portal" });
 
+  const PORTAL_METRIC_LABEL_KEYS: Record<string, Parameters<typeof t>[0]> = {
+    weight:         "healthWeightLabel",
+    temperature:    "healthTemperatureLabel",
+    heart_rate:     "healthHeartRateLabel",
+    energy:         "metricEnergyLabel",
+    mood:           "metricMoodLabel",
+    anxiety:        "metricAnxietyLabel",
+    socialization:  "metricSocializationLabel",
+  };
+
   const [metrics, petVacc, signalHistory] = await Promise.all([
     db.query.healthMetrics.findMany({
       where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
@@ -221,7 +231,7 @@ export default async function PetHealthPage({ params }: Params) {
                         key={metricId}
                         className={`rounded-lg p-3 ${display.inRange ? "bg-[var(--green-bg)]" : "bg-[var(--danger-bg)]"}`}
                       >
-                        <div className="text-xs text-[var(--muted)] mb-1">{def.label}</div>
+                        <div className="text-xs text-[var(--muted)] mb-1">{t(PORTAL_METRIC_LABEL_KEYS[metricId])}</div>
                         <div className="text-lg font-semibold text-[var(--ink)]">
                           {display.value}
                           <span className="text-sm font-normal text-[var(--muted)] ms-1">
@@ -257,7 +267,7 @@ export default async function PetHealthPage({ params }: Params) {
                         key={metricId}
                         className={`rounded-lg p-3 ${display.inRange ? "bg-[var(--green-bg)]" : "bg-[var(--danger-bg)]"}`}
                       >
-                        <div className="text-xs text-[var(--muted)] mb-1">{def.label}</div>
+                        <div className="text-xs text-[var(--muted)] mb-1">{t(PORTAL_METRIC_LABEL_KEYS[metricId])}</div>
                         <div className="text-lg font-semibold text-[var(--ink)]">
                           {display.value}
                           <span className="text-sm font-normal text-[var(--muted)] ms-1">
@@ -317,7 +327,7 @@ export default async function PetHealthPage({ params }: Params) {
                 data={chartData}
                 lines={EMOTIONAL_METRICS.map((id) => ({
                   dataKey: id,
-                  name: HEALTH_METRIC_CONFIG[id].label,
+                  name: t(PORTAL_METRIC_LABEL_KEYS[id]),
                   color: HEALTH_METRIC_CONFIG[id].chartColor,
                 }))}
                 unit="/5"

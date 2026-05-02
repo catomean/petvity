@@ -166,7 +166,7 @@ export default async function PublicPetPage({ params }: Params) {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className={`text-sm font-semibold ${twinCfg.text}`}>{tTwin(twin.id)}</p>
-                  <p className="text-xs text-[var(--muted)] mt-0.5">{twin.summary}</p>
+                  <p className="text-xs text-[var(--muted)] mt-0.5">{tTwin(twin.summaryKey as Parameters<typeof tTwin>[0])}</p>
                 </div>
                 <span className={`text-2xl font-extrabold tabular-nums ${twinCfg.text}`}>
                   {twin.scorePercent}
@@ -186,8 +186,8 @@ export default async function PublicPetPage({ params }: Params) {
                   {twin.metrics.map((m) => (
                     <div key={m.id}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-[var(--muted)]">{m.label}</span>
-                        <span className="text-[var(--ink2)]">{m.valueLabel}</span>
+                        <span className="text-[var(--muted)]">{tTwin(`metric${m.id.charAt(0).toUpperCase()}${m.id.slice(1)}` as Parameters<typeof tTwin>[0])}</span>
+                        <span className="text-[var(--ink2)]">{tTwin(`${m.id}Scale${m.rawValue}` as Parameters<typeof tTwin>[0])}</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[var(--border)]">
                         <div
