@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "مثال: 45.00",
     "profAcceptingClients": "يقبل عملاء جدد حاليًا",
     "profAcceptingClientsHint": "قم بإلغاء التحديد لإيقاف قائمتك مؤقتًا عند الوصول إلى الطاقة الكاملة.",
-    "profSaveProfile": "حفظ الملف الشخصي"
+    "profSaveProfile": "حفظ الملف الشخصي",
+    "digitalTwinTitle": "التوأم الرقمي",
+    "twinNotActiveTitle": "توأم {name} الرقمي غير نشط بعد",
+    "twinNotActiveDesc": "سجّل فحوصات الصحة اليومية لبناء صورة حية عن صحة {name}.",
+    "twinLogToUpdate": "سجّل فحص اليوم لتحديث التوأم",
+    "signalHistoryTitle": "سجل الإشارات",
+    "signalSourceCron": "فحص يومي",
+    "chartNoData": "لا توجد بيانات بعد"
   },
   "pets": {
     "name": "الاسم",

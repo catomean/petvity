@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "例：45.00",
     "profAcceptingClients": "現在新規クライアントを受付中",
     "profAcceptingClientsHint": "定員に達した際はチェックを外してリストを一時停止してください。",
-    "profSaveProfile": "プロフィールを保存"
+    "profSaveProfile": "プロフィールを保存",
+    "digitalTwinTitle": "デジタルツイン",
+    "twinNotActiveTitle": "{name}のデジタルツインはまだ活動していません",
+    "twinNotActiveDesc": "毎日の健康チェックインを記録して、{name}の状態のポートレートを構築しましょう。",
+    "twinLogToUpdate": "今日のチェックインを記録してツインを更新",
+    "signalHistoryTitle": "シグナル履歴",
+    "signalSourceCron": "日次チェック",
+    "chartNoData": "データなし"
   },
   "pets": {
     "name": "名前",

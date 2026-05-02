@@ -22,6 +22,7 @@ type Props = {
   normalMax?: number;
   /** 1–5 scale: show integer ticks only */
   integerScale?: boolean;
+  noDataText?: string;
 };
 
 export function HealthTrendChart({
@@ -32,6 +33,7 @@ export function HealthTrendChart({
   normalMin,
   normalMax,
   integerScale,
+  noDataText = "No data yet",
 }: Props) {
   const hasData = data.some((d) =>
     lines.some((l) => d[l.dataKey] != null),

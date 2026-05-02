@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "예: 45.00",
     "profAcceptingClients": "현재 신규 고객 수락 중",
     "profAcceptingClientsHint": "정원이 찼을 때 체크 해제하면 목록이 일시 중지됩니다.",
-    "profSaveProfile": "프로필 저장"
+    "profSaveProfile": "프로필 저장",
+    "digitalTwinTitle": "디지털 트윈",
+    "twinNotActiveTitle": "{name}의 트윈이 아직 활성화되지 않았습니다",
+    "twinNotActiveDesc": "일일 건강 체크인을 기록하여 {name}의 상태 프로필을 구축하세요.",
+    "twinLogToUpdate": "오늘의 체크인을 기록하여 트윈을 업데이트하세요",
+    "signalHistoryTitle": "신호 기록",
+    "signalSourceCron": "일일 점검",
+    "chartNoData": "데이터 없음"
   },
   "pets": {
     "name": "이름",

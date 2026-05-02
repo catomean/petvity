@@ -41,7 +41,7 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Brain className={`w-4 h-4 ${cfg.text}`} />
-            <span className={`text-sm font-semibold ${cfg.text}`}>Digital Twin</span>
+            <span className={`text-sm font-semibold ${cfg.text}`}>{t("digitalTwinTitle")}</span>
           </div>
           <div className="flex items-center gap-3">
             {twin.trend !== "insufficient_data" && (
@@ -72,14 +72,14 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
               <Brain className="w-6 h-6 text-[var(--teal)]" />
             </div>
             <p className="text-sm font-medium text-[var(--ink)] mb-1">
-              {petName}&apos;s twin isn&apos;t active yet
+              {t("twinNotActiveTitle", { name: petName })}
             </p>
             <p className="text-xs text-[var(--muted)] mb-4 max-w-xs mx-auto">
-              Log daily health check-ins to build a living portrait of how {petName} is feeling.
+              {t("twinNotActiveDesc", { name: petName })}
             </p>
             <Link href={`/portal/pets/${petId}/health/log`} className="btn-primary text-sm">
               <CalendarDays className="w-4 h-4" />
-              Log first check-in
+              {t("healthLogFirst")}
             </Link>
           </div>
         ) : (
@@ -141,7 +141,7 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
                   className="text-xs text-[var(--teal)] hover:underline inline-flex items-center gap-1"
                 >
                   <CalendarDays className="w-3 h-3" />
-                  Log today&apos;s check-in to update the twin
+                  {t("twinLogToUpdate")}
                 </Link>
               </div>
             )}

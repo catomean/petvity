@@ -88,7 +88,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
   }[] = [
     {
       key: "weightKg",
-      label: "Weight",
+      label: t("healthWeightLabel"),
       unit: "kg",
       step: "0.01",
       placeholder: weightHint ? `${weightHint.min}–${weightHint.max} ${weightHint.unit}` : "e.g. 8.5",
@@ -96,7 +96,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
     },
     {
       key: "temperatureC",
-      label: "Temperature",
+      label: t("healthTemperatureLabel"),
       unit: "°C",
       step: "0.1",
       placeholder: tempHint ? `${tempHint.min}–${tempHint.max} ${tempHint.unit}` : "e.g. 38.5",
@@ -104,7 +104,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
     },
     {
       key: "heartRateBpm",
-      label: "Heart rate",
+      label: t("healthHeartRateLabel"),
       unit: "bpm",
       step: "1",
       placeholder: hrHint ? `${hrHint.min}–${hrHint.max} bpm` : "e.g. 80",

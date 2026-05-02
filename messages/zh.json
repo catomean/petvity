@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "如：45.00",
     "profAcceptingClients": "目前接受新客户",
     "profAcceptingClientsHint": "满员时取消勾选以暂停您的招募。",
-    "profSaveProfile": "保存档案"
+    "profSaveProfile": "保存档案",
+    "digitalTwinTitle": "数字孪生",
+    "twinNotActiveTitle": "{name}的数字孪生还未激活",
+    "twinNotActiveDesc": "记录每日健康打卡，构建{name}健康状态的实时画像。",
+    "twinLogToUpdate": "记录今日打卡以更新数字孪生",
+    "signalHistoryTitle": "信号历史",
+    "signalSourceCron": "每日检查",
+    "chartNoData": "暂无数据"
   },
   "pets": {
     "name": "名字",

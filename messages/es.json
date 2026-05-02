@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "p. ej. 45,00",
     "profAcceptingClients": "Actualmente acepta nuevos clientes",
     "profAcceptingClientsHint": "Desmarque esto para pausar su anuncio cuando esté a plena capacidad.",
-    "profSaveProfile": "Guardar perfil"
+    "profSaveProfile": "Guardar perfil",
+    "digitalTwinTitle": "Gemelo digital",
+    "twinNotActiveTitle": "El gemelo de {name} aún no está activo",
+    "twinNotActiveDesc": "Registra controles de salud diarios para crear un retrato de cómo se siente {name}.",
+    "twinLogToUpdate": "Registra el control de hoy para actualizar el gemelo",
+    "signalHistoryTitle": "Historial de señales",
+    "signalSourceCron": "verificación diaria",
+    "chartNoData": "Sin datos aún"
   },
   "pets": {
     "name": "Nombre",

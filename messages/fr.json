@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "p. ex. 45,00",
     "profAcceptingClients": "Accepte actuellement de nouveaux clients",
     "profAcceptingClientsHint": "Décochez pour mettre votre annonce en pause si vous êtes complet.",
-    "profSaveProfile": "Enregistrer le profil"
+    "profSaveProfile": "Enregistrer le profil",
+    "digitalTwinTitle": "Jumeau numérique",
+    "twinNotActiveTitle": "Le jumeau de {name} n'est pas encore actif",
+    "twinNotActiveDesc": "Enregistrez des bilans de santé quotidiens pour construire un portrait vivant de l'état de {name}.",
+    "twinLogToUpdate": "Enregistrer le bilan d'aujourd'hui pour mettre à jour le jumeau",
+    "signalHistoryTitle": "Historique du signal",
+    "signalSourceCron": "vérification quotidienne",
+    "chartNoData": "Pas encore de données"
   },
   "pets": {
     "name": "Nom",

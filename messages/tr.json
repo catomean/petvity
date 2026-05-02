@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "ör. 45,00",
     "profAcceptingClients": "Şu anda yeni müşteri kabul ediyor",
     "profAcceptingClientsHint": "Kapasitedeyken listeyi duraklatmak için işareti kaldırın.",
-    "profSaveProfile": "Profili kaydet"
+    "profSaveProfile": "Profili kaydet",
+    "digitalTwinTitle": "Dijital İkiz",
+    "twinNotActiveTitle": "{name}'nin dijital ikizi henüz aktif değil",
+    "twinNotActiveDesc": "Günlük sağlık kontrollerini kaydedin ve {name}'nin nasıl hissettiğinin portresini oluşturun.",
+    "twinLogToUpdate": "İkizi güncellemek için bugünkü kontrolü kaydet",
+    "signalHistoryTitle": "Sinyal Geçmişi",
+    "signalSourceCron": "günlük kontrol",
+    "chartNoData": "Henüz veri yok"
   },
   "pets": {
     "name": "İsim",

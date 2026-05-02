@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "e.g. 45.00",
     "profAcceptingClients": "Currently accepting new clients",
     "profAcceptingClientsHint": "Uncheck this to pause your listing while you are at capacity.",
-    "profSaveProfile": "Save profile"
+    "profSaveProfile": "Save profile",
+    "digitalTwinTitle": "Digital Twin",
+    "twinNotActiveTitle": "{name}'s twin isn't active yet",
+    "twinNotActiveDesc": "Log daily health check-ins to build a living portrait of how {name} is feeling.",
+    "twinLogToUpdate": "Log today's check-in to update the twin",
+    "signalHistoryTitle": "Signal History",
+    "signalSourceCron": "daily check",
+    "chartNoData": "No data yet"
   },
   "pets": {
     "name": "Name",

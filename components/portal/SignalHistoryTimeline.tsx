@@ -14,11 +14,15 @@ type HistoryRow = {
 export async function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow[]; locale?: string }) {
   if (rows.length === 0) return null;
 
-  const tSignal = await getTranslations({ locale: locale ?? "en", namespace: "signal" });
+  const loc = locale ?? "en";
+  const [tSignal, t] = await Promise.all([
+    getTranslations({ locale: loc, namespace: "signal" }),
+    getTranslations({ locale: loc, namespace: "portal" }),
+  ]);
 
   return (
     <div className="card p-5 mt-3">
-      <h2 className="text-sm font-semibold text-[var(--ink)] mb-4">Signal History</h2>
+      <h2 className="text-sm font-semibold text-[var(--ink)] mb-4">{t("signalHistoryTitle")}</h2>
       <ol className="relative border-s border-[var(--border)] space-y-4 ms-2">
         {rows.map((row) => {
           const sig = row.signal as PetWellnessSignal;
@@ -34,7 +38,7 @@ export async function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow
                 </span>
                 <span className="text-xs text-[var(--muted)]">{date}</span>
                 {row.source === "cron" && (
-                  <span className="text-xs text-[var(--faint)] italic">daily check</span>
+                  <span className="text-xs text-[var(--faint)] italic">{t("signalSourceCron")}</span>
                 )}
               </div>
 

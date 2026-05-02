@@ -562,7 +562,14 @@
     "profDailyRatePlaceholder": "z. B. 45,00",
     "profAcceptingClients": "Nehme derzeit neue Kunden an",
     "profAcceptingClientsHint": "Deaktivieren Sie dies, wenn Ihre Kapazität ausgelastet ist.",
-    "profSaveProfile": "Profil speichern"
+    "profSaveProfile": "Profil speichern",
+    "digitalTwinTitle": "Digitaler Zwilling",
+    "twinNotActiveTitle": "{name}s Zwilling ist noch nicht aktiv",
+    "twinNotActiveDesc": "Trage täglich Gesundheitsdaten ein, um ein lebendiges Bild von {name}s Wohlbefinden zu erstellen.",
+    "twinLogToUpdate": "Heutigen Check-in eintragen, um den Zwilling zu aktualisieren",
+    "signalHistoryTitle": "Signalverlauf",
+    "signalSourceCron": "tägliche Prüfung",
+    "chartNoData": "Noch keine Daten"
   },
   "pets": {
     "name": "Name",
