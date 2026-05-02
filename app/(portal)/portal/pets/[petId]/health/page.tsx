@@ -45,7 +45,7 @@ export default async function PetHealthPage({ params }: Params) {
   const locale = await getPortalLocale();
   const t = await getTranslations({ locale, namespace: "portal" });
 
-  const PORTAL_METRIC_LABEL_KEYS: Record<string, Parameters<typeof t>[0]> = {
+  const PORTAL_METRIC_LABEL_KEYS: Record<MetricId, Parameters<typeof t>[0]> = {
     weight:         "healthWeightLabel",
     temperature:    "healthTemperatureLabel",
     heart_rate:     "healthHeartRateLabel",

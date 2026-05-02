@@ -13,6 +13,20 @@ const METRIC_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
   socialization: Users,
 };
 
+// Explicit lookup tables — safe fallback if a metric id is unexpected
+const TWIN_METRIC_LABEL_KEYS: Record<string, string> = {
+  energy:        "metricEnergy",
+  mood:          "metricMood",
+  anxiety:       "metricAnxiety",
+  socialization: "metricSocialization",
+};
+const TWIN_SCALE_KEYS: Record<string, string[]> = {
+  energy:        ["energyScale1",        "energyScale2",        "energyScale3",        "energyScale4",        "energyScale5"],
+  mood:          ["moodScale1",          "moodScale2",          "moodScale3",          "moodScale4",          "moodScale5"],
+  anxiety:       ["anxietyScale1",       "anxietyScale2",       "anxietyScale3",       "anxietyScale4",       "anxietyScale5"],
+  socialization: ["socializationScale1", "socializationScale2", "socializationScale3", "socializationScale4", "socializationScale5"],
+};
+
 // Icon mapping stays in the component (React component references are UI, not config)
 const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
   improving:         TrendingUp,
@@ -112,16 +126,16 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 {twin.metrics.map((m) => {
                   const Icon = METRIC_ICONS[m.id] ?? Brain;
-                  const metricLabelKey = `metric${m.id.charAt(0).toUpperCase()}${m.id.slice(1)}` as Parameters<typeof tTwin>[0];
-                  const scaleKey = `${m.id}Scale${m.rawValue}` as Parameters<typeof tTwin>[0];
+                  const metricLabel = tTwin((TWIN_METRIC_LABEL_KEYS[m.id] ?? m.id) as Parameters<typeof tTwin>[0]);
+                  const scaleLabel  = tTwin((TWIN_SCALE_KEYS[m.id]?.[m.rawValue - 1] ?? String(m.rawValue)) as Parameters<typeof tTwin>[0]);
                   return (
                     <div key={m.id} className="space-y-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                           <Icon className="w-3.5 h-3.5 text-[var(--muted)]" />
-                          <span className="text-xs font-medium text-[var(--ink2)]">{tTwin(metricLabelKey)}</span>
+                          <span className="text-xs font-medium text-[var(--ink2)]">{metricLabel}</span>
                         </div>
-                        <span className="text-xs text-[var(--muted)]">{tTwin(scaleKey)}</span>
+                        <span className="text-xs text-[var(--muted)]">{scaleLabel}</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[var(--border)]">
                         <div

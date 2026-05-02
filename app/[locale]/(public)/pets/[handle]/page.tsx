@@ -19,6 +19,16 @@ import { getTranslations } from "next-intl/server";
 /** Cache public pet profiles for 60 s (ISR stale-while-revalidate). */
 export const revalidate = 60;
 
+const TWIN_METRIC_LABELS: Record<string, string> = {
+  energy: "metricEnergy", mood: "metricMood", anxiety: "metricAnxiety", socialization: "metricSocialization",
+};
+const TWIN_SCALE: Record<string, string[]> = {
+  energy:        ["energyScale1",        "energyScale2",        "energyScale3",        "energyScale4",        "energyScale5"],
+  mood:          ["moodScale1",          "moodScale2",          "moodScale3",          "moodScale4",          "moodScale5"],
+  anxiety:       ["anxietyScale1",       "anxietyScale2",       "anxietyScale3",       "anxietyScale4",       "anxietyScale5"],
+  socialization: ["socializationScale1", "socializationScale2", "socializationScale3", "socializationScale4", "socializationScale5"],
+};
+
 type Params = { params: Promise<{ handle: string; locale: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -186,8 +196,8 @@ export default async function PublicPetPage({ params }: Params) {
                   {twin.metrics.map((m) => (
                     <div key={m.id}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-[var(--muted)]">{tTwin(`metric${m.id.charAt(0).toUpperCase()}${m.id.slice(1)}` as Parameters<typeof tTwin>[0])}</span>
-                        <span className="text-[var(--ink2)]">{tTwin(`${m.id}Scale${m.rawValue}` as Parameters<typeof tTwin>[0])}</span>
+                        <span className="text-[var(--muted)]">{tTwin((TWIN_METRIC_LABELS[m.id] ?? m.id) as Parameters<typeof tTwin>[0])}</span>
+                        <span className="text-[var(--ink2)]">{tTwin((TWIN_SCALE[m.id]?.[m.rawValue - 1] ?? String(m.rawValue)) as Parameters<typeof tTwin>[0])}</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[var(--border)]">
                         <div
