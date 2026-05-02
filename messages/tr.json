@@ -575,7 +575,9 @@
     "metricAnxietyLabel": "Kaygı",
     "metricSocializationLabel": "Sosyalleşme",
     "shopLoadFailed": "Ürünler yüklenemedi. Lütfen tekrar deneyin.",
-    "shopRetry": "Tekrar dene"
+    "shopRetry": "Tekrar dene",
+    "loadFailed": "Yükleme başarısız oldu. Lütfen tekrar deneyin.",
+    "retry": "Tekrar dene"
   },
   "pets": {
     "name": "İsim",

@@ -147,13 +147,19 @@ export default function SellerOrdersPage() {
   const t = useTranslations("portal");
   const [orders, setOrders] = useState<SellerOrder[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
 
-  useEffect(() => {
+  function loadOrders() {
+    setLoading(true);
+    setFetchError("");
     fetch("/api/orders/seller")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then(({ data }) => { setOrders(data ?? []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
+      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(loadOrders, []);
 
   const pendingCount = orders.filter((o) => o.status === "pending" || o.status === "confirmed").length;
 
@@ -183,6 +189,13 @@ export default function SellerOrdersPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2].map((i) => <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />)}
+        </div>
+      ) : fetchError ? (
+        <div className="card py-12 text-center">
+          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+          <button onClick={loadOrders} className="btn-outline text-sm">
+            {t("retry")}
+          </button>
         </div>
       ) : orders.length === 0 ? (
         <div className="card py-16 text-center">

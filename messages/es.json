@@ -575,7 +575,9 @@
     "metricAnxietyLabel": "Ansiedad",
     "metricSocializationLabel": "Socialización",
     "shopLoadFailed": "No se pudieron cargar los productos. Por favor, inténtalo de nuevo.",
-    "shopRetry": "Intentar de nuevo"
+    "shopRetry": "Intentar de nuevo",
+    "loadFailed": "Error al cargar. Por favor, inténtalo de nuevo.",
+    "retry": "Intentar de nuevo"
   },
   "pets": {
     "name": "Nombre",

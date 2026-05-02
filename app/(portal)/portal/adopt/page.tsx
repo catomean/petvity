@@ -120,15 +120,23 @@ export default function AdoptPage() {
   const t = useTranslations("portal");
   const [listings, setListings] = useState<AdoptionListing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
   const [species, setSpecies] = useState("");
   const [locationQ, setLocationQ] = useState("");
 
-  useEffect(() => {
-    const url = species ? `/api/adoptions?species=${species}` : "/api/adoptions";
+  function loadListings(currentSpecies: string) {
+    setLoading(true);
+    setFetchError("");
+    const url = currentSpecies ? `/api/adoptions?species=${currentSpecies}` : "/api/adoptions";
     fetch(url)
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then(({ data }) => { setListings(data ?? []); setLoading(false); })
-      .catch(() => setLoading(false));
+      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+  }
+
+  useEffect(() => {
+    loadListings(species);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [species]);
 
   const displayed = locationQ
@@ -195,6 +203,13 @@ export default function AdoptPage() {
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="card h-72 animate-pulse bg-[var(--off)]" />
           ))}
+        </div>
+      ) : fetchError ? (
+        <div className="card py-12 text-center">
+          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+          <button onClick={() => loadListings(species)} className="btn-outline text-sm">
+            {t("retry")}
+          </button>
         </div>
       ) : displayed.length === 0 ? (
         <div className="card py-16 text-center">

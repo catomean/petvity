@@ -575,7 +575,9 @@
     "metricAnxietyLabel": "불안",
     "metricSocializationLabel": "사회화",
     "shopLoadFailed": "상품을 불러오지 못했습니다. 다시 시도해 주세요.",
-    "shopRetry": "다시 시도"
+    "shopRetry": "다시 시도",
+    "loadFailed": "로드에 실패했습니다. 다시 시도해 주세요.",
+    "retry": "다시 시도"
   },
   "pets": {
     "name": "이름",

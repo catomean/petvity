@@ -31,24 +31,19 @@ export default function MyApplicationsPage() {
   const t = useTranslations("portal");
   const [applications, setApplications] = useState<MyApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
 
-  useEffect(() => {
+  function loadApplications() {
+    setLoading(true);
+    setFetchError("");
     fetch("/api/adoptions?applied=1")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then(({ data }) => { setApplications(data ?? []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="animate-pulse space-y-3">
-        <div className="h-8 bg-[var(--off)] rounded w-48" />
-        <div className="h-5 bg-[var(--off)] rounded w-32" />
-        <div className="card h-32 mt-6" />
-        <div className="card h-32" />
-      </div>
-    );
+      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
   }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(loadApplications, []);
 
   return (
     <div>
@@ -64,7 +59,21 @@ export default function MyApplicationsPage() {
         <p className="text-sm text-[var(--muted)] mt-0.5">{t("myAppsSubtitle")}</p>
       </div>
 
-      {applications.length === 0 ? (
+      {loading ? (
+        <div className="animate-pulse space-y-3">
+          <div className="h-8 bg-[var(--off)] rounded w-48" />
+          <div className="h-5 bg-[var(--off)] rounded w-32" />
+          <div className="card h-32 mt-6" />
+          <div className="card h-32" />
+        </div>
+      ) : fetchError ? (
+        <div className="card py-12 text-center">
+          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+          <button onClick={loadApplications} className="btn-outline text-sm">
+            {t("retry")}
+          </button>
+        </div>
+      ) : applications.length === 0 ? (
         <div className="card p-12 text-center">
           <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
             <Heart className="w-7 h-7 text-[var(--teal)]" />

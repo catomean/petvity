@@ -575,7 +575,9 @@
     "metricAnxietyLabel": "القلق",
     "metricSocializationLabel": "التواصل الاجتماعي",
     "shopLoadFailed": "تعذّر تحميل المنتجات. يرجى المحاولة مرة أخرى.",
-    "shopRetry": "حاول مرة أخرى"
+    "shopRetry": "حاول مرة أخرى",
+    "loadFailed": "فشل التحميل. يرجى المحاولة مرة أخرى.",
+    "retry": "حاول مرة أخرى"
   },
   "pets": {
     "name": "الاسم",

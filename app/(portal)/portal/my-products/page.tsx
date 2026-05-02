@@ -39,18 +39,24 @@ export default function MyProductsPage() {
   const t = useTranslations("portal");
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  function loadItems() {
+    setLoading(true);
+    setFetchError("");
     fetch("/api/products?mine=true")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then(({ data }) => { setItems(data ?? []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
+      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(loadItems, []);
 
   function openAdd() {
     setEditingId(null);
@@ -271,6 +277,13 @@ export default function MyProductsPage() {
       {/* Product list */}
       {loading ? (
         <div className="card p-8 text-center text-[var(--muted)]">{t("editPetLoading")}</div>
+      ) : fetchError ? (
+        <div className="card py-12 text-center">
+          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+          <button onClick={loadItems} className="btn-outline text-sm">
+            {t("retry")}
+          </button>
+        </div>
       ) : items.length === 0 ? (
         <div className="card p-12 text-center">
           <Store className="w-10 h-10 text-[var(--faint)] mx-auto mb-3" />

@@ -297,23 +297,20 @@ export default function AdoptionsPage() {
   const t = useTranslations("portal");
   const [listings, setListings] = useState<AdoptionListing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
 
-  useEffect(() => {
-    // Fetch only this user's listings by fetching pets then their listings
-    // We piggyback on the /api/adoptions endpoint but use pet ownership check
-    // The server filters visible listings; the GET endpoint is public but returns all
-    // We need a user-scoped endpoint. Use /api/pets to get pet IDs, then filter listings.
-    // Simpler: GET /api/adoptions returns all available; we need MY listings (any status).
-    // Route-level guard in PATCH shows ownerId. For now, fetch all and filter by ownerId
-    // embedded in session — but session isn't available client-side without extra call.
-    //
-    // Better approach: dedicated endpoint. For now use a query param approach:
+  function loadListings() {
+    setLoading(true);
+    setFetchError("");
     // GET /api/adoptions?mine=1 — the server requiresSession and returns only user's listings.
     fetch("/api/adoptions?mine=1")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then(({ data }) => { setListings(data ?? []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
+      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(loadListings, []);
 
   function handleStatusChange(id: string, status: AdoptionListing["status"]) {
     setListings((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)));
@@ -335,6 +332,13 @@ export default function AdoptionsPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2].map((i) => <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />)}
+        </div>
+      ) : fetchError ? (
+        <div className="card py-12 text-center">
+          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+          <button onClick={loadListings} className="btn-outline text-sm">
+            {t("retry")}
+          </button>
         </div>
       ) : listings.length === 0 ? (
         <div className="card py-16 text-center">

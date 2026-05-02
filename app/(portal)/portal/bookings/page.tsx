@@ -54,15 +54,21 @@ export default function BookingsPage() {
   const t = useTranslations("portal");
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
   const [reviewTarget, setReviewTarget] = useState<BookingRow | null>(null);
   const [, startTransition] = useTransition();
 
-  useEffect(() => {
+  function loadBookings() {
+    setLoading(true);
+    setFetchError("");
     fetch("/api/bookings")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then(({ data }) => { setBookings(data ?? []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
+      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(loadBookings, []);
 
   async function load() {
     const res = await fetch("/api/bookings");
@@ -101,6 +107,13 @@ export default function BookingsPage() {
           {[1, 2].map((i) => (
             <div key={i} className="card h-28 animate-pulse bg-[var(--off)]" />
           ))}
+        </div>
+      ) : fetchError ? (
+        <div className="card py-12 text-center">
+          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+          <button onClick={loadBookings} className="btn-outline text-sm">
+            {t("retry")}
+          </button>
         </div>
       ) : bookings.length === 0 ? (
         <div className="card py-16 text-center">

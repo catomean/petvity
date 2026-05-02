@@ -575,7 +575,9 @@
     "metricAnxietyLabel": "Anxiété",
     "metricSocializationLabel": "Socialisation",
     "shopLoadFailed": "Impossible de charger les produits. Veuillez réessayer.",
-    "shopRetry": "Réessayer"
+    "shopRetry": "Réessayer",
+    "loadFailed": "Chargement échoué. Veuillez réessayer.",
+    "retry": "Réessayer"
   },
   "pets": {
     "name": "Nom",
