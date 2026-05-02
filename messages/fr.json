@@ -685,5 +685,15 @@
     "proBookDesc": "Connectez-vous à {app} pour demander un rendez-vous.",
     "proSignInBook": "Se connecter pour réserver",
     "proPerDay": "{price} $/jour"
+  },
+  "twin": {
+    "thriving": "Épanouissant",
+    "content": "Bien portant",
+    "attention": "Nécessite de l'attention",
+    "struggling": "En difficulté",
+    "no_data": "Pas de données",
+    "improving": "En amélioration",
+    "stable": "Stable",
+    "declining": "En déclin"
   }
 }

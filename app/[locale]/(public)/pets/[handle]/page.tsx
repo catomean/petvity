@@ -4,7 +4,7 @@ import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { APP, APP_URL } from "@/lib/config/app";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { SIGNAL_BG_CLASSES, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
 import { HEALTH_CHART_WINDOW_DAYS } from "@/lib/config/health-metrics";
 import type { SpeciesId, SexId } from "@/lib/config/species";
@@ -61,9 +61,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PublicPetPage({ params }: Params) {
   const { handle, locale } = await params;
-  const [t, tNav] = await Promise.all([
+  const [t, tNav, tSignal, tTwin] = await Promise.all([
     getTranslations({ locale, namespace: "public" }),
     getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "signal" }),
+    getTranslations({ locale, namespace: "twin" }),
   ]);
   const db = getInstance();
 
@@ -140,7 +142,7 @@ export default async function PublicPetPage({ params }: Params) {
               <p className="text-sm text-[var(--muted)] mb-2">@{pet.handle}</p>
             )}
             <span className={`${SIGNAL_BG_CLASSES[signal]} mt-1`}>
-              {SIGNAL_LABELS[signal]}
+              {tSignal(signal)}
             </span>
             {signalResult.reason && (
               <p className="text-xs text-[var(--muted)] mt-1 mb-1">{signalResult.reason}</p>
@@ -163,7 +165,7 @@ export default async function PublicPetPage({ params }: Params) {
             <div className={`border-t border-[var(--border)] px-6 py-5 ${twinCfg.bg}`}>
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <p className={`text-sm font-semibold ${twinCfg.text}`}>{twinCfg.label}</p>
+                  <p className={`text-sm font-semibold ${twinCfg.text}`}>{tTwin(twin.id)}</p>
                   <p className="text-xs text-[var(--muted)] mt-0.5">{twin.summary}</p>
                 </div>
                 <span className={`text-2xl font-extrabold tabular-nums ${twinCfg.text}`}>

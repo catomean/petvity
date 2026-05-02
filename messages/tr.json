@@ -685,5 +685,15 @@
     "proBookDesc": "{app}'a giriş yapın ve randevu talep edin.",
     "proSignInBook": "Giriş yap ve rezervasyon yap",
     "proPerDay": "{price} $/gün"
+  },
+  "twin": {
+    "thriving": "Gelişiyor",
+    "content": "İyi Durumda",
+    "attention": "Dikkat Gerekiyor",
+    "struggling": "Zorlanıyor",
+    "no_data": "Veri yok",
+    "improving": "Gelişiyor",
+    "stable": "Sabit",
+    "declining": "Düşüyor"
   }
 }

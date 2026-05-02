@@ -685,5 +685,15 @@
     "proBookDesc": "{app}にサインインして予約リクエストを送りましょう。",
     "proSignInBook": "サインインして予約",
     "proPerDay": "{price}ドル/日"
+  },
+  "twin": {
+    "thriving": "絶好調",
+    "content": "元気",
+    "attention": "要注意",
+    "struggling": "苦しんでいる",
+    "no_data": "データなし",
+    "improving": "改善中",
+    "stable": "安定",
+    "declining": "低下中"
   }
 }

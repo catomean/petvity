@@ -215,15 +215,18 @@ export default function FindPage() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const [vetRes, sitterRes, petRes] = await Promise.all([
-        fetch("/api/vets"),
-        fetch("/api/sitters"),
-        fetch("/api/pets"),
-      ]);
-      if (vetRes.ok) setVets((await vetRes.json()).data ?? []);
-      if (sitterRes.ok) setSitters((await sitterRes.json()).data ?? []);
-      if (petRes.ok) setPets((await petRes.json()).data ?? []);
-      setLoading(false);
+      try {
+        const [vetRes, sitterRes, petRes] = await Promise.all([
+          fetch("/api/vets"),
+          fetch("/api/sitters"),
+          fetch("/api/pets"),
+        ]);
+        if (vetRes.ok) setVets((await vetRes.json()).data ?? []);
+        if (sitterRes.ok) setSitters((await sitterRes.json()).data ?? []);
+        if (petRes.ok) setPets((await petRes.json()).data ?? []);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);

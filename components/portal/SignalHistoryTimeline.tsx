@@ -1,4 +1,5 @@
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES } from "@/lib/config/pet-signal";
+import { getTranslations } from "next-intl/server";
+import { SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { formatIsoDate } from "@/lib/utils/format";
 
@@ -10,8 +11,10 @@ type HistoryRow = {
   recordedAt: Date;
 };
 
-export function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow[]; locale?: string }) {
+export async function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow[]; locale?: string }) {
   if (rows.length === 0) return null;
+
+  const tSignal = await getTranslations({ locale: locale ?? "en", namespace: "signal" });
 
   return (
     <div className="card p-5 mt-3">
@@ -27,7 +30,7 @@ export function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow[]; lo
 
               <div className="flex items-center gap-2 flex-wrap">
                 <span className={SIGNAL_BG_CLASSES[sig]}>
-                  {SIGNAL_LABELS[sig]}
+                  {tSignal(sig)}
                 </span>
                 <span className="text-xs text-[var(--muted)]">{date}</span>
                 {row.source === "cron" && (

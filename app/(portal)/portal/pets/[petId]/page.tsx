@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_HERO_BG, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { SIGNAL_BG_CLASSES, SIGNAL_HERO_BG, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId, SexId } from "@/lib/config/species";
@@ -38,7 +38,10 @@ export default async function PetProfilePage({ params }: Params) {
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
   const locale = await getPortalLocale();
-  const t = await getTranslations({ locale, namespace: "portal" });
+  const [t, tSignal] = await Promise.all([
+    getTranslations({ locale, namespace: "portal" }),
+    getTranslations({ locale, namespace: "signal" }),
+  ]);
 
   const [recentMetrics, allVacc, activeMeds, [{ recordCount }], signalHistory] = await Promise.all([
     db.query.healthMetrics.findMany({
@@ -141,7 +144,7 @@ export default async function PetProfilePage({ params }: Params) {
                     {pet.name}
                   </h1>
                   <span className={SIGNAL_BG_CLASSES[sig as keyof typeof SIGNAL_BG_CLASSES]}>
-                    {SIGNAL_LABELS[sig]}
+                    {tSignal(sig)}
                   </span>
                 </div>
 

@@ -685,5 +685,15 @@
     "proBookDesc": "{app}에 로그인하여 예약을 신청하세요.",
     "proSignInBook": "로그인 후 예약",
     "proPerDay": "${price}/일"
+  },
+  "twin": {
+    "thriving": "번성 중",
+    "content": "잘 지냄",
+    "attention": "주의 필요",
+    "struggling": "힘들어함",
+    "no_data": "데이터 없음",
+    "improving": "개선 중",
+    "stable": "안정적",
+    "declining": "감소 중"
   }
 }

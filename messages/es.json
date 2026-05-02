@@ -685,5 +685,15 @@
     "proBookDesc": "Inicia sesión en {app} para solicitar una cita.",
     "proSignInBook": "Iniciar sesión para reservar",
     "proPerDay": "{price} $/día"
+  },
+  "twin": {
+    "thriving": "Floreciente",
+    "content": "Bien",
+    "attention": "Necesita atención",
+    "struggling": "Con dificultades",
+    "no_data": "Sin datos",
+    "improving": "Mejorando",
+    "stable": "Estable",
+    "declining": "Disminuyendo"
   }
 }

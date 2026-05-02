@@ -5,7 +5,7 @@ import { and, desc, eq, gte, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import { SPECIES_CONFIG } from "@/lib/config/species";
@@ -29,7 +29,11 @@ export default async function DashboardPage() {
   if (!session) return null;
 
   const locale = await getPortalLocale();
-  const t = await getTranslations({ locale, namespace: "portal" });
+  const [t, tSignal, tTwin] = await Promise.all([
+    getTranslations({ locale, namespace: "portal" }),
+    getTranslations({ locale, namespace: "signal" }),
+    getTranslations({ locale, namespace: "twin" }),
+  ]);
 
   const db = getInstance();
   const userPets = await db
@@ -184,7 +188,7 @@ export default async function DashboardPage() {
                       )}
                     </div>
                     <span className={SIGNAL_BG_CLASSES[sig as keyof typeof SIGNAL_BG_CLASSES]}>
-                      {SIGNAL_LABELS[sig]}
+                      {tSignal(sig)}
                     </span>
                   </div>
 
@@ -218,7 +222,7 @@ export default async function DashboardPage() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                           <span className={`text-xs font-medium ${twinCfg.text}`}>
-                            {twinCfg.label}
+                            {tTwin(twin.id)}
                           </span>
                           {twin.trend !== "insufficient_data" && (
                             <TrendIcon className={`w-3 h-3 ${trendColor}`} />

@@ -685,5 +685,15 @@
     "proBookDesc": "Sign in to {app} to request an appointment.",
     "proSignInBook": "Sign in to book",
     "proPerDay": "${price}/day"
+  },
+  "twin": {
+    "thriving": "Thriving",
+    "content": "Doing Well",
+    "attention": "Needs Attention",
+    "struggling": "Struggling",
+    "no_data": "No data",
+    "improving": "Improving",
+    "stable": "Stable",
+    "declining": "Declining"
   }
 }

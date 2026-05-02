@@ -685,5 +685,15 @@
     "proBookDesc": "Melden Sie sich bei {app} an, um einen Termin anzufordern.",
     "proSignInBook": "Anmelden und buchen",
     "proPerDay": "{price} $/Tag"
+  },
+  "twin": {
+    "thriving": "Florierend",
+    "content": "Wohlbefinden",
+    "attention": "Braucht Aufmerksamkeit",
+    "struggling": "Kämpft",
+    "no_data": "Keine Daten",
+    "improving": "Verbessernd",
+    "stable": "Stabil",
+    "declining": "Abnehmend"
   }
 }

@@ -7,7 +7,6 @@ import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import {
   SIGNAL_BG_CLASSES,
-  SIGNAL_LABELS,
   SIGNAL_SORT_ORDER,
   SIGNAL_METRIC_WINDOW_DAYS,
 } from "@/lib/config/pet-signal";
@@ -24,7 +23,10 @@ export default async function PetsPage() {
   if (!session) return null;
 
   const locale = await getPortalLocale();
-  const t = await getTranslations({ locale, namespace: "portal" });
+  const [t, tSignal] = await Promise.all([
+    getTranslations({ locale, namespace: "portal" }),
+    getTranslations({ locale, namespace: "signal" }),
+  ]);
 
   const db = getInstance();
   const now = new Date();
@@ -159,7 +161,7 @@ export default async function PetsPage() {
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${SIGNAL_BG_CLASSES[sig]}`}>
-                    {SIGNAL_LABELS[sig]}
+                    {tSignal(sig)}
                   </span>
                   {pet.isPublic && (
                     <span className="text-xs bg-[var(--teal-light)] text-[var(--teal)] px-2.5 py-1 rounded-full font-medium hidden sm:inline">

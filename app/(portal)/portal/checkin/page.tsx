@@ -5,7 +5,7 @@ import { and, eq, desc, inArray, gte } from "drizzle-orm";
 import Link from "next/link";
 import { AlertTriangle, CalendarDays, ChevronRight, CheckCircle } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
-import { SIGNAL_LABELS, SIGNAL_BG_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { SIGNAL_BG_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
@@ -18,7 +18,10 @@ export default async function CheckinPage() {
   if (!session) return null;
 
   const locale = await getPortalLocale();
-  const t = await getTranslations({ locale, namespace: "portal" });
+  const [t, tSignal] = await Promise.all([
+    getTranslations({ locale, namespace: "portal" }),
+    getTranslations({ locale, namespace: "signal" }),
+  ]);
 
   const db = getInstance();
   const now = new Date();
@@ -151,7 +154,7 @@ export default async function CheckinPage() {
                   </span>
                 ) : (
                   <span className={`${SIGNAL_BG_CLASSES[sig]} flex-shrink-0 hidden sm:inline-flex`}>
-                    {SIGNAL_LABELS[sig]}
+                    {tSignal(sig)}
                   </span>
                 )}
 

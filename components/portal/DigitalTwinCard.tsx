@@ -29,6 +29,7 @@ type Props = {
 
 export function DigitalTwinCard({ twin, petId, petName }: Props) {
   const t = useTranslations("portal");
+  const tTwin = useTranslations("twin");
   const cfg = TWIN_STATE_CONFIG[twin.id];
   const trendCfg = TWIN_TREND_CONFIG[twin.trend];
   const TrendIcon = TREND_ICONS[twin.trend];
@@ -46,7 +47,7 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
             {twin.trend !== "insufficient_data" && (
               <div className={`flex items-center gap-1 text-xs font-medium ${trendCfg.color}`}>
                 <TrendIcon className="w-3.5 h-3.5" />
-                <span>{trendCfg.label}</span>
+                <span>{tTwin(twin.trend)}</span>
                 {twin.trendDelta !== 0 && (
                   <span className="tabular-nums">
                     {twin.trendDelta > 0 ? `+${twin.trendDelta}` : twin.trendDelta}
@@ -87,7 +88,7 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
             {/* Score + summary */}
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className={`text-xl font-bold ${cfg.text}`}>{cfg.label}</p>
+                <p className={`text-xl font-bold ${cfg.text}`}>{tTwin(twin.id)}</p>
                 <p className="text-sm text-[var(--ink2)] mt-0.5">{twin.summary}</p>
               </div>
               <div className="text-right flex-shrink-0">

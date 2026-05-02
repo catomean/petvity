@@ -685,5 +685,15 @@
     "proBookDesc": "登录 {app} 申请预约。",
     "proSignInBook": "登录预约",
     "proPerDay": "${price}/天"
+  },
+  "twin": {
+    "thriving": "蓬勃发展",
+    "content": "状态良好",
+    "attention": "需要关注",
+    "struggling": "状态不佳",
+    "no_data": "无数据",
+    "improving": "改善中",
+    "stable": "稳定",
+    "declining": "下降"
   }
 }
