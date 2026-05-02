@@ -681,7 +681,11 @@
     "proReadyToBook": "准备好预约 {name} 了吗？",
     "proBookDesc": "登录 {app} 申请预约。",
     "proSignInBook": "登录预约",
-    "proPerDay": "${price}/天"
+    "proPerDay": "${price}/天",
+    "shopMetaTitle": "宠物护理商店 · {app}",
+    "shopMetaDesc": "浏览{app}市场的宠物食品、玩具、配件和用品。",
+    "adoptMetaTitle": "领养宠物 · {app}",
+    "adoptMetaDesc": "在{app}上找到正在寻找充满爱的家园的狗、猫和其他宠物。"
   },
   "twin": {
     "thriving": "蓬勃发展",

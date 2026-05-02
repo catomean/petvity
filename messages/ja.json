@@ -681,7 +681,11 @@
     "proReadyToBook": "{name}さんを予約しますか？",
     "proBookDesc": "{app}にサインインして予約リクエストを送りましょう。",
     "proSignInBook": "サインインして予約",
-    "proPerDay": "{price}ドル/日"
+    "proPerDay": "{price}ドル/日",
+    "shopMetaTitle": "ペットケアショップ · {app}",
+    "shopMetaDesc": "{app}マーケットプレイスのペットフード、おもちゃ、アクセサリー、用品をご覧ください。",
+    "adoptMetaTitle": "ペットを引き取る · {app}",
+    "adoptMetaDesc": "{app}で、愛情あるご家庭を探している犬、猫、その他のペットを見つけましょう。"
   },
   "twin": {
     "thriving": "絶好調",

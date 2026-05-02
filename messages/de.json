@@ -681,7 +681,11 @@
     "proReadyToBook": "{name} buchen?",
     "proBookDesc": "Melden Sie sich bei {app} an, um einen Termin anzufordern.",
     "proSignInBook": "Anmelden und buchen",
-    "proPerDay": "{price} $/Tag"
+    "proPerDay": "{price} $/Tag",
+    "shopMetaTitle": "Tierpflege-Shop · {app}",
+    "shopMetaDesc": "Stöbere in Tierfutter, Spielzeug, Zubehör und Bedarf aus dem {app}-Marktplatz.",
+    "adoptMetaTitle": "Ein Tier adoptieren · {app}",
+    "adoptMetaDesc": "Finde Hunde, Katzen und andere Tiere, die ein liebevolles Zuhause suchen, auf {app}."
   },
   "twin": {
     "thriving": "Florierend",

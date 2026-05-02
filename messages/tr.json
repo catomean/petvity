@@ -681,7 +681,11 @@
     "proReadyToBook": "{name} ile rezervasyon yapmaya hazır mısınız?",
     "proBookDesc": "{app}'a giriş yapın ve randevu talep edin.",
     "proSignInBook": "Giriş yap ve rezervasyon yap",
-    "proPerDay": "{price} $/gün"
+    "proPerDay": "{price} $/gün",
+    "shopMetaTitle": "Evcil Hayvan Bakım Dükkanı · {app}",
+    "shopMetaDesc": "{app} pazar yerinden evcil hayvan maması, oyuncaklar, aksesuarlar ve malzemeler bulun.",
+    "adoptMetaTitle": "Evcil Hayvan Edin · {app}",
+    "adoptMetaDesc": "{app}'da sevgi dolu bir yuva arayan köpekler, kediler ve diğer evcil hayvanları bulun."
   },
   "twin": {
     "thriving": "Gelişiyor",

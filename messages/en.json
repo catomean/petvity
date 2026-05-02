@@ -681,7 +681,11 @@
     "proReadyToBook": "Ready to book {name}?",
     "proBookDesc": "Sign in to {app} to request an appointment.",
     "proSignInBook": "Sign in to book",
-    "proPerDay": "${price}/day"
+    "proPerDay": "${price}/day",
+    "shopMetaTitle": "Pet Care Shop · {app}",
+    "shopMetaDesc": "Browse pet food, toys, accessories, and supplies from the {app} marketplace.",
+    "adoptMetaTitle": "Adopt a Pet · {app}",
+    "adoptMetaDesc": "Find dogs, cats, and other pets looking for a loving home on {app}."
   },
   "twin": {
     "thriving": "Thriving",

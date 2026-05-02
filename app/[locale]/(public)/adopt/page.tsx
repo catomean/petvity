@@ -11,15 +11,18 @@ import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: `Adopt a Pet · ${APP.name}`,
-  description: "Find dogs, cats, and other pets looking for a loving home.",
-};
-
 /** Cache adoption listings for 30 s — listings update more frequently. */
 export const revalidate = 30;
 
 type Params = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "public" });
+  const title = t("adoptMetaTitle", { app: APP.name });
+  const description = t("adoptMetaDesc", { app: APP.name });
+  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description } };
+}
 
 function speciesEmoji(species: string): string {
   return SPECIES_CONFIG[species as SpeciesId]?.emoji ?? "🐾";

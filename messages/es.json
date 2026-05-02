@@ -681,7 +681,11 @@
     "proReadyToBook": "¿Listo para reservar con {name}?",
     "proBookDesc": "Inicia sesión en {app} para solicitar una cita.",
     "proSignInBook": "Iniciar sesión para reservar",
-    "proPerDay": "{price} $/día"
+    "proPerDay": "{price} $/día",
+    "shopMetaTitle": "Tienda de mascotas · {app}",
+    "shopMetaDesc": "Explora comida, juguetes, accesorios y suministros para mascotas en el mercado {app}.",
+    "adoptMetaTitle": "Adoptar una mascota · {app}",
+    "adoptMetaDesc": "Encuentra perros, gatos y otras mascotas que buscan un hogar amoroso en {app}."
   },
   "twin": {
     "thriving": "Floreciente",

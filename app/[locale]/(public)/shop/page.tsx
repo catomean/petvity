@@ -10,11 +10,6 @@ import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: `Shop · ${APP.name}`,
-  description: "Browse pet food, toys, accessories, and supplies from the Petvity marketplace.",
-};
-
 /** Revalidate every 60 s — product listings update less frequently than adoptions. */
 export const revalidate = 60;
 
@@ -27,6 +22,14 @@ type Props = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ category?: string }>;
 };
+
+export async function generateMetadata({ params }: Pick<Props, "params">): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "public" });
+  const title = t("shopMetaTitle", { app: APP.name });
+  const description = t("shopMetaDesc", { app: APP.name });
+  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description } };
+}
 
 export default async function PublicShopPage({ params, searchParams }: Props) {
   const { locale } = await params;

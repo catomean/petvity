@@ -681,7 +681,11 @@
     "proReadyToBook": "هل أنت مستعد لحجز {name}؟",
     "proBookDesc": "سجّل الدخول إلى {app} لطلب موعد.",
     "proSignInBook": "سجّل الدخول للحجز",
-    "proPerDay": "{price} دولار/يوم"
+    "proPerDay": "{price} دولار/يوم",
+    "shopMetaTitle": "متجر رعاية الحيوانات الأليفة · {app}",
+    "shopMetaDesc": "تصفح طعام الحيوانات الأليفة والألعاب والإكسسوارات واللوازم من سوق {app}.",
+    "adoptMetaTitle": "تبني حيواناً أليفاً · {app}",
+    "adoptMetaDesc": "ابحث عن كلاب وقطط وحيوانات أليفة أخرى تبحث عن منزل محب على {app}."
   },
   "twin": {
     "thriving": "يزدهر",

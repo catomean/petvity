@@ -681,7 +681,11 @@
     "proReadyToBook": "{name}을/를 예약할 준비가 됐나요?",
     "proBookDesc": "{app}에 로그인하여 예약을 신청하세요.",
     "proSignInBook": "로그인 후 예약",
-    "proPerDay": "${price}/일"
+    "proPerDay": "${price}/일",
+    "shopMetaTitle": "반려동물 케어 숍 · {app}",
+    "shopMetaDesc": "{app} 마켓플레이스에서 반려동물 식품, 장난감, 액세서리, 용품을 살펴보세요.",
+    "adoptMetaTitle": "반려동물 입양 · {app}",
+    "adoptMetaDesc": "{app}에서 사랑스러운 가정을 찾고 있는 강아지, 고양이 및 기타 반려동물을 찾아보세요."
   },
   "twin": {
     "thriving": "번성 중",
