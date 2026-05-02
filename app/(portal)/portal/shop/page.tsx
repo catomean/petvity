@@ -157,6 +157,7 @@ export default function ShopPage() {
   const t = useTranslations("portal");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
@@ -165,12 +166,17 @@ export default function ShopPage() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  function loadProducts() {
+    setLoading(true);
+    setFetchError("");
     fetch("/api/products")
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then(({ data }) => { setProducts(data ?? []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
+      .catch(() => { setFetchError(t("shopLoadFailed")); setLoading(false); });
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(loadProducts, []);
 
   const categories = ["all", ...Array.from(new Set(products.map((p) => p.category)))];
   const filtered = activeCategory === "all"
@@ -268,6 +274,13 @@ export default function ShopPage() {
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="card h-56 animate-pulse bg-[var(--off)]" />
           ))}
+        </div>
+      ) : fetchError ? (
+        <div className="card py-12 text-center">
+          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
+          <button onClick={loadProducts} className="btn-outline text-sm">
+            {t("shopRetry")}
+          </button>
         </div>
       ) : filtered.length === 0 ? (
         <div className="card py-16 text-center">

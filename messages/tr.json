@@ -573,7 +573,9 @@
     "metricEnergyLabel": "Enerji seviyesi",
     "metricMoodLabel": "Ruh hali",
     "metricAnxietyLabel": "Kaygı",
-    "metricSocializationLabel": "Sosyalleşme"
+    "metricSocializationLabel": "Sosyalleşme",
+    "shopLoadFailed": "Ürünler yüklenemedi. Lütfen tekrar deneyin.",
+    "shopRetry": "Tekrar dene"
   },
   "pets": {
     "name": "İsim",

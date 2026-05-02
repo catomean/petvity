@@ -573,7 +573,9 @@
     "metricEnergyLabel": "精力水平",
     "metricMoodLabel": "情绪",
     "metricAnxietyLabel": "焦虑",
-    "metricSocializationLabel": "社交化"
+    "metricSocializationLabel": "社交化",
+    "shopLoadFailed": "无法加载商品，请重试。",
+    "shopRetry": "重试"
   },
   "pets": {
     "name": "名字",

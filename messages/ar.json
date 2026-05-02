@@ -573,7 +573,9 @@
     "metricEnergyLabel": "مستوى الطاقة",
     "metricMoodLabel": "المزاج",
     "metricAnxietyLabel": "القلق",
-    "metricSocializationLabel": "التواصل الاجتماعي"
+    "metricSocializationLabel": "التواصل الاجتماعي",
+    "shopLoadFailed": "تعذّر تحميل المنتجات. يرجى المحاولة مرة أخرى.",
+    "shopRetry": "حاول مرة أخرى"
   },
   "pets": {
     "name": "الاسم",

@@ -573,7 +573,9 @@
     "metricEnergyLabel": "エネルギーレベル",
     "metricMoodLabel": "気分",
     "metricAnxietyLabel": "不安",
-    "metricSocializationLabel": "社会化"
+    "metricSocializationLabel": "社会化",
+    "shopLoadFailed": "商品を読み込めませんでした。もう一度お試しください。",
+    "shopRetry": "再試行"
   },
   "pets": {
     "name": "名前",

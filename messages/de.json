@@ -573,7 +573,9 @@
     "metricEnergyLabel": "Energieniveau",
     "metricMoodLabel": "Stimmung",
     "metricAnxietyLabel": "Angst",
-    "metricSocializationLabel": "Sozialverhalten"
+    "metricSocializationLabel": "Sozialverhalten",
+    "shopLoadFailed": "Produkte konnten nicht geladen werden. Bitte versuche es erneut.",
+    "shopRetry": "Erneut versuchen"
   },
   "pets": {
     "name": "Name",
