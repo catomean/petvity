@@ -18,9 +18,10 @@ export default async function CheckinPage() {
   if (!session) return null;
 
   const locale = await getPortalLocale();
-  const [t, tSignal] = await Promise.all([
+  const [t, tSignal, tPub] = await Promise.all([
     getTranslations({ locale, namespace: "portal" }),
     getTranslations({ locale, namespace: "signal" }),
+    getTranslations({ locale, namespace: "public" }),
   ]);
 
   const db = getInstance();
@@ -136,7 +137,7 @@ export default async function CheckinPage() {
                 <div className="min-w-0 flex-1">
                   <div className="font-medium text-[var(--ink)]">{pet.name}</div>
                   <div className="text-xs text-[var(--muted)]">
-                    {speciesDef?.label ?? pet.species}
+                    {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                   </div>
                   {!done && sig !== "healthy" && pet.signal.reason && (
                     <div className={`flex items-center gap-1 mt-1 text-xs ${sig === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>

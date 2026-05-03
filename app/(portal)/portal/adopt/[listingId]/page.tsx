@@ -258,7 +258,7 @@ export default function ListingDetailPage() {
         }`}>
           <div className="flex items-center gap-3 mb-3">
             <span className={`text-xs font-semibold px-3 py-1 rounded-full ${APPLICATION_STATUS_CONFIG[existingStatus].className}`}>
-              {APPLICATION_STATUS_CONFIG[existingStatus].label}
+              {t(`appStatus_${existingStatus}` as Parameters<typeof t>[0])}
             </span>
             <p className="text-sm font-medium text-[var(--ink)]">
               {existingStatus === "approved"
