@@ -34,7 +34,10 @@ const SPECIES_DISPLAY = Object.values(SPECIES_CONFIG).filter(
 
 export default async function HomePage({ params }: Params) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "home" });
+  const [t, tPub] = await Promise.all([
+    getTranslations({ locale, namespace: "home" }),
+    getTranslations({ locale, namespace: "public" }),
+  ]);
 
   const trustItems = [
     t("trustNoCreditCard"),
@@ -201,7 +204,7 @@ export default async function HomePage({ params }: Params) {
                 className="inline-flex items-center gap-1.5 bg-white border border-[var(--border)] text-[var(--ink2)] text-xs font-medium px-3.5 py-1.5 rounded-full shadow-sm"
               >
                 <span className="text-sm">{s.emoji}</span>
-                {s.label}
+                {tPub(`species_${s.id}` as Parameters<typeof tPub>[0])}
               </span>
             ))}
           </div>

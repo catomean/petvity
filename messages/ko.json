@@ -849,7 +849,11 @@
     "ctaDesc": "영구 무료. 매일 건강 데이터를 기록하고, 자동 웰니스 신호를 받고, 수의사와 공유할 수 있는 완전한 건강 기록을 구축하세요.",
     "ctaButton": "무료 계정 만들기",
     "metaTitle": "{species} 케어 가이드 · {app}",
-    "metaDesc": "{species}의 건강 추적, 정상 범위, 예방 접종 및 웰니스 팁. {app}의 {species} 보호자를 위해 만들어졌습니다."
+    "metaDesc": "{species}의 건강 추적, 정상 범위, 예방 접종 및 웰니스 팁. {app}의 {species} 보호자를 위해 만들어졌습니다.",
+    "emotEnergyLabel": "에너지 수준",
+    "emotMoodLabel": "기분",
+    "emotAnxietyLabel": "불안",
+    "emotSocializationLabel": "사회화"
   },
   "home": {
     "metaTitle": "{app} — 글로벌 반려동물 케어 플랫폼",

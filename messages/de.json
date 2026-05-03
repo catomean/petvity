@@ -849,7 +849,11 @@
     "ctaDesc": "Kostenlos für immer. Tägliche Gesundheitsdaten erfassen, automatische Wellness-Signale erhalten und eine vollständige Gesundheitsakte erstellen, die du mit deinem Tierarzt teilen kannst.",
     "ctaButton": "Kostenloses Konto erstellen",
     "metaTitle": "{species}-Pflegeratgeber · {app}",
-    "metaDesc": "Gesundheitstracking, Normalwerte, Impfungen und Wellness-Tipps für {species}. Für {species}-Besitzer auf {app}."
+    "metaDesc": "Gesundheitstracking, Normalwerte, Impfungen und Wellness-Tipps für {species}. Für {species}-Besitzer auf {app}.",
+    "emotEnergyLabel": "Energieniveau",
+    "emotMoodLabel": "Stimmung",
+    "emotAnxietyLabel": "Angst",
+    "emotSocializationLabel": "Sozialisierung"
   },
   "home": {
     "metaTitle": "{app} — Die globale Plattform für Tiergesundheit",

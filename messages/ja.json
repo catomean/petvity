@@ -849,7 +849,11 @@
     "ctaDesc": "永久無料。毎日の健康データを記録し、自動ウェルネスシグナルを取得し、獣医師と共有できる完全な健康記録を構築しましょう。",
     "ctaButton": "無料アカウントを作成",
     "metaTitle": "{species}ケアガイド · {app}",
-    "metaDesc": "{species}の健康追跡、正常範囲、ワクチン接種、ウェルネスのヒント。{app}の{species}オーナー向け。"
+    "metaDesc": "{species}の健康追跡、正常範囲、ワクチン接種、ウェルネスのヒント。{app}の{species}オーナー向け。",
+    "emotEnergyLabel": "エネルギーレベル",
+    "emotMoodLabel": "気分",
+    "emotAnxietyLabel": "不安",
+    "emotSocializationLabel": "社交性"
   },
   "home": {
     "metaTitle": "{app} — ペットケアのグローバルプラットフォーム",

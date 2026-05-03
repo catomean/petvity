@@ -849,7 +849,11 @@
     "ctaDesc": "永久免费。记录每日健康数据，获得自动健康信号，并建立可以与兽医分享的完整健康记录。",
     "ctaButton": "创建免费账户",
     "metaTitle": "{species}护理指南 · {app}",
-    "metaDesc": "{species}的健康追踪、正常范围、疫苗接种和健康技巧。专为{app}上的{species}主人打造。"
+    "metaDesc": "{species}的健康追踪、正常范围、疫苗接种和健康技巧。专为{app}上的{species}主人打造。",
+    "emotEnergyLabel": "能量水平",
+    "emotMoodLabel": "情绪",
+    "emotAnxietyLabel": "焦虑",
+    "emotSocializationLabel": "社交能力"
   },
   "home": {
     "metaTitle": "{app} — 全球宠物护理平台",

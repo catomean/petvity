@@ -849,7 +849,11 @@
     "ctaDesc": "Sonsuza kadar ücretsiz. Günlük sağlık verilerini kaydedin, otomatik wellness sinyalleri alın ve veterinerinizle paylaşabileceğiniz eksiksiz bir sağlık kaydı oluşturun.",
     "ctaButton": "Ücretsiz hesap oluştur",
     "metaTitle": "{species} Bakım Rehberi · {app}",
-    "metaDesc": "{species} için sağlık takibi, normal aralıklar, aşılar ve wellness ipuçları. {app}'taki {species} sahipleri için oluşturuldu."
+    "metaDesc": "{species} için sağlık takibi, normal aralıklar, aşılar ve wellness ipuçları. {app}'taki {species} sahipleri için oluşturuldu.",
+    "emotEnergyLabel": "Enerji Düzeyi",
+    "emotMoodLabel": "Ruh Hali",
+    "emotAnxietyLabel": "Kaygı",
+    "emotSocializationLabel": "Sosyalleşme"
   },
   "home": {
     "metaTitle": "{app} — Evcil hayvan bakımı için küresel platform",

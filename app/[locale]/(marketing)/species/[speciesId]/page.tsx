@@ -34,6 +34,13 @@ const EMOT_DESC_KEY: Record<string, string> = {
   socialization: "emotSocializationDesc",
 };
 
+const EMOT_LABEL_KEY: Record<string, string> = {
+  energy:        "emotEnergyLabel",
+  mood:          "emotMoodLabel",
+  anxiety:       "emotAnxietyLabel",
+  socialization: "emotSocializationLabel",
+};
+
 const SPECIES_BLURB_KEY: Partial<Record<SpeciesId, string>> = {
   dog:   "dogBlurb",
   cat:   "catBlurb",
@@ -75,9 +82,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const def = SPECIES_CONFIG[speciesId as SpeciesId];
   if (!def || def.id === "other") return { title: APP.name };
 
-  const t = await getTranslations({ locale, namespace: "speciesGuide" });
-  const title = t("metaTitle", { species: def.label, app: APP.name });
-  const description = t("metaDesc", { species: def.label, app: APP.name });
+  const [t, tPub] = await Promise.all([
+    getTranslations({ locale, namespace: "speciesGuide" }),
+    getTranslations({ locale, namespace: "public" }),
+  ]);
+  const speciesName = tPub(`species_${speciesId}` as Parameters<typeof tPub>[0]);
+  const title = t("metaTitle", { species: speciesName, app: APP.name });
+  const description = t("metaDesc", { species: speciesName, app: APP.name });
 
   return {
     title,
@@ -92,7 +103,13 @@ export default async function SpeciesGuidePage({ params }: Params) {
   const species = SPECIES_CONFIG[speciesId as SpeciesId];
   if (!species || speciesId === "other") notFound();
 
-  const t = await getTranslations({ locale, namespace: "speciesGuide" });
+  const [t, tPub] = await Promise.all([
+    getTranslations({ locale, namespace: "speciesGuide" }),
+    getTranslations({ locale, namespace: "public" }),
+  ]);
+
+  const speciesName = tPub(`species_${speciesId}` as Parameters<typeof tPub>[0]);
+  const speciesLc   = speciesName.toLowerCase();
 
   const tempRange = getNormalRange("temperature", species.id);
   const hrRange   = getNormalRange("heart_rate",  species.id);
@@ -112,7 +129,6 @@ export default async function SpeciesGuidePage({ params }: Params) {
 
   const blurbKey  = SPECIES_BLURB_KEY[species.id];
   const tipKeys   = CARE_TIP_KEYS[species.id] ?? [];
-  const speciesLc = species.label.toLowerCase();
 
   return (
     <main>
@@ -121,7 +137,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
         <div className="section-inner text-center">
           <div className="text-7xl mb-4">{species.emoji}</div>
           <h1 className="text-4xl lg:text-5xl font-extrabold text-[var(--ink)] mb-4">
-            {t("heroTitle", { species: species.label })}
+            {t("heroTitle", { species: speciesName })}
           </h1>
           {blurbKey && (
             <p className="text-lg text-[var(--ink2)] max-w-2xl mx-auto mb-8 leading-relaxed">
@@ -130,7 +146,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
           )}
           <div className="flex items-center justify-center gap-4 flex-wrap">
             <Link href="/register" className="btn-primary text-base px-6 py-3">
-              {t("heroTrackCta", { species: species.label })}
+              {t("heroTrackCta", { species: speciesName })}
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link href="/features" className="btn-outline text-base px-6 py-3">
@@ -153,7 +169,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
       <section className="py-16 lg:py-20">
         <div className="section-inner">
           <h2 className="text-2xl lg:text-3xl font-bold text-[var(--ink)] mb-2 text-center">
-            {t("rangesTitle", { species: species.label })}
+            {t("rangesTitle", { species: speciesName })}
           </h2>
           <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
             {t("rangesDesc")}
@@ -202,7 +218,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
                 </div>
                 <div>
                   <p className="font-semibold text-[var(--ink)] mb-1">
-                    {HEALTH_METRIC_CONFIG[id].label}
+                    {t((EMOT_LABEL_KEY[id] ?? id) as Parameters<typeof t>[0])}
                   </p>
                   <p className="text-sm text-[var(--muted)] leading-relaxed">
                     {t((EMOT_DESC_KEY[id] ?? id) as Parameters<typeof t>[0])}
@@ -218,7 +234,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
       <section className="py-16 lg:py-20">
         <div className="section-inner">
           <h2 className="text-2xl lg:text-3xl font-bold text-[var(--ink)] mb-2 text-center">
-            {t("breedsTitle", { species: species.label })}
+            {t("breedsTitle", { species: speciesName })}
           </h2>
           <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
             {t("breedsDesc", { species: speciesLc })}
@@ -242,7 +258,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
         <section className="py-16 lg:py-20 bg-[var(--off)]">
           <div className="section-inner">
             <h2 className="text-2xl lg:text-3xl font-bold text-[var(--ink)] mb-2 text-center">
-              {t("tipsTitle", { species: species.label })}
+              {t("tipsTitle", { species: speciesName })}
             </h2>
             <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
               {t("tipsDesc", { species: speciesLc })}

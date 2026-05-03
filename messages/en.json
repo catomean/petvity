@@ -849,7 +849,11 @@
     "ctaDesc": "Free forever. Log daily health data, get automatic wellness signals, and build a complete health record you can share with your vet.",
     "ctaButton": "Create a free account",
     "metaTitle": "{species} Care Guide · {app}",
-    "metaDesc": "Health tracking, normal ranges, vaccinations, and wellness tips for {species}s. Built for {species} owners on {app}."
+    "metaDesc": "Health tracking, normal ranges, vaccinations, and wellness tips for {species}s. Built for {species} owners on {app}.",
+    "emotEnergyLabel": "Energy Level",
+    "emotMoodLabel": "Mood",
+    "emotAnxietyLabel": "Anxiety",
+    "emotSocializationLabel": "Socialization"
   },
   "home": {
     "metaTitle": "{app} — The global platform for pet care",

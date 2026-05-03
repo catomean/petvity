@@ -849,7 +849,11 @@
     "ctaDesc": "Gratis para siempre. Registra datos de salud diarios, obtén señales de bienestar automáticas y construye un historial de salud completo que puedes compartir con tu veterinario.",
     "ctaButton": "Crear una cuenta gratuita",
     "metaTitle": "Guía de cuidados del {species} · {app}",
-    "metaDesc": "Seguimiento de salud, rangos normales, vacunas y consejos de bienestar para {species}s. Creado para propietarios de {species} en {app}."
+    "metaDesc": "Seguimiento de salud, rangos normales, vacunas y consejos de bienestar para {species}s. Creado para propietarios de {species} en {app}.",
+    "emotEnergyLabel": "Nivel de energía",
+    "emotMoodLabel": "Estado de ánimo",
+    "emotAnxietyLabel": "Ansiedad",
+    "emotSocializationLabel": "Socialización"
   },
   "home": {
     "metaTitle": "{app} — La plataforma global para el cuidado de mascotas",

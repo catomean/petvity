@@ -112,7 +112,7 @@ export default async function PublicProductDetailPage({ params }: Params) {
             {/* Category + stock */}
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-medium bg-[var(--off)] text-[var(--ink2)] px-2.5 py-1 rounded-full">
-                {catCfg?.emoji} {catCfg?.label ?? row.category}
+                {catCfg?.emoji} {catCfg ? t(`cat_${row.category}` as Parameters<typeof t>[0]) : row.category}
               </span>
               {outOfStock && (
                 <span className="text-xs font-medium text-[var(--danger)] bg-[var(--danger-bg)] px-2.5 py-1 rounded-full">
