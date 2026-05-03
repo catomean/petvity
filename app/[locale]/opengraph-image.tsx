@@ -1,0 +1,126 @@
+import { ImageResponse } from "next/og";
+import { APP } from "@/lib/config/app";
+
+export const runtime = "edge";
+export const alt = `${APP.name} — ${APP.tagline}`;
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+
+export default function OgImage() {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "linear-gradient(135deg, #0D6E78 0%, #0A5860 100%)",
+          fontFamily: "system-ui, -apple-system, sans-serif",
+        }}
+      >
+        {/* Background decoration */}
+        <div
+          style={{
+            position: "absolute",
+            top: -100,
+            right: -100,
+            width: 400,
+            height: 400,
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.06)",
+            display: "flex",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: -80,
+            left: -80,
+            width: 320,
+            height: 320,
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.04)",
+            display: "flex",
+          }}
+        />
+
+        {/* Paw icon */}
+        <div
+          style={{
+            width: 96,
+            height: 96,
+            borderRadius: 24,
+            background: "rgba(255,255,255,0.15)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: 32,
+            fontSize: 52,
+          }}
+        >
+          🐾
+        </div>
+
+        {/* App name */}
+        <div
+          style={{
+            fontSize: 72,
+            fontWeight: 800,
+            color: "white",
+            letterSpacing: "-2px",
+            marginBottom: 16,
+          }}
+        >
+          {APP.name}
+        </div>
+
+        {/* Tagline */}
+        <div
+          style={{
+            fontSize: 28,
+            color: "rgba(255,255,255,0.75)",
+            textAlign: "center",
+            maxWidth: 700,
+            lineHeight: 1.4,
+          }}
+        >
+          {APP.tagline}
+        </div>
+
+        {/* Signal pills */}
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            marginTop: 48,
+          }}
+        >
+          {[
+            { label: "Healthy", color: "#16A34A", bg: "rgba(22,163,74,0.2)" },
+            { label: "Watch", color: "#D97706", bg: "rgba(217,119,6,0.2)" },
+            { label: "Concern", color: "#DC2626", bg: "rgba(220,38,38,0.2)" },
+          ].map(({ label, color, bg }) => (
+            <div
+              key={label}
+              style={{
+                background: bg,
+                border: `1.5px solid ${color}`,
+                borderRadius: 24,
+                padding: "8px 20px",
+                fontSize: 18,
+                fontWeight: 600,
+                color,
+              }}
+            >
+              {label}
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    { ...size },
+  );
+}
