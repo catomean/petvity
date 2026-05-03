@@ -9,6 +9,7 @@ import { ShoppingBag, PawPrint, Package } from "lucide-react";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { buildAlternates } from "@/lib/i18n/alternates";
 
 /** Revalidate every 60 s — product listings update less frequently than adoptions. */
 export const revalidate = 60;
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
   const t = await getTranslations({ locale, namespace: "public" });
   const title = t("shopMetaTitle", { app: APP.name });
   const description = t("shopMetaDesc", { app: APP.name });
-  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description } };
+  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description }, alternates: buildAlternates("/shop") };
 }
 
 export default async function PublicShopPage({ params, searchParams }: Props) {

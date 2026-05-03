@@ -10,6 +10,7 @@ import { HEALTH_METRIC_CONFIG, getNormalRange } from "@/lib/config/health-metric
 import type { Metadata } from "next";
 import { APP } from "@/lib/config/app";
 import { getTranslations } from "next-intl/server";
+import { buildAlternates } from "@/lib/i18n/alternates";
 
 type Params = { params: Promise<{ speciesId: string; locale: string }> };
 
@@ -95,6 +96,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description,
     openGraph: { title, description },
     twitter: { card: "summary", title, description },
+    alternates: buildAlternates(`/species/${speciesId}`),
   };
 }
 

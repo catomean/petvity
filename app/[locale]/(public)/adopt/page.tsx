@@ -10,6 +10,7 @@ import { Heart, MapPin, PawPrint } from "lucide-react";
 import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { buildAlternates } from "@/lib/i18n/alternates";
 
 /** Cache adoption listings for 30 s — listings update more frequently. */
 export const revalidate = 30;
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "public" });
   const title = t("adoptMetaTitle", { app: APP.name });
   const description = t("adoptMetaDesc", { app: APP.name });
-  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description } };
+  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description }, alternates: buildAlternates("/adopt") };
 }
 
 function speciesEmoji(species: string): string {

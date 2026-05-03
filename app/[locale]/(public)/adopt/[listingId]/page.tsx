@@ -14,6 +14,7 @@ import type { ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
 import { formatPetAge, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { buildAlternates } from "@/lib/i18n/alternates";
 
 /** Cache adoption listing detail for 30 s — status changes propagate quickly. */
 export const revalidate = 30;
@@ -35,6 +36,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `Adopt ${row.petName} · ${APP.name}`,
     description: row.title,
+    alternates: buildAlternates(`/adopt/${listingId}`),
   };
 }
 

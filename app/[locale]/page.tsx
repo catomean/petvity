@@ -13,6 +13,7 @@ import { HeroCTA } from "@/components/sections/HeroCTA";
 import type { Metadata } from "next";
 import { APP } from "@/lib/config/app";
 import { getTranslations } from "next-intl/server";
+import { buildAlternates } from "@/lib/i18n/alternates";
 
 type Params = { params: Promise<{ locale: string }> };
 
@@ -25,6 +26,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title,
     description,
     openGraph: { title, description, type: "website" },
+    alternates: buildAlternates(""),
   };
 }
 

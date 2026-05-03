@@ -15,6 +15,7 @@ import { formatDateShort } from "@/lib/utils/format";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { buildAlternates } from "@/lib/i18n/alternates";
 import { translateSignalReason } from "@/lib/i18n/signal-reason";
 
 /** Cache public pet profiles for 60 s (ISR stale-while-revalidate). */
@@ -67,6 +68,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       description,
       ...(pet.avatarUrl ? { images: [pet.avatarUrl] } : {}),
     },
+    alternates: buildAlternates(`/pets/${handle}`),
   };
 }
 

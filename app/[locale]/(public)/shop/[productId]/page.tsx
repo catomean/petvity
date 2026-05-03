@@ -10,6 +10,7 @@ import { ShoppingBag, PawPrint, ChevronLeft, Package, ShoppingCart } from "lucid
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { buildAlternates } from "@/lib/i18n/alternates";
 
 export const revalidate = 60;
 
@@ -28,6 +29,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${row.name} · ${APP.name} Shop`,
     description: row.description ?? `${row.name} — ${formatPrice(row.priceCents)} on ${APP.name}`,
+    alternates: buildAlternates(`/shop/${productId}`),
   };
 }
 

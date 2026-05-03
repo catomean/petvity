@@ -8,6 +8,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { formatSitterServices } from "@/lib/config/professionals";
 import { getTranslations } from "next-intl/server";
+import { buildAlternates } from "@/lib/i18n/alternates";
 
 /** Cache professional profiles for 60 s — profiles don't change frequently. */
 export const revalidate = 60;
@@ -28,6 +29,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: `${name} · ${APP.name}`,
       url: `${APP_URL}/${locale}/pros/${userId}`,
     },
+    alternates: buildAlternates(`/pros/${userId}`),
   };
 }
 
