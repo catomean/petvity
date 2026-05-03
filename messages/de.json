@@ -614,7 +614,8 @@
     "housingType_house_no_garden": "Haus ohne Garten",
     "housingType_apartment": "Wohnung",
     "housingType_farm": "Bauernhof / ländliches Grundstück",
-    "housingType_other": "Sonstiges"
+    "housingType_other": "Sonstiges",
+    "allSpecies": "Alle Tierarten"
   },
   "pets": {
     "name": "Name",

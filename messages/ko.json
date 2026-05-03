@@ -614,7 +614,8 @@
     "housingType_house_no_garden": "정원 없는 집",
     "housingType_apartment": "아파트",
     "housingType_farm": "농장/농촌 부동산",
-    "housingType_other": "기타"
+    "housingType_other": "기타",
+    "allSpecies": "모든 종"
   },
   "pets": {
     "name": "이름",

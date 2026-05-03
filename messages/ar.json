@@ -614,7 +614,8 @@
     "housingType_house_no_garden": "منزل بدون حديقة",
     "housingType_apartment": "شقة",
     "housingType_farm": "مزرعة / ملكية ريفية",
-    "housingType_other": "أخرى"
+    "housingType_other": "أخرى",
+    "allSpecies": "جميع الأنواع"
   },
   "pets": {
     "name": "الاسم",

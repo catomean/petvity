@@ -614,7 +614,8 @@
     "housingType_house_no_garden": "Bahçesiz ev",
     "housingType_apartment": "Daire",
     "housingType_farm": "Çiftlik / kırsal mülk",
-    "housingType_other": "Diğer"
+    "housingType_other": "Diğer",
+    "allSpecies": "Tüm türler"
   },
   "pets": {
     "name": "İsim",

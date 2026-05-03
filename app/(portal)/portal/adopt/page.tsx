@@ -7,8 +7,8 @@ import {
   Search, Filter, ChevronRight, Sparkles,
 } from "lucide-react";
 import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
-import { SPECIES_CONFIG, SEX_LABELS, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
-import type { SpeciesId, SexId } from "@/lib/config/species";
+import { SPECIES_CONFIG, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import { useTranslations } from "next-intl";
 
@@ -43,15 +43,11 @@ interface AdoptionListing {
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
-// Prepend "All species" to the SSOT list from lib/config/species
-const SPECIES_OPTIONS = [{ value: "", label: "All species" }, ...SPECIES_OPTS];
-
-
-
 /* ─── Listing Card ───────────────────────────────────────────────────────── */
 
 function ListingCard({ listing }: { listing: AdoptionListing }) {
   const t = useTranslations("portal");
+  const tPub = useTranslations("public");
   const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
   const age = formatPetAgeShort(listing.pet.birthDate);
 
@@ -83,10 +79,10 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
           <div className="min-w-0">
             <p className="font-semibold text-[var(--ink)] truncate">{listing.pet.name}</p>
             <p className="text-xs text-[var(--muted)] mt-0.5">
-              {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
+              {tPub(`species_${listing.pet.species}` as Parameters<typeof tPub>[0])}
               {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
               {age ? ` · ${age}` : ""}
-              {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${SEX_LABELS[listing.pet.sex as SexId] ?? listing.pet.sex}` : ""}
+              {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${tPub(`sex_${listing.pet.sex}` as Parameters<typeof tPub>[0])}` : ""}
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--teal)] transition-colors flex-shrink-0 mt-0.5" />
@@ -118,6 +114,7 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
 
 export default function AdoptPage() {
   const t = useTranslations("portal");
+  const tPub = useTranslations("public");
   const [listings, setListings] = useState<AdoptionListing[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
@@ -190,8 +187,11 @@ export default function AdoptPage() {
             value={species}
             onChange={(e) => setSpecies(e.target.value)}
           >
-            {SPECIES_OPTIONS.map(({ value, label }) => (
-              <option key={value} value={value}>{label}</option>
+            <option value="">{t("allSpecies")}</option>
+            {SPECIES_OPTS.map(({ value }) => (
+              <option key={value} value={value}>
+                {SPECIES_CONFIG[value as SpeciesId].emoji} {tPub(`species_${value}` as Parameters<typeof tPub>[0])}
+              </option>
             ))}
           </select>
         </div>

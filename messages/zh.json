@@ -614,7 +614,8 @@
     "housingType_house_no_garden": "无花园的房子",
     "housingType_apartment": "公寓",
     "housingType_farm": "农场/乡村住宅",
-    "housingType_other": "其他"
+    "housingType_other": "其他",
+    "allSpecies": "所有种类"
   },
   "pets": {
     "name": "名字",

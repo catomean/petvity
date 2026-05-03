@@ -614,7 +614,8 @@
     "housingType_house_no_garden": "庭なし一戸建て",
     "housingType_apartment": "アパート・マンション",
     "housingType_farm": "農場・郊外の物件",
-    "housingType_other": "その他"
+    "housingType_other": "その他",
+    "allSpecies": "すべての種"
   },
   "pets": {
     "name": "名前",
