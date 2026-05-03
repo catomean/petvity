@@ -752,7 +752,8 @@
     "cat_health": "健康",
     "cat_accessories": "アクセサリー",
     "cat_grooming": "グルーミング",
-    "cat_other": "その他"
+    "cat_other": "その他",
+    "sex_unknown": "不明"
   },
   "twin": {
     "thriving": "絶好調",

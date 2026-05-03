@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, Heart, MapPin, DollarSign } from "lucide-react";
-import { APPLICATION_STATUS_CONFIG, LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
-import type { ApplicationStatusId, ListingStatusId } from "@/lib/config/adoptions";
+import { APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
+import type { ApplicationStatusId } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort, formatAdoptionFee } from "@/lib/utils/format";
@@ -29,6 +29,7 @@ interface MyApplication {
 
 export default function MyApplicationsPage() {
   const t = useTranslations("portal");
+  const tPub = useTranslations("public");
   const [applications, setApplications] = useState<MyApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
@@ -107,13 +108,13 @@ export default function MyApplicationsPage() {
                       <div>
                         <p className="font-semibold text-[var(--ink)]">{app.petName}</p>
                         <p className="text-sm text-[var(--muted)]">
-                          {speciesDef?.label ?? app.petSpecies}
+                          {tPub(`species_${app.petSpecies}` as Parameters<typeof tPub>[0])}
                           {app.petBreed ? ` · ${app.petBreed}` : ""}
                         </p>
                         <p className="text-sm text-[var(--ink2)] mt-0.5">{app.listingTitle}</p>
                       </div>
                       <span className={`text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${statusCfg.className}`}>
-                        {statusCfg.label}
+                        {t(`appStatus_${app.applicationStatus}` as Parameters<typeof t>[0])}
                       </span>
                     </div>
 
@@ -133,7 +134,7 @@ export default function MyApplicationsPage() {
                       <span>{t("myAppsApplied", { date: formatDateShort(app.createdAt) })}</span>
                       {listingClosed && (
                         <span className="text-[var(--muted)]">
-                          {t("myAppsListingStatus", { status: LISTING_STATUS_CONFIG[app.listingStatus as ListingStatusId]?.label ?? app.listingStatus })}
+                          {t("myAppsListingStatus", { status: t(`listingStatus_${app.listingStatus}` as Parameters<typeof t>[0]) })}
                         </span>
                       )}
                     </div>

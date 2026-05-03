@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { SPECIES_OPTIONS, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
+import { SPECIES_OPTIONS, SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
 import { ChevronLeft, Trash2, Camera, Loader2 } from "lucide-react";
@@ -23,6 +23,7 @@ interface PetData {
 
 export default function EditPetPage() {
   const t = useTranslations("portal");
+  const tPub = useTranslations("public");
   const router = useRouter();
   const { petId } = useParams<{ petId: string }>();
 
@@ -177,7 +178,7 @@ export default function EditPetPage() {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={avatarUrl} alt="Pet avatar" className="w-full h-full object-cover" />
             ) : (
-              SPECIES_OPTIONS.find((s) => s.value === form.species)?.label?.split(" ")[0] ?? "🐾"
+              SPECIES_CONFIG[form.species as SpeciesId]?.emoji ?? "🐾"
             )}
           </div>
           {avatarUploading && (
@@ -233,8 +234,7 @@ export default function EditPetPage() {
             {t("petSpeciesLabel")}
           </label>
           <div className="form-input bg-[var(--light)] text-[var(--muted)] cursor-not-allowed">
-            {SPECIES_OPTIONS.find((s) => s.value === form.species)?.label ??
-              form.species}
+            {form.species ? `${SPECIES_CONFIG[form.species as SpeciesId]?.emoji ?? ""} ${tPub(`species_${form.species}` as Parameters<typeof tPub>[0])}` : form.species}
           </div>
           <p className="text-xs text-[var(--muted)] mt-1">{t("editPetSpeciesHint")}</p>
         </div>
@@ -287,8 +287,8 @@ export default function EditPetPage() {
               }
               className="form-input"
             >
-              {SEX_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>{label}</option>
+              {SEX_OPTIONS.map(({ value }) => (
+                <option key={value} value={value}>{tPub(`sex_${value}` as Parameters<typeof tPub>[0])}</option>
               ))}
             </select>
           </div>

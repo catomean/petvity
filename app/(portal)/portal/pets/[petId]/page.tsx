@@ -7,9 +7,9 @@ import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
 import { SIGNAL_BG_CLASSES, SIGNAL_HERO_BG, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
-import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
+import { SPECIES_CONFIG } from "@/lib/config/species";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
-import type { SpeciesId, SexId } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort, formatPetAge } from "@/lib/utils/format";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { getTranslations } from "next-intl/server";
@@ -38,9 +38,10 @@ export default async function PetProfilePage({ params }: Params) {
     .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
   const locale = await getPortalLocale();
-  const [t, tSignal] = await Promise.all([
+  const [t, tSignal, tPub] = await Promise.all([
     getTranslations({ locale, namespace: "portal" }),
     getTranslations({ locale, namespace: "signal" }),
+    getTranslations({ locale, namespace: "public" }),
   ]);
 
   const [recentMetrics, allVacc, activeMeds, [{ recordCount }], signalHistory] = await Promise.all([
@@ -149,9 +150,9 @@ export default async function PetProfilePage({ params }: Params) {
                 </div>
 
                 <p className="text-sm text-[var(--muted)] leading-relaxed">
-                  {speciesDef?.label ?? pet.species}
+                  {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                   {pet.breed ? ` · ${pet.breed}` : ""}
-                  {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
+                  {pet.sex !== "unknown" ? ` · ${tPub(`sex_${pet.sex}` as Parameters<typeof tPub>[0])}` : ""}
                   {age ? ` · ${age}` : pet.birthDate ? ` · ${t("petBorn", { date: formatDateShort(pet.birthDate, locale) })}` : ""}
                 </p>
 

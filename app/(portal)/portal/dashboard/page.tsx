@@ -29,10 +29,11 @@ export default async function DashboardPage() {
   if (!session) return null;
 
   const locale = await getPortalLocale();
-  const [t, tSignal, tTwin] = await Promise.all([
+  const [t, tSignal, tTwin, tPub] = await Promise.all([
     getTranslations({ locale, namespace: "portal" }),
     getTranslations({ locale, namespace: "signal" }),
     getTranslations({ locale, namespace: "twin" }),
+    getTranslations({ locale, namespace: "public" }),
   ]);
 
   const db = getInstance();
@@ -197,7 +198,7 @@ export default async function DashboardPage() {
                     {pet.name}
                   </h3>
                   <p className="text-xs text-[var(--muted)] mb-3">
-                    {speciesDef?.label ?? pet.species}
+                    {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                     {pet.breed ? ` · ${pet.breed}` : ""}
                   </p>
 

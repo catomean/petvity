@@ -3,8 +3,8 @@ import { getInstance } from "@/lib/db";
 import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
 import { eq, desc, inArray, max, gte, and } from "drizzle-orm";
 import Link from "next/link";
-import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
-import type { SpeciesId, SexId } from "@/lib/config/species";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import {
   SIGNAL_BG_CLASSES,
   SIGNAL_SORT_ORDER,
@@ -23,9 +23,10 @@ export default async function PetsPage() {
   if (!session) return null;
 
   const locale = await getPortalLocale();
-  const [t, tSignal] = await Promise.all([
+  const [t, tSignal, tPub] = await Promise.all([
     getTranslations({ locale, namespace: "portal" }),
     getTranslations({ locale, namespace: "signal" }),
+    getTranslations({ locale, namespace: "public" }),
   ]);
 
   const db = getInstance();
@@ -149,9 +150,9 @@ export default async function PetsPage() {
                     {pet.name}
                   </p>
                   <p className="text-sm text-[var(--muted)] truncate">
-                    {speciesDef?.label ?? pet.species}
+                    {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                     {pet.breed ? ` · ${pet.breed}` : ""}
-                    {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
+                    {pet.sex !== "unknown" ? ` · ${tPub(`sex_${pet.sex}` as Parameters<typeof tPub>[0])}` : ""}
                   </p>
                   {lastDate && (
                     <p className="text-xs text-[var(--faint)] mt-0.5">

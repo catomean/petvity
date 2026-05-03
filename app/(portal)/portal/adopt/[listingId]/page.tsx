@@ -7,8 +7,8 @@ import {
   Heart, ChevronLeft, MapPin, DollarSign, CheckCircle,
   Dog, Cat, Baby, Star, Loader2, Send,
 } from "lucide-react";
-import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
-import type { SpeciesId, SexId } from "@/lib/config/species";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS, LISTING_STATUS_CONFIG, LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import type { ApplicationStatusId, ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
@@ -59,6 +59,7 @@ interface FormState {
 
 export default function ListingDetailPage() {
   const t = useTranslations("portal");
+  const tPub = useTranslations("public");
   const { listingId } = useParams<{ listingId: string }>();
 
   const [listing, setListing] = useState<Listing | null>(null);
@@ -175,14 +176,14 @@ export default function ListingDetailPage() {
             <div>
               <h1 className="text-2xl font-bold text-[var(--ink)]">{listing.pet.name}</h1>
               <p className="text-sm text-[var(--muted)] mt-0.5">
-                {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
+                {tPub(`species_${listing.pet.species}` as Parameters<typeof tPub>[0])}
                 {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
                 {age ? ` · ${age}` : ""}
-                {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${SEX_LABELS[listing.pet.sex as SexId] ?? listing.pet.sex}` : ""}
+                {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${tPub(`sex_${listing.pet.sex}` as Parameters<typeof tPub>[0])}` : ""}
               </p>
             </div>
             <span className={`text-xs font-medium px-3 py-1 rounded-full ${LISTING_STATUS_CONFIG[listing.status as ListingStatusId].className}`}>
-              {LISTING_STATUS_CONFIG[listing.status as ListingStatusId].label}
+              {t(`listingStatus_${listing.status}` as Parameters<typeof t>[0])}
             </span>
           </div>
 
@@ -201,10 +202,10 @@ export default function ListingDetailPage() {
           </div>
 
           {/* Traits — icons are UI-layer only; labels come from LISTING_TRAIT_CONFIG */}
-          {LISTING_TRAIT_CONFIG.some((t) => listing[t.field]) && (
+          {LISTING_TRAIT_CONFIG.some((trait) => listing[trait.field]) && (
             <div className="flex flex-wrap gap-2 mb-5">
-              {LISTING_TRAIT_CONFIG.map((t) => {
-                if (!listing[t.field]) return null;
+              {LISTING_TRAIT_CONFIG.map((trait) => {
+                if (!listing[trait.field]) return null;
                 const icon: Record<ListingTraitKey, React.ReactNode> = {
                   goodWithKids:       <Baby className="w-3.5 h-3.5" />,
                   goodWithDogs:       <Dog className="w-3.5 h-3.5" />,
@@ -212,8 +213,8 @@ export default function ListingDetailPage() {
                   requiresExperience: <Star className="w-3.5 h-3.5" />,
                 };
                 return (
-                  <span key={t.field} className={`inline-flex items-center gap-1.5 text-xs font-medium ${t.className} px-3 py-1 rounded-full`}>
-                    {icon[t.field]} {t.label}
+                  <span key={trait.field} className={`inline-flex items-center gap-1.5 text-xs font-medium ${trait.className} px-3 py-1 rounded-full`}>
+                    {icon[trait.field]} {tPub(`trait_${trait.field}` as Parameters<typeof tPub>[0])}
                   </span>
                 );
               })}

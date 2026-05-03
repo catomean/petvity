@@ -40,8 +40,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   });
   if (!pet) return { title: APP.name };
 
-  const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
-  const speciesLabel = speciesDef?.label ?? pet.species;
+  const tPub = await getTranslations({ locale, namespace: "public" });
+  const speciesLabel = tPub(`species_${pet.species}` as Parameters<typeof tPub>[0]);
   const title = `${pet.name} · ${APP.name}`;
   const description = [
     speciesLabel,

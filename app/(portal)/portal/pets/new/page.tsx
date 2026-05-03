@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SPECIES_OPTIONS, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
+import { SPECIES_OPTIONS, SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 
 export default function NewPetPage() {
   const t = useTranslations("portal");
+  const tPub = useTranslations("public");
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -88,7 +89,7 @@ export default function NewPetPage() {
             <option value="">{t("newPetChooseType")}</option>
             {SPECIES_OPTIONS.map((s) => (
               <option key={s.value} value={s.value}>
-                {s.label}
+                {SPECIES_CONFIG[s.value as SpeciesId].emoji} {tPub(`species_${s.value}` as Parameters<typeof tPub>[0])}
               </option>
             ))}
           </select>
@@ -157,8 +158,8 @@ export default function NewPetPage() {
               }
               className="form-input"
             >
-              {SEX_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>{label}</option>
+              {SEX_OPTIONS.map(({ value }) => (
+                <option key={value} value={value}>{tPub(`sex_${value}` as Parameters<typeof tPub>[0])}</option>
               ))}
             </select>
           </div>

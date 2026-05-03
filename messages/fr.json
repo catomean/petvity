@@ -752,7 +752,8 @@
     "cat_health": "Santé",
     "cat_accessories": "Accessoires",
     "cat_grooming": "Toilettage",
-    "cat_other": "Autre"
+    "cat_other": "Autre",
+    "sex_unknown": "Inconnu"
   },
   "twin": {
     "thriving": "Épanouissant",
