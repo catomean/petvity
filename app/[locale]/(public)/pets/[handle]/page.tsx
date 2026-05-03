@@ -15,6 +15,7 @@ import { formatDateShort } from "@/lib/utils/format";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { translateSignalReason } from "@/lib/i18n/signal-reason";
 
 /** Cache public pet profiles for 60 s (ISR stale-while-revalidate). */
 export const revalidate = 60;
@@ -154,8 +155,10 @@ export default async function PublicPetPage({ params }: Params) {
             <span className={`${SIGNAL_BG_CLASSES[signal]} mt-1`}>
               {tSignal(signal)}
             </span>
-            {signalResult.reason && (
-              <p className="text-xs text-[var(--muted)] mt-1 mb-1">{signalResult.reason}</p>
+            {signal !== "healthy" && (
+              <p className="text-xs text-[var(--muted)] mt-1 mb-1">
+                {translateSignalReason(signalResult.reasonData, tSignal)}
+              </p>
             )}
             <p className="text-sm text-[var(--muted)] mt-2">
               {t(`species_${pet.species}` as Parameters<typeof t>[0])}

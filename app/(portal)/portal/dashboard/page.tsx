@@ -15,6 +15,7 @@ import type { TwinTrend } from "@/lib/domain/digital-twin";
 import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
+import { translateSignalReason } from "@/lib/i18n/signal-reason";
 
 // Icon mapping stays component-side (React components are UI, not config)
 const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
@@ -243,10 +244,10 @@ export default async function DashboardPage() {
                   )}
 
                   {/* Signal reason + action links — shown when watch/concern */}
-                  {sig !== "healthy" && pet.signal.reason && (
+                  {sig !== "healthy" && (
                     <div className={`flex items-start gap-1.5 mt-2 text-xs ${sig === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
                       <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                      <span className="leading-snug">{pet.signal.reason}</span>
+                      <span className="leading-snug">{translateSignalReason(pet.signal.reasonData, tSignal)}</span>
                     </div>
                   )}
                   {sig !== "healthy" && (

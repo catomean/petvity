@@ -32,9 +32,23 @@ export type PetSignalInput = {
   now?: Date;
 };
 
+export type SignalOutOfRangeDetail = {
+  id: MetricId;
+  formattedValue: string; // display value + unit, e.g. "200bpm"
+  formattedRange: string; // range + unit, e.g. "60–140bpm"
+};
+
+export type SignalReasonData =
+  | { type: "no_metrics"; overdueVaccinations: number }
+  | { type: "stale"; days: number; overdueVaccinations: number }
+  | { type: "out_of_range"; details: SignalOutOfRangeDetail[]; overdueVaccinations: number }
+  | { type: "overdue_only"; count: number }
+  | { type: "healthy" };
+
 export type PetSignalResult = {
   signal: PetWellnessSignal;
   reason: string;
+  reasonData: SignalReasonData;
   outOfRangeMetrics: MetricId[];
 };
 
@@ -68,11 +82,11 @@ export function computePetSignal({
 
   // ── Step 1: Check if we have any recent data ───────────────────────────────
   if (recentMetrics.length === 0) {
-    const baseSignal =
-      overdueVaccinations > 0 ? "concern" : "watch";
+    const baseSignal = overdueVaccinations > 0 ? "concern" : "watch";
     return {
       signal: baseSignal,
       reason: "No health metrics logged recently",
+      reasonData: { type: "no_metrics", overdueVaccinations },
       outOfRangeMetrics: [],
     };
   }
@@ -90,6 +104,7 @@ export function computePetSignal({
     return {
       signal,
       reason: `No check-in for ${daysSinceLast} days (last: ${sorted[0].date})`,
+      reasonData: { type: "stale", days: daysSinceLast, overdueVaccinations },
       outOfRangeMetrics: [],
     };
   }
@@ -97,8 +112,8 @@ export function computePetSignal({
   // ── Step 2: Count out-of-range metrics from the most recent row ─────────────
   const latest = sorted[0];
   const outOfRangeMetrics: MetricId[] = [];
-  // Stores a human-readable description per out-of-range metric for the reason string
   const outOfRangeDetails: string[] = [];
+  const outOfRangeStructured: SignalOutOfRangeDetail[] = [];
 
   for (const { metricId, field } of METRIC_DB_MAP) {
     const storedValue = latest[field] as number | null;
@@ -112,11 +127,11 @@ export function computePetSignal({
       const displayVal = def.toDisplay(storedValue);
       const displayMin = def.toDisplay(range.min);
       const displayMax = def.toDisplay(range.max);
-      // Format: "Temperature 40.5°C (normal 38–39°C)" or "Anxiety 4/5 (normal ≤2/5)"
       const unit = def.unit;
-      const valStr = `${displayVal}${unit}`;
-      const rangeStr = `${displayMin}–${displayMax}${unit}`;
-      outOfRangeDetails.push(`${def.label} ${valStr} (normal ${rangeStr})`);
+      const formattedValue = `${displayVal}${unit}`;
+      const formattedRange = `${displayMin}–${displayMax}${unit}`;
+      outOfRangeDetails.push(`${def.label} ${formattedValue} (normal ${formattedRange})`);
+      outOfRangeStructured.push({ id: metricId, formattedValue, formattedRange });
     }
   }
 
@@ -138,5 +153,14 @@ export function computePetSignal({
       ? "All monitored metrics within normal range"
       : [...outOfRangeDetails, ...(vaccStr ? [vaccStr] : [])].join(" · ");
 
-  return { signal, reason, outOfRangeMetrics };
+  let reasonData: SignalReasonData;
+  if (outOfRangeStructured.length === 0 && overdueVaccinations === 0) {
+    reasonData = { type: "healthy" };
+  } else if (outOfRangeStructured.length === 0) {
+    reasonData = { type: "overdue_only", count: overdueVaccinations };
+  } else {
+    reasonData = { type: "out_of_range", details: outOfRangeStructured, overdueVaccinations };
+  }
+
+  return { signal, reason, reasonData, outOfRangeMetrics };
 }

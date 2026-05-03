@@ -646,7 +646,18 @@
   "signal": {
     "healthy": "Gesund",
     "watch": "Beobachten",
-    "concern": "Aufmerksamkeit nötig"
+    "concern": "Aufmerksamkeit nötig",
+    "reasonNoMetrics": "Keine Gesundheitsdaten kürzlich protokolliert",
+    "reasonStale": "{days, plural, =1 {Kein Check-in seit gestern} other {Kein Check-in seit # Tagen}}",
+    "reasonOutOfRange": "{metric} {value} (normal {range})",
+    "reasonOverdueVaccinations": "{count, plural, =1 {1 überfällige Impfung} other {# überfällige Impfungen}}",
+    "metric_weight": "Gewicht",
+    "metric_temperature": "Temperatur",
+    "metric_heart_rate": "Herzfrequenz",
+    "metric_energy": "Energie",
+    "metric_mood": "Stimmung",
+    "metric_anxiety": "Angst",
+    "metric_socialization": "Sozialisierung"
   },
   "common": {
     "save": "Speichern",

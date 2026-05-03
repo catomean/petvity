@@ -646,7 +646,18 @@
   "signal": {
     "healthy": "بصحة جيدة",
     "watch": "مراقبة",
-    "concern": "يحتاج انتباهاً"
+    "concern": "يحتاج انتباهاً",
+    "reasonNoMetrics": "لم يتم تسجيل مقاييس صحية مؤخراً",
+    "reasonStale": "{days, plural, =1 {لا يوجد تسجيل دخول منذ أمس} other {لا يوجد تسجيل دخول منذ # أيام}}",
+    "reasonOutOfRange": "{metric} {value} (طبيعي {range})",
+    "reasonOverdueVaccinations": "{count, plural, =1 {لقاح واحد متأخر} other {# لقاحات متأخرة}}",
+    "metric_weight": "الوزن",
+    "metric_temperature": "درجة الحرارة",
+    "metric_heart_rate": "معدل ضربات القلب",
+    "metric_energy": "الطاقة",
+    "metric_mood": "المزاج",
+    "metric_anxiety": "القلق",
+    "metric_socialization": "التنشئة الاجتماعية"
   },
   "common": {
     "save": "حفظ",

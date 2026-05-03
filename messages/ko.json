@@ -646,7 +646,18 @@
   "signal": {
     "healthy": "건강",
     "watch": "관찰",
-    "concern": "주의 필요"
+    "concern": "주의 필요",
+    "reasonNoMetrics": "최근 건강 지표가 기록되지 않았습니다",
+    "reasonStale": "{days, plural, =1 {어제 이후 체크인 없음} other {# 일간 체크인 없음}}",
+    "reasonOutOfRange": "{metric} {value} (정상 {range})",
+    "reasonOverdueVaccinations": "{count, plural, =1 {백신 1건 기한 초과} other {백신 #건 기한 초과}}",
+    "metric_weight": "체중",
+    "metric_temperature": "체온",
+    "metric_heart_rate": "심박수",
+    "metric_energy": "에너지",
+    "metric_mood": "기분",
+    "metric_anxiety": "불안",
+    "metric_socialization": "사교성"
   },
   "common": {
     "save": "저장",

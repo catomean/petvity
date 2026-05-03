@@ -646,7 +646,18 @@
   "signal": {
     "healthy": "Sağlıklı",
     "watch": "Takip et",
-    "concern": "Dikkat gerekiyor"
+    "concern": "Dikkat gerekiyor",
+    "reasonNoMetrics": "Son zamanlarda sağlık metriği kaydedilmedi",
+    "reasonStale": "{days, plural, =1 {Dünden beri giriş yok} other {# gündür giriş yok}}",
+    "reasonOutOfRange": "{metric} {value} (normal {range})",
+    "reasonOverdueVaccinations": "{count, plural, =1 {1 aşı süresi geçmiş} other {# aşı süresi geçmiş}}",
+    "metric_weight": "Ağırlık",
+    "metric_temperature": "Sıcaklık",
+    "metric_heart_rate": "Nabız",
+    "metric_energy": "Enerji",
+    "metric_mood": "Ruh hali",
+    "metric_anxiety": "Kaygı",
+    "metric_socialization": "Sosyalleşme"
   },
   "common": {
     "save": "Kaydet",

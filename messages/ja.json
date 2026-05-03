@@ -646,7 +646,18 @@
   "signal": {
     "healthy": "健康",
     "watch": "要観察",
-    "concern": "注意が必要"
+    "concern": "注意が必要",
+    "reasonNoMetrics": "最近の健康指標が記録されていません",
+    "reasonStale": "{days, plural, =1 {昨日以来チェックインなし} other {# 日間チェックインなし}}",
+    "reasonOutOfRange": "{metric} {value}（正常値 {range}）",
+    "reasonOverdueVaccinations": "{count, plural, =1 {1件のワクチン接種が期限切れ} other {#件のワクチン接種が期限切れ}}",
+    "metric_weight": "体重",
+    "metric_temperature": "体温",
+    "metric_heart_rate": "心拍数",
+    "metric_energy": "エネルギー",
+    "metric_mood": "気分",
+    "metric_anxiety": "不安",
+    "metric_socialization": "社交性"
   },
   "common": {
     "save": "保存",

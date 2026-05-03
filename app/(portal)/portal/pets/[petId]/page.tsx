@@ -13,6 +13,7 @@ import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort, formatPetAge } from "@/lib/utils/format";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { getTranslations } from "next-intl/server";
+import { translateSignalReason } from "@/lib/i18n/signal-reason";
 import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 import { SignalHistoryTimeline } from "@/components/portal/SignalHistoryTimeline";
@@ -177,7 +178,7 @@ export default async function PetProfilePage({ params }: Params) {
           {/* Signal reason + CTAs */}
           <div className="mt-5 pt-5 border-t border-white/60 flex items-center justify-between gap-4 flex-wrap">
             <p className="text-sm text-[var(--ink2)] flex-1">
-              {signalResult.reason}
+              {translateSignalReason(signalResult.reasonData, tSignal)}
             </p>
             <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
               {sig !== "healthy" && overdueCount > 0 && (

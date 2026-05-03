@@ -23,6 +23,7 @@ import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { getTranslations } from "next-intl/server";
 import { HealthTrendChart } from "@/components/portal/HealthTrendChart";
 import { SignalHistoryTimeline } from "@/components/portal/SignalHistoryTimeline";
+import { translateSignalReason } from "@/lib/i18n/signal-reason";
 
 type Params = { params: Promise<{ petId: string }> };
 
@@ -43,7 +44,10 @@ export default async function PetHealthPage({ params }: Params) {
   const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
   const locale = await getPortalLocale();
-  const t = await getTranslations({ locale, namespace: "portal" });
+  const [t, tSignal] = await Promise.all([
+    getTranslations({ locale, namespace: "portal" }),
+    getTranslations({ locale, namespace: "signal" }),
+  ]);
 
   const PORTAL_METRIC_LABEL_KEYS: Record<MetricId, Parameters<typeof t>[0]> = {
     weight:         "healthWeightLabel",
@@ -173,7 +177,7 @@ export default async function PetHealthPage({ params }: Params) {
               <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${petSignal.signal === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`} />
               <div className="flex-1 min-w-0">
                 <p className={`text-sm font-medium ${petSignal.signal === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
-                  {petSignal.reason}
+                  {translateSignalReason(petSignal.reasonData, tSignal)}
                 </p>
                 {overdueCount > 0 && (
                   <Link

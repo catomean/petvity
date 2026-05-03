@@ -12,6 +12,7 @@ import type { SpeciesId } from "@/lib/config/species";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { getTranslations } from "next-intl/server";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
+import { translateSignalReason } from "@/lib/i18n/signal-reason";
 
 export default async function CheckinPage() {
   const session = await auth();
@@ -139,10 +140,10 @@ export default async function CheckinPage() {
                   <div className="text-xs text-[var(--muted)]">
                     {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                   </div>
-                  {!done && sig !== "healthy" && pet.signal.reason && (
+                  {!done && sig !== "healthy" && (
                     <div className={`flex items-center gap-1 mt-1 text-xs ${sig === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
                       <AlertTriangle className="w-3 h-3 flex-shrink-0" />
-                      <span className="truncate">{pet.signal.reason}</span>
+                      <span className="truncate">{translateSignalReason(pet.signal.reasonData, tSignal)}</span>
                     </div>
                   )}
                 </div>

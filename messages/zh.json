@@ -646,7 +646,18 @@
   "signal": {
     "healthy": "健康",
     "watch": "观察",
-    "concern": "需要关注"
+    "concern": "需要关注",
+    "reasonNoMetrics": "最近未记录健康指标",
+    "reasonStale": "{days, plural, =1 {昨天以来未打卡} other {# 天未打卡}}",
+    "reasonOutOfRange": "{metric} {value}（正常 {range}）",
+    "reasonOverdueVaccinations": "{count, plural, =1 {1项疫苗逾期} other {#项疫苗逾期}}",
+    "metric_weight": "体重",
+    "metric_temperature": "体温",
+    "metric_heart_rate": "心率",
+    "metric_energy": "精力",
+    "metric_mood": "情绪",
+    "metric_anxiety": "焦虑",
+    "metric_socialization": "社交性"
   },
   "common": {
     "save": "保存",
