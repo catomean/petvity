@@ -44,7 +44,7 @@ export function HealthTrendChart({
       <div className="card p-5">
         <h3 className="text-sm font-semibold text-[var(--ink)] mb-3">{title}</h3>
         <div className="h-32 flex items-center justify-center text-sm text-[var(--faint)]">
-          No data yet
+          {noDataText}
         </div>
       </div>
     );
