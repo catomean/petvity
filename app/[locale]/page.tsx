@@ -81,6 +81,38 @@ export default async function HomePage({ params }: Params) {
     t("pricingF9"),
   ];
 
+  const heroMetrics = [
+    { label: t("mockWeight"),  value: "32.4 kg", sub: t("mockStable") },
+    { label: t("mockTemp"),    value: "38.4°C",  sub: t("mockNormal") },
+    { label: t("mockHeart"),   value: "72 bpm",  sub: t("mockNormal") },
+    { label: t("mockEnergy"),  value: "4 / 5",   sub: t("mockUp") },
+    { label: t("mockMood"),    value: "5 / 5",   sub: t("mockGreat") },
+    { label: t("mockAnxiety"), value: "2 / 5",   sub: t("mockCalmSub") },
+  ];
+
+  const trackingMetrics = [
+    { label: t("mockWeight"),      value: "32.4 kg" },
+    { label: t("mockTemperature"), value: "38.4 °C" },
+    { label: t("mockHeartRate"),   value: "72 bpm" },
+    { label: t("mockEnergy"),      value: "4 / 5" },
+    { label: t("mockMood"),        value: "5 / 5" },
+    { label: t("mockAnxiety"),     value: "2 / 5" },
+  ];
+
+  const recordsMock = [
+    { icon: "💉", label: "Rabies booster",        meta: t("mockDueDays"),    cls: "text-purple-600 bg-purple-50" },
+    { icon: "🩺", label: t("mockRecordExam"),      meta: t("mockMonthsAgo"), cls: "text-[var(--teal)] bg-[var(--teal-light)]" },
+    { icon: "💊", label: "Heartgard · monthly",    meta: t("mockActive"),    cls: "text-[var(--accent)] bg-[var(--accent-light)]" },
+    { icon: "🔬", label: t("mockRecordPanel"),     meta: t("mockAllNormal"), cls: "text-blue-600 bg-blue-50" },
+  ];
+
+  const twinMetrics = [
+    { label: t("mockMood"),          value: 4, max: 5, note: undefined },
+    { label: t("mockEnergy"),        value: 4, max: 5, note: undefined },
+    { label: t("mockSocialization"), value: 5, max: 5, note: undefined },
+    { label: t("mockCalm"),          value: 4, max: 5, note: t("mockLowAnxiety") },
+  ];
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <MarketingNav />
@@ -145,21 +177,14 @@ export default async function HomePage({ params }: Params) {
                     </div>
                   </div>
                   <span className="bg-[var(--green-bg)] text-[var(--green-text)] text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1">
-                    <CheckCircle className="w-3 h-3" /> Healthy
+                    <CheckCircle className="w-3 h-3" /> {t("mockHealthy")}
                   </span>
                 </div>
 
                 {/* Metrics grid */}
                 <div className="p-5">
                   <div className="grid grid-cols-3 gap-3 mb-4">
-                    {[
-                      { label: "Weight", value: "32.4 kg", sub: "↔ stable" },
-                      { label: "Temp", value: "38.4°C", sub: "✓ normal" },
-                      { label: "Heart", value: "72 bpm", sub: "✓ normal" },
-                      { label: "Energy", value: "4 / 5", sub: "↑ up" },
-                      { label: "Mood", value: "5 / 5", sub: "✓ great" },
-                      { label: "Anxiety", value: "2 / 5", sub: "✓ calm" },
-                    ].map(({ label, value, sub }) => (
+                    {heroMetrics.map(({ label, value, sub }) => (
                       <div key={label} className="bg-[var(--off)] rounded-xl p-3 text-center">
                         <p className="text-[10px] text-[var(--muted)] mb-1 uppercase tracking-wide">{label}</p>
                         <p className="text-sm font-bold text-[var(--ink)]">{value}</p>
@@ -172,16 +197,16 @@ export default async function HomePage({ params }: Params) {
                     <div className="bg-[var(--off)] rounded-xl p-3">
                       <div className="flex items-center gap-1.5 mb-1">
                         <Syringe className="w-3 h-3 text-[var(--teal)]" />
-                        <p className="text-[11px] font-semibold text-[var(--ink)]">Next vaccine</p>
+                        <p className="text-[11px] font-semibold text-[var(--ink)]">{t("mockNextVaccine")}</p>
                       </div>
-                      <p className="text-xs text-[var(--muted)]">Rabies · 47 days</p>
+                      <p className="text-xs text-[var(--muted)]">{t("mockRabiesDays")}</p>
                     </div>
                     <div className="bg-[var(--off)] rounded-xl p-3">
                       <div className="flex items-center gap-1.5 mb-1">
                         <Pill className="w-3 h-3 text-[var(--accent)]" />
-                        <p className="text-[11px] font-semibold text-[var(--ink)]">Medication</p>
+                        <p className="text-[11px] font-semibold text-[var(--ink)]">{t("mockMedication")}</p>
                       </div>
-                      <p className="text-xs text-[var(--muted)]">Heartgard · monthly</p>
+                      <p className="text-xs text-[var(--muted)]">{t("mockHeartgard")}</p>
                     </div>
                   </div>
                 </div>
@@ -244,20 +269,13 @@ export default async function HomePage({ params }: Params) {
               <div>
                 <div className="card shadow-[var(--shadow-md)] p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-sm font-semibold text-[var(--ink)]">Today&apos;s check-in</p>
+                    <p className="text-sm font-semibold text-[var(--ink)]">{t("mockCheckIn")}</p>
                     <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[var(--green-bg)] text-[var(--green-text)]">
-                      Healthy
+                      {t("mockHealthy")}
                     </span>
                   </div>
                   <div className="grid grid-cols-3 gap-2.5">
-                    {[
-                      { label: "Weight", value: "32.4 kg" },
-                      { label: "Temperature", value: "38.4 °C" },
-                      { label: "Heart rate", value: "72 bpm" },
-                      { label: "Energy", value: "4 / 5" },
-                      { label: "Mood", value: "5 / 5" },
-                      { label: "Anxiety", value: "2 / 5" },
-                    ].map(({ label, value }) => (
+                    {trackingMetrics.map(({ label, value }) => (
                       <div key={label} className="bg-[var(--off)] rounded-xl p-3 text-center">
                         <p className="text-[10px] text-[var(--muted)] mb-1 uppercase tracking-wide">{label}</p>
                         <p className="text-sm font-bold text-[var(--ink)]">{value}</p>
@@ -285,12 +303,7 @@ export default async function HomePage({ params }: Params) {
 
               <div className="lg:[direction:ltr]">
                 <div className="card shadow-[var(--shadow-md)] p-5 space-y-2.5">
-                  {[
-                    { icon: "💉", label: "Rabies booster", meta: "Due in 47 days", cls: "text-purple-600 bg-purple-50" },
-                    { icon: "🩺", label: "Annual wellness exam", meta: "3 months ago", cls: "text-[var(--teal)] bg-[var(--teal-light)]" },
-                    { icon: "💊", label: "Heartgard · monthly", meta: "Active", cls: "text-[var(--accent)] bg-[var(--accent-light)]" },
-                    { icon: "🔬", label: "Full blood panel", meta: "All values normal", cls: "text-blue-600 bg-blue-50" },
-                  ].map(({ icon, label, meta, cls }) => (
+                  {recordsMock.map(({ icon, label, meta, cls }) => (
                     <div key={label} className="flex items-center gap-3 p-3 rounded-xl bg-[var(--off)]">
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0 ${cls}`}>
                         {icon}
@@ -329,7 +342,7 @@ export default async function HomePage({ params }: Params) {
                     <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)]">{t("twinMockLabel")}</p>
                     <span className="inline-flex items-center gap-1.5 bg-[var(--green-bg)] text-[var(--green-text)] text-xs font-bold px-3 py-1 rounded-full">
                       <Brain className="w-3 h-3" />
-                      Thriving
+                      {t("mockThriving")}
                     </span>
                   </div>
 
@@ -341,12 +354,7 @@ export default async function HomePage({ params }: Params) {
 
                   {/* Metric bars */}
                   <div className="space-y-2.5">
-                    {[
-                      { label: "Mood",          value: 4, max: 5, invert: false },
-                      { label: "Energy",         value: 4, max: 5, invert: false },
-                      { label: "Socialization",  value: 5, max: 5, invert: false },
-                      { label: "Calm",           value: 4, max: 5, invert: true,  note: "low anxiety" },
-                    ].map(({ label, value, max, note }) => (
+                    {twinMetrics.map(({ label, value, max, note }) => (
                       <div key={label}>
                         <div className="flex justify-between mb-1">
                           <span className="text-xs text-[var(--ink2)] font-medium">{label}</span>
