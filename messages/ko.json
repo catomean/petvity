@@ -752,7 +752,8 @@
     "cat_health": "건강",
     "cat_accessories": "액세서리",
     "cat_grooming": "그루밍",
-    "cat_other": "기타"
+    "cat_other": "기타",
+    "sex_unknown": "미상"
   },
   "twin": {
     "thriving": "번성 중",
