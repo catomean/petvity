@@ -117,8 +117,22 @@ export default async function PublicPetPage({ params }: Params) {
   const twin = computeDigitalTwin(recentMetrics);
   const twinCfg = TWIN_STATE_CONFIG[twin.id];
 
+  const petSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    name: `${pet.name} on ${APP.name}`,
+    url: `${APP_URL}/${locale}/pets/${pet.handle}`,
+    mainEntity: {
+      "@type": "Thing",
+      name: pet.name,
+      description: pet.bio ?? undefined,
+      image: pet.avatarUrl ?? undefined,
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[var(--off)]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(petSchema) }} />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between">
         <Link href={`/${locale}`} className="font-bold text-[var(--teal)] text-lg no-underline">

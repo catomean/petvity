@@ -3,7 +3,7 @@ import { getInstance } from "@/lib/db";
 import { adoptionListings, pets } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
-import { APP } from "@/lib/config/app";
+import { APP, APP_URL } from "@/lib/config/app";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import {
@@ -83,8 +83,38 @@ export default async function PublicListingDetailPage({ params }: Params) {
   const age = formatPetAge(row.pet.birthDate);
   const isAvailable = row.status === "available";
 
+  const listingSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemPage",
+    name: row.title,
+    description: row.description ?? undefined,
+    url: `${APP_URL}/${locale}/adopt/${listingId}`,
+    image: row.pet.avatarUrl ?? undefined,
+    about: {
+      "@type": "Thing",
+      name: row.pet.name,
+      description: [
+        SPECIES_CONFIG[row.pet.species as SpeciesId]?.label,
+        row.pet.breed,
+        row.pet.sex,
+      ].filter(Boolean).join(", "),
+    },
+    ...(row.location ? { contentLocation: { "@type": "Place", name: row.location } } : {}),
+    offers: row.feeCents !== null
+      ? {
+          "@type": "Offer",
+          price: (row.feeCents / 100).toFixed(2),
+          priceCurrency: "USD",
+          availability: isAvailable
+            ? "https://schema.org/InStock"
+            : "https://schema.org/SoldOut",
+        }
+      : undefined,
+  };
+
   return (
     <div className="min-h-screen bg-[var(--off)]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listingSchema) }} />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
         <Link href={`/${locale}`} className="font-bold text-[var(--teal)] text-lg no-underline flex items-center gap-2">

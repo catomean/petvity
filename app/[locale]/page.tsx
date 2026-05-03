@@ -11,7 +11,7 @@ import MarketingNav from "@/components/sections/MarketingNav";
 import MarketingFooter from "@/components/sections/MarketingFooter";
 import { HeroCTA } from "@/components/sections/HeroCTA";
 import type { Metadata } from "next";
-import { APP } from "@/lib/config/app";
+import { APP, APP_URL } from "@/lib/config/app";
 import { getTranslations } from "next-intl/server";
 import { buildAlternates } from "@/lib/i18n/alternates";
 
@@ -115,8 +115,32 @@ export default async function HomePage({ params }: Params) {
     { label: t("mockCalm"),          value: 4, max: 5, note: t("mockLowAnxiety") },
   ];
 
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: APP.name,
+    url: APP_URL,
+    description: APP.tagline,
+    foundingDate: String(APP.foundingYear),
+    contactPoint: { "@type": "ContactPoint", email: APP.email, contactType: "customer support" },
+  };
+
+  const siteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: APP.name,
+    url: APP_URL,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: `${APP_URL}/${locale}/adopt?q={search_term_string}` },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }} />
       <MarketingNav />
 
       <main>

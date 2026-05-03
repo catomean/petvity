@@ -3,7 +3,7 @@ import { getInstance } from "@/lib/db";
 import { products, users } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import Link from "next/link";
-import { APP } from "@/lib/config/app";
+import { APP, APP_URL } from "@/lib/config/app";
 import { PRODUCT_CATEGORY_CONFIG } from "@/lib/config/products";
 import type { ProductCategoryId } from "@/lib/config/products";
 import { ShoppingBag, PawPrint, ChevronLeft, Package, ShoppingCart } from "lucide-react";
@@ -60,8 +60,27 @@ export default async function PublicProductDetailPage({ params }: Params) {
   const catCfg = PRODUCT_CATEGORY_CONFIG[row.category as ProductCategoryId];
   const outOfStock = row.stock === 0;
 
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: row.name,
+    description: row.description ?? undefined,
+    image: row.imageUrl ?? undefined,
+    url: `${APP_URL}/${locale}/shop/${row.id}`,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "USD",
+      price: (row.priceCents / 100).toFixed(2),
+      availability: outOfStock
+        ? "https://schema.org/OutOfStock"
+        : "https://schema.org/InStock",
+      seller: { "@type": "Organization", name: row.sellerName ?? APP.name },
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[var(--off)]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
         <Link

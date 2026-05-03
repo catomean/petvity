@@ -119,8 +119,38 @@ export default async function PublicProPage({ params }: Params) {
       ? reviewRows.reduce((sum, r) => sum + r.rating, 0) / reviewRows.length
       : null;
 
+  const proSchema = {
+    "@context": "https://schema.org",
+    "@type": isVet ? "VeterinaryCare" : "LocalBusiness",
+    name: profile.name ?? (isVet ? "Veterinarian" : "Pet Sitter"),
+    url: `${APP_URL}/${locale}/pros/${userId}`,
+    ...(profile.city || profile.country
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            ...(profile.city ? { addressLocality: profile.city } : {}),
+            ...(profile.country ? { addressCountry: profile.country } : {}),
+          },
+        }
+      : {}),
+    ...(profile.phone ? { telephone: profile.phone } : {}),
+    ...(isVet && vetRow?.clinicName ? { branchOf: { "@type": "Organization", name: vetRow.clinicName } } : {}),
+    ...(avgRating !== null
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: avgRating.toFixed(1),
+            reviewCount: reviewRows.length,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="min-h-screen bg-[var(--off)]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(proSchema) }} />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between">
         <Link href={`/${locale}`} className="font-bold text-[var(--teal)] text-lg no-underline">
