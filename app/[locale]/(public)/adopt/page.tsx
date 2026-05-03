@@ -4,8 +4,8 @@ import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
 import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
-import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
-import type { SpeciesId, SexId } from "@/lib/config/species";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import { Heart, MapPin, PawPrint } from "lucide-react";
 import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
@@ -140,7 +140,7 @@ export default async function PublicAdoptPage({ params }: Params) {
                         <span>{emoji}</span>
                       )}
                       <div className="absolute top-2 end-2 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-xs font-medium text-[var(--ink2)]">
-                        {formatAdoptionFee(listing.feeCents)}
+                        {listing.feeCents ? formatAdoptionFee(listing.feeCents) : t("adoptFree")}
                       </div>
                     </div>
 
@@ -150,10 +150,10 @@ export default async function PublicAdoptPage({ params }: Params) {
                         {listing.pet.name}
                       </p>
                       <p className="text-xs text-[var(--muted)] mt-0.5">
-                        {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
+                        {t(`species_${listing.pet.species}` as Parameters<typeof t>[0])}
                         {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
                         {age ? ` · ${age}` : ""}
-                        {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${SEX_LABELS[listing.pet.sex as SexId] ?? listing.pet.sex}` : ""}
+                        {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${t(`sex_${listing.pet.sex}` as Parameters<typeof t>[0])}` : ""}
                       </p>
                       {listing.location && (
                         <p className="text-xs text-[var(--muted)] flex items-center gap-1 mt-2">
@@ -163,10 +163,10 @@ export default async function PublicAdoptPage({ params }: Params) {
                       )}
                       {/* Trait pills */}
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {LISTING_TRAIT_CONFIG.map((t) =>
-                          listing[t.field] ? (
-                            <span key={t.field} className={`text-[10px] font-medium ${t.className} px-2 py-0.5 rounded-full`}>
-                              {t.shortLabel}
+                        {LISTING_TRAIT_CONFIG.map((trait) =>
+                          listing[trait.field] ? (
+                            <span key={trait.field} className={`text-[10px] font-medium ${trait.className} px-2 py-0.5 rounded-full`}>
+                              {t(`traitShort_${trait.field}` as Parameters<typeof t>[0])}
                             </span>
                           ) : null,
                         )}

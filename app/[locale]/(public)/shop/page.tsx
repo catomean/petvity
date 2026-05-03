@@ -131,7 +131,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
               }`}
             >
               <span>{cfg.emoji}</span>
-              {cfg.label}
+              {t(`cat_${id}` as Parameters<typeof t>[0])}
             </Link>
           ))}
         </div>
@@ -145,7 +145,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
             <p className="font-medium text-[var(--ink)] mb-1">{t("shopEmptyTitle")}</p>
             <p className="text-sm text-[var(--muted)] mb-5">
               {activeCategory
-                ? t("shopEmptyCategory", { category: PRODUCT_CATEGORY_CONFIG[activeCategory].label.toLowerCase() })
+                ? t("shopEmptyCategory", { category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]).toLowerCase() })
                 : t("shopEmptyAny")}
             </p>
             <Link href="/register" className="btn-primary">
@@ -156,7 +156,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
           <>
             <p className="text-sm text-[var(--muted)] mb-5">
               {t("shopCount", { count: rows.length })}
-              {activeCategory ? ` ${t("shopInCategory", { category: PRODUCT_CATEGORY_CONFIG[activeCategory].label })}` : ""}
+              {activeCategory ? ` ${t("shopInCategory", { category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]) })}` : ""}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {rows.map((product) => {
@@ -193,7 +193,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                         </p>
                       )}
                       <p className="text-xs text-[var(--muted)] mt-1.5">
-                        {catCfg?.label ?? product.category}
+                        {catCfg ? t(`cat_${product.category}` as Parameters<typeof t>[0]) : product.category}
                         {product.sellerName ? ` · ${t("shopSoldBy", { seller: product.sellerName })}` : ""}
                       </p>
                       {product.stock === 0 && (

@@ -4,8 +4,8 @@ import { adoptionListings, pets } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
-import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
-import type { SpeciesId, SexId } from "@/lib/config/species";
+import { SPECIES_CONFIG } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import {
   Heart, MapPin, DollarSign, PawPrint, Baby, Dog, Cat, Star, ChevronLeft,
 } from "lucide-react";
@@ -128,14 +128,14 @@ export default async function PublicListingDetailPage({ params }: Params) {
               <div>
                 <h1 className="text-2xl font-bold text-[var(--ink)]">{row.pet.name}</h1>
                 <p className="text-sm text-[var(--muted)] mt-0.5">
-                  {SPECIES_CONFIG[row.pet.species as SpeciesId]?.label ?? row.pet.species}
+                  {t(`species_${row.pet.species}` as Parameters<typeof t>[0])}
                   {row.pet.breed ? ` · ${row.pet.breed}` : ""}
                   {age ? ` · ${age}` : ""}
-                  {row.pet.sex && row.pet.sex !== "unknown" ? ` · ${SEX_LABELS[row.pet.sex as SexId] ?? row.pet.sex}` : ""}
+                  {row.pet.sex && row.pet.sex !== "unknown" ? ` · ${t(`sex_${row.pet.sex}` as Parameters<typeof t>[0])}` : ""}
                 </p>
               </div>
               <span className={`text-xs font-medium px-3 py-1 rounded-full flex-shrink-0 ${LISTING_STATUS_CONFIG[row.status as ListingStatusId].className}`}>
-                {LISTING_STATUS_CONFIG[row.status as ListingStatusId].label}
+                {t(`listingStatus_${row.status}` as Parameters<typeof t>[0])}
               </span>
             </div>
 
@@ -153,11 +153,11 @@ export default async function PublicListingDetailPage({ params }: Params) {
               </span>
             </div>
 
-            {/* Traits — icons are UI-layer only; labels come from LISTING_TRAIT_CONFIG */}
-            {LISTING_TRAIT_CONFIG.some((t) => row[t.field]) && (
+            {/* Traits — icons are UI-layer only; labels come from translation keys */}
+            {LISTING_TRAIT_CONFIG.some((trait) => row[trait.field]) && (
               <div className="flex flex-wrap gap-2 mb-5">
-                {LISTING_TRAIT_CONFIG.map((t) => {
-                  if (!row[t.field]) return null;
+                {LISTING_TRAIT_CONFIG.map((trait) => {
+                  if (!row[trait.field]) return null;
                   const icon: Record<ListingTraitKey, React.ReactNode> = {
                     goodWithKids:       <Baby className="w-3.5 h-3.5" />,
                     goodWithDogs:       <Dog className="w-3.5 h-3.5" />,
@@ -165,8 +165,8 @@ export default async function PublicListingDetailPage({ params }: Params) {
                     requiresExperience: <Star className="w-3.5 h-3.5" />,
                   };
                   return (
-                    <span key={t.field} className={`inline-flex items-center gap-1.5 text-xs font-medium ${t.className} px-3 py-1 rounded-full`}>
-                      {icon[t.field]} {t.label}
+                    <span key={trait.field} className={`inline-flex items-center gap-1.5 text-xs font-medium ${trait.className} px-3 py-1 rounded-full`}>
+                      {icon[trait.field]} {t(`trait_${trait.field}` as Parameters<typeof t>[0])}
                     </span>
                   );
                 })}

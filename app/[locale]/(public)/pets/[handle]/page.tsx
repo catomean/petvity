@@ -3,11 +3,11 @@ import { getInstance } from "@/lib/db";
 import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
 import { and, eq, gte, desc } from "drizzle-orm";
 import { APP, APP_URL } from "@/lib/config/app";
-import { SPECIES_CONFIG, SEX_LABELS } from "@/lib/config/species";
+import { SPECIES_CONFIG } from "@/lib/config/species";
 import { SIGNAL_BG_CLASSES, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG } from "@/lib/config/digital-twin";
 import { HEALTH_CHART_WINDOW_DAYS } from "@/lib/config/health-metrics";
-import type { SpeciesId, SexId } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
@@ -158,9 +158,9 @@ export default async function PublicPetPage({ params }: Params) {
               <p className="text-xs text-[var(--muted)] mt-1 mb-1">{signalResult.reason}</p>
             )}
             <p className="text-sm text-[var(--muted)] mt-2">
-              {speciesDef?.label ?? pet.species}
+              {t(`species_${pet.species}` as Parameters<typeof t>[0])}
               {pet.breed ? ` · ${pet.breed}` : ""}
-              {pet.sex !== "unknown" ? ` · ${SEX_LABELS[pet.sex as SexId] ?? pet.sex}` : ""}
+              {pet.sex !== "unknown" ? ` · ${t(`sex_${pet.sex}` as Parameters<typeof t>[0])}` : ""}
               {pet.birthDate
                 ? ` · ${t("bornDate", { date: formatDateShort(pet.birthDate, locale) })}`
                 : ""}
