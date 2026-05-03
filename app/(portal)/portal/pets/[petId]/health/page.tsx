@@ -306,6 +306,7 @@ export default async function PetHealthPage({ params }: Params) {
                   normalMin={HEALTH_METRIC_CONFIG.weight.toDisplay(weightRange.min)}
                   normalMax={HEALTH_METRIC_CONFIG.weight.toDisplay(weightRange.max)}
                   noDataText={t("chartNoData")}
+                  normalRangeLabel={t("chartNormalRange")}
                 />
                 <HealthTrendChart
                   data={chartData}
@@ -315,6 +316,7 @@ export default async function PetHealthPage({ params }: Params) {
                   normalMin={HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRange.min)}
                   normalMax={HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRange.max)}
                   noDataText={t("chartNoData")}
+                  normalRangeLabel={t("chartNormalRange")}
                 />
                 <HealthTrendChart
                   data={chartData}
@@ -324,6 +326,7 @@ export default async function PetHealthPage({ params }: Params) {
                   normalMin={hrRange.min}
                   normalMax={hrRange.max}
                   noDataText={t("chartNoData")}
+                  normalRangeLabel={t("chartNormalRange")}
                 />
               </div>
 

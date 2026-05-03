@@ -574,6 +574,7 @@
     "signalHistoryTitle": "Sinyal Geçmişi",
     "signalSourceCron": "günlük kontrol",
     "chartNoData": "Henüz veri yok",
+    "chartNormalRange": "Normal aralık",
     "metricEnergyLabel": "Enerji seviyesi",
     "metricMoodLabel": "Ruh hali",
     "metricAnxietyLabel": "Kaygı",

@@ -574,6 +574,7 @@
     "signalHistoryTitle": "Historique du signal",
     "signalSourceCron": "vérification quotidienne",
     "chartNoData": "Pas encore de données",
+    "chartNormalRange": "Plage normale",
     "metricEnergyLabel": "Niveau d'énergie",
     "metricMoodLabel": "Humeur",
     "metricAnxietyLabel": "Anxiété",

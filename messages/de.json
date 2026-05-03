@@ -574,6 +574,7 @@
     "signalHistoryTitle": "Signalverlauf",
     "signalSourceCron": "tägliche Prüfung",
     "chartNoData": "Noch keine Daten",
+    "chartNormalRange": "Normalbereich",
     "metricEnergyLabel": "Energieniveau",
     "metricMoodLabel": "Stimmung",
     "metricAnxietyLabel": "Angst",

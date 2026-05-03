@@ -574,6 +574,7 @@
     "signalHistoryTitle": "신호 기록",
     "signalSourceCron": "일일 점검",
     "chartNoData": "데이터 없음",
+    "chartNormalRange": "정상 범위",
     "metricEnergyLabel": "에너지 수준",
     "metricMoodLabel": "기분",
     "metricAnxietyLabel": "불안",

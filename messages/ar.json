@@ -574,6 +574,7 @@
     "signalHistoryTitle": "سجل الإشارات",
     "signalSourceCron": "فحص يومي",
     "chartNoData": "لا توجد بيانات بعد",
+    "chartNormalRange": "النطاق الطبيعي",
     "metricEnergyLabel": "مستوى الطاقة",
     "metricMoodLabel": "المزاج",
     "metricAnxietyLabel": "القلق",

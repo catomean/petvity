@@ -7,7 +7,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  ReferenceLine,
+  ReferenceArea,
   CartesianGrid,
 } from "recharts";
 
@@ -23,6 +23,7 @@ type Props = {
   /** 1–5 scale: show integer ticks only */
   integerScale?: boolean;
   noDataText?: string;
+  normalRangeLabel?: string;
 };
 
 export function HealthTrendChart({
@@ -34,6 +35,7 @@ export function HealthTrendChart({
   normalMax,
   integerScale,
   noDataText = "No data yet",
+  normalRangeLabel = "Normal range",
 }: Props) {
   const hasData = data.some((d) =>
     lines.some((l) => d[l.dataKey] != null),
@@ -50,17 +52,26 @@ export function HealthTrendChart({
     );
   }
 
+  const showRange = normalMin != null && normalMax != null;
+  const showLegend = lines.length > 1 || showRange;
+
   return (
     <div className="card p-5">
       <h3 className="text-sm font-semibold text-[var(--ink)] mb-1">{title}</h3>
-      {lines.length > 1 && (
-        <div className="flex flex-wrap gap-3 mb-3">
-          {lines.map((l) => (
+      {showLegend && (
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          {lines.length > 1 && lines.map((l) => (
             <span key={l.dataKey} className="flex items-center gap-1.5 text-xs text-[var(--ink2)]">
               <span className="inline-block w-3 h-0.5 rounded" style={{ backgroundColor: l.color }} />
               {l.name}
             </span>
           ))}
+          {showRange && (
+            <span className="flex items-center gap-1.5 text-xs text-[var(--ink2)]">
+              <span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(22,163,74,0.25)" }} />
+              {normalRangeLabel}
+            </span>
+          )}
         </div>
       )}
       <ResponsiveContainer width="100%" height={160}>
@@ -90,20 +101,15 @@ export function HealthTrendChart({
             }}
             formatter={(value) => (value != null ? [`${value}${unit}`, undefined] : [undefined, undefined])}
           />
-          {normalMin != null && (
-            <ReferenceLine
-              y={normalMin}
-              stroke="var(--green)"
+          {normalMin != null && normalMax != null && (
+            <ReferenceArea
+              y1={normalMin}
+              y2={normalMax}
+              fill="#16A34A"
+              fillOpacity={0.08}
+              stroke="#16A34A"
+              strokeOpacity={0.25}
               strokeDasharray="4 2"
-              strokeOpacity={0.5}
-            />
-          )}
-          {normalMax != null && (
-            <ReferenceLine
-              y={normalMax}
-              stroke="var(--green)"
-              strokeDasharray="4 2"
-              strokeOpacity={0.5}
             />
           )}
           {lines.map((l) => (

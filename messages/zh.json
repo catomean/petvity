@@ -574,6 +574,7 @@
     "signalHistoryTitle": "信号历史",
     "signalSourceCron": "每日检查",
     "chartNoData": "暂无数据",
+    "chartNormalRange": "正常范围",
     "metricEnergyLabel": "精力水平",
     "metricMoodLabel": "情绪",
     "metricAnxietyLabel": "焦虑",
