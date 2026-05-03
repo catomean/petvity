@@ -23,18 +23,21 @@ type Params = { params: Promise<{ locale: string; listingId: string }> };
 
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { listingId } = await params;
+  const { listingId, locale } = await params;
   const db = getInstance();
-  const [row] = await db
-    .select({ title: adoptionListings.title, petName: pets.name, species: pets.species })
-    .from(adoptionListings)
-    .innerJoin(pets, eq(pets.id, adoptionListings.petId))
-    .where(eq(adoptionListings.id, listingId))
-    .limit(1);
+  const [[row], t] = await Promise.all([
+    db
+      .select({ title: adoptionListings.title, petName: pets.name, species: pets.species })
+      .from(adoptionListings)
+      .innerJoin(pets, eq(pets.id, adoptionListings.petId))
+      .where(eq(adoptionListings.id, listingId))
+      .limit(1),
+    getTranslations({ locale, namespace: "public" }),
+  ]);
 
   if (!row) return { title: APP.name };
   return {
-    title: `Adopt ${row.petName} · ${APP.name}`,
+    title: t("adoptListingMetaTitle", { name: row.petName ?? "", app: APP.name }),
     description: row.title,
     alternates: buildAlternates(`/adopt/${listingId}`),
   };

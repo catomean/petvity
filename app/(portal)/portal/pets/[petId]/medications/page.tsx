@@ -202,7 +202,7 @@ export default function MedicationsPage() {
               </label>
               <input
                 className="form-input"
-                placeholder="e.g. Amoxicillin, Rimadyl, Heartgard"
+                placeholder={t("medsNamePlaceholder")}
                 required
                 value={form.name}
                 onChange={(e) => field("name", e.target.value)}
@@ -215,7 +215,7 @@ export default function MedicationsPage() {
               </label>
               <input
                 className="form-input"
-                placeholder="e.g. 250mg, 1 tablet"
+                placeholder={t("medsDosagePlaceholder")}
                 value={form.dosage}
                 onChange={(e) => field("dosage", e.target.value)}
               />
@@ -227,7 +227,7 @@ export default function MedicationsPage() {
               </label>
               <input
                 className="form-input"
-                placeholder="e.g. Twice daily, Every 8 hours"
+                placeholder={t("medsFrequencyPlaceholder")}
                 value={form.frequency}
                 onChange={(e) => field("frequency", e.target.value)}
               />

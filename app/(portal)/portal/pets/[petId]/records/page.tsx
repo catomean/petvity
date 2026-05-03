@@ -231,7 +231,7 @@ export default function HealthRecordsPage() {
               </label>
               <input
                 className="form-input"
-                placeholder="e.g. Annual wellness exam, Spay surgery"
+                placeholder={t("recordsTitlePlaceholder")}
                 required
                 value={form.title}
                 onChange={(e) => field("title", e.target.value)}
