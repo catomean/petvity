@@ -161,8 +161,8 @@ export default function MedicationsPage() {
                 aria-label={t("listStatusLabel")}
               >
                 <option value="all">{t("listAllStatuses")}</option>
-                {(Object.entries(MEDICATION_STATUS_CONFIG) as [MedicationStatus, { label: string }][]).map(
-                  ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
+                {(Object.keys(MEDICATION_STATUS_CONFIG) as MedicationStatus[]).map(
+                  (val) => <option key={val} value={val}>{t(`medStatus_${val}` as Parameters<typeof t>[0])}</option>
                 )}
               </select>
             </>
@@ -265,8 +265,8 @@ export default function MedicationsPage() {
                 value={form.status}
                 onChange={(e) => field("status", e.target.value)}
               >
-                {(Object.entries(MEDICATION_STATUS_CONFIG) as [MedicationStatus, { label: string }][]).map(
-                  ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
+                {(Object.keys(MEDICATION_STATUS_CONFIG) as MedicationStatus[]).map(
+                  (val) => <option key={val} value={val}>{t(`medStatus_${val}` as Parameters<typeof t>[0])}</option>
                 )}
               </select>
             </div>
@@ -370,7 +370,7 @@ export default function MedicationsPage() {
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center gap-1 ${status.className}`}>
                         <StatusIcon className="w-3 h-3" />
-                        {status.label}
+                        {t(`medStatus_${m.status}` as Parameters<typeof t>[0])}
                       </span>
                     </td>
                     <td className="py-3 px-4">

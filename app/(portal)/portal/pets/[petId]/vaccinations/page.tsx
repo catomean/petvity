@@ -161,8 +161,8 @@ export default function VaccinationsPage() {
                 aria-label={t("listStatusLabel")}
               >
                 <option value="all">{t("vaccAllTypes")}</option>
-                {(Object.entries(VACCINATION_STATUS_CONFIG) as [VaccinationStatus, { label: string }][]).map(
-                  ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
+                {(Object.keys(VACCINATION_STATUS_CONFIG) as VaccinationStatus[]).map(
+                  (val) => <option key={val} value={val}>{t(`vaccStatus_${val}` as Parameters<typeof t>[0])}</option>
                 )}
               </select>
             </>
@@ -242,8 +242,8 @@ export default function VaccinationsPage() {
                 value={form.status}
                 onChange={(e) => field("status", e.target.value)}
               >
-                {(Object.entries(VACCINATION_STATUS_CONFIG) as [VaccinationStatus, { label: string }][]).map(
-                  ([val, cfg]) => <option key={val} value={val}>{cfg.label}</option>
+                {(Object.keys(VACCINATION_STATUS_CONFIG) as VaccinationStatus[]).map(
+                  (val) => <option key={val} value={val}>{t(`vaccStatus_${val}` as Parameters<typeof t>[0])}</option>
                 )}
               </select>
             </div>
@@ -362,7 +362,7 @@ export default function VaccinationsPage() {
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center gap-1 ${status.className}`}>
                         {StatusIcon && <StatusIcon className="w-3 h-3" />}
-                        {status.label}
+                        {t(`vaccStatus_${displayStatus}` as Parameters<typeof t>[0])}
                       </span>
                     </td>
                     <td className="py-3 px-4">

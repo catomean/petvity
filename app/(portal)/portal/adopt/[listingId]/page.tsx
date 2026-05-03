@@ -52,10 +52,6 @@ interface FormState {
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
-// Populated inside the component after t() is available
-function buildHousingOptions(selectLabel: string) {
-  return [{ value: "", label: selectLabel }, ...HOUSING_TYPE_OPTIONS];
-}
 
 
 
@@ -306,8 +302,9 @@ export default function ListingDetailPage() {
                   value={form.housingType}
                   onChange={(e) => setForm((f) => ({ ...f, housingType: e.target.value }))}
                 >
-                  {buildHousingOptions(t("listingSelectHousingType")).map(({ value, label }) => (
-                    <option key={value} value={value}>{label}</option>
+                  <option value="">{t("listingSelectHousingType")}</option>
+                  {HOUSING_TYPE_OPTIONS.map(({ value }) => (
+                    <option key={value} value={value}>{t(`housingType_${value}` as Parameters<typeof t>[0])}</option>
                   ))}
                 </select>
               </div>

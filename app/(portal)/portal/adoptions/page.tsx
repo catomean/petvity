@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG, HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
+import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
 import { formatAdoptionFee } from "@/lib/utils/format";
 import { useTranslations } from "next-intl";
 
@@ -79,12 +79,12 @@ function ApplicationRow({
           <p className="text-xs text-[var(--muted)]">{app.applicant.email}</p>
           {app.housingType && (
             <p className="text-xs text-[var(--muted)] mt-0.5">
-              {HOUSING_TYPE_LABELS[app.housingType] ?? app.housingType.replace(/_/g, " ")}
+              {t(`housingType_${app.housingType}` as Parameters<typeof t>[0])}
             </p>
           )}
         </div>
         <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${badge.className}`}>
-          {badge.label}
+          {t(`appStatus_${app.status}` as Parameters<typeof t>[0])}
         </span>
       </div>
       {app.message && (
@@ -206,7 +206,7 @@ function ListingCard({
         {/* Status + chevron */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${badge.className}`}>
-            {badge.label}
+            {t(`listingStatus_${listing.status}` as Parameters<typeof t>[0])}
           </span>
           {expanded ? <ChevronUp className="w-4 h-4 text-[var(--muted)]" /> : <ChevronDown className="w-4 h-4 text-[var(--muted)]" />}
         </div>

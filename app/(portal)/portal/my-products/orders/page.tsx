@@ -82,7 +82,7 @@ function SellerOrderCard({ order }: { order: SellerOrder }) {
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.className}`}>
             <Icon className="w-3 h-3" />
-            {cfg.label}
+            {t(`orderStatus_${order.status}` as Parameters<typeof t>[0])}
           </span>
           {expanded ? <ChevronUp className="w-4 h-4 text-[var(--muted)]" /> : <ChevronDown className="w-4 h-4 text-[var(--muted)]" />}
         </div>

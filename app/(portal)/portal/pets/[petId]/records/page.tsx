@@ -158,8 +158,8 @@ export default function HealthRecordsPage() {
                 aria-label={t("recordsAllTypes")}
               >
                 <option value="all">{t("recordsAllTypes")}</option>
-                {HEALTH_RECORD_TYPE_OPTIONS.map(({ value, label }) => (
-                  <option key={value} value={value}>{label}</option>
+                {HEALTH_RECORD_TYPE_OPTIONS.map(({ value }) => (
+                  <option key={value} value={value}>{t(`recType_${value}` as Parameters<typeof t>[0])}</option>
                 ))}
               </select>
             </>
@@ -206,8 +206,8 @@ export default function HealthRecordsPage() {
                 value={form.type}
                 onChange={(e) => field("type", e.target.value)}
               >
-                {HEALTH_RECORD_TYPE_OPTIONS.map(({ value, label }) => (
-                  <option key={value} value={value}>{label}</option>
+                {HEALTH_RECORD_TYPE_OPTIONS.map(({ value }) => (
+                  <option key={value} value={value}>{t(`recType_${value}` as Parameters<typeof t>[0])}</option>
                 ))}
               </select>
             </div>
@@ -329,7 +329,7 @@ export default function HealthRecordsPage() {
                     <div className="min-w-0">
                       <p className="font-medium text-[var(--ink)] leading-snug">{r.title}</p>
                       <p className="text-xs text-[var(--muted)] mt-0.5">
-                        {cfg.label} · {formatDateShort(r.date)}
+                        {t(`recType_${r.type}` as Parameters<typeof t>[0])} · {formatDateShort(r.date)}
                         {r.vetName && ` · ${r.vetName}`}
                         {r.clinic && ` @ ${r.clinic}`}
                       </p>
