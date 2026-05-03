@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
     petId: string;
     signal: "healthy" | "watch" | "concern";
     reason: string;
+    reasonData: unknown;
     source: string;
     recordedAt: Date;
   }[] = [];
@@ -86,6 +87,7 @@ export async function POST(req: NextRequest) {
         petId: pet.id,
         signal: result.signal as "healthy" | "watch" | "concern",
         reason: result.reason,
+        reasonData: result.reasonData,
         source: "cron",
         recordedAt: now,
       });

@@ -50,6 +50,7 @@ export async function refreshSignalCache(petId: string, now = new Date()): Promi
         petId,
         signal: signal.signal as "healthy" | "watch" | "concern",
         reason: signal.reason,
+        reasonData: signal.reasonData,
         source: "user_action",
         recordedAt: now,
       });

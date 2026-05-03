@@ -2,11 +2,14 @@ import { getTranslations } from "next-intl/server";
 import { SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { formatIsoDate } from "@/lib/utils/format";
+import { translateSignalReason } from "@/lib/i18n/signal-reason";
+import type { SignalReasonData } from "@/lib/domain/pet-signal";
 
 type HistoryRow = {
   id: string;
   signal: string;
   reason: string | null;
+  reasonData: unknown;
   source: string;
   recordedAt: Date;
 };
@@ -42,8 +45,12 @@ export async function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow
                 )}
               </div>
 
-              {row.reason && (
-                <p className="text-xs text-[var(--ink2)] mt-1 leading-relaxed">{row.reason}</p>
+              {(row.reasonData || row.reason) && (
+                <p className="text-xs text-[var(--ink2)] mt-1 leading-relaxed">
+                  {row.reasonData
+                    ? translateSignalReason(row.reasonData as SignalReasonData, tSignal)
+                    : row.reason}
+                </p>
               )}
             </li>
           );

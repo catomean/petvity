@@ -510,6 +510,8 @@ export const petSignalHistory = pgTable(
     signal: petWellnessSignalEnum("signal").notNull(),
     /** Human-readable reason at the moment of transition (from computePetSignal). */
     reason: text("reason"),
+    /** Structured reason data for i18n display; null for legacy rows written before this column. */
+    reasonData: jsonb("reason_data"),
     /** "user_action" = triggered by a health/vaccination mutation; "cron" = daily batch. */
     source: varchar("source", { length: 20 }).notNull().default("user_action"),
     recordedAt: timestamp("recorded_at", { mode: "date" }).notNull().defaultNow(),
