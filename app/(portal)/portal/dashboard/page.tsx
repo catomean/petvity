@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, vaccinations } from "@/lib/db/schema";
-import { and, desc, eq, gte, inArray } from "drizzle-orm";
+import { pets, healthMetrics, vaccinations, adoptionListings, adoptionApplications } from "@/lib/db/schema";
+import { and, count, desc, eq, gte, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
@@ -12,7 +12,7 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId } from "@/lib/config/species";
 import type { TwinTrend } from "@/lib/domain/digital-twin";
-import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe } from "lucide-react";
+import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe, Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { translateSignalReason } from "@/lib/i18n/signal-reason";
@@ -50,17 +50,29 @@ export default async function DashboardPage() {
 
   const petIds = userPets.map((p) => p.id);
 
-  // Batch-fetch metrics + vaccinations for all pets in 2 queries (not N×2)
-  const [allMetrics, allVacc] = petIds.length > 0
-    ? await Promise.all([
-        db
+  // Batch-fetch metrics + vaccinations + pending adoption applications in parallel
+  const [allMetrics, allVacc, [pendingAppsRow]] = await Promise.all([
+    petIds.length > 0
+      ? db
           .select()
           .from(healthMetrics)
           .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr)))
-          .orderBy(desc(healthMetrics.date)),
-        db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
-      ])
-    : [[], []];
+          .orderBy(desc(healthMetrics.date))
+      : Promise.resolve([]),
+    petIds.length > 0
+      ? db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds))
+      : Promise.resolve([]),
+    db
+      .select({ total: count() })
+      .from(adoptionApplications)
+      .innerJoin(adoptionListings, eq(adoptionListings.id, adoptionApplications.listingId))
+      .where(and(
+        eq(adoptionListings.ownerId, session.user.id),
+        eq(adoptionApplications.status, "pending"),
+      )),
+  ]);
+
+  const pendingAppsCount = pendingAppsRow?.total ?? 0;
 
   // Group in memory by petId
   const metricsByPet = new Map<string, typeof allMetrics>();
@@ -97,6 +109,13 @@ export default async function DashboardPage() {
 
   const loggedToday = petsWithData.filter((p) => p.twin.daysAgo === 0).length;
 
+  // Vaccinations due within 14 days (from already-fetched data — no extra query)
+  const vaccDueSoonCount = allVacc.filter((v) => {
+    if (!v.nextDueDate || v.status === "not_applicable") return false;
+    const daysUntil = (new Date(v.nextDueDate + "T00:00:00Z").getTime() - new Date(todayStr + "T00:00:00Z").getTime()) / 86_400_000;
+    return daysUntil >= 0 && daysUntil <= 14;
+  }).length;
+
   return (
     <div>
       {/* Header */}
@@ -132,6 +151,32 @@ export default async function DashboardPage() {
           {t("addPetButton")}
         </Link>
       </div>
+
+      {/* Needs-attention strip — shown when there are pending applications or vaccines due */}
+      {(pendingAppsCount > 0 || vaccDueSoonCount > 0) && (
+        <div className="mb-6 flex flex-col sm:flex-row gap-3">
+          {pendingAppsCount > 0 && (
+            <Link
+              href="/portal/adoptions"
+              className="flex-1 flex items-center gap-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-light)] px-4 py-3 no-underline hover:bg-orange-50 transition-colors"
+            >
+              <Heart className="w-4 h-4 text-[var(--accent)] flex-shrink-0" />
+              <span className="text-sm font-medium text-[var(--ink)] flex-1">
+                {t("dashPendingApplications", { count: pendingAppsCount })}
+              </span>
+              <span className="text-xs font-medium text-[var(--accent)]">{t("dashReview")} →</span>
+            </Link>
+          )}
+          {vaccDueSoonCount > 0 && (
+            <div className="flex-1 flex items-center gap-3 rounded-xl border border-[var(--warn)] bg-[var(--warn-bg)] px-4 py-3">
+              <Syringe className="w-4 h-4 text-[var(--warn-text)] flex-shrink-0" />
+              <span className="text-sm font-medium text-[var(--ink)] flex-1">
+                {t("dashVaccDueSoon", { count: vaccDueSoonCount })}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Empty state */}
       {petsWithData.length === 0 ? (
