@@ -1,21 +1,23 @@
 import { getInstance } from "@/lib/db";
 import { adoptionListings, pets } from "@/lib/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, ilike } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
 import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { Heart, MapPin, PawPrint } from "lucide-react";
+import { Heart, MapPin, PawPrint, Search, X } from "lucide-react";
 import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { buildAlternates } from "@/lib/i18n/alternates";
 
-/** Cache adoption listings for 30 s — listings update more frequently. */
 export const revalidate = 30;
 
-type Params = { params: Promise<{ locale: string }> };
+type Params = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ species?: string; location?: string }>;
+};
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params;
@@ -29,11 +31,20 @@ function speciesEmoji(species: string): string {
   return SPECIES_CONFIG[species as SpeciesId]?.emoji ?? "🐾";
 }
 
+const FILTER_SPECIES: SpeciesId[] = ["dog", "cat", "rabbit", "bird", "horse", "guinea_pig", "hamster", "reptile", "fish", "other"];
 
-export default async function PublicAdoptPage({ params }: Params) {
+export default async function PublicAdoptPage({ params, searchParams }: Params) {
   const { locale } = await params;
+  const { species: speciesFilter, location: locationFilter } = await searchParams;
   const t = await getTranslations({ locale, namespace: "public" });
   const db = getInstance();
+
+  const activeSpecies = FILTER_SPECIES.includes(speciesFilter as SpeciesId) ? (speciesFilter as SpeciesId) : null;
+  const activeLocation = locationFilter?.trim() ?? "";
+
+  const conditions = [eq(adoptionListings.status, "available")];
+  if (activeSpecies) conditions.push(eq(pets.species, activeSpecies));
+  if (activeLocation) conditions.push(ilike(adoptionListings.location, `%${activeLocation}%`));
 
   const listings = await db
     .select({
@@ -59,9 +70,11 @@ export default async function PublicAdoptPage({ params }: Params) {
     })
     .from(adoptionListings)
     .innerJoin(pets, eq(pets.id, adoptionListings.petId))
-    .where(eq(adoptionListings.status, "available"))
+    .where(and(...conditions))
     .orderBy(desc(adoptionListings.createdAt))
     .limit(100);
+
+  const isFiltered = !!(activeSpecies || activeLocation);
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
@@ -100,24 +113,110 @@ export default async function PublicAdoptPage({ params }: Params) {
         </div>
       </div>
 
+      {/* Filters */}
+      <div className="bg-white border-b border-[var(--border)]">
+        <div className="max-w-5xl mx-auto px-6 py-4">
+          <form method="GET" action={`/${locale}/adopt`} className="space-y-3">
+            {/* Species pills */}
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="submit"
+                name="species"
+                value=""
+                className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+                  !activeSpecies
+                    ? "bg-[var(--teal)] text-white border-[var(--teal)]"
+                    : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--teal)] hover:text-[var(--teal)]"
+                }`}
+              >
+                {t("adoptFilterAll")}
+              </button>
+              {FILTER_SPECIES.map((sp) => (
+                <button
+                  key={sp}
+                  type="submit"
+                  name="species"
+                  value={sp}
+                  className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+                    activeSpecies === sp
+                      ? "bg-[var(--teal)] text-white border-[var(--teal)]"
+                      : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--teal)] hover:text-[var(--teal)]"
+                  }`}
+                >
+                  {SPECIES_CONFIG[sp].emoji} {t(`species_${sp}` as Parameters<typeof t>[0])}
+                </button>
+              ))}
+              {/* Preserve location when clicking species pills */}
+              {activeLocation && <input type="hidden" name="location" value={activeLocation} />}
+            </div>
+
+            {/* Location search */}
+            <div className="flex gap-2 max-w-sm">
+              <div className="relative flex-1">
+                <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
+                <input
+                  type="text"
+                  name="location"
+                  defaultValue={activeLocation}
+                  placeholder={t("adoptFilterLocation")}
+                  className="form-input ps-9 text-sm py-2 w-full"
+                />
+              </div>
+              <button type="submit" className="btn-outline text-sm py-2 px-4 flex items-center gap-1.5">
+                <Search className="w-3.5 h-3.5" />
+                {t("adoptSearch")}
+              </button>
+              {/* Preserve species when submitting location */}
+              {activeSpecies && <input type="hidden" name="species" value={activeSpecies} />}
+            </div>
+          </form>
+
+          {/* Active filters summary + clear */}
+          {isFiltered && (
+            <div className="flex items-center gap-2 mt-3">
+              <span className="text-xs text-[var(--muted)]">
+                {t("adoptCount", { count: listings.length })}
+              </span>
+              <Link
+                href={`/${locale}/adopt`}
+                className="inline-flex items-center gap-1 text-xs text-[var(--danger-text)] hover:underline no-underline"
+              >
+                <X className="w-3 h-3" />
+                {t("adoptClearFilters")}
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Grid */}
       <div className="max-w-5xl mx-auto px-6 py-10">
         {listings.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-2xl mb-3">🐾</p>
-            <p className="font-medium text-[var(--ink)] mb-1">{t("adoptEmptyTitle")}</p>
-            <p className="text-sm text-[var(--muted)] mb-5">
-              {t("adoptEmptyDesc")}
+            <p className="text-2xl mb-3">{isFiltered ? "🔍" : "🐾"}</p>
+            <p className="font-medium text-[var(--ink)] mb-1">
+              {isFiltered ? t("adoptNoResults") : t("adoptEmptyTitle")}
             </p>
-            <Link href="/register" className="btn-primary">
-              {t("adoptEmptyAction")}
-            </Link>
+            <p className="text-sm text-[var(--muted)] mb-5">
+              {isFiltered ? (
+                <Link href={`/${locale}/adopt`} className="text-[var(--teal)] hover:underline">
+                  {t("adoptClearFilters")}
+                </Link>
+              ) : t("adoptEmptyDesc")}
+            </p>
+            {!isFiltered && (
+              <Link href="/register" className="btn-primary">
+                {t("adoptEmptyAction")}
+              </Link>
+            )}
           </div>
         ) : (
           <>
-            <p className="text-sm text-[var(--muted)] mb-5">
-              {t("adoptCount", { count: listings.length })}
-            </p>
+            {!isFiltered && (
+              <p className="text-sm text-[var(--muted)] mb-5">
+                {t("adoptCount", { count: listings.length })}
+              </p>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {listings.map((listing) => {
                 const emoji = speciesEmoji(listing.pet.species);
