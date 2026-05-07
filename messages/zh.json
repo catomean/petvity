@@ -349,7 +349,7 @@
     "bookingsMarkCompleted": "标记为已完成",
     "bookingsCancel": "取消预约",
     "bookingsLeaveReview": "发表评价",
-    "bookingPetFallback": "宠物",
+    "petFallback": "宠物",
     "bookingsRatingLabel": "评分",
     "bookingsCommentLabel": "评论",
     "bookingsCommentPlaceholder": "分享您的体验…",

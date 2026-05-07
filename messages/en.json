@@ -349,7 +349,7 @@
     "bookingsMarkCompleted": "Mark completed",
     "bookingsCancel": "Cancel booking",
     "bookingsLeaveReview": "Leave a Review",
-    "bookingPetFallback": "Pet",
+    "petFallback": "Pet",
     "bookingsRatingLabel": "Rating",
     "bookingsCommentLabel": "Comment",
     "bookingsCommentPlaceholder": "Share your experience…",

@@ -134,7 +134,7 @@ export default function HealthRecordsPage() {
             className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-1 transition-colors"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
-            {petName || "Pet"}
+            {petName || t("petFallback")}
           </Link>
           <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("recordsTitle")}</h1>
           <p className="text-sm text-[var(--muted)] mt-0.5">{t("recordsSubtitle")}</p>

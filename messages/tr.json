@@ -349,7 +349,7 @@
     "bookingsMarkCompleted": "Tamamlandı olarak işaretle",
     "bookingsCancel": "Rezervasyonu iptal et",
     "bookingsLeaveReview": "Yorum Bırak",
-    "bookingPetFallback": "Evcil hayvan",
+    "petFallback": "Evcil hayvan",
     "bookingsRatingLabel": "Puan",
     "bookingsCommentLabel": "Yorum",
     "bookingsCommentPlaceholder": "Deneyiminizi paylaşın…",

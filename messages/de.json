@@ -349,7 +349,7 @@
     "bookingsMarkCompleted": "Als abgeschlossen markieren",
     "bookingsCancel": "Buchung stornieren",
     "bookingsLeaveReview": "Bewertung abgeben",
-    "bookingPetFallback": "Haustier",
+    "petFallback": "Haustier",
     "bookingsRatingLabel": "Bewertung",
     "bookingsCommentLabel": "Kommentar",
     "bookingsCommentPlaceholder": "Teilen Sie Ihre Erfahrung…",

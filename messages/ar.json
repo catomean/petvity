@@ -349,7 +349,7 @@
     "bookingsMarkCompleted": "وضع علامة مكتمل",
     "bookingsCancel": "إلغاء الحجز",
     "bookingsLeaveReview": "اترك مراجعة",
-    "bookingPetFallback": "حيوان أليف",
+    "petFallback": "حيوان أليف",
     "bookingsRatingLabel": "التقييم",
     "bookingsCommentLabel": "تعليق",
     "bookingsCommentPlaceholder": "شارك تجربتك…",

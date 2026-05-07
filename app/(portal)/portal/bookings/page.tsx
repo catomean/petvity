@@ -202,7 +202,7 @@ function BookingCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <p className="font-semibold text-[var(--ink)]">
-              {b.petName ?? t("bookingPetFallback")} · {roleLabel}
+              {b.petName ?? t("petFallback")} · {roleLabel}
             </p>
             <StatusBadge status={b.status} />
             {b.reviewId && (
@@ -350,7 +350,7 @@ function ReviewModal({
           <div>
             <h2 className="font-semibold text-[var(--ink)]">{t("bookingsLeaveReview")}</h2>
             <p className="text-xs text-[var(--muted)] mt-0.5">
-              {b.petName ?? t("bookingPetFallback")} · {roleLabel}
+              {b.petName ?? t("petFallback")} · {roleLabel}
             </p>
           </div>
           <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">

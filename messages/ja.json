@@ -349,7 +349,7 @@
     "bookingsMarkCompleted": "完了としてマーク",
     "bookingsCancel": "予約をキャンセル",
     "bookingsLeaveReview": "レビューを書く",
-    "bookingPetFallback": "ペット",
+    "petFallback": "ペット",
     "bookingsRatingLabel": "評価",
     "bookingsCommentLabel": "コメント",
     "bookingsCommentPlaceholder": "あなたの体験を共有してください…",

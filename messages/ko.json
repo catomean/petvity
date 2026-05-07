@@ -349,7 +349,7 @@
     "bookingsMarkCompleted": "완료로 표시",
     "bookingsCancel": "예약 취소",
     "bookingsLeaveReview": "리뷰 작성",
-    "bookingPetFallback": "반려동물",
+    "petFallback": "반려동물",
     "bookingsRatingLabel": "평점",
     "bookingsCommentLabel": "댓글",
     "bookingsCommentPlaceholder": "경험을 공유해 주세요…",
