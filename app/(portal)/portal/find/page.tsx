@@ -6,7 +6,6 @@ import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, 
 import { useTranslations, useLocale } from "next-intl";
 import { formatSitterServices } from "@/lib/config/professionals";
 import { formatPrice } from "@/lib/utils/format";
-import { DEFAULT_LOCALE } from "@/lib/config/locales";
 import { EmptyState } from "@/components/portal/PageState";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -95,6 +94,7 @@ function StarRating({ avg, count }: { avg: number | null; count: number }) {
 
 function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => void }) {
   const t = useTranslations("portal");
+  const locale = useLocale();
   return (
     <div className="card p-5">
       <div className="flex items-start justify-between gap-4">
@@ -136,7 +136,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
         </div>
       )}
       <div className="mt-2">
-        <a href={`/${DEFAULT_LOCALE}/pros/${vet.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
+        <a href={`/${locale}/pros/${vet.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
           {t("findViewProfile")}
         </a>
       </div>
@@ -193,7 +193,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
         </div>
       )}
       <div className="mt-2">
-        <a href={`/${DEFAULT_LOCALE}/pros/${sitter.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
+        <a href={`/${locale}/pros/${sitter.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
           {t("findViewProfile")}
         </a>
       </div>
@@ -375,6 +375,10 @@ function BookingModal({
       setError(t("findBookingRequired"));
       return;
     }
+    if (new Date(endDate) < new Date(startDate)) {
+      setError(t("findBookingEndBeforeStart"));
+      return;
+    }
     setSaving(true);
     setError("");
     const res = await fetch("/api/bookings", {
@@ -416,7 +420,10 @@ function BookingModal({
             </div>
             <p className="font-medium text-[var(--ink)] mb-1">{t("findBookingSuccess")}</p>
             <p className="text-sm text-[var(--muted)] mb-4">{t("findBookingSuccessDesc")}</p>
-            <button onClick={onClose} className="btn-primary w-full">{t("findDone")}</button>
+            <div className="flex flex-col gap-2">
+              <Link href="/portal/bookings" className="btn-primary w-full text-center">{t("findViewBookings")}</Link>
+              <button onClick={onClose} className="btn-outline w-full">{t("findDone")}</button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="px-5 py-4 space-y-4">
