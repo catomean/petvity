@@ -105,6 +105,7 @@ export default function MedicationsPage() {
     searchQ, setSearchQ,
     showForm, editingId, deletingId, setDeletingId,
     form, saving, error,
+    deleteError,
     openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
   } = useHealthList<Medication, FormState>({
     petId,
@@ -113,6 +114,7 @@ export default function MedicationsPage() {
     rowToForm,
     buildBody,
     matchesFilterAndSearch,
+    messages: { saveFailed: t("saveFailed"), deleteFailed: t("deleteFailed") },
   });
 
   if (loading) {
@@ -175,6 +177,8 @@ export default function MedicationsPage() {
           )}
         </div>
       </div>
+
+      {deleteError && <p className="alert-error mb-4">{deleteError}</p>}
 
       {/* Form (add / edit) */}
       {showForm && (
@@ -365,7 +369,7 @@ export default function MedicationsPage() {
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden md:table-cell">
                       {formatDateShort(m.startDate)}
-                      {m.endDate ? ` → ${formatDateShort(m.endDate)}` : " → ongoing"}
+                      {m.endDate ? ` → ${formatDateShort(m.endDate)}` : ` → ${t("medsOngoing")}`}
                     </td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center gap-1 ${status.className}`}>

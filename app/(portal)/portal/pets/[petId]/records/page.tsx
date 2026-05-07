@@ -102,6 +102,7 @@ export default function HealthRecordsPage() {
     searchQ, setSearchQ,
     showForm, editingId, deletingId, setDeletingId,
     form, saving, error,
+    deleteError,
     openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
   } = useHealthList<HealthRecord, FormState>({
     petId,
@@ -110,6 +111,7 @@ export default function HealthRecordsPage() {
     rowToForm,
     buildBody,
     matchesFilterAndSearch,
+    messages: { saveFailed: t("saveFailed"), deleteFailed: t("deleteFailed") },
   });
 
   if (loading) {
@@ -172,6 +174,8 @@ export default function HealthRecordsPage() {
           )}
         </div>
       </div>
+
+      {deleteError && <p className="alert-error mb-4">{deleteError}</p>}
 
       {/* Add form */}
       {showForm && (

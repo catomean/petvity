@@ -31,6 +31,11 @@ export interface UseHealthListOptions<
    * lower-cased search query. Called only when filter !== "all" OR query is non-empty.
    */
   matchesFilterAndSearch: (row: TRow, filter: string, searchQuery: string) => boolean;
+  /** Translated fallback messages (English defaults if omitted). */
+  messages?: {
+    saveFailed?: string;
+    deleteFailed?: string;
+  };
 }
 
 export function useHealthList<
@@ -43,6 +48,7 @@ export function useHealthList<
   rowToForm,
   buildBody,
   matchesFilterAndSearch,
+  messages,
 }: UseHealthListOptions<TRow, TForm>) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -58,6 +64,7 @@ export function useHealthList<
   const [form, setForm]   = useState<TForm>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError]   = useState("");
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -78,6 +85,7 @@ export function useHealthList<
   function openAdd() {
     setEditingId(null);
     setDeletingId(null);
+    setDeleteError("");
     setForm(emptyForm);
     setError("");
     setShowForm(true);
@@ -86,6 +94,7 @@ export function useHealthList<
   function openEdit(row: TRow) {
     setEditingId(row.id);
     setDeletingId(null);
+    setDeleteError("");
     setForm(rowToForm(row));
     setError("");
     setShowForm(true);
@@ -115,7 +124,7 @@ export function useHealthList<
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? "Failed to save."); return; }
+    if (!data.success) { setError(data.error ?? messages?.saveFailed ?? "Failed to save."); return; }
 
     if (isEdit) {
       setRows((prev) => prev.map((r) => (r.id === editingId ? (data.data as TRow) : r)));
@@ -127,11 +136,14 @@ export function useHealthList<
   }
 
   async function handleDelete(id: string) {
+    setDeleteError("");
     const res = await fetch(`${apiPath}/${id}`, { method: "DELETE" });
     if (res.ok) {
       setRows((prev) => prev.filter((r) => r.id !== id));
       setDeletingId(null);
       startTransition(() => router.refresh());
+    } else {
+      setDeleteError(messages?.deleteFailed ?? "Failed to delete.");
     }
   }
 
@@ -154,6 +166,8 @@ export function useHealthList<
     showForm, editingId, deletingId, setDeletingId,
     // Form state
     form, saving, error,
+    // Delete state
+    deleteError,
     // Actions
     openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
   };

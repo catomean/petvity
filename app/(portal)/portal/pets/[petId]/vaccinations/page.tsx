@@ -106,6 +106,7 @@ export default function VaccinationsPage() {
     searchQ, setSearchQ,
     showForm, editingId, deletingId, setDeletingId,
     form, saving, error,
+    deleteError,
     openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
   } = useHealthList<Vaccination, FormState>({
     petId,
@@ -114,6 +115,7 @@ export default function VaccinationsPage() {
     rowToForm,
     buildBody,
     matchesFilterAndSearch,
+    messages: { saveFailed: t("saveFailed"), deleteFailed: t("deleteFailed") },
   });
 
   if (loading) {
@@ -176,6 +178,8 @@ export default function VaccinationsPage() {
           )}
         </div>
       </div>
+
+      {deleteError && <p className="alert-error mb-4">{deleteError}</p>}
 
       {/* Form (add / edit) */}
       {showForm && (
