@@ -5,7 +5,7 @@ import { and, count, desc, eq, gte, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
-import { SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS, SIGNAL_TEXT_CLASSES } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import { SPECIES_CONFIG } from "@/lib/config/species";
@@ -290,7 +290,7 @@ export default async function DashboardPage() {
 
                   {/* Signal reason + action links — shown when watch/concern */}
                   {sig !== "healthy" && (
-                    <div className={`flex items-start gap-1.5 mt-2 text-xs ${sig === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
+                    <div className={`flex items-start gap-1.5 mt-2 text-xs ${SIGNAL_TEXT_CLASSES[sig as PetWellnessSignal]}`}>
                       <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
                       <span className="leading-snug">{translateSignalReason(pet.signal.reasonData, tSignal)}</span>
                     </div>

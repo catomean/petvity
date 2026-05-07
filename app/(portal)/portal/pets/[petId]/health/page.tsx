@@ -16,7 +16,8 @@ import type { MetricId } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
 import { getMetricDisplay, computeWellnessScore, WELLNESS_SCORE_THRESHOLDS } from "@/lib/domain/health";
 import { computePetSignal } from "@/lib/domain/pet-signal";
-import { SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { SIGNAL_METRIC_WINDOW_DAYS, SIGNAL_TEXT_CLASSES } from "@/lib/config/pet-signal";
+import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { formatDateShort } from "@/lib/utils/format";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
@@ -174,9 +175,9 @@ export default async function PetHealthPage({ params }: Params) {
                 ? "bg-[var(--danger-bg)] border border-[var(--danger)]"
                 : "bg-[var(--warn-bg)] border border-[var(--warn)]"
             }`}>
-              <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${petSignal.signal === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`} />
+              <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${SIGNAL_TEXT_CLASSES[petSignal.signal as PetWellnessSignal]}`} />
               <div className="flex-1 min-w-0">
-                <p className={`text-sm font-medium ${petSignal.signal === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
+                <p className={`text-sm font-medium ${SIGNAL_TEXT_CLASSES[petSignal.signal as PetWellnessSignal]}`}>
                   {translateSignalReason(petSignal.reasonData, tSignal)}
                 </p>
                 {overdueCount > 0 && (

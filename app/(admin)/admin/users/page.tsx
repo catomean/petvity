@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { Users, PawPrint, Shield, BadgeCheck } from "lucide-react";
 import { USER_ROLE_CONFIG, USER_ROLE_OPTIONS } from "@/lib/config/users";
+import { formatDateShort } from "@/lib/utils/format";
 import type { UserRole } from "@/lib/auth/types";
 
 interface UserRow {
@@ -180,11 +181,7 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="py-3 px-4 text-[var(--ink2)]">{row.petCount}</td>
                     <td className="py-3 px-4 text-[var(--muted)]">
-                      {new Date(row.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {formatDateShort(row.createdAt)}
                     </td>
                   </tr>
                 ))}

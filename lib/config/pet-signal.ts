@@ -57,3 +57,10 @@ export const SIGNAL_HERO_BG: Record<PetWellnessSignal, string> = {
   watch: "from-[var(--warn-bg)] to-[var(--off)]",
   concern: "from-[var(--danger-bg)] to-[var(--off)]",
 };
+
+/** Text + icon color for signal reason text — use instead of inline ternaries */
+export const SIGNAL_TEXT_CLASSES: Record<PetWellnessSignal, string> = {
+  healthy: "text-[var(--green-text)]",
+  watch: "text-[var(--warn-text)]",
+  concern: "text-[var(--danger-text)]",
+};

@@ -7,9 +7,9 @@ import type { UserRole } from "@/lib/auth/types";
 
 export const USER_ROLE_CONFIG: Record<UserRole, { label: string; color: string; bg: string; className: string }> = {
   pet_owner:    { label: "Pet Owner",    color: "text-[var(--teal)]", bg: "bg-[var(--teal-light)]", className: "bg-[var(--teal-light)] text-[var(--teal)]" },
-  veterinarian: { label: "Veterinarian", color: "text-blue-700",      bg: "bg-blue-50",             className: "bg-blue-50 text-blue-700" },
-  pet_sitter:   { label: "Pet Sitter",   color: "text-amber-700",     bg: "bg-amber-50",            className: "bg-amber-50 text-amber-700" },
-  admin:        { label: "Admin",        color: "text-purple-700",    bg: "bg-purple-50",           className: "bg-purple-50 text-purple-700" },
+  veterinarian: { label: "Veterinarian", color: "text-[var(--role-vet)]",    bg: "bg-[var(--role-vet-bg)]",    className: "bg-[var(--role-vet-bg)] text-[var(--role-vet)]" },
+  pet_sitter:   { label: "Pet Sitter",   color: "text-[var(--role-sitter)]", bg: "bg-[var(--role-sitter-bg)]", className: "bg-[var(--role-sitter-bg)] text-[var(--role-sitter)]" },
+  admin:        { label: "Admin",        color: "text-[var(--role-admin)]",  bg: "bg-[var(--role-admin-bg)]",  className: "bg-[var(--role-admin-bg)] text-[var(--role-admin)]" },
 } as const;
 
 /** Derived options array for role selects/filters. */

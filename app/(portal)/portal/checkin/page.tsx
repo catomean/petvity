@@ -5,7 +5,7 @@ import { and, eq, desc, inArray, gte } from "drizzle-orm";
 import Link from "next/link";
 import { AlertTriangle, CalendarDays, ChevronRight, CheckCircle } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
-import { SIGNAL_BG_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import { SIGNAL_BG_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS, SIGNAL_TEXT_CLASSES } from "@/lib/config/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
@@ -141,7 +141,7 @@ export default async function CheckinPage() {
                     {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                   </div>
                   {!done && sig !== "healthy" && (
-                    <div className={`flex items-center gap-1 mt-1 text-xs ${sig === "concern" ? "text-[var(--danger-text)]" : "text-[var(--warn-text)]"}`}>
+                    <div className={`flex items-center gap-1 mt-1 text-xs ${SIGNAL_TEXT_CLASSES[sig as PetWellnessSignal]}`}>
                       <AlertTriangle className="w-3 h-3 flex-shrink-0" />
                       <span className="truncate">{translateSignalReason(pet.signal.reasonData, tSignal)}</span>
                     </div>

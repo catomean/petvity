@@ -5,6 +5,7 @@ import { users, pets, orders, adoptionListings } from "@/lib/db/schema";
 import { count, eq, ne, sum } from "drizzle-orm";
 import Link from "next/link";
 import { Users, PawPrint, ShoppingBag, Heart, Package, TrendingUp } from "lucide-react";
+import { formatPrice } from "@/lib/utils/format";
 
 export default async function AdminOverviewPage() {
   const session = await auth();
@@ -28,9 +29,7 @@ export default async function AdminOverviewPage() {
     db.select({ activeListings: count() }).from(adoptionListings).where(eq(adoptionListings.status, "available")),
   ]);
 
-  const revenueFormatted = revenue
-    ? `$${(Number(revenue) / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-    : "$0.00";
+  const revenueFormatted = formatPrice(revenue ? Number(revenue) : 0);
 
   const stats = [
     { label: "Total users",        value: totalUsers,        icon: Users,       href: "/admin/users",     color: "text-[var(--teal)]",    bg: "bg-[var(--teal-light)]" },
