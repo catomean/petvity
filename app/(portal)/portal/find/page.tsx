@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { formatSitterServices } from "@/lib/config/professionals";
-import { formatAdoptionFee } from "@/lib/utils/format";
+import { formatPrice } from "@/lib/utils/format";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -145,6 +145,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
 
 function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: BookingTarget) => void }) {
   const t = useTranslations("portal");
+  const locale = useLocale();
   return (
     <div className="card p-5">
       <div className="flex items-start justify-between gap-4">
@@ -161,7 +162,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
             </div>
             {sitter.pricePerDay != null && (
               <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">
-                {formatAdoptionFee(sitter.pricePerDay)}{t("findPerDay")}
+                {formatPrice(sitter.pricePerDay!, locale)}{t("findPerDay")}
               </p>
             )}
           </div>
