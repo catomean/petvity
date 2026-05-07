@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Store, Plus, Pencil, X, Package, Eye, EyeOff, ShoppingBag } from "lucide-react";
-import { PRODUCT_CATEGORY_OPTIONS, productCategoryLabel } from "@/lib/config/products";
+import { PRODUCT_CATEGORY_OPTIONS } from "@/lib/config/products";
 import { formatPrice } from "@/lib/utils/format";
 import { useTranslations } from "next-intl";
 
@@ -37,6 +37,7 @@ const EMPTY_FORM: FormState = {
 
 export default function MyProductsPage() {
   const t = useTranslations("portal");
+  const tPub = useTranslations("public");
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
@@ -244,8 +245,8 @@ export default function MyProductsPage() {
                   value={form.category}
                   onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
                 >
-                  {PRODUCT_CATEGORY_OPTIONS.map(({ value, label }) => (
-                    <option key={value} value={value}>{label}</option>
+                  {PRODUCT_CATEGORY_OPTIONS.map(({ value }) => (
+                    <option key={value} value={value}>{tPub(`cat_${value}` as Parameters<typeof tPub>[0])}</option>
                   ))}
                 </select>
               </div>
@@ -315,7 +316,7 @@ export default function MyProductsPage() {
                   )}
                 </div>
                 <p className="text-xs text-[var(--muted)] mt-0.5">
-                  {productCategoryLabel(p.category)} · {formatPrice(p.priceCents)}
+                  {tPub(`cat_${p.category}` as Parameters<typeof tPub>[0])} · {formatPrice(p.priceCents)}
                   {p.stock != null && ` · ${t("myProductsInStock", { count: p.stock })}`}
                 </p>
               </div>

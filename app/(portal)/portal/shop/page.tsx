@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X, Store, BadgeCheck } from "lucide-react";
-import { productCategoryLabel } from "@/lib/config/products";
 import { formatPrice } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
@@ -156,6 +155,7 @@ function CartDrawer({
 
 export default function ShopPage() {
   const t = useTranslations("portal");
+  const tPub = useTranslations("public");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
@@ -263,7 +263,7 @@ export default function ShopPage() {
                   : "border-[var(--border)] text-[var(--ink2)] hover:border-[var(--teal)] hover:text-[var(--teal)]"
               }`}
             >
-              {cat === "all" ? t("shopAll") : productCategoryLabel(cat)}
+              {cat === "all" ? t("shopAll") : tPub(`cat_${cat}` as Parameters<typeof tPub>[0])}
             </button>
           ))}
         </div>
@@ -311,7 +311,7 @@ export default function ShopPage() {
                 </div>
                 <div className="p-3 flex flex-col flex-1">
                   <span className="text-xs text-[var(--muted)] mb-0.5">
-                    {productCategoryLabel(product.category)}
+                    {tPub(`cat_${product.category}` as Parameters<typeof tPub>[0])}
                   </span>
                   <p className="font-medium text-[var(--ink)] text-sm leading-snug mb-1">
                     {product.name}
