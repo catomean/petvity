@@ -6,6 +6,7 @@ import { ShoppingBag, Package, Clock, CheckCircle, Truck, XCircle, ChevronDown, 
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
 import { formatPrice, formatIsoDate } from "@/lib/utils/format";
+import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -182,21 +183,14 @@ export default function OrdersPage() {
           {[1, 2].map((i) => <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />)}
         </div>
       ) : fetchError ? (
-        <div className="card py-12 text-center">
-          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
-          <button onClick={loadOrders} className="btn-outline text-sm">
-            {t("retry")}
-          </button>
-        </div>
+        <ErrorState message={fetchError} onRetry={loadOrders} retryLabel={t("retry")} />
       ) : orders.length === 0 ? (
-        <div className="card py-16 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
-            <ShoppingBag className="w-7 h-7 text-[var(--teal)]" />
-          </div>
-          <p className="font-medium text-[var(--ink)] mb-1">{t("ordersEmpty")}</p>
-          <p className="text-sm text-[var(--muted)] mb-5">{t("ordersEmptyDesc")}</p>
-          <Link href="/portal/shop" className="btn-primary">{t("ordersBrowseShop")}</Link>
-        </div>
+        <EmptyState
+          icon={ShoppingBag}
+          title={t("ordersEmpty")}
+          body={t("ordersEmptyDesc")}
+          cta={{ label: t("ordersBrowseShop"), href: "/portal/shop" }}
+        />
       ) : (
         <div className="space-y-3">
           {orders.map((order) => (

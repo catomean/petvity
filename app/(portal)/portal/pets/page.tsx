@@ -14,6 +14,7 @@ import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { formatRelativeDate } from "@/lib/utils/format";
+import { EmptyState } from "@/components/portal/PageState";
 import { Plus, ChevronRight, PawPrint } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
@@ -106,21 +107,17 @@ export default async function PetsPage() {
       </div>
 
       {userPets.length === 0 ? (
-        <div className="card p-12 text-center">
-          <div className="w-20 h-20 rounded-3xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
-            <PawPrint className="w-9 h-9 text-[var(--teal)]" />
-          </div>
-          <h2 className="text-lg font-semibold text-[var(--ink)] mb-2">
-            {t("noPetsYet")}
-          </h2>
-          <p className="text-sm text-[var(--muted)] mb-6 max-w-xs mx-auto">
-            {t("petsEmptyDesc")}
-          </p>
-          <Link href="/portal/pets/new" className="btn-primary">
-            <Plus className="w-4 h-4" />
-            {t("addYourFirstPet")}
-          </Link>
-        </div>
+        <EmptyState
+          icon={PawPrint}
+          title={t("noPetsYet")}
+          body={t("petsEmptyDesc")}
+          actions={
+            <Link href="/portal/pets/new" className="btn-primary">
+              <Plus className="w-4 h-4" />
+              {t("addYourFirstPet")}
+            </Link>
+          }
+        />
       ) : (
         <div className="flex flex-col gap-3">
           {sortedPets.map((pet) => {

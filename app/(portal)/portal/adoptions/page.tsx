@@ -9,6 +9,7 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
 import { formatAdoptionFee } from "@/lib/utils/format";
+import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -354,21 +355,14 @@ export default function AdoptionsPage() {
           {[1, 2].map((i) => <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />)}
         </div>
       ) : fetchError ? (
-        <div className="card py-12 text-center">
-          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
-          <button onClick={loadListings} className="btn-outline text-sm">
-            {t("retry")}
-          </button>
-        </div>
+        <ErrorState message={fetchError} onRetry={loadListings} retryLabel={t("retry")} />
       ) : listings.length === 0 ? (
-        <div className="card py-16 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
-            <Heart className="w-7 h-7 text-[var(--teal)]" />
-          </div>
-          <p className="font-medium text-[var(--ink)] mb-1">{t("adoptionsEmpty")}</p>
-          <p className="text-sm text-[var(--muted)] mb-5">{t("adoptionsEmptyDesc")}</p>
-          <Link href="/portal/pets" className="btn-primary">{t("adoptionsGoToMyPets")}</Link>
-        </div>
+        <EmptyState
+          icon={Heart}
+          title={t("adoptionsEmpty")}
+          body={t("adoptionsEmptyDesc")}
+          cta={{ label: t("adoptionsGoToMyPets"), href: "/portal/pets" }}
+        />
       ) : (
         <div className="space-y-3">
           {listings.map((listing) => (

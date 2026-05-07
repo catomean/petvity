@@ -187,7 +187,7 @@ export default function SidebarNav({ userName, userEmail, userRole, locale }: Pr
           <Link
             key={href}
             href={href}
-            className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium no-underline transition-colors ${
+            className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs font-medium no-underline transition-colors ${
               isActive(pathname, href)
                 ? "text-[var(--teal)]"
                 : "text-[var(--muted)]"

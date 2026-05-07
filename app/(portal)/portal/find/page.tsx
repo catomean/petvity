@@ -7,6 +7,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { formatSitterServices } from "@/lib/config/professionals";
 import { formatPrice } from "@/lib/utils/format";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
+import { EmptyState } from "@/components/portal/PageState";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -487,29 +488,3 @@ function BookingModal({
   );
 }
 
-function EmptyState({
-  icon: Icon,
-  title,
-  body,
-  cta,
-}: {
-  icon: React.ElementType;
-  title: string;
-  body: string;
-  cta?: { label: string; href: string };
-}) {
-  return (
-    <div className="card py-16 text-center">
-      <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
-        <Icon className="w-7 h-7 text-[var(--teal)]" />
-      </div>
-      <p className="font-medium text-[var(--ink)] mb-1">{title}</p>
-      <p className="text-sm text-[var(--muted)] mb-5">{body}</p>
-      {cta && (
-        <Link href={cta.href} className="btn-primary">
-          {cta.label}
-        </Link>
-      )}
-    </div>
-  );
-}

@@ -10,6 +10,7 @@ import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
+import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -205,25 +206,14 @@ export default function AdoptPage() {
           ))}
         </div>
       ) : fetchError ? (
-        <div className="card py-12 text-center">
-          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
-          <button onClick={() => loadListings(species)} className="btn-outline text-sm">
-            {t("retry")}
-          </button>
-        </div>
+        <ErrorState message={fetchError} onRetry={() => loadListings(species)} retryLabel={t("retry")} />
       ) : displayed.length === 0 ? (
-        <div className="card py-16 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
-            <Sparkles className="w-8 h-8 text-[var(--teal)]" />
-          </div>
-          <p className="font-medium text-[var(--ink)] mb-1">{t("adoptNoListings")}</p>
-          <p className="text-sm text-[var(--muted)] mb-5">
-            {species || locationQ ? t("adoptNoListingsFiltered") : t("adoptNoListingsEmpty")}
-          </p>
-          <Link href="/portal/pets" className="btn-primary">
-            {t("adoptListForAdoption")}
-          </Link>
-        </div>
+        <EmptyState
+          icon={Sparkles}
+          title={t("adoptNoListings")}
+          body={species || locationQ ? t("adoptNoListingsFiltered") : t("adoptNoListingsEmpty")}
+          cta={{ label: t("adoptListForAdoption"), href: "/portal/pets" }}
+        />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {displayed.map((listing) => (

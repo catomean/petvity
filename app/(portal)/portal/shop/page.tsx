@@ -6,6 +6,7 @@ import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X, Store, BadgeCheck }
 import { productCategoryLabel } from "@/lib/config/products";
 import { formatPrice } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
+import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -276,24 +277,19 @@ export default function ShopPage() {
           ))}
         </div>
       ) : fetchError ? (
-        <div className="card py-12 text-center">
-          <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
-          <button onClick={loadProducts} className="btn-outline text-sm">
-            {t("shopRetry")}
-          </button>
-        </div>
+        <ErrorState message={fetchError} onRetry={loadProducts} retryLabel={t("shopRetry")} />
       ) : filtered.length === 0 ? (
-        <div className="card py-16 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
-            <Package className="w-7 h-7 text-[var(--teal)]" />
-          </div>
-          <p className="font-medium text-[var(--ink)] mb-2">{t("shopEmpty")}</p>
-          <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">{t("shopEmptyDesc")}</p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/portal/dashboard" className="btn-primary text-sm">{t("shopGoToDashboard")}</Link>
-            <Link href="/portal/find" className="btn-outline text-sm">{t("shopFindPro")}</Link>
-          </div>
-        </div>
+        <EmptyState
+          icon={Package}
+          title={t("shopEmpty")}
+          body={t("shopEmptyDesc")}
+          actions={
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/portal/dashboard" className="btn-primary text-sm">{t("shopGoToDashboard")}</Link>
+              <Link href="/portal/find" className="btn-outline text-sm">{t("shopFindPro")}</Link>
+            </div>
+          }
+        />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {filtered.map((product) => {
