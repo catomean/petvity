@@ -265,7 +265,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                       <div className="flex flex-wrap gap-1 mt-2">
                         {LISTING_TRAIT_CONFIG.map((trait) =>
                           listing[trait.field] ? (
-                            <span key={trait.field} className={`text-[10px] font-medium ${trait.className} px-2 py-0.5 rounded-full`}>
+                            <span key={trait.field} className={`text-xs font-medium ${trait.className} px-2 py-0.5 rounded-full`}>
                               {t(`traitShort_${trait.field}` as Parameters<typeof t>[0])}
                             </span>
                           ) : null,

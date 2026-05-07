@@ -259,7 +259,7 @@ export default async function DashboardPage() {
                         {t("logToday")}
                       </Link>
                       {twin.daysAgo !== null && twin.daysAgo > 0 && (
-                        <span className="text-[11px] text-[var(--muted)]">
+                        <span className="text-xs text-[var(--muted)]">
                           {t("daysAgo", { count: twin.daysAgo })}
                         </span>
                       )}

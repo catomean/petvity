@@ -107,7 +107,7 @@ function RegisterForm() {
                 <span className={`text-xs font-semibold leading-tight ${selected ? "text-[var(--teal)]" : "text-[var(--ink2)]"}`}>
                   {label}
                 </span>
-                <span className="text-[10px] text-[var(--muted)] leading-tight hidden sm:block">{desc}</span>
+                <span className="text-xs text-[var(--muted)] leading-tight hidden sm:block">{desc}</span>
               </button>
             );
           })}
