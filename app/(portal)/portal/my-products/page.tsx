@@ -46,6 +46,7 @@ export default function MyProductsPage() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [mutationError, setMutationError] = useState("");
 
   function loadItems() {
     setLoading(true);
@@ -123,6 +124,7 @@ export default function MyProductsPage() {
   }
 
   async function toggleActive(p: Product) {
+    setMutationError("");
     const res = await fetch(`/api/products/${p.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -130,12 +132,15 @@ export default function MyProductsPage() {
     });
     const data = await res.json();
     if (data.success) setItems((prev) => prev.map((x) => x.id === p.id ? data.data : x));
+    else setMutationError(data.error ?? t("saveFailed"));
   }
 
   async function handleDelete(id: string) {
+    setMutationError("");
     const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
     const data = await res.json();
     if (data.success) setItems((prev) => prev.filter((p) => p.id !== id));
+    else setMutationError(data.error ?? t("deleteFailed"));
   }
 
   const activeCount = items.filter((p) => p.isActive).length;
@@ -157,6 +162,8 @@ export default function MyProductsPage() {
           </button>
         </div>
       </div>
+
+      {mutationError && <p className="alert-error">{mutationError}</p>}
 
       {/* Stats */}
       {items.length > 0 && (
