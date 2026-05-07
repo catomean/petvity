@@ -193,17 +193,6 @@ export const EMOTIONAL_METRICS: MetricId[] = [
   "socialization",
 ];
 
-/**
- * Human-readable labels for each 1–5 scale value, indexed by metric ID.
- * Index 0 = value 1, index 4 = value 5.
- */
-export const EMOTIONAL_SCALE_LABELS: Record<string, [string, string, string, string, string]> = {
-  energy:        ["Very low",  "Low",   "Moderate", "High",     "Very high"],
-  mood:          ["Very sad",  "Sad",   "Neutral",  "Happy",    "Joyful"],
-  anxiety:       ["Very calm", "Calm",  "Mild",     "Anxious",  "Very anxious"],
-  socialization: ["Avoidant",  "Shy",   "Normal",   "Friendly", "Very social"],
-};
-
 /** Get the normal range for a metric, falling back to "default". */
 export function getNormalRange(
   metricId: MetricId,

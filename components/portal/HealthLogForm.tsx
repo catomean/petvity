@@ -190,7 +190,9 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
                     </option>
                   ))}
                 </select>
-                <p className="text-xs text-[var(--muted)] mt-1">{def.description}</p>
+                <p className="text-xs text-[var(--muted)] mt-1">
+                  1 = {tTwin(`${metricId}Scale1` as Parameters<typeof tTwin>[0])} · 5 = {tTwin(`${metricId}Scale5` as Parameters<typeof tTwin>[0])}
+                </p>
               </div>
             );
           })}
