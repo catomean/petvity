@@ -3,6 +3,7 @@ import { getInstance } from "@/lib/db";
 import { products } from "@/lib/db/schema";
 import { and, eq } from "drizzle-orm";
 import { APP } from "@/lib/config/app";
+import { formatPrice } from "@/lib/utils/format";
 import { PRODUCT_CATEGORY_CONFIG } from "@/lib/config/products";
 import type { ProductCategoryId } from "@/lib/config/products";
 
@@ -32,9 +33,7 @@ export default async function OgImage({ params }: Params) {
   const catCfg = PRODUCT_CATEGORY_CONFIG[category];
   const emoji = catCfg?.emoji ?? "📦";
   const categoryLabel = catCfg?.label ?? "Product";
-  const price = row?.priceCents != null
-    ? `$${(row.priceCents / 100).toFixed(2)}`
-    : null;
+  const price = row?.priceCents != null ? formatPrice(row.priceCents) : null;
 
   return new ImageResponse(
     (

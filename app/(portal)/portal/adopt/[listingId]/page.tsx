@@ -146,7 +146,7 @@ export default function ListingDetailPage() {
   }
 
   const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
-  const age = formatPetAge(listing.pet.birthDate);
+  const age = formatPetAge(listing.pet.birthDate, tPub);
   const isAvailable = listing.status === "available";
 
   return (

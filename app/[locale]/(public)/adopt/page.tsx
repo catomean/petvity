@@ -220,7 +220,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {listings.map((listing) => {
                 const emoji = speciesEmoji(listing.pet.species);
-                const age = formatPetAgeShort(listing.pet.birthDate);
+                const age = formatPetAgeShort(listing.pet.birthDate, t);
                 return (
                   <Link
                     key={listing.id}

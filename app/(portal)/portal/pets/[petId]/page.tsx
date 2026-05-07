@@ -74,7 +74,7 @@ export default async function PetProfilePage({ params }: Params) {
 
   const speciesDef = SPECIES_CONFIG[pet.species as SpeciesId];
   const sig = signalResult.signal;
-  const age = formatPetAge(pet.birthDate ?? null);
+  const age = formatPetAge(pet.birthDate ?? null, tPub);
 
   const twin = computeDigitalTwin(recentMetrics, now);
 

@@ -80,7 +80,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
   if (!row) notFound();
 
   const emoji = SPECIES_CONFIG[row.pet.species as SpeciesId]?.emoji ?? "🐾";
-  const age = formatPetAge(row.pet.birthDate);
+  const age = formatPetAge(row.pet.birthDate, t);
   const isAvailable = row.status === "available";
 
   const listingSchema = {

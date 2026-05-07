@@ -49,7 +49,7 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
   const t = useTranslations("portal");
   const tPub = useTranslations("public");
   const emoji = SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾";
-  const age = formatPetAgeShort(listing.pet.birthDate);
+  const age = formatPetAgeShort(listing.pet.birthDate, tPub);
 
   return (
     <Link

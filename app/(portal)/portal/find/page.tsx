@@ -414,7 +414,7 @@ function BookingModal({
                   required
                 >
                   {pets.map((p) => (
-                    <option key={p.id} value={p.id}>{p.name ?? "Unnamed pet"}</option>
+                    <option key={p.id} value={p.id}>{p.name ?? t("unnamedPet")}</option>
                   ))}
                 </select>
               )}

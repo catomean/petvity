@@ -65,27 +65,43 @@ describe("formatTemperature", () => {
  * Both formatPetAgeShort and formatPetAge use Date.now() internally.
  * Pin system time to a fixed date so the tests are deterministic.
  * now = 2026-04-24T12:00:00Z
+ *
+ * These functions now require a `t` function (from next-intl). We pass
+ * a minimal English mock so tests remain self-contained.
  */
+const mockTShort = (key: string, v?: Record<string, number>) => ({
+  petAgeShortLess1Month: "< 1mo",
+  petAgeShortMonths: `${v?.n}mo`,
+  petAgeShortYears: `${v?.n}yr`,
+}[key] ?? key);
+
+const mockT = (key: string, v?: Record<string, number>) => ({
+  petAgeLess1Month: "< 1 month old",
+  petAgeMonths: `${v?.n} month${v?.n === 1 ? "" : "s"} old`,
+  petAgeYears: `${v?.n} year${v?.n === 1 ? "" : "s"} old`,
+  petAgeYearsMonths: `${v?.years}y ${v?.months}mo old`,
+}[key] ?? key);
+
 describe("formatPetAgeShort", () => {
   beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(new Date("2026-04-24T12:00:00Z")); });
   afterEach(() => vi.useRealTimers());
 
   it("returns empty string for null", () => {
-    expect(formatPetAgeShort(null)).toBe("");
+    expect(formatPetAgeShort(null, mockTShort)).toBe("");
   });
 
   it("returns '< 1mo' for a pet born less than 1 month ago", () => {
-    expect(formatPetAgeShort("2026-04-21")).toBe("< 1mo"); // 3 days ago
+    expect(formatPetAgeShort("2026-04-21", mockTShort)).toBe("< 1mo");
   });
 
   it("returns months for 1–11 month old pets", () => {
-    expect(formatPetAgeShort("2026-01-24")).toBe("2mo");  // ~90 days = 2 months
-    expect(formatPetAgeShort("2025-07-24")).toBe("9mo");  // ~9 months
+    expect(formatPetAgeShort("2026-01-24", mockTShort)).toBe("2mo");
+    expect(formatPetAgeShort("2025-07-24", mockTShort)).toBe("9mo");
   });
 
   it("returns years for pets 12+ months old", () => {
-    expect(formatPetAgeShort("2025-04-24")).toBe("1yr"); // exactly 12 months
-    expect(formatPetAgeShort("2024-04-24")).toBe("2yr"); // exactly 24 months
+    expect(formatPetAgeShort("2025-04-24", mockTShort)).toBe("1yr");
+    expect(formatPetAgeShort("2024-04-24", mockTShort)).toBe("2yr");
   });
 });
 
@@ -94,25 +110,24 @@ describe("formatPetAge", () => {
   afterEach(() => vi.useRealTimers());
 
   it("returns empty string for null", () => {
-    expect(formatPetAge(null)).toBe("");
+    expect(formatPetAge(null, mockT)).toBe("");
   });
 
   it("returns '< 1 month old' for a very young pet", () => {
-    expect(formatPetAge("2026-04-21")).toBe("< 1 month old");
+    expect(formatPetAge("2026-04-21", mockT)).toBe("< 1 month old");
   });
 
   it("returns 'N months old' for 1–11 month old pets", () => {
-    expect(formatPetAge("2026-01-24")).toBe("2 months old");
+    expect(formatPetAge("2026-01-24", mockT)).toBe("2 months old");
   });
 
   it("returns 'N year(s) old' for exactly whole years", () => {
-    expect(formatPetAge("2025-04-24")).toBe("1 year old");
-    expect(formatPetAge("2024-04-24")).toBe("2 years old");
+    expect(formatPetAge("2025-04-24", mockT)).toBe("1 year old");
+    expect(formatPetAge("2024-04-24", mockT)).toBe("2 years old");
   });
 
   it("returns 'Ny Nmo old' when years + remaining months", () => {
-    // 2023-10-24 → ~30 months → 2 years 6 months
-    expect(formatPetAge("2023-10-24")).toBe("2y 6mo old");
+    expect(formatPetAge("2023-10-24", mockT)).toBe("2y 6mo old");
   });
 });
 

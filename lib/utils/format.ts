@@ -29,34 +29,38 @@ export function formatTemperature(centidegrees: number): string {
   return `${(centidegrees / 100).toFixed(1)}°C`;
 }
 
+type AgeT = (key: string, values?: Record<string, number>) => string;
+
 /**
- * Format a pet's age from birthDate for compact display.
- * e.g. null → ""; 3 months → "3mo"; 14 months → "1yr"
+ * Format a pet's age compactly, locale-aware.
+ * Requires translation keys: petAgeShortLess1Month, petAgeShortMonths, petAgeShortYears
+ * e.g. en: "3mo" / "1yr" · de: "3Mo" / "1J"
  */
-export function formatPetAgeShort(birthDate: string | null): string {
+export function formatPetAgeShort(birthDate: string | null, t: AgeT): string {
   if (!birthDate) return "";
   const months = Math.floor(
     (Date.now() - new Date(birthDate).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
   );
-  if (months < 1) return "< 1mo";
-  if (months < 12) return `${months}mo`;
-  return `${Math.floor(months / 12)}yr`;
+  if (months < 1) return t("petAgeShortLess1Month");
+  if (months < 12) return t("petAgeShortMonths", { n: months });
+  return t("petAgeShortYears", { n: Math.floor(months / 12) });
 }
 
 /**
- * Format a pet's age from birthDate for verbose display.
- * e.g. null → ""; 3 months → "3 months old"; 14 months → "1y 2mo old"
+ * Format a pet's age verbosely, locale-aware.
+ * Requires translation keys: petAgeLess1Month, petAgeMonths, petAgeYears, petAgeYearsMonths
+ * e.g. en: "3 months old" / "1 year old" · de: "3 Monate alt" / "1 Jahr alt"
  */
-export function formatPetAge(birthDate: string | null): string {
+export function formatPetAge(birthDate: string | null, t: AgeT): string {
   if (!birthDate) return "";
   const months = Math.floor(
     (Date.now() - new Date(birthDate).getTime()) / (1000 * 60 * 60 * 24 * 30.4),
   );
-  if (months < 1) return "< 1 month old";
-  if (months < 12) return `${months} months old`;
+  if (months < 1) return t("petAgeLess1Month");
+  if (months < 12) return t("petAgeMonths", { n: months });
   const years = Math.floor(months / 12);
   const rem = months % 12;
-  return rem > 0 ? `${years}y ${rem}mo old` : `${years} year${years !== 1 ? "s" : ""} old`;
+  return rem > 0 ? t("petAgeYearsMonths", { years, months: rem }) : t("petAgeYears", { n: years });
 }
 
 /**

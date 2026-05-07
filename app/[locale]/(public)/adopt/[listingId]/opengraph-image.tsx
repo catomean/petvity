@@ -3,6 +3,7 @@ import { getInstance } from "@/lib/db";
 import { adoptionListings, pets } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { APP } from "@/lib/config/app";
+import { formatAdoptionFee } from "@/lib/utils/format";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 
@@ -34,9 +35,7 @@ export default async function OgImage({ params }: Params) {
   const emoji = SPECIES_CONFIG[species]?.emoji ?? "🐾";
   const location = row?.location ?? null;
   const feeCents = row?.feeCents ?? null;
-  const feeLabel = feeCents === null
-    ? "Free"
-    : `$${(feeCents / 100).toFixed(0)} adoption fee`;
+  const feeLabel = feeCents === null ? "Free" : `${formatAdoptionFee(feeCents)} adoption fee`;
 
   return new ImageResponse(
     (
