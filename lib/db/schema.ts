@@ -491,6 +491,7 @@ export const adoptionApplications = pgTable("adoption_applications", {
 (t) => [
   index("adoption_applications_listing_id_idx").on(t.listingId),
   index("adoption_applications_applicant_id_idx").on(t.applicantId),
+  uniqueIndex("adoption_applications_unique_applicant_idx").on(t.listingId, t.applicantId),
 ]);
 
 // ─── Pet signal history ────────────────────────────────────────────────────────

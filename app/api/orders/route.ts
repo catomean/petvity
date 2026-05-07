@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, desc, inArray } from "drizzle-orm";
+import { eq, desc, inArray, sql, gte, and } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
@@ -120,7 +120,47 @@ export async function POST(req: NextRequest) {
     return sum + p.priceCents * item.quantity;
   }, 0);
 
-  // Insert order + items in a transaction-like sequence
+  // Atomically decrement finite-stock items BEFORE creating the order.
+  // WHERE stock >= quantity ensures only one concurrent request can win per product —
+  // if two requests race on the last unit, only one UPDATE row count > 0.
+  const stockDecrements = items
+    .filter((item) => productMap.get(item.productId)!.stock !== null)
+    .map((item) => ({ productId: item.productId, quantity: item.quantity }));
+
+  if (stockDecrements.length > 0) {
+    const decrementResults = await Promise.all(
+      stockDecrements.map(({ productId, quantity }) =>
+        db
+          .update(products)
+          .set({ stock: sql`${products.stock} - ${quantity}`, updatedAt: new Date() })
+          .where(and(eq(products.id, productId), gte(products.stock, quantity)))
+          .returning({ id: products.id }),
+      ),
+    );
+
+    const failedIdx = decrementResults.findIndex((r) => r.length === 0);
+    if (failedIdx !== -1) {
+      // Compensate: restore stock for any products already decremented in this batch
+      const toRestore = stockDecrements.filter((_, i) => i !== failedIdx && decrementResults[i].length > 0);
+      if (toRestore.length > 0) {
+        await Promise.all(
+          toRestore.map(({ productId, quantity }) =>
+            db
+              .update(products)
+              .set({ stock: sql`${products.stock} + ${quantity}`, updatedAt: new Date() })
+              .where(eq(products.id, productId)),
+          ),
+        );
+      }
+      const failedProduct = productMap.get(stockDecrements[failedIdx].productId);
+      return NextResponse.json(
+        { success: false, error: `"${failedProduct?.name ?? "A product"}" just sold out. Please refresh your cart.` },
+        { status: 409 },
+      );
+    }
+  }
+
+  // Stock reserved — now safe to record the order
   const [order] = await db
     .insert(orders)
     .values({ userId: session.user.id, totalCents, notes: notes ?? null })
@@ -134,17 +174,6 @@ export async function POST(req: NextRequest) {
   }));
 
   const insertedItems = await db.insert(orderItems).values(itemValues).returning();
-
-  // Decrement stock for finite-stock products
-  for (const item of items) {
-    const p = productMap.get(item.productId)!;
-    if (p.stock !== null) {
-      await db
-        .update(products)
-        .set({ stock: p.stock - item.quantity, updatedAt: new Date() })
-        .where(eq(products.id, item.productId));
-    }
-  }
 
   // Look up the buyer once; reused for buyer confirmation + seller notifications
   const [buyer] = await db
