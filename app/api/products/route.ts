@@ -37,6 +37,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Public: active products only (platform + seller listings) with seller name for trust
+  const PAGE = 100; // products are browsed with category filter; 100 is generous per category
   const rows = await db
     .select({
       id: products.id,
@@ -59,7 +60,8 @@ export async function GET(req: NextRequest) {
           )
         : eq(products.isActive, true),
     )
-    .orderBy(products.name);
+    .orderBy(products.name)
+    .limit(PAGE);
 
   return NextResponse.json({ success: true, data: rows });
 }

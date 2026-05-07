@@ -87,14 +87,15 @@ describe("GET /api/sitters", () => {
     expect(body.data[0].reviewCount).toBe(0);
   });
 
-  it("filters by city (case-insensitive, client-side)", async () => {
-    const sitterMunich  = { ...MOCK_SITTER };
-    const sitterHamburg = { ...MOCK_SITTER, id: "sp-2", userId: "user-2", city: "Hamburg" };
-    db._queueSelectResult([sitterMunich, sitterHamburg]);
+  it("filters by city via SQL ILIKE (mock simulates DB-filtered result)", async () => {
+    const sitterMunich = { ...MOCK_SITTER };
+    // Mock returns only Munich sitter — simulating that the DB honoured the ILIKE WHERE clause
+    db._queueSelectResult([sitterMunich]);
     db._queueSelectResult([]); // no reviews
 
     const res = await GET(makeRequest("city=munich"));
     const body = await res.json();
-    expect(body.data.every((s: any) => s.city.toLowerCase().includes("munich"))).toBe(true);
+    expect(body.data).toHaveLength(1);
+    expect(body.data[0].city).toBe("Munich");
   });
 });

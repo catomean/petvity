@@ -318,6 +318,7 @@
     "findNoSittersCity": "\"{city}\"でペットシッターが見つかりませんでした。別の都市を試すかフィルターをクリアしてください。",
     "findNoSittersBody": "まだペットシッターが登録していません。ペットシッターを提供していますか？プロフィールを作成して近くのペット飼い主とつながりましょう。",
     "findRegisterSitter": "ペットシッターとして登録する",
+    "findResultsLimited": "上位50件を表示しています。都市で絞り込むとさらに表示されます。",
     "findProfessional": "プロ",
     "findBookTitle": "{name}を予約",
     "findBookingRequired": "すべての必須項目を入力してください。",

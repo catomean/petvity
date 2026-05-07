@@ -212,34 +212,48 @@ export default function FindPage() {
   const [pets, setPets] = useState<PetOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [cityFilter, setCityFilter] = useState("");
+  const [debouncedCity, setDebouncedCity] = useState("");
+  const [vetsHasMore, setVetsHasMore] = useState(false);
+  const [sittersHasMore, setSittersHasMore] = useState(false);
   const [bookingTarget, setBookingTarget] = useState<BookingTarget | null>(null);
 
+  // Debounce city input 300ms before triggering a refetch
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedCity(cityFilter), 300);
+    return () => clearTimeout(id);
+  }, [cityFilter]);
+
+  // Fetch pets once (not city-dependent)
+  useEffect(() => {
+    fetch("/api/pets").then(async (r) => { if (r.ok) setPets((await r.json()).data ?? []); });
+  }, []);
+
+  // Refetch vets + sitters whenever city filter changes
   useEffect(() => {
     async function load() {
       setLoading(true);
       try {
-        const [vetRes, sitterRes, petRes] = await Promise.all([
-          fetch("/api/vets"),
-          fetch("/api/sitters"),
-          fetch("/api/pets"),
+        const cityParam = debouncedCity ? `?city=${encodeURIComponent(debouncedCity)}` : "";
+        const [vetRes, sitterRes] = await Promise.all([
+          fetch(`/api/vets${cityParam}`),
+          fetch(`/api/sitters${cityParam}`),
         ]);
-        if (vetRes.ok) setVets((await vetRes.json()).data ?? []);
-        if (sitterRes.ok) setSitters((await sitterRes.json()).data ?? []);
-        if (petRes.ok) setPets((await petRes.json()).data ?? []);
+        if (vetRes.ok) {
+          const json = await vetRes.json();
+          setVets(json.data ?? []);
+          setVetsHasMore(json.meta?.hasMore ?? false);
+        }
+        if (sitterRes.ok) {
+          const json = await sitterRes.json();
+          setSitters(json.data ?? []);
+          setSittersHasMore(json.meta?.hasMore ?? false);
+        }
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, []);
-
-  const filteredVets = cityFilter
-    ? vets.filter((v) => v.city?.toLowerCase().includes(cityFilter.toLowerCase()))
-    : vets;
-
-  const filteredSitters = cityFilter
-    ? sitters.filter((s) => s.city?.toLowerCase().includes(cityFilter.toLowerCase()))
-    : sitters;
+  }, [debouncedCity]);
 
   return (
     <div>
@@ -284,37 +298,43 @@ export default function FindPage() {
           ))}
         </div>
       ) : tab === "vets" ? (
-        filteredVets.length === 0 ? (
+        vets.length === 0 ? (
           <EmptyState
             icon={Stethoscope}
             title={t("findNoVets")}
-            body={cityFilter
-              ? t("findNoVetsCity", { city: cityFilter })
+            body={debouncedCity
+              ? t("findNoVetsCity", { city: debouncedCity })
               : t("findNoVetsBody")}
-            cta={cityFilter ? undefined : { label: t("findRegisterVet"), href: "/register?role=vet" }}
+            cta={debouncedCity ? undefined : { label: t("findRegisterVet"), href: "/register?role=vet" }}
           />
         ) : (
           <div className="space-y-3">
-            {filteredVets.map((vet) => (
+            {vets.map((vet) => (
               <VetCard key={vet.id} vet={vet} onBook={setBookingTarget} />
             ))}
+            {vetsHasMore && (
+              <p className="text-xs text-center text-[var(--muted)] pt-2">{t("findResultsLimited")}</p>
+            )}
           </div>
         )
       ) : (
-        filteredSitters.length === 0 ? (
+        sitters.length === 0 ? (
           <EmptyState
             icon={Home}
             title={t("findNoSitters")}
-            body={cityFilter
-              ? t("findNoSittersCity", { city: cityFilter })
+            body={debouncedCity
+              ? t("findNoSittersCity", { city: debouncedCity })
               : t("findNoSittersBody")}
-            cta={cityFilter ? undefined : { label: t("findRegisterSitter"), href: "/register?role=sitter" }}
+            cta={debouncedCity ? undefined : { label: t("findRegisterSitter"), href: "/register?role=sitter" }}
           />
         ) : (
           <div className="space-y-3">
-            {filteredSitters.map((sitter) => (
+            {sitters.map((sitter) => (
               <SitterCard key={sitter.id} sitter={sitter} onBook={setBookingTarget} />
             ))}
+            {sittersHasMore && (
+              <p className="text-xs text-center text-[var(--muted)] pt-2">{t("findResultsLimited")}</p>
+            )}
           </div>
         )
       )}

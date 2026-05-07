@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and, avg, count, inArray } from "drizzle-orm";
+import { eq, and, avg, count, inArray, ilike } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { vetProfiles, users, reviews } from "@/lib/db/schema";
@@ -14,10 +14,11 @@ export async function GET(req: NextRequest) {
   const db = getInstance();
 
   const conditions = [eq(users.role, "veterinarian")];
-  if (accepting === "true") {
-    conditions.push(eq(vetProfiles.isAcceptingClients, true));
-  }
+  if (accepting === "true") conditions.push(eq(vetProfiles.isAcceptingClients, true));
+  if (city) conditions.push(ilike(vetProfiles.city, `%${city}%`));
 
+  // Fetch 51 to cheaply detect whether there are more results beyond the limit
+  const PAGE = 50;
   const rows = await db
     .select({
       id: vetProfiles.id,
@@ -34,14 +35,14 @@ export async function GET(req: NextRequest) {
     })
     .from(vetProfiles)
     .innerJoin(users, eq(users.id, vetProfiles.userId))
-    .where(and(...conditions));
+    .where(and(...conditions))
+    .limit(PAGE + 1);
 
-  const filtered = city
-    ? rows.filter((r) => r.city?.toLowerCase().includes(city.toLowerCase()))
-    : rows;
+  const hasMore = rows.length > PAGE;
+  const filtered = rows.slice(0, PAGE);
 
   if (filtered.length === 0) {
-    return NextResponse.json({ success: true, data: [] });
+    return NextResponse.json({ success: true, data: [], meta: { hasMore: false } });
   }
 
   // Fetch review aggregates for all returned professionals in one query
@@ -69,5 +70,5 @@ export async function GET(req: NextRequest) {
     reviewCount: ratingMap.get(r.userId)?.reviewCount ?? 0,
   }));
 
-  return NextResponse.json({ success: true, data });
+  return NextResponse.json({ success: true, data, meta: { hasMore } });
 }

@@ -318,6 +318,7 @@
     "findNoSittersCity": "No se encontraron cuidadores en \"{city}\". Intente con otra ciudad o borre el filtro.",
     "findNoSittersBody": "Aún no hay cuidadores. ¿Ofreces cuidado de mascotas? Crea tu perfil y conéctate con dueños de mascotas cerca de ti.",
     "findRegisterSitter": "Registrarse como cuidador de mascotas",
+    "findResultsLimited": "Mostrando los 50 primeros resultados. Filtra por ciudad para ver más.",
     "findProfessional": "Profesional",
     "findBookTitle": "Reservar con {name}",
     "findBookingRequired": "Por favor completa todos los campos requeridos.",

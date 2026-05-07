@@ -318,6 +318,7 @@
     "findNoSittersCity": "在\"{city}\"未找到宠物保姆。请尝试其他城市或清除筛选条件。",
     "findNoSittersBody": "还没有宠物保姆加入。您提供宠物看护服务吗？创建资料并与附近的宠物主人联系。",
     "findRegisterSitter": "注册成为宠物保姆",
+    "findResultsLimited": "显示前50个结果。按城市筛选可查看更多。",
     "findProfessional": "专业人士",
     "findBookTitle": "预约 {name}",
     "findBookingRequired": "请填写所有必填字段。",

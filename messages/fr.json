@@ -318,6 +318,7 @@
     "findNoSittersCity": "Aucun gardien trouvé à \"{city}\". Essayez une autre ville ou effacez le filtre.",
     "findNoSittersBody": "Aucun gardien n'a encore rejoint. Proposez-vous de la garde d'animaux ? Créez votre profil et connectez-vous avec des propriétaires près de chez vous.",
     "findRegisterSitter": "S'inscrire comme gardien d'animaux",
+    "findResultsLimited": "Affichage des 50 premiers résultats. Affinez par ville pour en voir plus.",
     "findProfessional": "Professionnel",
     "findBookTitle": "Réserver {name}",
     "findBookingRequired": "Veuillez remplir tous les champs obligatoires.",

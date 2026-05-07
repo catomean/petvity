@@ -318,6 +318,7 @@
     "findNoSittersCity": "No sitters found in \"{city}\". Try a different city or clear the filter.",
     "findNoSittersBody": "No sitters have joined yet. Do you offer pet sitting or boarding? Create your profile and connect with pet owners near you.",
     "findRegisterSitter": "Register as a pet sitter",
+    "findResultsLimited": "Showing top 50 results. Refine by city to see more.",
     "findProfessional": "Professional",
     "findBookTitle": "Book {name}",
     "findBookingRequired": "Please fill in all required fields.",

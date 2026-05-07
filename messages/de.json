@@ -318,6 +318,7 @@
     "findNoSittersCity": "Keine Tierpfleger in \"{city}\" gefunden. Versuchen Sie eine andere Stadt oder löschen Sie den Filter.",
     "findNoSittersBody": "Noch keine Tierpfleger eingetragen. Bieten Sie Tierbetreuung an? Erstellen Sie Ihr Profil und verbinden Sie sich mit Tierbesitzern in Ihrer Nähe.",
     "findRegisterSitter": "Als Tierpfleger registrieren",
+    "findResultsLimited": "Zeigt die ersten 50 Ergebnisse. Nach Stadt filtern für mehr.",
     "findProfessional": "Fachkraft",
     "findBookTitle": "{name} buchen",
     "findBookingRequired": "Bitte füllen Sie alle Pflichtfelder aus.",

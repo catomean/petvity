@@ -318,6 +318,7 @@
     "findNoSittersCity": "\"{city}\" içinde bakıcı bulunamadı. Farklı bir şehir deneyin veya filtreyi temizleyin.",
     "findNoSittersBody": "Henüz bakıcı katılmadı. Evcil hayvan bakım hizmeti sunuyor musunuz? Profilinizi oluşturun ve yakınızdaki hayvan sahipleriyle bağlantı kurun.",
     "findRegisterSitter": "Evcil hayvan bakıcısı olarak kayıt ol",
+    "findResultsLimited": "İlk 50 sonuç gösteriliyor. Daha fazlası için şehre göre filtreleyin.",
     "findProfessional": "Profesyonel",
     "findBookTitle": "{name} Rezervasyonu",
     "findBookingRequired": "Lütfen tüm zorunlu alanları doldurun.",
