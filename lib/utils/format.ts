@@ -1,3 +1,5 @@
+import { APP_CURRENCY } from "@/lib/config/app";
+
 /**
  * Format a YYYY-MM-DD date string for display.
  * Uses the runtime locale (browser on client, server locale on SSR) — consistent
@@ -64,20 +66,26 @@ export function formatPetAge(birthDate: string | null, t: AgeT): string {
 }
 
 /**
- * Format an integer cent amount as a price string.
- * e.g. 2999 → "$29.99"
+ * Format an integer cent amount as a locale-aware price string.
+ * Currency determined by APP_CURRENCY (NEXT_PUBLIC_APP_CURRENCY env, default "USD").
+ * e.g. 2999, "en" → "$29.99" · 2999, "de" → "29,99 $"
  */
-export function formatPrice(cents: number): string {
-  return `$${(cents / 100).toFixed(2)}`;
+export function formatPrice(cents: number, locale?: string): string {
+  return new Intl.NumberFormat(locale, { style: "currency", currency: APP_CURRENCY }).format(cents / 100);
 }
 
 /**
  * Format an adoption fee. Returns "Free" for null/0, whole dollars otherwise.
- * e.g. null → "Free"; 2500 → "$25"
+ * Currency determined by APP_CURRENCY (NEXT_PUBLIC_APP_CURRENCY env, default "USD").
+ * e.g. null → "Free"; 2500, "en" → "$25"
  */
-export function formatAdoptionFee(feeCents: number | null): string {
+export function formatAdoptionFee(feeCents: number | null, locale?: string): string {
   if (feeCents === null || feeCents === 0) return "Free";
-  return `$${Math.round(feeCents / 100)}`;
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: APP_CURRENCY,
+    maximumFractionDigits: 0,
+  }).format(Math.round(feeCents / 100));
 }
 
 /**

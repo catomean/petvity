@@ -133,43 +133,43 @@ describe("formatPetAge", () => {
 
 describe("formatPrice", () => {
   it("formats zero as $0.00", () => {
-    expect(formatPrice(0)).toBe("$0.00");
+    expect(formatPrice(0, "en")).toBe("$0.00");
   });
 
   it("formats a whole-dollar amount with two decimal places", () => {
-    expect(formatPrice(1000)).toBe("$10.00");
-    expect(formatPrice(100)).toBe("$1.00");
+    expect(formatPrice(1000, "en")).toBe("$10.00");
+    expect(formatPrice(100, "en")).toBe("$1.00");
   });
 
   it("formats cents correctly", () => {
-    expect(formatPrice(2999)).toBe("$29.99");
-    expect(formatPrice(1)).toBe("$0.01");
-    expect(formatPrice(50)).toBe("$0.50");
+    expect(formatPrice(2999, "en")).toBe("$29.99");
+    expect(formatPrice(1, "en")).toBe("$0.01");
+    expect(formatPrice(50, "en")).toBe("$0.50");
   });
 
-  it("handles large amounts", () => {
-    expect(formatPrice(100000)).toBe("$1000.00");
+  it("handles large amounts with thousands separator", () => {
+    expect(formatPrice(100000, "en")).toBe("$1,000.00");
   });
 });
 
 describe("formatAdoptionFee", () => {
   it("returns 'Free' for null", () => {
-    expect(formatAdoptionFee(null)).toBe("Free");
+    expect(formatAdoptionFee(null, "en")).toBe("Free");
   });
 
   it("returns 'Free' for zero", () => {
-    expect(formatAdoptionFee(0)).toBe("Free");
+    expect(formatAdoptionFee(0, "en")).toBe("Free");
   });
 
   it("returns whole-dollar amount for non-zero fee", () => {
-    expect(formatAdoptionFee(2500)).toBe("$25");
-    expect(formatAdoptionFee(10000)).toBe("$100");
-    expect(formatAdoptionFee(5000)).toBe("$50");
+    expect(formatAdoptionFee(2500, "en")).toBe("$25");
+    expect(formatAdoptionFee(10000, "en")).toBe("$100");
+    expect(formatAdoptionFee(5000, "en")).toBe("$50");
   });
 
   it("rounds sub-dollar amounts to nearest dollar", () => {
-    expect(formatAdoptionFee(250)).toBe("$3");
-    expect(formatAdoptionFee(150)).toBe("$2");
+    expect(formatAdoptionFee(250, "en")).toBe("$3");
+    expect(formatAdoptionFee(150, "en")).toBe("$2");
   });
 });
 
