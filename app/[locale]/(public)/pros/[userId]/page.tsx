@@ -6,7 +6,6 @@ import { APP, APP_URL } from "@/lib/config/app";
 import { BadgeCheck, MapPin, Phone, Star, Stethoscope, Home } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { formatSitterServices } from "@/lib/config/professionals";
 import { getTranslations } from "next-intl/server";
 import { buildAlternates } from "@/lib/i18n/alternates";
 
@@ -48,13 +47,23 @@ function StarRow({ rating }: { rating: number }) {
   );
 }
 
-const formatServices = formatSitterServices;
+function formatServices(services: string | null, t: Awaited<ReturnType<typeof getTranslations<"portal">>>): string {
+  if (!services) return "";
+  return services
+    .split(",")
+    .map((s) => t(`service_${s.trim()}` as Parameters<typeof t>[0]))
+    .filter(Boolean)
+    .join(" · ");
+}
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
 export default async function PublicProPage({ params }: Params) {
   const { userId, locale } = await params;
-  const t = await getTranslations({ locale, namespace: "public" });
+  const [t, tPortal] = await Promise.all([
+    getTranslations({ locale, namespace: "public" }),
+    getTranslations({ locale, namespace: "portal" }),
+  ]);
   const db = getInstance();
 
   // Query both profile types in parallel; one will be null
@@ -242,7 +251,7 @@ export default async function PublicProPage({ params }: Params) {
             {!isVet && sitterRow && (
               <div className="mt-3 pt-3 border-t border-[var(--border)]">
                 {sitterRow.services && (
-                  <p className="text-sm text-[var(--muted)]">{formatServices(sitterRow.services)}</p>
+                  <p className="text-sm text-[var(--muted)]">{formatServices(sitterRow.services, tPortal)}</p>
                 )}
                 {sitterRow.pricePerDay != null && (
                   <p className="text-sm font-semibold text-[var(--accent)] mt-1">

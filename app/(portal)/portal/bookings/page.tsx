@@ -5,7 +5,6 @@ import Link from "next/link";
 import { CalendarCheck, Clock, CheckCircle, XCircle, ChevronDown, Star, X } from "lucide-react";
 import { BOOKING_STATUS_CONFIG } from "@/lib/config/orders";
 import type { BookingStatusId } from "@/lib/config/orders";
-import { userRoleLabel } from "@/lib/config/users";
 import { formatIsoDate } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
@@ -193,7 +192,7 @@ function BookingCard({
 }) {
   const t = useTranslations("portal");
   const [actionsOpen, setActionsOpen] = useState(false);
-  const roleLabel = userRoleLabel(b.professionalRole);
+  const roleLabel = t(`role_${b.professionalRole}` as Parameters<typeof t>[0]);
   const canReview = b.status === "completed" && !b.reviewId;
 
   return (
@@ -341,7 +340,7 @@ function ReviewModal({
     else setError(data.error ?? t("bookingsReviewFailed"));
   }
 
-  const roleLabel = userRoleLabel(b.professionalRole);
+  const roleLabel = t(`role_${b.professionalRole}` as Parameters<typeof t>[0]);
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4">

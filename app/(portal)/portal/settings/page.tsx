@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import { User, Lock, CheckCircle, Mail, AlertTriangle, X, Download } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
-import { userRoleLabel } from "@/lib/config/users";
 
 export default function SettingsPage() {
   const t = useTranslations("portal");
@@ -190,7 +189,7 @@ export default function SettingsPage() {
             </label>
             <input
               className="form-input bg-[var(--off)] cursor-not-allowed"
-              value={userRoleLabel(session.user?.role ?? "pet_owner")}
+              value={t(`role_${session.user?.role ?? "pet_owner"}` as Parameters<typeof t>[0])}
               disabled
             />
           </div>

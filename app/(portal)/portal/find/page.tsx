@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { formatSitterServices } from "@/lib/config/professionals";
 import { formatPrice } from "@/lib/utils/format";
 import { EmptyState } from "@/components/portal/PageState";
 
@@ -77,7 +76,14 @@ function AcceptingBadge({ accepting }: { accepting: boolean }) {
   );
 }
 
-const formatServices = formatSitterServices;
+function formatServices(services: string | null, t: ReturnType<typeof useTranslations>): string {
+  if (!services) return "";
+  return services
+    .split(",")
+    .map((s) => t(`service_${s.trim()}` as Parameters<typeof t>[0]))
+    .filter(Boolean)
+    .join(" · ");
+}
 
 function StarRating({ avg, count }: { avg: number | null; count: number }) {
   if (avg === null || count === 0) return null;
@@ -178,7 +184,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
           </button>
         )}
       </div>
-      {sitter.services && <p className="text-sm text-[var(--muted)] mt-2">{formatServices(sitter.services)}</p>}
+      {sitter.services && <p className="text-sm text-[var(--muted)] mt-2">{formatServices(sitter.services, t)}</p>}
       {(sitter.city || sitter.country) && (
         <div className="flex items-center gap-1.5 mt-1 text-sm text-[var(--muted)]">
           <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
