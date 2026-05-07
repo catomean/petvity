@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, desc, eq, ne } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
-import { adoptionListings, adoptionApplications, pets } from "@/lib/db/schema";
+import { adoptionListings, adoptionApplications, pets, users } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 import { auth } from "@/lib/auth";
 
@@ -64,6 +65,7 @@ export async function GET(req: NextRequest) {
     if (!session) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
+    const ownerUser = alias(users, "owner_user");
     const rows = await db
       .select({
         applicationId: adoptionApplications.id,
@@ -80,10 +82,13 @@ export async function GET(req: NextRequest) {
         petSpecies: pets.species,
         petBreed: pets.breed,
         petAvatarUrl: pets.avatarUrl,
+        ownerName: ownerUser.name,
+        ownerEmail: ownerUser.email,
       })
       .from(adoptionApplications)
       .innerJoin(adoptionListings, eq(adoptionListings.id, adoptionApplications.listingId))
       .innerJoin(pets, eq(pets.id, adoptionListings.petId))
+      .innerJoin(ownerUser, eq(ownerUser.id, adoptionListings.ownerId))
       .where(eq(adoptionApplications.applicantId, session.user.id))
       .orderBy(desc(adoptionApplications.createdAt));
     return NextResponse.json({ success: true, data: rows });

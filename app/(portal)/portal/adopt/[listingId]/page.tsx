@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
   Heart, ChevronLeft, MapPin, DollarSign, CheckCircle,
-  Dog, Cat, Baby, Star, Loader2, Send,
+  Dog, Cat, Baby, Star, Loader2, Send, Mail,
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
@@ -67,6 +67,7 @@ export default function ListingDetailPage() {
   const [fetchError, setFetchError] = useState("");
   const [applied, setApplied] = useState(false);
   const [existingStatus, setExistingStatus] = useState<ApplicationStatusId | null>(null);
+  const [ownerContact, setOwnerContact] = useState<{ name: string | null; email: string } | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -80,9 +81,14 @@ export default function ListingDetailPage() {
       fetch("/api/adoptions?applied=1").then((r) => r.json()).catch(() => ({ data: [] })),
     ]).then(([listingRes, appsRes]) => {
       setListing(listingRes.data ?? null);
-      const apps: { listingId: string; applicationStatus: ApplicationStatusId }[] = appsRes.data ?? [];
+      const apps: { listingId: string; applicationStatus: ApplicationStatusId; ownerName: string | null; ownerEmail: string }[] = appsRes.data ?? [];
       const match = apps.find((a) => a.listingId === listingId);
-      if (match) setExistingStatus(match.applicationStatus);
+      if (match) {
+        setExistingStatus(match.applicationStatus);
+        if (match.applicationStatus === "approved") {
+          setOwnerContact({ name: match.ownerName, email: match.ownerEmail });
+        }
+      }
       setLoading(false);
     }).catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
   }
@@ -277,6 +283,21 @@ export default function ListingDetailPage() {
               ? t("listingOwnerWillReview")
               : t("listingStatusOtherDesc")}
           </p>
+          {existingStatus === "approved" && ownerContact && (
+            <div className="mt-4 pt-4 border-t border-[var(--border)]">
+              <p className="text-xs font-medium text-[var(--ink2)] mb-2">{t("listingApprovedContactPrompt")}</p>
+              <a
+                href={`mailto:${ownerContact.email}`}
+                className="inline-flex items-center gap-2 text-sm font-medium text-[var(--teal)] hover:text-[var(--teal-dark)] no-underline"
+              >
+                <Mail className="w-4 h-4 flex-shrink-0" />
+                {ownerContact.name ?? ownerContact.email}
+                {ownerContact.name && (
+                  <span className="text-[var(--muted)] font-normal">({ownerContact.email})</span>
+                )}
+              </a>
+            </div>
+          )}
           <Link href="/portal/adopt" className="text-sm text-[var(--teal)] hover:underline mt-3 inline-block no-underline">
             {t("listingBrowseOther")}
           </Link>

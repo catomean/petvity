@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Heart, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2,
+  Heart, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2, Mail,
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
@@ -112,6 +112,15 @@ function ApplicationRow({
             {t("adoptionsReject")}
           </button>
         </div>
+      )}
+      {app.status === "approved" && (
+        <a
+          href={`mailto:${app.applicant.email}`}
+          className="inline-flex items-center gap-1.5 mt-2 text-xs font-medium text-[var(--teal)] hover:text-[var(--teal-dark)] no-underline"
+        >
+          <Mail className="w-3 h-3" />
+          {t("adoptionsEmailApplicant")}
+        </a>
       )}
     </div>
   );
