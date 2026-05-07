@@ -52,9 +52,11 @@ function ApplicationRow({
 }) {
   const t = useTranslations("portal");
   const [busy, setBusy] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   async function setStatus(status: Application["status"]) {
     setBusy(true);
+    setActionError("");
     const res = await fetch(`/api/adoptions/${listingId}/applications`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -62,7 +64,7 @@ function ApplicationRow({
     });
     const data = await res.json();
     setBusy(false);
-    if (!data.success) return;
+    if (!data.success) { setActionError(data.error ?? t("loadFailed")); return; }
     onUpdate({ ...app, status });
     if (status === "approved") onApproved?.();
   }
@@ -94,23 +96,26 @@ function ApplicationRow({
         <p className="text-xs text-[var(--muted)] mt-1 italic">{app.experience}</p>
       )}
       {app.status === "pending" && (
-        <div className="flex gap-2 mt-2">
-          <button
-            onClick={() => setStatus("approved")}
-            disabled={busy}
-            className="text-xs font-medium text-[var(--green-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
-          >
-            {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
-            {t("adoptionsApprove")}
-          </button>
-          <button
-            onClick={() => setStatus("rejected")}
-            disabled={busy}
-            className="text-xs font-medium text-[var(--danger-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
-          >
-            <XCircle className="w-3 h-3" />
-            {t("adoptionsReject")}
-          </button>
+        <div className="mt-2">
+          <div className="flex gap-2">
+            <button
+              onClick={() => setStatus("approved")}
+              disabled={busy}
+              className="text-xs font-medium text-[var(--green-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
+            >
+              {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
+              {t("adoptionsApprove")}
+            </button>
+            <button
+              onClick={() => setStatus("rejected")}
+              disabled={busy}
+              className="text-xs font-medium text-[var(--danger-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
+            >
+              <XCircle className="w-3 h-3" />
+              {t("adoptionsReject")}
+            </button>
+          </div>
+          {actionError && <p className="text-xs text-[var(--danger-text)] mt-1">{actionError}</p>}
         </div>
       )}
       {app.status === "approved" && (
@@ -141,6 +146,7 @@ function ListingCard({
   const [appsLoading, setAppsLoading] = useState(false);
   const [appsLoaded, setAppsLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [statusError, setStatusError] = useState("");
 
   async function loadApps() {
     if (appsLoaded) return;
@@ -159,6 +165,7 @@ function ListingCard({
 
   async function setStatus(status: AdoptionListing["status"]) {
     setBusy(true);
+    setStatusError("");
     const res = await fetch(`/api/adoptions/${listing.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -167,6 +174,7 @@ function ListingCard({
     const data = await res.json();
     setBusy(false);
     if (data.success) onStatusChange(listing.id, status);
+    else setStatusError(data.error ?? t("loadFailed"));
   }
 
   /** Called when an application is approved — sync local state without refetch. */
@@ -267,6 +275,9 @@ function ListingCard({
                 {t("adoptionsWithdraw")}
               </button>
             )}
+          {statusError && (
+            <p className="text-xs text-[var(--danger-text)] px-4 pb-2">{statusError}</p>
+          )}
           </div>
 
           {/* Applications */}
