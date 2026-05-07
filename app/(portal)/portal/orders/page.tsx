@@ -139,6 +139,7 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
+  const [cancelError, setCancelError] = useState("");
 
   function loadOrders() {
     setLoading(true);
@@ -153,6 +154,7 @@ export default function OrdersPage() {
   useEffect(loadOrders, []);
 
   async function cancelOrder(orderId: string) {
+    setCancelError("");
     const res = await fetch(`/api/orders/${orderId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -162,6 +164,8 @@ export default function OrdersPage() {
       setOrders((prev) =>
         prev.map((o) => o.id === orderId ? { ...o, status: "cancelled" } : o),
       );
+    } else {
+      setCancelError(t("deleteFailed"));
     }
   }
 
@@ -177,6 +181,8 @@ export default function OrdersPage() {
           {t("shop")}
         </Link>
       </div>
+
+      {cancelError && <p className="alert-error mb-4">{cancelError}</p>}
 
       {loading ? (
         <div className="space-y-3">
