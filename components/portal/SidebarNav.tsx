@@ -56,13 +56,15 @@ export default function SidebarNav({ userName, userEmail, userRole, locale }: Pr
   ];
 
   // Mobile tab bar: max 5 items — standard for reliable touch targets.
+  // Settings is accessible via the top-bar avatar link, so we use the slot for Bookings
+  // (the natural follow-up destination after using Find a Pro).
   // Professionals swap "Find" for their own profile since they are the pro.
   const MOBILE_NAV_ITEMS_DEFAULT = [
     { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
     { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
     { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
     { href: "/portal/find", icon: Search, label: t("findAPro") },
-    { href: "/portal/settings", icon: Settings, label: t("settings") },
+    { href: "/portal/bookings", icon: CalendarCheck, label: t("bookings") },
   ];
 
   const MOBILE_NAV_ITEMS_PRO = [
@@ -70,7 +72,7 @@ export default function SidebarNav({ userName, userEmail, userRole, locale }: Pr
     { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
     { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
     { href: "/portal/professional-profile", icon: Stethoscope, label: t("myProfile") },
-    { href: "/portal/settings", icon: Settings, label: t("settings") },
+    { href: "/portal/bookings", icon: CalendarCheck, label: t("bookings") },
   ];
 
   return (
