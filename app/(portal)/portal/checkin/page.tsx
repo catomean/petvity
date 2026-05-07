@@ -155,7 +155,7 @@ export default async function CheckinPage() {
                     {t("loggedToday")}
                   </span>
                 ) : (
-                  <span className={`${SIGNAL_BG_CLASSES[sig]} flex-shrink-0 hidden sm:inline-flex`}>
+                  <span className={`${SIGNAL_BG_CLASSES[sig]} flex-shrink-0`}>
                     {tSignal(sig)}
                   </span>
                 )}

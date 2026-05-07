@@ -116,6 +116,19 @@ export default async function DashboardPage() {
     return daysUntil >= 0 && daysUntil <= 14;
   }).length;
 
+  // Which pets have a due vaccination — used to make the strip actionable
+  const petsWithDueVacc = petsWithData.filter((pet) => {
+    const petVacc = vaccByPet.get(pet.id) ?? [];
+    return petVacc.some((v) => {
+      if (!v.nextDueDate || v.status === "not_applicable") return false;
+      const daysUntil = (new Date(v.nextDueDate + "T00:00:00Z").getTime() - new Date(todayStr + "T00:00:00Z").getTime()) / 86_400_000;
+      return daysUntil >= 0 && daysUntil <= 14;
+    });
+  });
+  const vaccHref = petsWithDueVacc.length === 1
+    ? `/portal/pets/${petsWithDueVacc[0].id}/vaccinations`
+    : "/portal/pets";
+
   return (
     <div>
       {/* Header */}
@@ -168,12 +181,16 @@ export default async function DashboardPage() {
             </Link>
           )}
           {vaccDueSoonCount > 0 && (
-            <div className="flex-1 flex items-center gap-3 rounded-xl border border-[var(--warn)] bg-[var(--warn-bg)] px-4 py-3">
+            <Link
+              href={vaccHref}
+              className="flex-1 flex items-center gap-3 rounded-xl border border-[var(--warn)] bg-[var(--warn-bg)] px-4 py-3 no-underline hover:opacity-90 transition-opacity"
+            >
               <Syringe className="w-4 h-4 text-[var(--warn-text)] flex-shrink-0" />
               <span className="text-sm font-medium text-[var(--ink)] flex-1">
                 {t("dashVaccDueSoon", { count: vaccDueSoonCount })}
               </span>
-            </div>
+              <span className="text-xs font-medium text-[var(--warn-text)]">{t("dashReview")} →</span>
+            </Link>
           )}
         </div>
       )}
