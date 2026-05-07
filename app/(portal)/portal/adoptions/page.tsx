@@ -276,7 +276,7 @@ function ListingCard({
             </p>
             {appsLoading ? (
               <div className="flex items-center gap-2 px-4 py-3 text-sm text-[var(--muted)]">
-                <Loader2 className="w-4 h-4 animate-spin" /> Loading…
+                <Loader2 className="w-4 h-4 animate-spin" /> {t("loading")}
               </div>
             ) : applications.length === 0 ? (
               <p className="text-sm text-[var(--muted)] px-4 py-3">{t("adoptionsNoApplications")}</p>

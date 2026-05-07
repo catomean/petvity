@@ -99,7 +99,7 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
         <div className="flex flex-wrap gap-1 mt-3">
           {LISTING_TRAIT_CONFIG.map((t) =>
             listing[t.field] ? (
-              <span key={t.field} className={`text-[10px] font-medium ${t.className} px-2 py-0.5 rounded-full`}>
+              <span key={t.field} className={`text-xs font-medium ${t.className} px-2 py-0.5 rounded-full`}>
                 {t.shortLabel}
               </span>
             ) : null,

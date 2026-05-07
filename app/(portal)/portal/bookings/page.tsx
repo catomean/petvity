@@ -56,6 +56,7 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
+  const [mutationError, setMutationError] = useState("");
   const [reviewTarget, setReviewTarget] = useState<BookingRow | null>(null);
   const [, startTransition] = useTransition();
 
@@ -80,17 +81,21 @@ export default function BookingsPage() {
   }
 
   async function updateStatus(bookingId: string, status: BookingRow["status"]) {
+    setMutationError("");
     const res = await fetch(`/api/bookings/${bookingId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     });
     if (res.ok) startTransition(() => load());
+    else setMutationError(t("loadFailed"));
   }
 
   async function deleteBooking(bookingId: string) {
+    setMutationError("");
     const res = await fetch(`/api/bookings/${bookingId}`, { method: "DELETE" });
     if (res.ok) startTransition(() => load());
+    else setMutationError(t("loadFailed"));
   }
 
   const upcoming = bookings.filter((b) => b.status === "pending" || b.status === "confirmed");
@@ -102,6 +107,10 @@ export default function BookingsPage() {
         <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("bookings")}</h1>
         <p className="text-sm text-[var(--muted)] mt-0.5">{t("bookingsSubtitle")}</p>
       </div>
+
+      {mutationError && (
+        <div className="alert-error mb-4">{mutationError}</div>
+      )}
 
       {loading ? (
         <div className="space-y-3">
