@@ -191,31 +191,37 @@ describe("formatIsoDateTime", () => {
 describe("formatRelativeDate", () => {
   const now = new Date("2026-01-15T12:00:00Z");
 
-  it("returns 'Today' for the current date", () => {
-    expect(formatRelativeDate("2026-01-15", now)).toBe("Today");
+  it("returns 'today' for the current date", () => {
+    expect(formatRelativeDate("2026-01-15", "en", now)).toBe("today");
   });
 
-  it("returns 'Tomorrow' for the next day", () => {
-    expect(formatRelativeDate("2026-01-16", now)).toBe("Tomorrow");
+  it("returns 'tomorrow' for the next day", () => {
+    expect(formatRelativeDate("2026-01-16", "en", now)).toBe("tomorrow");
   });
 
-  it("returns 'Yesterday' for the previous day", () => {
-    expect(formatRelativeDate("2026-01-14", now)).toBe("Yesterday");
+  it("returns 'yesterday' for the previous day", () => {
+    expect(formatRelativeDate("2026-01-14", "en", now)).toBe("yesterday");
   });
 
-  it("returns 'In N days' for future dates", () => {
-    expect(formatRelativeDate("2026-01-22", now)).toBe("In 7 days");
+  it("returns 'in N days' for future dates", () => {
+    expect(formatRelativeDate("2026-01-22", "en", now)).toBe("in 7 days");
   });
 
   it("returns 'N days ago' for past dates", () => {
-    expect(formatRelativeDate("2026-01-08", now)).toBe("7 days ago");
+    expect(formatRelativeDate("2026-01-08", "en", now)).toBe("7 days ago");
   });
 
   it("returns plural 'N days ago' for large past offsets", () => {
-    expect(formatRelativeDate("2025-12-16", now)).toBe("30 days ago");
+    expect(formatRelativeDate("2025-12-16", "en", now)).toBe("30 days ago");
   });
 
-  it("returns plural 'In N days' for large future offsets", () => {
-    expect(formatRelativeDate("2026-02-14", now)).toBe("In 30 days");
+  it("returns plural 'in N days' for large future offsets", () => {
+    expect(formatRelativeDate("2026-02-14", "en", now)).toBe("in 30 days");
+  });
+
+  it("formats in German when locale is 'de'", () => {
+    expect(formatRelativeDate("2026-01-15", "de", now)).toBe("heute");
+    expect(formatRelativeDate("2026-01-16", "de", now)).toBe("morgen");
+    expect(formatRelativeDate("2026-01-14", "de", now)).toBe("gestern");
   });
 });

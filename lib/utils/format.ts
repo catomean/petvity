@@ -102,10 +102,11 @@ export function formatIsoDateTime(iso: string, locale?: string): string {
 }
 
 /**
- * Format a date relative to now.
- * e.g. "2 days ago", "in 3 days"
+ * Format a date relative to now using the browser/runtime locale.
+ * e.g. locale="de": "heute", "morgen", "in 7 Tagen", "vor 30 Tagen"
+ *      locale="en": "today", "tomorrow", "in 7 days", "30 days ago"
  */
-export function formatRelativeDate(date: string, now = new Date()): string {
+export function formatRelativeDate(date: string, locale?: string, now = new Date()): string {
   // Use UTC midnight on both sides so the comparison is timezone-agnostic.
   const target = new Date(date + "T00:00:00Z");
   const nowUtcMidnight = new Date(
@@ -113,10 +114,5 @@ export function formatRelativeDate(date: string, now = new Date()): string {
   );
   const diffMs = target.getTime() - nowUtcMidnight.getTime();
   const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Tomorrow";
-  if (diffDays === -1) return "Yesterday";
-  if (diffDays > 0) return `In ${diffDays} days`;
-  return `${Math.abs(diffDays)} days ago`;
+  return new Intl.RelativeTimeFormat(locale ?? "en", { numeric: "auto" }).format(diffDays, "day");
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { formatSitterServices } from "@/lib/config/professionals";
+import { formatAdoptionFee } from "@/lib/utils/format";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -160,7 +161,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
             </div>
             {sitter.pricePerDay != null && (
               <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">
-                ${(sitter.pricePerDay / 100).toFixed(0)}{t("findPerDay")}
+                {formatAdoptionFee(sitter.pricePerDay)}{t("findPerDay")}
               </p>
             )}
           </div>

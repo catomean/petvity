@@ -108,7 +108,7 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
       </h1>
       <p className="text-sm text-[var(--muted)] mb-4">
         {isEditing
-          ? t("editingEntryFor", { date: formatRelativeDate(targetDate).toLowerCase() })
+          ? t("editingEntryFor", { date: formatRelativeDate(targetDate, locale) })
           : existing
             ? t("alreadyLoggedToday")
             : t("logAsManyMetrics")}
@@ -125,7 +125,7 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
           parts.push(`${prevLog.heartRateBpm} bpm`);
         return parts.length > 0 ? (
           <p className="text-xs text-[var(--muted)] bg-[var(--off)] border border-[var(--border)] rounded-lg px-3 py-2 mb-6">
-            <span className="font-medium text-[var(--ink2)]">{t("lastLoggedContext", { date: formatRelativeDate(prevLog.date) })}</span>
+            <span className="font-medium text-[var(--ink2)]">{t("lastLoggedContext", { date: formatRelativeDate(prevLog.date, locale) })}</span>
             {" "}{parts.join(" · ")}
           </p>
         ) : null;

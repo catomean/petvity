@@ -12,7 +12,7 @@ import { VACCINATION_STATUS_CONFIG, computeVaccinationDisplayStatus } from "@/li
 import type { VaccinationStatusId } from "@/lib/config/vaccinations";
 import { VACCINATION_DUE_SOON_DAYS } from "@/lib/config/pet-signal";
 import { useHealthList } from "@/hooks/useHealthList";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Partial<Record<VaccinationStatusId, React.ElementType>> = {
@@ -82,6 +82,7 @@ function buildBody(form: FormState, petId: string, isEdit: boolean) {
 
 export default function VaccinationsPage() {
   const t = useTranslations("portal");
+  const locale = useLocale();
   const { petId } = useParams<{ petId: string }>();
 
   /* todayStr is needed both in the filter callback and in row rendering */
@@ -354,7 +355,7 @@ export default function VaccinationsPage() {
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden md:table-cell">
                       {v.nextDueDate ? (
-                        <span title={formatDateShort(v.nextDueDate)}>{formatRelativeDate(v.nextDueDate)}</span>
+                        <span title={formatDateShort(v.nextDueDate)}>{formatRelativeDate(v.nextDueDate, locale)}</span>
                       ) : (
                         <span className="text-[var(--faint)]">–</span>
                       )}

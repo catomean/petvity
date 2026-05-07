@@ -156,7 +156,7 @@ export default async function PetsPage() {
                   </p>
                   {lastDate && (
                     <p className="text-xs text-[var(--faint)] mt-0.5">
-                      {t("lastCheckin", { date: formatRelativeDate(lastDate) })}
+                      {t("lastCheckin", { date: formatRelativeDate(lastDate, locale) })}
                     </p>
                   )}
                 </div>
