@@ -403,7 +403,7 @@ function BookingModal({
           <h2 className="font-semibold text-[var(--ink)]">
             {t("findBookTitle", { name: target.name ?? t("findProfessional") })}
           </h2>
-          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
+          <button onClick={onClose} className="p-2 -me-2 text-[var(--muted)] hover:text-[var(--ink)] transition-colors rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
