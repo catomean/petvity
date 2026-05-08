@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SPECIES_OPTIONS, SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, PawPrint } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-export default function NewPetPage() {
+function NewPetForm() {
   const t = useTranslations("portal");
   const tPub = useTranslations("public");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromRegistration = searchParams.get("from") === "registration";
+
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -49,6 +52,8 @@ export default function NewPetPage() {
 
     if (!data.success) {
       setError(data.error ?? t("newPetFailed"));
+    } else if (fromRegistration) {
+      router.push(`/portal/pets/${data.data.id}/health/log`);
     } else {
       router.push(`/portal/pets/${data.data.id}`);
     }
@@ -56,13 +61,25 @@ export default function NewPetPage() {
 
   return (
     <div className="max-w-lg">
-      <Link
-        href="/portal/pets"
-        className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
-      >
-        <ChevronLeft className="w-4 h-4" />
-        {t("myPets")}
-      </Link>
+      {fromRegistration ? (
+        <div className="flex items-start gap-3 rounded-2xl bg-[var(--teal-light)] border border-[var(--teal)] px-5 py-4 mb-6">
+          <div className="w-9 h-9 rounded-xl bg-[var(--teal)] flex items-center justify-center flex-shrink-0 mt-0.5">
+            <PawPrint className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-[var(--teal)]">{t("newPetWelcomeTitle")}</p>
+            <p className="text-xs text-[var(--ink2)] mt-0.5">{t("newPetWelcomeSubtitle")}</p>
+          </div>
+        </div>
+      ) : (
+        <Link
+          href="/portal/pets"
+          className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          {t("myPets")}
+        </Link>
+      )}
 
       <h1 className="text-2xl font-bold text-[var(--ink)] mb-2">{t("addPet")}</h1>
       <p className="text-sm text-[var(--muted)] mb-6">{t("newPetSubtitle")}</p>
@@ -217,5 +234,13 @@ export default function NewPetPage() {
         </div>
       </form>
     </div>
+  );
+}
+
+export default function NewPetPage() {
+  return (
+    <Suspense>
+      <NewPetForm />
+    </Suspense>
   );
 }

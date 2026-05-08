@@ -334,6 +334,27 @@ export const sitterProfiles = pgTable("sitter_profiles", {
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
 
+// ─── Seller profiles ───────────────────────────────────────────────────────────
+
+export const sellerProfiles = pgTable("seller_profiles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+  /** Public store name (defaults to user display name) */
+  displayName: varchar("display_name", { length: 200 }),
+  bio: text("bio"),
+  city: varchar("city", { length: 100 }),
+  country: varchar("country", { length: 2 }),
+  phone: varchar("phone", { length: 50 }),
+  website: varchar("website", { length: 500 }),
+  /** false = store is paused (products still visible but not purchasable) */
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
 // ─── Bookings ──────────────────────────────────────────────────────────────────
 
 export const bookings = pgTable("bookings", {

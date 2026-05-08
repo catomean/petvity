@@ -4,6 +4,9 @@ import { NextIntlClientProvider } from "next-intl";
 import SidebarNav from "@/components/portal/SidebarNav";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import type { LocaleCode } from "@/lib/config/locales";
+import { getInstance } from "@/lib/db";
+import { sellerProfiles } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 export default async function PortalLayout({
   children,
@@ -13,7 +16,15 @@ export default async function PortalLayout({
   const session = await auth();
   if (!session) redirect("/login");
 
-  const locale = await getPortalLocale();
+  const db = getInstance();
+  const [locale, sellerProfile] = await Promise.all([
+    getPortalLocale(),
+    db.query.sellerProfiles.findFirst({
+      where: eq(sellerProfiles.userId, session.user.id),
+      columns: { id: true },
+    }),
+  ]);
+
   const messages = (await import(`../../messages/${locale}.json`)).default;
 
   return (
@@ -23,6 +34,7 @@ export default async function PortalLayout({
           userName={session.user.name}
           userEmail={session.user.email}
           userRole={session.user.role}
+          hasSeller={!!sellerProfile}
           locale={locale as LocaleCode}
         />
         {/* Offset for desktop sidebar (w-60) and mobile top/bottom bars */}
