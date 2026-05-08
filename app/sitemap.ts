@@ -13,9 +13,15 @@ const MARKETING_PATHS = [
   { path: "/about", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/pricing", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/pros", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/species/dog", changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/cat", changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/horse", changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/dog",       changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/cat",       changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/horse",     changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/bird",      changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/rabbit",    changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/guinea_pig", changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/hamster",   changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/reptile",   changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/fish",      changeFrequency: "monthly" as const, priority: 0.7 },
   { path: "/adopt", changeFrequency: "daily" as const, priority: 0.9 },
 ];
 

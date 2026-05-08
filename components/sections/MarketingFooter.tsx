@@ -2,9 +2,20 @@ import Link from "next/link";
 import { PawPrint } from "lucide-react";
 import { APP } from "@/lib/config/app";
 import { getTranslations } from "next-intl/server";
+import { SPECIES_CONFIG } from "@/lib/config/species";
 
 export default async function MarketingFooter() {
-  const t = await getTranslations("footer");
+  const [t, tPub] = await Promise.all([
+    getTranslations("footer"),
+    getTranslations("public"),
+  ]);
+
+  const speciesGuideLinks = Object.values(SPECIES_CONFIG)
+    .filter((s) => s.id !== "other")
+    .map((s) => ({
+      label: `${s.emoji} ${tPub(`species_${s.id}` as Parameters<typeof tPub>[0])}`,
+      href: `/species/${s.id}`,
+    }));
 
   const LINK_SECTIONS = [
     {
@@ -18,11 +29,7 @@ export default async function MarketingFooter() {
     },
     {
       heading: t("sections.guides"),
-      links: [
-        { label: t("links.dogHealth"),   href: "/species/dog" },
-        { label: t("links.catHealth"),   href: "/species/cat" },
-        { label: t("links.horseHealth"), href: "/species/horse" },
-      ],
+      links: speciesGuideLinks,
     },
     {
       heading: t("sections.professionals"),

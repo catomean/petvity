@@ -64,9 +64,15 @@ export default function MarketingNav() {
   ];
 
   const GUIDES_ITEMS = [
-    { emoji: "🐕", label: "Dogs",   href: "/species/dog" },
-    { emoji: "🐈", label: "Cats",   href: "/species/cat" },
-    { emoji: "🐴", label: "Horses", href: "/species/horse" },
+    { emoji: "🐕", label: "Dogs",        href: "/species/dog" },
+    { emoji: "🐈", label: "Cats",        href: "/species/cat" },
+    { emoji: "🐴", label: "Horses",      href: "/species/horse" },
+    { emoji: "🐦", label: "Birds",       href: "/species/bird" },
+    { emoji: "🐇", label: "Rabbits",     href: "/species/rabbit" },
+    { emoji: "🐹", label: "Guinea Pigs", href: "/species/guinea_pig" },
+    { emoji: "🐹", label: "Hamsters",    href: "/species/hamster" },
+    { emoji: "🦎", label: "Reptiles",    href: "/species/reptile" },
+    { emoji: "🐟", label: "Fish",        href: "/species/fish" },
   ];
 
   return (

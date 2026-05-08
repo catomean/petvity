@@ -43,15 +43,27 @@ const EMOT_LABEL_KEY: Record<string, string> = {
 };
 
 const SPECIES_BLURB_KEY: Partial<Record<SpeciesId, string>> = {
-  dog:   "dogBlurb",
-  cat:   "catBlurb",
-  horse: "horseBlurb",
+  dog:       "dogBlurb",
+  cat:       "catBlurb",
+  horse:     "horseBlurb",
+  bird:      "birdBlurb",
+  rabbit:    "rabbitBlurb",
+  guinea_pig:"guineaPigBlurb",
+  hamster:   "hamsterBlurb",
+  reptile:   "reptileBlurb",
+  fish:      "fishBlurb",
 };
 
 const CARE_TIP_KEYS: Partial<Record<SpeciesId, string[]>> = {
-  dog:   ["dogTip1","dogTip2","dogTip3","dogTip4","dogTip5"],
-  cat:   ["catTip1","catTip2","catTip3","catTip4","catTip5"],
-  horse: ["horseTip1","horseTip2","horseTip3","horseTip4","horseTip5"],
+  dog:       ["dogTip1","dogTip2","dogTip3","dogTip4","dogTip5"],
+  cat:       ["catTip1","catTip2","catTip3","catTip4","catTip5"],
+  horse:     ["horseTip1","horseTip2","horseTip3","horseTip4","horseTip5"],
+  bird:      ["birdTip1","birdTip2","birdTip3","birdTip4","birdTip5"],
+  rabbit:    ["rabbitTip1","rabbitTip2","rabbitTip3","rabbitTip4","rabbitTip5"],
+  guinea_pig:["guineaPigTip1","guineaPigTip2","guineaPigTip3","guineaPigTip4","guineaPigTip5"],
+  hamster:   ["hamsterTip1","hamsterTip2","hamsterTip3","hamsterTip4","hamsterTip5"],
+  reptile:   ["reptileTip1","reptileTip2","reptileTip3","reptileTip4","reptileTip5"],
+  fish:      ["fishTip1","fishTip2","fishTip3","fishTip4","fishTip5"],
 };
 
 /* ── Physical metrics shown in the ranges section ── */
@@ -69,12 +81,18 @@ const EMOTIONAL_INFO = [
   { id: "socialization" as const, icon: Users },
 ] as const;
 
-/** Statically render dog, cat, horse. "other" has no useful health ranges. */
+/** Statically render all trackable species. "other" has no species-specific ranges. */
 export function generateStaticParams() {
   return [
     { speciesId: "dog" },
     { speciesId: "cat" },
     { speciesId: "horse" },
+    { speciesId: "bird" },
+    { speciesId: "rabbit" },
+    { speciesId: "guinea_pig" },
+    { speciesId: "hamster" },
+    { speciesId: "reptile" },
+    { speciesId: "fish" },
   ];
 }
 
