@@ -27,13 +27,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 const PILLAR_META = [
   { icon: Activity,     color: "bg-[var(--teal-light)] text-[var(--teal)]",    titleKey: "fp1Title" as const, descKey: "fp1Desc" as const, bulletKeys: ["fp1B1","fp1B2","fp1B3","fp1B4"] as const },
-  { icon: Brain,        color: "bg-violet-50 text-violet-600",                  titleKey: "fp2Title" as const, descKey: "fp2Desc" as const, bulletKeys: ["fp2B1","fp2B2","fp2B3","fp2B4"] as const },
-  { icon: Zap,          color: "bg-amber-50 text-amber-600",                    titleKey: "fp3Title" as const, descKey: "fp3Desc" as const, bulletKeys: ["fp3B1","fp3B2","fp3B3","fp3B4"] as const },
-  { icon: FileText,     color: "bg-blue-50 text-blue-600",                      titleKey: "fp4Title" as const, descKey: "fp4Desc" as const, bulletKeys: ["fp4B1","fp4B2","fp4B3","fp4B4"] as const },
+  { icon: Brain,        color: "bg-[var(--twin-bg)] text-[var(--twin)]",        titleKey: "fp2Title" as const, descKey: "fp2Desc" as const, bulletKeys: ["fp2B1","fp2B2","fp2B3","fp2B4"] as const },
+  { icon: Zap,          color: "bg-[var(--warm-bg)] text-[var(--warn)]",        titleKey: "fp3Title" as const, descKey: "fp3Desc" as const, bulletKeys: ["fp3B1","fp3B2","fp3B3","fp3B4"] as const },
+  { icon: FileText,     color: "bg-[var(--info-bg)] text-[var(--info)]",        titleKey: "fp4Title" as const, descKey: "fp4Desc" as const, bulletKeys: ["fp4B1","fp4B2","fp4B3","fp4B4"] as const },
   { icon: Globe,        color: "bg-[var(--green-bg)] text-[var(--green-text)]", titleKey: "fp5Title" as const, descKey: "fp5Desc" as const, bulletKeys: ["fp5B1","fp5B2","fp5B3","fp5B4"] as const },
   { icon: Search,       color: "bg-sky-50 text-sky-600",                        titleKey: "fp6Title" as const, descKey: "fp6Desc" as const, bulletKeys: ["fp6B1","fp6B2","fp6B3","fp6B4"] as const },
   { icon: ShoppingBag,  color: "bg-rose-50 text-rose-600",                      titleKey: "fp7Title" as const, descKey: "fp7Desc" as const, bulletKeys: ["fp7B1","fp7B2","fp7B3","fp7B4"] as const },
-  { icon: Heart,        color: "bg-pink-50 text-pink-600",                      titleKey: "fp8Title" as const, descKey: "fp8Desc" as const, bulletKeys: ["fp8B1","fp8B2","fp8B3","fp8B4"] as const },
+  { icon: Heart,        color: "bg-[var(--secondary-bg)] text-[var(--secondary)]", titleKey: "fp8Title" as const, descKey: "fp8Desc" as const, bulletKeys: ["fp8B1","fp8B2","fp8B3","fp8B4"] as const },
   { icon: Globe,        color: "bg-emerald-50 text-emerald-600",                titleKey: "fp9Title" as const, descKey: "fp9Desc" as const, bulletKeys: ["fp9B1","fp9B2","fp9B3","fp9B4"] as const },
   { icon: Shield,       color: "bg-[var(--teal-light)] text-[var(--teal)]",    titleKey: "fp10Title" as const, descKey: "fp10Desc" as const, bulletKeys: ["fp10B1","fp10B2","fp10B3","fp10B4"] as const },
 ] as const;
@@ -57,7 +57,7 @@ export default async function FeaturesPage({ params }: Params) {
       <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[#f0fafb] pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
         />
         <div aria-hidden className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
 
@@ -147,7 +147,7 @@ export default async function FeaturesPage({ params }: Params) {
           <p className="text-white/70 text-lg mb-8 max-w-xl mx-auto">
             {t("ctaDesc")}
           </p>
-          <Link href="/register" className="inline-flex items-center gap-2 bg-white text-[var(--teal)] font-bold px-8 py-4 rounded-xl text-base hover:bg-[var(--teal-light)] transition-colors">
+          <Link href="/register" className="btn-on-teal">
             {t("ctaButton")}
             <ArrowRight className="w-4 h-4" />
           </Link>

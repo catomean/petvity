@@ -43,7 +43,7 @@ export default async function ProsPage({ params }: Params) {
       <section className="relative pt-28 pb-20 md:pt-36 md:pb-28">
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[#f0fafb] pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
         />
         <div aria-hidden className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
 
@@ -120,7 +120,7 @@ export default async function ProsPage({ params }: Params) {
                   {i < 2 && (
                     <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--border)]" />
                   )}
-                  <div className="w-14 h-14 rounded-2xl bg-[var(--teal)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4 shadow-[0_4px_12px_rgb(13_110_120/0.25)]">
+                  <div className="w-14 h-14 rounded-2xl bg-[var(--teal)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4 shadow-[var(--brand-shadow)]">
                     {String(i + 1).padStart(2, "0")}
                   </div>
                   <p className="text-sm text-[var(--ink2)]">{t(key)}</p>
@@ -141,10 +141,10 @@ export default async function ProsPage({ params }: Params) {
       <section id="sitters" className="py-24 md:py-32 bg-white">
         <div className="section-inner">
           <div className="text-center mb-16">
-            <div className="w-14 h-14 rounded-2xl bg-pink-50 flex items-center justify-center mx-auto mb-5">
-              <Heart className="w-7 h-7 text-pink-500" />
+            <div className="w-14 h-14 rounded-2xl bg-[var(--secondary-bg)] flex items-center justify-center mx-auto mb-5">
+              <Heart className="w-7 h-7 text-[var(--secondary)]" />
             </div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-pink-500 mb-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--secondary)] mb-3">
               {t("sitterTabLabel")}
             </p>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
@@ -160,8 +160,8 @@ export default async function ProsPage({ params }: Params) {
               const Icon = SITTER_BENEFIT_ICONS[i];
               return (
                 <div key={key} className="card p-7">
-                  <div className="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5 text-pink-500" />
+                  <div className="w-10 h-10 rounded-xl bg-[var(--secondary-bg)] flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-[var(--secondary)]" />
                   </div>
                   <p className="text-sm text-[var(--muted)] leading-relaxed">{t(key)}</p>
                 </div>
@@ -180,7 +180,7 @@ export default async function ProsPage({ params }: Params) {
                   {i < 2 && (
                     <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--border)]" />
                   )}
-                  <div className="w-14 h-14 rounded-2xl bg-pink-500 text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4 shadow-[0_4px_12px_rgb(236_72_153/0.25)]">
+                  <div className="w-14 h-14 rounded-2xl bg-[var(--secondary)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4 shadow-[var(--secondary-shadow)]">
                     {String(i + 1).padStart(2, "0")}
                   </div>
                   <p className="text-sm text-[var(--ink2)]">{t(key)}</p>
@@ -188,7 +188,7 @@ export default async function ProsPage({ params }: Params) {
               ))}
             </div>
             <div className="text-center mt-10">
-              <Link href="/register?role=sitter" className="btn-primary" style={{ background: "var(--accent)" }}>
+              <Link href="/register?role=sitter" className="btn-primary">
                 {t("sitterCtaButton")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -229,18 +229,12 @@ export default async function ProsPage({ params }: Params) {
             {t("ctaDesc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/register?role=vet"
-              className="inline-flex items-center gap-2 bg-white text-[var(--teal)] font-bold text-base px-8 py-4 rounded-xl hover:bg-[var(--teal-light)] transition-colors no-underline shadow-[0_4px_20px_rgb(0_0_0/0.15)]"
-            >
+            <Link href="/register?role=vet" className="btn-on-teal shadow-[var(--cta-shadow)]">
               <Stethoscope className="w-4 h-4" />
               {t("ctaVetButton")}
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link
-              href="/register?role=sitter"
-              className="inline-flex items-center gap-2 bg-white/10 text-white font-bold text-base px-8 py-4 rounded-xl hover:bg-white/20 transition-colors no-underline border border-white/20"
-            >
+            <Link href="/register?role=sitter" className="btn-on-teal-ghost">
               <Heart className="w-4 h-4" />
               {t("ctaSitterButton")}
             </Link>

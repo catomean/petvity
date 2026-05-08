@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 const VALUE_META = [
   { icon: Heart,  color: "bg-[var(--accent-light)] text-[var(--accent)]", titleKey: "v1Title" as const, descKey: "v1Desc" as const },
   { icon: Globe,  color: "bg-[var(--teal-light)] text-[var(--teal)]",     titleKey: "v2Title" as const, descKey: "v2Desc" as const },
-  { icon: Shield, color: "bg-blue-50 text-blue-600",                       titleKey: "v3Title" as const, descKey: "v3Desc" as const },
-  { icon: Zap,    color: "bg-amber-50 text-amber-600",                     titleKey: "v4Title" as const, descKey: "v4Desc" as const },
+  { icon: Shield, color: "bg-[var(--info-bg)] text-[var(--info)]",         titleKey: "v3Title" as const, descKey: "v3Desc" as const },
+  { icon: Zap,    color: "bg-[var(--warm-bg)] text-[var(--warn)]",         titleKey: "v4Title" as const, descKey: "v4Desc" as const },
 ] as const;
 
 const STAT_KEYS = [
@@ -47,7 +47,7 @@ export default async function AboutPage({ params }: Params) {
       <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[#f0fafb] pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
         />
         <div aria-hidden className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
 
@@ -133,11 +133,11 @@ export default async function AboutPage({ params }: Params) {
             {t("ctaDesc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/register" className="inline-flex items-center gap-2 bg-white text-[var(--teal)] font-bold px-8 py-4 rounded-xl text-base hover:bg-[var(--teal-light)] transition-colors">
+            <Link href="/register" className="btn-on-teal">
               {t("ctaButton")}
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/features" className="inline-flex items-center gap-2 bg-white/10 text-white font-bold px-8 py-4 rounded-xl text-base hover:bg-white/20 transition-colors border border-white/20">
+            <Link href="/features" className="btn-on-teal-ghost">
               {t("ctaFeatures")}
             </Link>
           </div>

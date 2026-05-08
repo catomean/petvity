@@ -171,7 +171,7 @@ export default async function DashboardPage() {
           {pendingAppsCount > 0 && (
             <Link
               href="/portal/adoptions"
-              className="flex-1 flex items-center gap-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-light)] px-4 py-3 no-underline hover:bg-orange-50 transition-colors"
+              className="flex-1 flex items-center gap-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-light)] px-4 py-3 no-underline hover:brightness-95 transition-colors"
             >
               <Heart className="w-4 h-4 text-[var(--accent)] flex-shrink-0" />
               <span className="text-sm font-medium text-[var(--ink)] flex-1">

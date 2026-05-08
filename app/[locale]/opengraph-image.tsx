@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { APP } from "@/lib/config/app";
+import { TOKENS } from "@/lib/config/design-tokens";
 
 export const runtime = "edge";
 export const alt = `${APP.name} — ${APP.tagline}`;
@@ -17,7 +18,7 @@ export default function OgImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0D6E78 0%, #0A5860 100%)",
+          background: `linear-gradient(135deg, ${TOKENS.teal} 0%, ${TOKENS.tealDark} 100%)`,
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
       >
@@ -99,9 +100,9 @@ export default function OgImage() {
           }}
         >
           {[
-            { label: "Healthy", color: "#16A34A", bg: "rgba(22,163,74,0.2)" },
-            { label: "Watch", color: "#D97706", bg: "rgba(217,119,6,0.2)" },
-            { label: "Concern", color: "#DC2626", bg: "rgba(220,38,38,0.2)" },
+            { label: "Healthy", color: TOKENS.green,  bg: `${TOKENS.green}33`  },
+            { label: "Watch",   color: TOKENS.warn,   bg: `${TOKENS.warn}33`   },
+            { label: "Concern", color: TOKENS.danger,  bg: `${TOKENS.danger}33` },
           ].map(({ label, color, bg }) => (
             <div
               key={label}

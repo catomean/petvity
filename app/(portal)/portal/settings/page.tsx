@@ -415,7 +415,7 @@ export default function SettingsPage() {
                 <button
                   type="submit"
                   disabled={deleting || deleteConfirm !== "DELETE" || !deletePw}
-                  className="text-sm font-medium px-4 py-2 rounded-lg bg-[var(--danger)] text-white hover:bg-red-700 disabled:opacity-60 transition-colors"
+                  className="text-sm font-medium px-4 py-2 rounded-lg bg-[var(--danger)] text-white hover:bg-[var(--danger-dark)] disabled:opacity-60 transition-colors"
                 >
                   {deleting ? t("settingsDeleting") : t("settingsDeleteForever")}
                 </button>

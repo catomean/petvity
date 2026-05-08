@@ -68,7 +68,7 @@ export function HealthTrendChart({
           ))}
           {showRange && (
             <span className="flex items-center gap-1.5 text-xs text-[var(--ink2)]">
-              <span className="inline-block w-3 h-2 rounded-sm" style={{ background: "rgba(22,163,74,0.25)" }} />
+              <span className="inline-block w-3 h-2 rounded-sm" style={{ background: "color-mix(in srgb, var(--green) 25%, transparent)" }} />
               {normalRangeLabel}
             </span>
           )}
@@ -97,7 +97,7 @@ export function HealthTrendChart({
               fontSize: 12,
               borderRadius: 8,
               border: "1px solid var(--border)",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+              boxShadow: "var(--tooltip-shadow)",
             }}
             formatter={(value) => (value != null ? [`${value}${unit}`, undefined] : [undefined, undefined])}
           />
@@ -105,9 +105,9 @@ export function HealthTrendChart({
             <ReferenceArea
               y1={normalMin}
               y2={normalMax}
-              fill="#16A34A"
+              fill="var(--green)"
               fillOpacity={0.08}
-              stroke="#16A34A"
+              stroke="var(--green)"
               strokeOpacity={0.25}
               strokeDasharray="4 2"
             />

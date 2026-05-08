@@ -18,6 +18,7 @@ import {
   Heart,
   Store,
   ClipboardList,
+  Package,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
@@ -33,10 +34,11 @@ interface Props {
   userName?: string | null;
   userEmail?: string | null;
   userRole?: string | null;
+  hasSeller?: boolean;
   locale: LocaleCode;
 }
 
-export default function SidebarNav({ userName, userEmail, userRole, locale }: Props) {
+export default function SidebarNav({ userName, userEmail, userRole, hasSeller, locale }: Props) {
   const pathname = usePathname();
   const t = useTranslations("portal");
   const initials = userName?.[0]?.toUpperCase() ?? "?";
@@ -50,7 +52,6 @@ export default function SidebarNav({ userName, userEmail, userRole, locale }: Pr
     { href: "/portal/bookings", icon: CalendarCheck, label: t("bookings") },
     { href: "/portal/shop", icon: ShoppingCart, label: t("shop") },
     { href: "/portal/orders", icon: ShoppingBag, label: t("orders") },
-    { href: "/portal/my-products", icon: Store, label: t("myProducts") },
     { href: "/portal/adopt", icon: Heart, label: t("adopt") },
     { href: "/portal/adoptions", icon: ClipboardList, label: t("myAdoptions") },
   ];
@@ -98,24 +99,43 @@ export default function SidebarNav({ userName, userEmail, userRole, locale }: Pr
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium no-underline transition-colors ${
-                isActive(pathname, href)
-                  ? "bg-[var(--teal-light)] text-[var(--teal)]"
-                  : "text-[var(--ink2)] hover:bg-[var(--light)] hover:text-[var(--ink)]"
-              }`}
+              className={`nav-link ${isActive(pathname, href) ? "nav-link-active" : "nav-link-inactive"}`}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
               {label}
             </Link>
           ))}
+          {hasSeller && (
+            <>
+              <Link
+                href="/portal/my-products"
+                className={`nav-link ${isActive(pathname, "/portal/my-products") ? "nav-link-active" : "nav-link-inactive"}`}
+              >
+                <Store className="w-4 h-4 flex-shrink-0" />
+                {t("myProducts")}
+              </Link>
+              <Link
+                href="/portal/seller-profile"
+                className={`nav-link ${isActive(pathname, "/portal/seller-profile") ? "nav-link-active" : "nav-link-inactive"}`}
+              >
+                <Package className="w-4 h-4 flex-shrink-0" />
+                {t("sellerProfile")}
+              </Link>
+            </>
+          )}
+          {!hasSeller && (
+            <Link
+              href="/portal/seller-profile"
+              className={`nav-link ${isActive(pathname, "/portal/seller-profile") ? "nav-link-active" : "nav-link-muted"}`}
+            >
+              <Store className="w-4 h-4 flex-shrink-0" />
+              {t("becomeSeller")}
+            </Link>
+          )}
           {isProfessional && (
             <Link
               href="/portal/professional-profile"
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium no-underline transition-colors ${
-                isActive(pathname, "/portal/professional-profile")
-                  ? "bg-[var(--teal-light)] text-[var(--teal)]"
-                  : "text-[var(--ink2)] hover:bg-[var(--light)] hover:text-[var(--ink)]"
-              }`}
+              className={`nav-link ${isActive(pathname, "/portal/professional-profile") ? "nav-link-active" : "nav-link-inactive"}`}
             >
               <Stethoscope className="w-4 h-4 flex-shrink-0" />
               {t("myProfile")}
@@ -128,18 +148,14 @@ export default function SidebarNav({ userName, userEmail, userRole, locale }: Pr
           <LocaleSwitcher current={locale} />
           <Link
             href="/portal/settings"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium no-underline transition-colors ${
-              pathname === "/portal/settings"
-                ? "bg-[var(--teal-light)] text-[var(--teal)]"
-                : "text-[var(--ink2)] hover:bg-[var(--light)] hover:text-[var(--ink)]"
-            }`}
+            className={`nav-link ${pathname === "/portal/settings" ? "nav-link-active" : "nav-link-inactive"}`}
           >
             <Settings className="w-4 h-4 flex-shrink-0" />
             {t("settings")}
           </Link>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-[var(--muted)] hover:bg-[var(--danger-bg)] hover:text-[var(--danger-text)] transition-colors cursor-pointer border-none bg-transparent"
+            className="nav-link nav-link-danger w-full cursor-pointer bg-transparent"
           >
             <LogOut className="w-4 h-4 flex-shrink-0" />
             {t("signOut")}
@@ -189,11 +205,7 @@ export default function SidebarNav({ userName, userEmail, userRole, locale }: Pr
           <Link
             key={href}
             href={href}
-            className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs font-medium no-underline transition-colors ${
-              isActive(pathname, href)
-                ? "text-[var(--teal)]"
-                : "text-[var(--muted)]"
-            }`}
+            className={`mobile-tab-item ${isActive(pathname, href) ? "mobile-tab-item-active" : "mobile-tab-item-inactive"}`}
           >
             <Icon
               className={`w-5 h-5 ${isActive(pathname, href) ? "stroke-2" : "stroke-[1.5]"}`}

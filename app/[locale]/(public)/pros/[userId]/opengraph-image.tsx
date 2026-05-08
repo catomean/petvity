@@ -3,6 +3,7 @@ import { getInstance } from "@/lib/db";
 import { vetProfiles, sitterProfiles, users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { APP } from "@/lib/config/app";
+import { TOKENS } from "@/lib/config/design-tokens";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -32,8 +33,8 @@ export default async function OgImage({ params }: Params) {
   const name = vetRow?.name ?? sitterRow?.name ?? (isVet ? "Veterinarian" : "Pet Sitter");
   const role = isVet ? "Veterinarian" : "Pet Sitter";
   const specialty = isVet && vetRow?.specialty ? ` · ${vetRow.specialty}` : "";
-  const accent = isVet ? "#0D6E78" : "#E06B3A";
-  const accentDark = isVet ? "#0A5860" : "#C85E30";
+  const accent = isVet ? TOKENS.teal : TOKENS.accent;
+  const accentDark = isVet ? TOKENS.tealDark : TOKENS.accentDark;
   const icon = isVet ? "🩺" : "🏠";
 
   return new ImageResponse(

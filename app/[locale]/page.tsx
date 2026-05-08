@@ -105,7 +105,7 @@ export default async function HomePage({ params }: Params) {
     { icon: "💉", label: "Rabies booster",        meta: t("mockDueDays"),    cls: "text-purple-600 bg-purple-50" },
     { icon: "🩺", label: t("mockRecordExam"),      meta: t("mockMonthsAgo"), cls: "text-[var(--teal)] bg-[var(--teal-light)]" },
     { icon: "💊", label: "Heartgard · monthly",    meta: t("mockActive"),    cls: "text-[var(--accent)] bg-[var(--accent-light)]" },
-    { icon: "🔬", label: t("mockRecordPanel"),     meta: t("mockAllNormal"), cls: "text-blue-600 bg-blue-50" },
+    { icon: "🔬", label: t("mockRecordPanel"),     meta: t("mockAllNormal"), cls: "text-[var(--info)] bg-[var(--info-bg)]" },
   ];
 
   const twinMetrics = [
@@ -149,7 +149,7 @@ export default async function HomePage({ params }: Params) {
         {/* Warm gradient background */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[#f0fafb] pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
         />
         {/* Decorative blobs */}
         <div aria-hidden className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
@@ -404,10 +404,10 @@ export default async function HomePage({ params }: Params) {
 
             {/* Copy */}
             <div className="order-1 lg:order-2">
-              <p className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3">{t("twinEyebrow")}</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--twin)] mb-3">{t("twinEyebrow")}</p>
               <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-6 leading-tight">
                 {t("twinTitle1")}
-                <br /><span className="text-violet-600">{t("twinTitle2")}</span>, {t("twinTitle3")}
+                <br /><span className="text-[var(--twin)]">{t("twinTitle2")}</span>, {t("twinTitle3")}
               </h2>
               <p className="text-lg text-[var(--muted)] leading-relaxed mb-5">
                 {t("twinP1")}
@@ -559,8 +559,8 @@ export default async function HomePage({ params }: Params) {
 
             {/* Adoption */}
             <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
-              <div className="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center">
-                <Heart className="w-6 h-6 text-pink-500" />
+              <div className="w-12 h-12 rounded-2xl bg-[var(--secondary-bg)] flex items-center justify-center">
+                <Heart className="w-6 h-6 text-[var(--secondary)]" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("adoptTitle")}</h3>

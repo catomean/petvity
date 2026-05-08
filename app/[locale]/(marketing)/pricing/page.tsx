@@ -74,7 +74,7 @@ export default async function PricingPage({ params }: Params) {
       <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[#f0fafb] pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
         />
         <div aria-hidden className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
 
