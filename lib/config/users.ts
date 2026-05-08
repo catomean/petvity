@@ -17,7 +17,3 @@ export const USER_ROLE_OPTIONS = (Object.entries(USER_ROLE_CONFIG) as [UserRole,
   ([value, { label }]) => ({ value, label }),
 );
 
-/** Label-only helper for inline use. */
-export function userRoleLabel(role: string): string {
-  return USER_ROLE_CONFIG[role as UserRole]?.label ?? role;
-}

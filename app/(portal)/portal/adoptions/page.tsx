@@ -331,7 +331,7 @@ export default function AdoptionsPage() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(loadListings, []);
+  useEffect(() => { loadListings(); }, []);
 
   function handleStatusChange(id: string, status: AdoptionListing["status"]) {
     setListings((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)));

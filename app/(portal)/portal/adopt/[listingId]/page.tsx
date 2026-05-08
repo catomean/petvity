@@ -94,7 +94,7 @@ export default function ListingDetailPage() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(loadListing, [listingId]);
+  useEffect(() => { loadListing(); }, [listingId]);
 
   async function handleApply(e: React.FormEvent) {
     e.preventDefault();

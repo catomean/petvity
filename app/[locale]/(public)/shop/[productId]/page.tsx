@@ -6,7 +6,7 @@ import Link from "next/link";
 import { APP, APP_URL } from "@/lib/config/app";
 import { PRODUCT_CATEGORY_CONFIG } from "@/lib/config/products";
 import type { ProductCategoryId } from "@/lib/config/products";
-import { ShoppingBag, PawPrint, ChevronLeft, Package, ShoppingCart } from "lucide-react";
+import { ShoppingBag, PawPrint, ChevronLeft, ShoppingCart } from "lucide-react";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";

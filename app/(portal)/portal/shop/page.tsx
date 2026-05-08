@@ -177,7 +177,7 @@ export default function ShopPage() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(loadProducts, []);
+  useEffect(() => { loadProducts(); }, []);
 
   const categories = ["all", ...Array.from(new Set(products.map((p) => p.category)))];
   const filtered = activeCategory === "all"

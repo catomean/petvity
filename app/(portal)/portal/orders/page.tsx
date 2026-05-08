@@ -151,7 +151,7 @@ export default function OrdersPage() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(loadOrders, []);
+  useEffect(() => { loadOrders(); }, []);
 
   async function cancelOrder(orderId: string) {
     setCancelError("");

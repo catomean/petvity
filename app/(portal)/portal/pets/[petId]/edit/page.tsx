@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { SPECIES_OPTIONS, SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
+import { SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
 import { ChevronLeft, Trash2, Camera, Loader2 } from "lucide-react";

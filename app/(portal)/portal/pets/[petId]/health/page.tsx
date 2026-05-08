@@ -265,7 +265,6 @@ export default async function PetHealthPage({ params }: Params) {
                     const raw = latest[field] as number | null;
                     if (raw === null) return null;
                     const display = getMetricDisplay(metricId, raw, species);
-                    const def = HEALTH_METRIC_CONFIG[metricId];
                     const range = !display.inRange ? getNormalRange(metricId, species) : null;
                     return (
                       <div

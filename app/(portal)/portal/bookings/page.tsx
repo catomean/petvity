@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
-import Link from "next/link";
 import { CalendarCheck, Clock, CheckCircle, XCircle, ChevronDown, Star, X } from "lucide-react";
 import { BOOKING_STATUS_CONFIG } from "@/lib/config/orders";
 import type { BookingStatusId } from "@/lib/config/orders";
@@ -70,7 +69,7 @@ export default function BookingsPage() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(loadBookings, []);
+  useEffect(() => { loadBookings(); }, []);
 
   async function load() {
     const res = await fetch("/api/bookings");

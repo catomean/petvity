@@ -93,7 +93,7 @@ export default function ListForAdoptionPage() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(loadPet, [petId]);
+  useEffect(() => { loadPet(); }, [petId]);
 
   function field<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));

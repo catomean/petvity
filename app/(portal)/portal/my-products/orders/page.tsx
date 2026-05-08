@@ -159,7 +159,7 @@ export default function SellerOrdersPage() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(loadOrders, []);
+  useEffect(() => { loadOrders(); }, []);
 
   const pendingCount = orders.filter((o) => o.status === "pending" || o.status === "confirmed").length;
 

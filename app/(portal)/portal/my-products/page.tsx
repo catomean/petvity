@@ -58,7 +58,7 @@ export default function MyProductsPage() {
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(loadItems, []);
+  useEffect(() => { loadItems(); }, []);
 
   function openAdd() {
     setEditingId(null);

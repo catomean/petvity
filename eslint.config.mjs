@@ -13,6 +13,13 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // Disable set-state-in-effect: our load functions call setLoading(true) synchronously so they
+  // also work as retry callbacks — the rule generates false positives for this legitimate pattern.
+  {
+    rules: {
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
   // Test files: allow `any` — mocks need escape hatches to satisfy Drizzle/Next types
   // Allow `_`-prefixed unused vars — conventional "intentionally ignored" pattern in destructuring
   {
