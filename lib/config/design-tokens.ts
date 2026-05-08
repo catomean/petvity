@@ -35,13 +35,19 @@ export const TOKENS = {
   green:         "#16A34A",
   greenBg:       "#DCFCE7",
   greenText:     "#166534",
+  greenBorder:   "#bbf7d0",
   warn:          "#D97706",
   warnBg:        "#FEF3C7",
   warnText:      "#92400E",
+  warnBorder:    "#fde68a",
   danger:        "#DC2626",
   dangerBg:      "#FEE2E2",
   dangerText:    "#991B1B",
   dangerDark:    "#B91C1C",
+  dangerBorder:  "#fca5a5",
+
+  /* Star rating */
+  star:          "#FBBF24",
 
   /* Text */
   ink:           "#1C1917",
@@ -56,6 +62,7 @@ export const TOKENS = {
   border:        "#E8E2D9",
   borderHover:   "#d4cdc5",
   warmBg:        "#FFFBEB",
+  warmText:      "#B45309",
 } as const;
 
 export type DesignToken = keyof typeof TOKENS;

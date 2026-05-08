@@ -60,14 +60,14 @@ export default async function HomePage({ params }: Params) {
       name: "James T.",
       pet: t("t2Pet"),
       initials: "JT",
-      color: "bg-amber-50 text-amber-700",
+      color: "bg-[var(--warm-bg)] text-[var(--warm-text)]",
     },
     {
       quote: t("t3Quote"),
       name: "Amara O.",
       pet: t("t3Pet"),
       initials: "AO",
-      color: "bg-purple-50 text-purple-700",
+      color: "bg-[var(--twin-bg)] text-[var(--twin)]",
     },
   ];
 
@@ -102,7 +102,7 @@ export default async function HomePage({ params }: Params) {
   ];
 
   const recordsMock = [
-    { icon: "💉", label: "Rabies booster",        meta: t("mockDueDays"),    cls: "text-purple-600 bg-purple-50" },
+    { icon: "💉", label: "Rabies booster",        meta: t("mockDueDays"),    cls: "text-[var(--twin)] bg-[var(--twin-bg)]" },
     { icon: "🩺", label: t("mockRecordExam"),      meta: t("mockMonthsAgo"), cls: "text-[var(--teal)] bg-[var(--teal-light)]" },
     { icon: "💊", label: "Heartgard · monthly",    meta: t("mockActive"),    cls: "text-[var(--accent)] bg-[var(--accent-light)]" },
     { icon: "🔬", label: t("mockRecordPanel"),     meta: t("mockAllNormal"), cls: "text-[var(--info)] bg-[var(--info-bg)]" },
@@ -450,21 +450,21 @@ export default async function HomePage({ params }: Params) {
                   signalKey: "signalHealthy" as const,
                   descKey: "signalHealthyDesc" as const,
                   badge: "bg-[var(--green-bg)] text-[var(--green-text)]",
-                  border: "border-[#bbf7d0]",
+                  border: "border-[var(--green-border)]",
                   icon: CheckCircle,
                 },
                 {
                   signalKey: "signalWatch" as const,
                   descKey: "signalWatchDesc" as const,
                   badge: "bg-[var(--warn-bg)] text-[var(--warn-text)]",
-                  border: "border-[#fde68a]",
+                  border: "border-[var(--warn-border)]",
                   icon: TrendingUp,
                 },
                 {
                   signalKey: "signalConcern" as const,
                   descKey: "signalConcernDesc" as const,
                   badge: "bg-[var(--danger-bg)] text-[var(--danger-text)]",
-                  border: "border-[#fca5a5]",
+                  border: "border-[var(--danger-border)]",
                   icon: Activity,
                 },
               ].map(({ signalKey, descKey, badge, border, icon: Icon }) => (
@@ -606,7 +606,7 @@ export default async function HomePage({ params }: Params) {
                 {/* Stars */}
                 <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    <Star key={i} className="w-4 h-4 fill-[var(--star)] text-[var(--star)]" />
                   ))}
                 </div>
                 <blockquote className="text-sm text-[var(--ink2)] leading-relaxed flex-1">
@@ -652,7 +652,7 @@ export default async function HomePage({ params }: Params) {
                 {i < 2 && (
                   <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--border)]" />
                 )}
-                <div className="w-14 h-14 rounded-2xl bg-[var(--teal)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-5 shadow-[0_4px_12px_rgb(13_110_120/0.25)]">
+                <div className="w-14 h-14 rounded-2xl bg-[var(--teal)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-5 shadow-[var(--brand-shadow)]">
                   {n}
                 </div>
                 <h3 className="font-bold text-[var(--ink)] mb-2 text-base">{t(titleKey)}</h3>
@@ -713,7 +713,7 @@ export default async function HomePage({ params }: Params) {
           </p>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 bg-white text-[var(--teal)] font-bold text-base px-8 py-4 rounded-xl hover:bg-[var(--teal-light)] transition-colors no-underline shadow-[0_4px_20px_rgb(0_0_0/0.15)]"
+            className="inline-flex items-center gap-2 bg-white text-[var(--teal)] font-bold text-base px-8 py-4 rounded-xl hover:bg-[var(--teal-light)] transition-colors no-underline shadow-[var(--cta-shadow)]"
           >
             {t("finalCta")}
             <ArrowRight className="w-4 h-4" />

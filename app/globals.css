@@ -56,8 +56,17 @@
   --twin: #7C3AED;
   --twin-bg: #EDE9FE;
 
-  /* Warm bg (amber-50 — decorative icon backgrounds, distinct from --warn-bg) */
+  /* Warm bg/text (amber-50 / amber-700 — decorative icon backgrounds) */
   --warm-bg: #FFFBEB;
+  --warm-text: #B45309;
+
+  /* Signal border colors (lighter tints for card borders) */
+  --green-border: #bbf7d0;
+  --warn-border: #fde68a;
+  --danger-border: #fca5a5;
+
+  /* Star rating color (amber-400) */
+  --star: #FBBF24;
 
   /* Danger hover */
   --danger-dark: #B91C1C;
