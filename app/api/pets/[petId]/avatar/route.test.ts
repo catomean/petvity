@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { NextRequest, NextResponse } from "next/server";
 import { makeMockDb } from "@/lib/test-helpers/db-mock";
 
@@ -6,8 +6,8 @@ import { makeMockDb } from "@/lib/test-helpers/db-mock";
 
 vi.mock("@/lib/auth/guards", () => ({ requireSession: vi.fn() }));
 vi.mock("@/lib/db", () => ({ getInstance: vi.fn() }));
-vi.mock("@vercel/blob", () => ({
-  put: vi.fn().mockResolvedValue({ url: "https://blob.example.com/pets/pet-1/avatar-abc123.jpg" }),
+vi.mock("@/lib/storage", () => ({
+  putLocal: vi.fn().mockResolvedValue({ url: "/uploads/pets/pet-1/avatar-abc123" }),
 }));
 
 /* ─── Imports after mocks ──────────────────────────────────────────────────── */
@@ -15,7 +15,7 @@ vi.mock("@vercel/blob", () => ({
 import { POST } from "./route";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { put } from "@vercel/blob";
+import { putLocal } from "@/lib/storage";
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
@@ -43,8 +43,6 @@ function makeFormRequest(hasFile: boolean) {
 
 /* ─── Tests ──────────────────────────────────────────────────────────────── */
 
-const ORIGINAL_BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
-
 describe("POST /api/pets/[petId]/avatar", () => {
   let db: ReturnType<typeof makeMockDb>;
 
@@ -53,14 +51,6 @@ describe("POST /api/pets/[petId]/avatar", () => {
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
     vi.mocked(requireSession).mockResolvedValue({ session: OWNER_SESSION as any, error: null });
-    // Token must be set for the route to reach the upload path; individual tests
-    // override this to verify the missing-token branch.
-    process.env.BLOB_READ_WRITE_TOKEN = "test-token";
-  });
-
-  afterEach(() => {
-    if (ORIGINAL_BLOB_TOKEN === undefined) delete process.env.BLOB_READ_WRITE_TOKEN;
-    else process.env.BLOB_READ_WRITE_TOKEN = ORIGINAL_BLOB_TOKEN;
   });
 
   it("returns 401 when unauthenticated", async () => {
@@ -95,17 +85,6 @@ describe("POST /api/pets/[petId]/avatar", () => {
     expect(body.error).toContain("file");
   });
 
-  it("returns 503 when BLOB_READ_WRITE_TOKEN is not configured", async () => {
-    delete process.env.BLOB_READ_WRITE_TOKEN;
-    const res = await POST(makeFormRequest(true), ROUTE_CONTEXT);
-    expect(res.status).toBe(503);
-    const body = await res.json();
-    expect(body.error).toMatch(/aren't configured/);
-    // Must short-circuit before any DB or Blob work
-    expect(db.query.pets.findFirst).not.toHaveBeenCalled();
-    expect(vi.mocked(put)).not.toHaveBeenCalled();
-  });
-
   it("returns 413 when the uploaded file exceeds the size cap", async () => {
     db.query.pets.findFirst.mockResolvedValueOnce(MOCK_PET);
     const huge = new File(["x".repeat(6 * 1024 * 1024)], "big.jpg", { type: "image/jpeg" });
@@ -114,7 +93,7 @@ describe("POST /api/pets/[petId]/avatar", () => {
     const req = new NextRequest(`http://localhost/api/pets/${PET_ID}/avatar`, { method: "POST", body: form });
     const res = await POST(req, ROUTE_CONTEXT);
     expect(res.status).toBe(413);
-    expect(vi.mocked(put)).not.toHaveBeenCalled();
+    expect(vi.mocked(putLocal)).not.toHaveBeenCalled();
   });
 
   it("returns 415 when the file type is not an accepted image format", async () => {
@@ -125,19 +104,19 @@ describe("POST /api/pets/[petId]/avatar", () => {
     const req = new NextRequest(`http://localhost/api/pets/${PET_ID}/avatar`, { method: "POST", body: form });
     const res = await POST(req, ROUTE_CONTEXT);
     expect(res.status).toBe(415);
-    expect(vi.mocked(put)).not.toHaveBeenCalled();
+    expect(vi.mocked(putLocal)).not.toHaveBeenCalled();
   });
 
-  it("returns 502 with a friendly message when the Blob upload throws", async () => {
+  it("returns 502 with a friendly message when the upload throws", async () => {
     db.query.pets.findFirst.mockResolvedValueOnce(MOCK_PET);
-    vi.mocked(put).mockRejectedValueOnce(new Error("Blob service unavailable"));
+    vi.mocked(putLocal).mockRejectedValueOnce(new Error("disk full"));
     const res = await POST(makeFormRequest(true), ROUTE_CONTEXT);
     expect(res.status).toBe(502);
     const body = await res.json();
     expect(body.error).toMatch(/try again/i);
   });
 
-  it("returns 200 with blob URL on success", async () => {
+  it("returns 200 with the stored URL on success", async () => {
     db.query.pets.findFirst.mockResolvedValueOnce(MOCK_PET);
     db.update.mockReturnValueOnce({ set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) }) } as any);
 
@@ -145,11 +124,10 @@ describe("POST /api/pets/[petId]/avatar", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
-    expect(body.data.url).toContain("blob.example.com");
-    expect(vi.mocked(put)).toHaveBeenCalledWith(
-      `pets/${PET_ID}/avatar`,
+    expect(body.data.url).toContain("/uploads/");
+    expect(vi.mocked(putLocal)).toHaveBeenCalledWith(
+      expect.stringMatching(new RegExp(`^pets/${PET_ID}/avatar-`)),
       expect.any(File),
-      expect.objectContaining({ access: "public" }),
     );
   });
 });

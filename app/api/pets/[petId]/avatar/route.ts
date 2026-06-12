@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import { randomUUID } from "crypto";
+import { putLocal } from "@/lib/storage";
 import { and, eq } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
 import { pets } from "@/lib/db/schema";
@@ -15,16 +16,6 @@ type Params = { params: Promise<{ petId: string }> };
 export async function POST(req: NextRequest, { params }: Params) {
   const { session, error } = await requireSession();
   if (error) return error;
-
-  // Fail fast (and helpfully) when the platform isn't configured for uploads.
-  // Without this, @vercel/blob throws an opaque error and the user sees a
-  // generic "Upload failed" with no recovery path.
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return NextResponse.json(
-      { success: false, error: "Photo uploads aren't configured for this deployment yet." },
-      { status: 503 },
-    );
-  }
 
   const { petId } = await params;
   const db = getInstance();
@@ -62,10 +53,9 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   let blob;
   try {
-    blob = await put(`pets/${petId}/avatar`, file, {
-      access: "public",
-      addRandomSuffix: true,
-    });
+    // Random suffix keeps old avatar URLs valid until the row is updated
+    // (same behavior addRandomSuffix gave us on Vercel Blob).
+    blob = await putLocal(`pets/${petId}/avatar-${randomUUID()}`, file);
   } catch (err) {
     console.error("[avatar] upload failed", err);
     return NextResponse.json(
