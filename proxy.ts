@@ -24,7 +24,8 @@ const PRIVATE_API_PREFIXES = [
   "/api/bookings",
   "/api/reviews",
   "/api/orders",
-  "/api/cron",
+  // /api/cron/* is intentionally NOT gated — cron routes self-authenticate via
+  // the CRON_SECRET bearer (box systemd timers; fleetcrown install-app-crons.sh).
   "/api/admin",
 ];
 
