@@ -7,7 +7,7 @@ export const APP = {
 } as const;
 
 export const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://petvity.vercel.app";
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://petvity.orangecat.ch";
 
 /** ISO 4217 currency code for all price display. Override with NEXT_PUBLIC_APP_CURRENCY. */
 export const APP_CURRENCY = process.env.NEXT_PUBLIC_APP_CURRENCY ?? "USD";

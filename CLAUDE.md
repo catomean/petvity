@@ -9,14 +9,15 @@ Petvity gives pet owners a single place to monitor their pet's daily wellness, c
 **What this is:** Global pet care platform. Owners manage multi-species pet profiles, track physical + emotional health KPIs, connect with vets/sitters (Phase 2), access a marketplace (Phase 3), and list pets for cross-border adoption (Phase 4). Pets can have public "influencer profiles." Long-term vision: digital twins (IoT sensors, cameras, emotional state). Part of the same ecosystem as VitaReBa and Surf Your Life.
 
 **Deployed URLs:**
-- Production: https://petvity.vercel.app
+- Production: https://petvity.orangecat.ch
 - GitHub: https://github.com/g-but/petvity
-- Vercel team: orangecat
-- Neon project: `odd-star-07028207` (region: us-east-1)
+- Host: self-hosted Hetzner box `bitbaum` (service `petvity-app`, port 4013, behind Caddy auto-TLS)
+- Database: self-hosted PostgreSQL 17 on the box (database `petvity`)
 
-**Stack:** Next.js 16 (App Router) · TypeScript strict · Tailwind v4 · Neon PostgreSQL ·
-Drizzle ORM · NextAuth 5 · Resend email · Vercel Blob (pet photos) · next-intl
-(9 languages: EN DE FR ES JA ZH KO TR AR — AR is RTL) · Lucide React icons · Recharts · Zod · Vercel
+**Stack:** Next.js 16 (App Router, standalone output) · TypeScript strict · Tailwind v4 ·
+self-hosted PostgreSQL 17 · Drizzle ORM (`node-postgres` driver) · NextAuth 5 · Resend email ·
+local-disk file storage (pet photos) · next-intl
+(9 languages: EN DE FR ES JA ZH KO TR AR — AR is RTL) · Lucide React icons · Recharts · Zod
 
 ---
 
@@ -26,29 +27,32 @@ Drizzle ORM · NextAuth 5 · Resend email · Vercel Blob (pet photos) · next-in
 pnpm dev          # local dev (localhost:3000)
 pnpm build        # production build — MUST pass before every push
 pnpm lint         # eslint
-pnpm db:push      # push schema changes to Neon (uses .env.local)
+pnpm db:push      # push schema changes to Postgres (uses .env.local)
 pnpm db:generate  # generate migration files
 pnpm db:studio    # Drizzle Studio (visual DB explorer)
 pnpm test         # vitest unit tests
 
-git push && vercel --prod --scope orangecat --yes   # deploy
+# deploy: builds standalone, rsyncs to the box, restarts the service, health-checks
+scripts/hetzner/deploy.sh petvity   # run from the fleetcrown repo's scripts/hetzner/
 ```
 
-**Before every push:** `pnpm build` must pass with zero TypeScript errors. Never rely on Vercel to catch TS errors.
+**Before every push:** `pnpm build` must pass with zero TypeScript errors. CI does not catch TS errors for you.
 
-**After every deployment:** verify `vercel inspect <url> --scope orangecat` shows `status: Ready`.
+**After every deployment:** `deploy.sh` health-checks the service; confirm `petvity.orangecat.ch` returns 2xx.
 
 ---
 
 ## Environment Variables
 
-### Set in Vercel production ✓
+Production env lives in `.env.selfhost.local` on the box (sourced by the systemd unit).
+
+### Set in production ✓
 | Variable | Value |
 |----------|-------|
-| `DATABASE_URL` | Neon connection string (project odd-star-07028207) |
+| `DATABASE_URL` | self-hosted Postgres connection string (database `petvity`) |
 | `NEXTAUTH_SECRET` | Set |
 | `CRON_SECRET` | Set |
-| `NEXT_PUBLIC_APP_URL` | https://petvity.vercel.app |
+| `NEXT_PUBLIC_APP_URL` | https://petvity.orangecat.ch |
 
 ### NOT YET configured (needed for full functionality)
 | Variable | Where to get it | Impact if missing |
@@ -57,11 +61,10 @@ git push && vercel --prod --scope orangecat --yes   # deploy
 | `GOOGLE_CLIENT_SECRET` | Google Cloud Console | Google OAuth login disabled |
 | `RESEND_API_KEY` | resend.com dashboard | Welcome/alert emails silently dropped |
 | `RESEND_FROM` | Resend verified domain | Emails use fallback |
-| `BLOB_READ_WRITE_TOKEN` | Vercel Blob dashboard | Pet avatar upload fails |
 | `ADMIN_EMAILS` | Set to owner's email | No admin access |
 
-Set missing vars: `echo "value" | vercel env add VAR_NAME production --scope orangecat`
-Then redeploy: `vercel --prod --scope orangecat --yes`
+Set missing vars: edit `.env.selfhost.local` on the box, then redeploy with
+`scripts/hetzner/deploy.sh petvity --env` to push the updated env file.
 
 ---
 
@@ -111,7 +114,7 @@ app/
     account/           → POST: registration, PATCH: update name/password (no auth on POST)
     pets/              → GET list, POST create
     pets/[petId]/      → GET, PATCH, DELETE (owner-scoped)
-    pets/[petId]/avatar → POST: upload to Vercel Blob
+    pets/[petId]/avatar → POST: upload to local-disk storage (lib/storage.ts)
     health/metrics/[petId] → POST upsert daily health log
     health/records/    → Health records CRUD
     health/records/[recordId] → PATCH/DELETE (owner-scoped)
@@ -154,7 +157,7 @@ components/
 
 lib/
   db/schema.ts         → SSOT: ALL Drizzle table definitions
-  db/index.ts          → Lazy Neon singleton (Proxy pattern — no eager connection)
+  db/index.ts          → Lazy Postgres singleton (node-postgres Pool, Proxy pattern — no eager connection)
   auth/index.ts        → NextAuth config (functional pattern — adapter called lazily)
   auth/edge.ts         → Edge-compatible auth config (no bcrypt/DB) — used by proxy.ts only
   auth/guards.ts       → requireSession() / requireRole() / requireAdmin()
@@ -488,6 +491,11 @@ Algorithm:
 
 All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 
+> **Scheduling:** these schedules are still declared in `vercel.json` (legacy). Vercel
+> Cron no longer fires them on the self-hosted box — they need a host cron / systemd
+> timer that curls each route with the `CRON_SECRET` bearer token. Until that is wired,
+> the cron routes only run when invoked manually. (Tracked — see PR notes.)
+
 | Route | Schedule | Purpose |
 |-------|----------|---------|
 | `/api/cron/emails` | `0 7 * * *` | Process welcome email queue |
@@ -512,7 +520,7 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - Health records (add, list with type icons)
 - Medications (add, list with active/completed/discontinued status)
 - Account settings (edit name, change password)
-- Pet avatar upload (UI + API — needs BLOB_READ_WRITE_TOKEN in Vercel Dashboard)
+- Pet avatar upload (UI + API — local-disk storage via lib/storage.ts, served by Caddy under /uploads/*)
 - Email queue (welcome sequence) + cron jobs (health alerts, vaccination reminders)
 - Public pet profiles (`/[locale]/pets/[handle]`)
 - 9-language i18n with RTL Arabic
@@ -522,7 +530,6 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - Sidebar nav + mobile bottom nav + admin panel
 
 ### Env vars still needed (user action — no code change required)
-- [ ] `BLOB_READ_WRITE_TOKEN` → Vercel Blob dashboard → enables pet avatar upload
 - [ ] `ADMIN_EMAILS` → owner's email → enables admin panel access
 - [ ] `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` → Google Cloud Console → enables Google OAuth
 - [ ] `RESEND_API_KEY` + `RESEND_FROM` → resend.com → enables all transactional email
@@ -567,7 +574,7 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 
 7. **Pet signal test must be updated** — Any change to `computePetSignal()` logic must be reflected in `lib/domain/pet-signal.test.ts`. Run `pnpm test` to verify.
 
-8. **CRON_SECRET must not have trailing whitespace** — Vercel rejects it. Use `printf` not `echo` when setting via CLI.
+8. **CRON_SECRET must not have trailing whitespace** — the cron caller compares it exactly. Use `printf` not `echo` when writing it into `.env.selfhost.local`.
 
 ---
 
