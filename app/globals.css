@@ -77,6 +77,20 @@
   /* Keep legacy aliases */
   --off-bg: var(--off);
 
+  /* ── Editorial brand layer (marketing surface) ──────────────────────────
+     Warm, premium, photography-led design language for the public marketing
+     pages: deep cream + warm-dark + muted gold, paired with the Cormorant
+     display serif. Lives alongside the teal/terracotta product palette — the
+     product UI (portal/admin) keeps teal; the marketing face wears this. */
+  --cream:      #F4F0E9;   /* primary warm page cream */
+  --cream-soft: #FBF9F5;   /* lighter cream for raised panels */
+  --warm-dark:  #1F231D;   /* olive-charcoal for dark editorial sections */
+  --warm-ink:   #2A2926;   /* warm near-black display text */
+  --gold:       #A98F63;   /* muted gold accent */
+  --gold-dark:  #8F784F;   /* gold hover */
+  --gold-light: #EFE7D7;   /* soft gold tint for icon chips */
+  --display-serif: var(--font-display), "Cormorant Garamond", Georgia, serif;
+
   /* Shadows */
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 16px 0 rgb(0 0 0 / 0.07), 0 2px 6px -2px rgb(0 0 0 / 0.05);
@@ -166,6 +180,172 @@ body {
 .btn-primary:active {
   transform: scale(0.98);
   box-shadow: none;
+}
+
+/* ── Editorial marketing classes (petvity.com brand language) ───────────────── */
+
+/* Display serif — premium emotional headline voice. */
+.font-display { font-family: var(--display-serif); }
+
+/* Warm cream hero/section backdrop — replaces the teal-blob SaaS gradient. */
+.hero-editorial { background: var(--cream); }
+.section-cream  { background: var(--cream); }
+.section-cream-soft { background: var(--cream-soft); }
+.section-warm-dark { background: var(--warm-dark); color: var(--cream); }
+
+/* Editorial headline — light-weight Cormorant, large, tight tracking. */
+.display-title {
+  font-family: var(--display-serif);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--warm-ink);
+}
+.display-title em { font-style: italic; }   /* emphasis line, no colour shift */
+
+/* Understated uppercase eyebrow (replaces the filled teal pill on marketing). */
+.eyebrow-editorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-dark);
+}
+
+/* Editorial pill buttons — dark or outline, uppercase, tracked. */
+.btn-editorial {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--warm-ink);
+  color: var(--cream);
+  border: 1px solid var(--warm-ink);
+  border-radius: 100px;
+  padding: 14px 30px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  white-space: nowrap;
+}
+.btn-editorial:hover  { background: #000; }
+.btn-editorial:active { transform: scale(0.98); }
+
+.btn-editorial-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--warm-ink);
+  border: 1px solid color-mix(in srgb, var(--warm-ink) 28%, transparent);
+  border-radius: 100px;
+  padding: 14px 30px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.btn-editorial-ghost:hover { border-color: var(--warm-ink); background: color-mix(in srgb, var(--warm-ink) 5%, transparent); }
+
+/* Cream pill for dark editorial sections (e.g. the final CTA band). */
+.btn-editorial-light {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  color: var(--warm-ink);
+  border: 1px solid var(--cream);
+  border-radius: 100px;
+  padding: 14px 30px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.1s;
+  white-space: nowrap;
+}
+.btn-editorial-light:hover  { opacity: 0.9; }
+.btn-editorial-light:active { transform: scale(0.98); }
+
+/* Compact editorial pill — for nav CTAs where the full pill is too large. */
+.btn-editorial-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--warm-ink);
+  color: var(--cream);
+  border: 1px solid var(--warm-ink);
+  border-radius: 100px;
+  padding: 9px 18px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  white-space: nowrap;
+}
+.btn-editorial-sm:hover  { background: #000; }
+.btn-editorial-sm:active { transform: scale(0.98); }
+
+/* Section eyebrow — uppercase tracked gold (replaces teal SaaS eyebrows). */
+.ed-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--gold-dark);
+}
+
+/* Section headings — Cormorant serif, light, large. */
+.ed-title {
+  font-family: var(--display-serif);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--warm-ink);
+  font-size: clamp(2.4rem, 5vw, 3.5rem);
+}
+.ed-title-sm {
+  font-family: var(--display-serif);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: var(--warm-ink);
+  font-size: clamp(2rem, 4vw, 2.7rem);
+}
+.ed-title-on-dark { color: var(--cream); }   /* pair with .ed-title on dark bands */
+
+/* Numbered step badge — warm-ink disc, cream serif numeral. */
+.ed-num {
+  background: var(--warm-ink);
+  color: var(--cream);
+  font-family: var(--display-serif);
+  font-weight: 400;
+}
+
+/* Icon badge — soft gold tint (replaces teal-light icon chips). */
+.ed-icon {
+  background: var(--gold-light);
+  color: var(--gold-dark);
 }
 
 .btn-outline {

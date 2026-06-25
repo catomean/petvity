@@ -2,7 +2,7 @@ import Link from "next/link";
 import {
   Activity, Syringe, Pill,
   CalendarDays, CheckCircle, TrendingUp,
-  ArrowRight, Zap, Star,
+  ArrowRight, Star,
   Brain, Stethoscope, ShoppingBag, Heart,
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
@@ -145,32 +145,22 @@ export default async function HomePage({ params }: Params) {
 
       <main>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28">
-        {/* Warm gradient background */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
-        />
-        {/* Decorative blobs */}
-        <div aria-hidden className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
-        <div aria-hidden className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[var(--accent-light)] opacity-40 blur-[100px] pointer-events-none translate-y-1/3 -translate-x-1/3" />
-
+      <section className="hero-editorial relative pt-28 pb-20 md:pt-36 md:pb-28">
         <div className="section-inner relative">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Copy */}
             <div>
-              <div className="inline-flex items-center gap-2 bg-[var(--teal-light)] text-[var(--teal)] text-xs font-semibold px-3 py-1.5 rounded-full mb-7 border border-[var(--teal-mid)]">
-                <Zap className="w-3 h-3" />
+              <div className="eyebrow-editorial mb-7">
                 {t("heroBadge")}
               </div>
 
-              <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
+              <h1 className="display-title text-[3.4rem] md:text-[5rem] mb-6">
                 {t("heroTitle1")}
                 <br />
-                <span className="text-[var(--teal)]">{t("heroTitle2")}</span>
+                <em>{t("heroTitle2")}</em>
               </h1>
 
-              <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed mb-9 max-w-lg">
+              <p className="text-lg md:text-xl text-[var(--ink2)] leading-relaxed mb-9 max-w-lg">
                 {t("heroSubtitle", { app: APP.name })}
               </p>
 
@@ -190,11 +180,11 @@ export default async function HomePage({ params }: Params) {
             {/* Right: App mockup */}
             <div className="relative">
               {/* Glow behind card */}
-              <div aria-hidden className="absolute inset-8 bg-[var(--teal)] opacity-10 blur-3xl rounded-3xl pointer-events-none" />
+              <div aria-hidden className="absolute inset-8 bg-[var(--gold)] opacity-10 blur-3xl rounded-3xl pointer-events-none" />
 
               <div className="card relative shadow-[var(--shadow-lg)] rounded-2xl overflow-hidden">
                 {/* Card header */}
-                <div className="bg-[var(--teal)] px-6 py-4 flex items-center justify-between">
+                <div className="bg-[var(--warm-dark)] px-6 py-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl">🐕</div>
                     <div>
@@ -266,10 +256,10 @@ export default async function HomePage({ params }: Params) {
       <section id="features" className="py-24 md:py-32">
         <div className="section-inner">
           <div className="text-center mb-20">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
+            <p className="ed-eyebrow mb-3">
               {t("featuresEyebrow")}
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
+            <h2 className="ed-title mb-5">
               {t("featuresTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
@@ -281,12 +271,12 @@ export default async function HomePage({ params }: Params) {
             {/* Tracking section */}
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">{t("trackingEyebrow")}</p>
-                <h3 className="text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight mb-5 leading-tight">
+                <p className="ed-eyebrow mb-3">{t("trackingEyebrow")}</p>
+                <h3 className="ed-title-sm mb-5 leading-tight">
                   {t("trackingTitle")}
                 </h3>
                 <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">{t("trackingBody")}</p>
-                <Link href="/register" className="btn-primary">
+                <Link href="/register" className="btn-editorial">
                   {t("trackingCta")}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -316,12 +306,12 @@ export default async function HomePage({ params }: Params) {
             {/* Records section */}
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center lg:[direction:rtl]">
               <div className="lg:[direction:ltr]">
-                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">{t("recordsEyebrow")}</p>
-                <h3 className="text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight mb-5 leading-tight">
+                <p className="ed-eyebrow mb-3">{t("recordsEyebrow")}</p>
+                <h3 className="ed-title-sm mb-5 leading-tight">
                   {t("recordsTitle")}
                 </h3>
                 <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">{t("recordsBody")}</p>
-                <Link href="/register" className="btn-primary">
+                <Link href="/register" className="btn-editorial">
                   {t("recordsCta")}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -348,14 +338,14 @@ export default async function HomePage({ params }: Params) {
       </section>
 
       {/* ── Digital Twin ─────────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 bg-gradient-to-br from-violet-50 via-white to-[var(--teal-light)]">
+      <section className="py-24 md:py-32 section-cream-soft">
         <div className="section-inner">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Visual */}
             <div className="order-2 lg:order-1">
               <div className="card shadow-[var(--shadow-lg)] rounded-2xl overflow-hidden max-w-sm mx-auto">
                 {/* Card header */}
-                <div className="bg-gradient-to-r from-violet-600 to-[var(--teal)] px-5 py-4 flex items-center gap-3">
+                <div className="bg-[var(--warm-dark)] px-5 py-4 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl">🐕</div>
                   <div>
                     <p className="font-bold text-white text-sm">Buddy</p>
@@ -404,10 +394,10 @@ export default async function HomePage({ params }: Params) {
 
             {/* Copy */}
             <div className="order-1 lg:order-2">
-              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--twin)] mb-3">{t("twinEyebrow")}</p>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-6 leading-tight">
+              <p className="ed-eyebrow mb-3">{t("twinEyebrow")}</p>
+              <h2 className="ed-title mb-6 leading-tight">
                 {t("twinTitle1")}
-                <br /><span className="text-[var(--twin)]">{t("twinTitle2")}</span>, {t("twinTitle3")}
+                <br /><span className="italic">{t("twinTitle2")}</span>, {t("twinTitle3")}
               </h2>
               <p className="text-lg text-[var(--muted)] leading-relaxed mb-5">
                 {t("twinP1")}
@@ -429,10 +419,10 @@ export default async function HomePage({ params }: Params) {
         <div className="section-inner">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
+              <p className="ed-eyebrow mb-3">
                 {t("signalsEyebrow")}
               </p>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-6 leading-tight">
+              <h2 className="ed-title mb-6 leading-tight">
                 {t("signalsTitle1")}
                 <br />{t("signalsTitle2")}
               </h2>
@@ -485,10 +475,10 @@ export default async function HomePage({ params }: Params) {
       <section className="py-24 md:py-32">
         <div className="section-inner">
           <div className="text-center mb-16">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
+            <p className="ed-eyebrow mb-3">
               {t("ecosystemEyebrow")}
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
+            <h2 className="ed-title mb-5">
               {t("ecosystemTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
@@ -499,8 +489,8 @@ export default async function HomePage({ params }: Params) {
           <div className="grid md:grid-cols-3 gap-6">
             {/* Find a Pro */}
             <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
-              <div className="w-12 h-12 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center">
-                <Stethoscope className="w-6 h-6 text-[var(--teal)]" />
+              <div className="ed-icon w-12 h-12 rounded-2xl flex items-center justify-center">
+                <Stethoscope className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("vetTitle")}</h3>
@@ -527,8 +517,8 @@ export default async function HomePage({ params }: Params) {
 
             {/* Marketplace */}
             <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
-              <div className="w-12 h-12 rounded-2xl bg-[var(--accent-light)] flex items-center justify-center">
-                <ShoppingBag className="w-6 h-6 text-[var(--accent)]" />
+              <div className="ed-icon w-12 h-12 rounded-2xl flex items-center justify-center">
+                <ShoppingBag className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("mktTitle")}</h3>
@@ -547,7 +537,7 @@ export default async function HomePage({ params }: Params) {
                     <span className="text-base">{icon}</span>
                     <div className="min-w-0">
                       <p className="text-xs font-medium text-[var(--ink)] truncate">{name}</p>
-                      <p className="text-xs text-[var(--teal)] font-semibold">{price}</p>
+                      <p className="text-xs text-[var(--gold-dark)] font-semibold">{price}</p>
                     </div>
                   </div>
                 ))}
@@ -559,8 +549,8 @@ export default async function HomePage({ params }: Params) {
 
             {/* Adoption */}
             <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
-              <div className="w-12 h-12 rounded-2xl bg-[var(--secondary-bg)] flex items-center justify-center">
-                <Heart className="w-6 h-6 text-[var(--secondary)]" />
+              <div className="ed-icon w-12 h-12 rounded-2xl flex items-center justify-center">
+                <Heart className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("adoptTitle")}</h3>
@@ -592,10 +582,10 @@ export default async function HomePage({ params }: Params) {
       <section className="py-24 md:py-32">
         <div className="section-inner">
           <div className="text-center mb-14">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
+            <p className="ed-eyebrow mb-3">
               {t("testimonialsEyebrow")}
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight">
+            <h2 className="ed-title">
               {t("testimonialsTitle")}
             </h2>
           </div>
@@ -631,10 +621,10 @@ export default async function HomePage({ params }: Params) {
       <section id="how-it-works" className="bg-[var(--off)] border-y border-[var(--border)] py-24 md:py-32">
         <div className="section-inner">
           <div className="text-center mb-16">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
+            <p className="ed-eyebrow mb-3">
               {t("howEyebrow")}
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
+            <h2 className="ed-title mb-5">
               {t("howTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)]">
@@ -652,7 +642,7 @@ export default async function HomePage({ params }: Params) {
                 {i < 2 && (
                   <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--border)]" />
                 )}
-                <div className="w-14 h-14 rounded-2xl bg-[var(--teal)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-5 shadow-[var(--brand-shadow)]">
+                <div className="w-14 h-14 rounded-full ed-num text-xl flex items-center justify-center mx-auto mb-5">
                   {n}
                 </div>
                 <h3 className="font-bold text-[var(--ink)] mb-2 text-base">{t(titleKey)}</h3>
@@ -666,15 +656,15 @@ export default async function HomePage({ params }: Params) {
       {/* ── Pricing ──────────────────────────────────────────────────────── */}
       <section id="pricing" className="py-24 md:py-32">
         <div className="section-inner text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">{t("pricingEyebrow")}</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">{t("pricingTitle")}</h2>
+          <p className="ed-eyebrow mb-3">{t("pricingEyebrow")}</p>
+          <h2 className="ed-title mb-5">{t("pricingTitle")}</h2>
           <p className="text-lg text-[var(--muted)] max-w-lg mx-auto mb-12 leading-relaxed">
             {t("pricingDesc")}
           </p>
 
           <div className="card max-w-sm mx-auto p-8 text-left shadow-[var(--shadow-lg)]">
             <div className="flex items-baseline gap-1 mb-1">
-              <span className="text-5xl font-extrabold text-[var(--ink)] tracking-tight">$0</span>
+              <span className="font-display text-6xl font-light text-[var(--warm-ink)]">$0</span>
               <span className="text-[var(--muted)] text-base">/ month</span>
             </div>
             <p className="text-sm text-[var(--muted)] mb-7">{t("pricingNoCreditCard")}</p>
@@ -688,7 +678,7 @@ export default async function HomePage({ params }: Params) {
               ))}
             </ul>
 
-            <Link href="/register" className="btn-primary w-full justify-center py-3 text-base">
+            <Link href="/register" className="btn-editorial w-full justify-center">
               {t("pricingCta")}
               <ArrowRight className="w-4 h-4" />
             </Link>
@@ -697,24 +687,21 @@ export default async function HomePage({ params }: Params) {
       </section>
 
       {/* ── Final CTA ────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-[var(--teal)] py-24 md:py-32">
-        <div aria-hidden className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-white/5 pointer-events-none" />
-        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-white/5 pointer-events-none" />
+      <section className="section-warm-dark relative overflow-hidden py-24 md:py-32">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
 
         <div className="section-inner relative text-center">
-          <CalendarDays className="w-12 h-12 text-[var(--teal-light)] mx-auto mb-6 opacity-80" />
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-5">
+          <CalendarDays className="w-11 h-11 text-[var(--gold)] mx-auto mb-7 opacity-90" />
+          <h2 className="ed-title ed-title-on-dark mb-5">
             {t("finalTitle1")}
             <br />{t("finalTitle2")}
           </h2>
-          <p className="text-lg text-[var(--teal-mid)] mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-[var(--cream-soft)] opacity-80 mb-10 max-w-xl mx-auto leading-relaxed">
             {t("finalDesc")}
           </p>
-          <Link
-            href="/register"
-            className="inline-flex items-center gap-2 bg-white text-[var(--teal)] font-bold text-base px-8 py-4 rounded-xl hover:bg-[var(--teal-light)] transition-colors no-underline shadow-[var(--cta-shadow)]"
-          >
+          <Link href="/register" className="btn-editorial-light">
             {t("finalCta")}
             <ArrowRight className="w-4 h-4" />
           </Link>
