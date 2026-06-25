@@ -86,8 +86,8 @@ export default function MarketingNav() {
       <div className="section-inner h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 no-underline flex-shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-[var(--teal)] flex items-center justify-center">
-            <PawPrint className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-[var(--warm-dark)] flex items-center justify-center">
+            <PawPrint className="w-4 h-4 text-[var(--cream)]" />
           </div>
           <span className="font-bold text-[var(--ink)] text-lg">{APP.name}</span>
         </Link>
@@ -172,7 +172,7 @@ export default function MarketingNav() {
           </Link>
           <Link
             href="/pros"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--teal)] hover:bg-[var(--teal-light)] transition-colors no-underline"
+            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--warm-ink)] hover:bg-[var(--gold-light)] transition-colors no-underline"
           >
             {t("forPros")}
           </Link>
@@ -188,7 +188,7 @@ export default function MarketingNav() {
         <div className="hidden md:flex items-center gap-3">
           <div className="w-32"><LocaleSwitcher current={locale} /></div>
           {status === "loading" ? null : status === "authenticated" ? (
-            <Link href={dashboardHref} className="btn-primary text-sm py-2 px-4">
+            <Link href={dashboardHref} className="btn-editorial-sm">
               {t("goToDashboard")}
             </Link>
           ) : (
@@ -199,7 +199,7 @@ export default function MarketingNav() {
               >
                 {t("logIn")}
               </Link>
-              <Link href="/register" className="btn-primary text-sm py-2 px-4">
+              <Link href="/register" className="btn-editorial-sm">
                 {t("getStartedFree")}
               </Link>
             </>
@@ -260,7 +260,7 @@ export default function MarketingNav() {
               <Link
                 href="/pros"
                 onClick={() => setMenuOpen(false)}
-                className="px-3 py-2.5 text-sm font-medium text-[var(--teal)] no-underline"
+                className="px-3 py-2.5 text-sm font-medium text-[var(--warm-ink)] no-underline"
               >
                 🩺 {t("forPros")}
               </Link>
@@ -275,7 +275,7 @@ export default function MarketingNav() {
                 <Link
                   href={dashboardHref}
                   onClick={() => setMenuOpen(false)}
-                  className="btn-primary justify-center"
+                  className="btn-editorial justify-center"
                 >
                   {t("goToDashboard")}
                 </Link>
@@ -291,7 +291,7 @@ export default function MarketingNav() {
                   <Link
                     href="/register"
                     onClick={() => setMenuOpen(false)}
-                    className="btn-primary justify-center"
+                    className="btn-editorial justify-center"
                   >
                     {t("getStartedFree")}
                   </Link>

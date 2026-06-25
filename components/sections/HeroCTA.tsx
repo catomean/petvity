@@ -21,21 +21,21 @@ export function HeroCTA() {
         <div aria-hidden className="h-[52px]" />
       ) : status === "authenticated" ? (
         <>
-          <Link href={dashboardHref} className="btn-primary text-base px-7 py-3.5 justify-center">
+          <Link href={dashboardHref} className="btn-editorial justify-center">
             {t("goToDashboard")}
             <ArrowRight className="w-4 h-4" />
           </Link>
-          <Link href="#how-it-works" className="btn-outline text-base px-7 py-3.5 justify-center">
+          <Link href="#how-it-works" className="btn-editorial-ghost justify-center">
             See how it works
           </Link>
         </>
       ) : (
         <>
-          <Link href="/register" className="btn-primary text-base px-7 py-3.5 justify-center">
+          <Link href="/register" className="btn-editorial justify-center">
             {t("getStartedFree")}
             <ArrowRight className="w-4 h-4" />
           </Link>
-          <Link href="#how-it-works" className="btn-outline text-base px-7 py-3.5 justify-center">
+          <Link href="#how-it-works" className="btn-editorial-ghost justify-center">
             See how it works
           </Link>
         </>

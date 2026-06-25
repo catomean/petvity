@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Cormorant_Garamond } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { Analytics } from "@vercel/analytics/next";
 import { APP, APP_URL } from "@/lib/config/app";
@@ -10,6 +10,17 @@ const font = Plus_Jakarta_Sans({
   variable: "--font-sans",
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
+});
+
+// Editorial display serif — the premium, emotional voice for marketing
+// headlines (mirrors the petvity.com brand language). Light weights only;
+// large sizes carry it. Italic used for emphasis lines.
+const display = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
 });
 
 const TITLE = `${APP.name} — The global platform for pet care`;
@@ -42,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={font.variable}>
+    <html lang="en" className={`${font.variable} ${display.variable}`}>
       <body>
         <SessionProvider>{children}</SessionProvider>
         <Analytics />

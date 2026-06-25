@@ -59,14 +59,14 @@ export default async function MarketingFooter() {
   ];
 
   return (
-    <footer className="bg-[var(--ink)] text-white">
+    <footer className="bg-[var(--warm-dark)] text-[var(--cream)]">
       <div className="section-inner py-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2 no-underline mb-4">
-              <div className="w-8 h-8 rounded-lg bg-[var(--teal)] flex items-center justify-center">
-                <PawPrint className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 rounded-lg bg-[var(--gold)] flex items-center justify-center">
+                <PawPrint className="w-4 h-4 text-[var(--warm-dark)]" />
               </div>
               <span className="font-bold text-white text-lg">{APP.name}</span>
             </Link>
@@ -75,7 +75,7 @@ export default async function MarketingFooter() {
             </p>
             <a
               href={`mailto:${APP.email}`}
-              className="text-sm text-stone-400 hover:text-[var(--teal-mid)] transition-colors no-underline"
+              className="text-sm text-stone-400 hover:text-[var(--gold)] transition-colors no-underline"
             >
               {APP.email}
             </a>
