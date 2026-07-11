@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Cormorant_Garamond } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
-import { Analytics } from "@vercel/analytics/next";
 import { APP, APP_URL } from "@/lib/config/app";
 import "./globals.css";
 
@@ -56,7 +55,6 @@ export default function RootLayout({
     <html lang="en" className={`${font.variable} ${display.variable}`}>
       <body>
         <SessionProvider>{children}</SessionProvider>
-        <Analytics />
       </body>
     </html>
   );
