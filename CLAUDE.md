@@ -31,12 +31,17 @@ pnpm db:push      # push schema changes to Postgres (uses .env.local)
 pnpm db:generate  # generate migration files
 pnpm db:studio    # Drizzle Studio (visual DB explorer)
 pnpm test         # vitest unit tests
+pnpm verify       # lint + typecheck + test — the pre-done gate (mirrors CI)
 
 # deploy: builds standalone, rsyncs to the box, restarts the service, health-checks
 scripts/hetzner/deploy.sh petvity   # run from the fleetcrown repo's scripts/hetzner/
 ```
 
-**Before every push:** `pnpm build` must pass with zero TypeScript errors. CI does not catch TS errors for you.
+**Before declaring any change done, run `pnpm verify`** (lint + typecheck +
+test). It mirrors CI's hermetic gates, so green locally means green on `main`.
+CI (`.github/workflows/ci.yml`) runs the same gates on every push and PR. Build
+is not yet gated in CI (it prerenders `/sitemap.xml` from Postgres — see the
+workflow); until it is, still run `pnpm build` before a deploy.
 
 **After every deployment:** `deploy.sh` health-checks the service; confirm `petvity.orangecat.ch` returns 2xx.
 
