@@ -28,8 +28,9 @@ local-disk file storage (pet photos) · next-intl
 pnpm dev          # local dev (localhost:3000)
 pnpm build        # production build — MUST pass before every push
 pnpm lint         # eslint
-pnpm db:push      # push schema changes to Postgres (uses .env.local)
-pnpm db:generate  # generate migration files
+pnpm db:generate  # versioned migration after schema.ts edits — COMMIT the drizzle/*.sql;
+                  # deploys auto-apply pending migrations to prod (guarded, forward-only)
+pnpm db:push      # local dev DBs ONLY — never push schema to prod by hand
 pnpm db:studio    # Drizzle Studio (visual DB explorer)
 pnpm test         # vitest unit tests
 pnpm verify       # lint + typecheck + test — the pre-done gate (mirrors CI)
