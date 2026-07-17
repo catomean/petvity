@@ -33,14 +33,10 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm run lint
-
-      - name: Typecheck
-        run: pnpm exec tsc --noEmit
-
-      - name: Test
-        run: pnpm run test
+      # SSOT: one definition of "verified" (lint + typecheck + test) lives in
+      # package.json `verify`, run identically here and locally.
+      - name: Verify
+        run: pnpm run verify
 
       # Build is DEFERRED, not skipped silently: `next build` prerenders
       # /sitemap.xml, which queries Postgres (select handle from pets ...) at
