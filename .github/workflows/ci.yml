@@ -1,0 +1,48 @@
+# Golden CI floor — see dotfiles/templates/ci/README.md.
+# petvity: pnpm + vitest. 61 test files / ~541 cases that never ran on the shared
+# branch until now. No `typecheck` script exists, so tsc is invoked directly.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Build
+        env:
+          DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+        run: pnpm run build
