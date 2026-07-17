@@ -6,98 +6,156 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Design System
 
-**Tailwind version:** v4. No `tailwind.config.*` file exists. Tailwind is loaded via `@import "tailwindcss"` in `app/globals.css`. There is no `@theme` block. All design tokens are `:root` CSS custom properties in `globals.css`. Do not create a `tailwind.config.*` file.
+**Tailwind version:** v4. No `tailwind.config.*` file exists — Tailwind is loaded via `@import "tailwindcss"` in `app/globals.css`. There is no `@theme` block. All design tokens are `:root` CSS custom properties in `globals.css`. Do not create a `tailwind.config.*` file. Arbitrary Tailwind values or `style={{}}` must be avoided — use semantic CSS classes defined in `globals.css` instead.
 
-**JS token file:** `lib/config/design-tokens.ts` exports `TOKENS` — a `const` object with hex values for use in Recharts SVG attributes and Satori OG images (contexts that cannot read CSS vars). Keep in sync with `globals.css` manually. Do NOT use `TOKENS` in JSX classNames.
+**JS token file:** `lib/config/design-tokens.ts` exports `TOKENS` (a `const` object) with hex values mirroring `globals.css` — for use in JS rendering contexts that cannot read CSS vars (Recharts SVG attributes, Satori OG images). Values must stay in sync with `globals.css` manually — it is NOT auto-derived. Do NOT use `TOKENS` in JSX classNames.
 
 ### CSS Custom Properties (`app/globals.css` `:root`)
 
 **Brand — deep forest teal:**
 ```
---teal:       #0D6E78
---teal-dark:  #0A5860
---teal-light: #E3F4F6
---teal-mid:   #B2DDE2
---teal-wash:  #f0fafb
+--teal:       #0D6E78    Brand (nav, links, focus rings, active states)
+--teal-dark:  #0A5860    Brand hover
+--teal-light: #E3F4F6    Brand backgrounds, hover fills
+--teal-mid:   #B2DDE2    Eyebrow badge border, teal mid-tint
+--teal-wash:  #f0fafb    Hero gradient endpoint
 ```
 
 **Accent — warm terracotta (all primary CTAs):**
 ```
---accent:       #B8502A    (WCAG AA 4.5:1 on white)
---accent-dark:  #9E4220
---accent-light: #FEF0E8
+--accent:       #B8502A    Primary action buttons (WCAG AA 4.5:1 on white)
+--accent-dark:  #9E4220    Accent hover
+--accent-light: #FEF0E8    Accent backgrounds
 ```
 
 **Text:**
 ```
---ink:   #1C1917
---ink2:  #44403C
---muted: #78716C
---faint: #C4BBB3
+--ink:   #1C1917    Primary text (warm charcoal)
+--ink2:  #44403C    Secondary text
+--muted: #78716C    Placeholder/helper text
+--faint: #C4BBB3    Disabled/decorative
 ```
 
 **Backgrounds:**
 ```
---off:          #FAF8F5
---light:        #F0EBE3
---card:         #FFFFFF
---border:       #E8E2D9
---border-hover: #d4cdc5
---off-bg:       var(--off)    (legacy alias)
+--off:    #FAF8F5    Page background (warm cream)
+--light:  #F0EBE3    Light section backgrounds
+--card:   #FFFFFF    Card background
+--border: #E8E2D9    Default border
+--border-hover: #d4cdc5    Hovered border
+--off-bg: var(--off)        Legacy alias for --off
 ```
 
 **State colors:**
 ```
---green:         #16A34A    --green-bg:     #DCFCE7    --green-text:   #166534    --green-border: #bbf7d0
---warn:          #D97706    --warn-bg:      #FEF3C7    --warn-text:    #92400E    --warn-border:  #fde68a
---danger:        #DC2626    --danger-bg:    #FEE2E2    --danger-text:  #991B1B    --danger-dark:  #B91C1C    --danger-border: #fca5a5
+--green:        #16A34A    Healthy signal, success text
+--green-bg:     #DCFCE7    Success badge/alert background
+--green-text:   #166534    Success text on --green-bg (WCAG AA)
+--green-border: #bbf7d0    Success card borders
+--warn:         #D97706    Watch signal, warning text
+--warn-bg:      #FEF3C7    Warning badge/alert background
+--warn-text:    #92400E    Warning text on --warn-bg (WCAG AA)
+--warn-border:  #fde68a    Warning card borders
+--danger:       #DC2626    Concern signal, error text
+--danger-bg:    #FEE2E2    Error badge/alert background
+--danger-text:  #991B1B    Error text on --danger-bg (WCAG AA)
+--danger-dark:  #B91C1C    Danger hover
+--danger-border:#fca5a5    Error card borders
 ```
 
-**Role badges:**
+**Role badge colors:**
 ```
---role-vet-bg: #EFF6FF    --role-vet:    #1D4ED8
---role-sitter-bg: #FFFBEB --role-sitter: #92400E
---role-admin-bg: #F3E8FF  --role-admin:  #6B21A8
+--role-vet-bg:    #EFF6FF    --role-vet:    #1D4ED8
+--role-sitter-bg: #FFFBEB    --role-sitter: #92400E
+--role-admin-bg:  #F3E8FF    --role-admin:  #6B21A8
 ```
 
-**Additional palettes:**
+**Secondary palette (sitter / feminine brand):**
 ```
---secondary: #EC4899    --secondary-dark: #BE185D    --secondary-bg: #FDF2F8
---info:      #2563EB    --info-bg:        #EFF6FF
---twin:      #7C3AED    --twin-bg:        #EDE9FE
---warm-bg:   #FFFBEB    --warm-text:      #B45309
---star:      #FBBF24
+--secondary:      #EC4899
+--secondary-dark: #BE185D
+--secondary-bg:   #FDF2F8
+```
+
+**Info palette:**
+```
+--info:    #2563EB
+--info-bg: #EFF6FF
+```
+
+**Digital twin identity:**
+```
+--twin:    #7C3AED
+--twin-bg: #EDE9FE
+```
+
+**Warm bg/text (decorative icon backgrounds):**
+```
+--warm-bg:   #FFFBEB
+--warm-text: #B45309
+```
+
+**Star rating:**
+```
+--star: #FBBF24
 ```
 
 **Shadows:**
 ```
---shadow-sm        --shadow-md        --shadow-lg
---brand-shadow     --secondary-shadow --cta-shadow    --tooltip-shadow
+--shadow-sm:        0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)
+--shadow-md:        0 4px 16px 0 rgb(0 0 0 / 0.07), 0 2px 6px -2px rgb(0 0 0 / 0.05)
+--shadow-lg:        0 12px 40px 0 rgb(0 0 0 / 0.10), 0 4px 12px -4px rgb(0 0 0 / 0.06)
+--brand-shadow:     0 4px 12px rgb(13 110 120 / 0.25)
+--secondary-shadow: 0 4px 12px rgb(236 72 153 / 0.25)
+--cta-shadow:       0 4px 20px rgb(0 0 0 / 0.15)
+--tooltip-shadow:   0 2px 8px rgb(0 0 0 / 0.08)
 ```
 
 ### Semantic CSS Classes (defined in `globals.css` — use these, not arbitrary Tailwind values)
 
-| Class | Purpose |
-|-------|---------|
-| `.card` | White card, `--border`, 16px radius, `--shadow-sm` |
-| `.card-hover` | Hover: `--shadow-md` + `--border-hover` |
-| `.btn-primary` | Terracotta fill, white text, 10px radius |
-| `.btn-outline` | Transparent, `--ink2` text, border |
-| `.btn-ghost` | Transparent, `--muted` text |
-| `.btn-on-teal` | White fill for use on teal backgrounds |
-| `.btn-on-teal-ghost` | White/10 fill for use on teal backgrounds |
-| `.form-input` | Styled input with teal focus ring |
-| `.signal-healthy` | `--green-bg` / `--green-text` pill badge |
-| `.signal-watch` | `--warn-bg` / `--warn-text` pill badge |
-| `.signal-concern` | `--danger-bg` / `--danger-text` pill badge |
-| `.alert-error` | Error box |
-| `.alert-success` | Success box |
-| `.nav-link` | Base nav link |
-| `.nav-link-active` | Active nav state |
-| `.nav-link-inactive` | Default nav state |
-| `.eyebrow-badge` | Teal pill for hero eyebrow labels |
-| `.section-inner` | Max-width 1100px container |
-| `.prose-legal` | Legal/terms long-form content styles |
+**Layout:**
+- `.section-inner` — max-width 1100px, centered, 24px side padding
+
+**Cards:**
+- `.card` — white card, `--border` border, 16px radius, `--shadow-sm`
+- `.card-hover` — hover: `--shadow-md` + `--border-hover`
+
+**Buttons:**
+- `.btn-primary` — terracotta fill (`--accent`), white text, 10px radius
+- `.btn-outline` — transparent, `--ink2` text, `--border` border, hover: teal tint
+- `.btn-ghost` — transparent, `--muted` text, hover: `--light` bg
+- `.btn-on-teal` — white fill on teal backgrounds, `--teal` text
+- `.btn-on-teal-ghost` — white/10 fill on teal backgrounds, white text
+
+**Forms:**
+- `.form-input` — full-width input, 10px radius, teal focus ring (`--teal-light`)
+
+**Signal badges:**
+- `.signal-healthy` — `--green-bg` / `--green-text` pill
+- `.signal-watch` — `--warn-bg` / `--warn-text` pill
+- `.signal-concern` — `--danger-bg` / `--danger-text` pill
+
+**Alerts:**
+- `.alert-error` — `--danger-bg` / `--danger-text`
+- `.alert-success` — `--green-bg` / `--green-text`
+
+**Navigation:**
+- `.nav-link` — base nav link (flex, 12px radius)
+- `.nav-link-active` — `--teal-light` bg, `--teal` text
+- `.nav-link-inactive` — `--ink2`, hover: `--light` bg + `--ink` text
+- `.nav-link-muted` — `--muted`, hover: `--light` bg
+- `.nav-link-danger` — `--muted`, hover: `--danger-bg` + `--danger-text`
+- `.mobile-tab-item` / `.mobile-tab-item-active` / `.mobile-tab-item-inactive`
+
+**Other:**
+- `.eyebrow-badge` — teal pill for hero eyebrow labels
+- `.prose-legal` — styled legal/terms/privacy long-form content
+
+### Navigation Pattern
+
+- Desktop: fixed 240px left sidebar (`components/portal/SidebarNav.tsx` — client component)
+- Mobile: fixed top bar (h-14) + fixed bottom tab bar
+- Portal layout offsets: `lg:ps-60 pt-14 lg:pt-0 pb-20 lg:pb-0`
 
 ### Typography
 
@@ -105,16 +163,17 @@ System font stack via `--font-sans`: Inter, -apple-system, BlinkMacSystemFont, "
 
 ### RTL Support
 
-Arabic only. `dir="rtl"` injected by `app/[locale]/layout.tsx`. Use logical Tailwind props: `ms-*`, `me-*`, `ps-*`, `pe-*`. Never `ml-*`, `mr-*`, `pl-*`, `pr-*`. Use `.flip-rtl` for icons needing mirror.
+Arabic only. `app/[locale]/layout.tsx` injects `dir="rtl"`. Use logical Tailwind props: `ms-*`, `me-*`, `ps-*`, `pe-*`. NEVER `ml-*`, `mr-*`, `pl-*`, `pr-*`. Use `.flip-rtl` for icons needing mirror.
 
 ### SSOT Rule
 
-All design tokens live in `app/globals.css` only. Tailwind config MUST reference CSS vars (`'var(--name)'`), never literal values. Components MUST use semantic Tailwind classes, never arbitrary values like `bg-[#hex]`.
+All design tokens live in `app/globals.css` only. There is no `tailwind.config.*` (Tailwind v4); if one ever existed it MUST reference CSS vars (`'var(--name)'`), never literal values. Components MUST use semantic CSS classes from `globals.css` or standard Tailwind utilities, never arbitrary values like `bg-[#hex]`.
 
 **Violations to fix when touching UI:**
 - `bg-[#hex]` / `text-[#hex]` in className → CSS var + semantic class
 - `style={{ color: '#hex' }}` → CSS var + className
-- Literal hex in tailwind.config → `'var(--color-name)'`
+- Literal hex in a tailwind config → `'var(--color-name)'`
 - Same token defined in 2+ files → consolidate to globals.css
+- Hex values in `lib/config/design-tokens.ts` diverging from `globals.css` → sync them
 
 **Audit:** `grep -r '\[#' src/` — every result is a violation.
