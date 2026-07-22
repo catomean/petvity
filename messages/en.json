@@ -1247,7 +1247,7 @@
     "faq5Q": "Can I use {app} in my language?",
     "faq5A": "{app} supports English, German, French, Spanish, Japanese, Chinese, Korean, Turkish, and Arabic (with full right-to-left layout).",
     "faq6Q": "Is my data secure?",
-    "faq6A": "All data is owner-scoped — you can only see your own pets. We use encrypted connections, bcrypt password hashing, and host on Vercel's global edge infrastructure.",
+    "faq6A": "All data is owner-scoped — you can only see your own pets. We use encrypted connections, bcrypt password hashing, and host on our own self-hosted European infrastructure.",
     "ctaTitle": "Start tracking your pet's health today",
     "ctaDesc": "Free forever. No credit card required.",
     "ctaCta": "Create free account",

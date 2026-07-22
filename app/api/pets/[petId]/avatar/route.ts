@@ -6,8 +6,8 @@ import { getInstance } from "@/lib/db";
 import { pets } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/guards";
 
-/** Cap at 5 MB. Vercel Blob accepts much larger but pet avatars don't need it,
- *  and rejecting at the edge is faster + cheaper than streaming a huge file. */
+/** Cap at 5 MB — pet avatars don't need more, and rejecting a huge upload
+ *  early is faster + cheaper than streaming it to disk. */
 const MAX_BYTES = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
@@ -53,8 +53,7 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   let blob;
   try {
-    // Random suffix keeps old avatar URLs valid until the row is updated
-    // (same behavior addRandomSuffix gave us on Vercel Blob).
+    // Random suffix keeps old avatar URLs valid until the row is updated.
     blob = await putLocal(`pets/${petId}/avatar-${randomUUID()}`, file);
   } catch (err) {
     console.error("[avatar] upload failed", err);

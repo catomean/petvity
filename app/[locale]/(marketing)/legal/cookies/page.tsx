@@ -48,9 +48,8 @@ export default function CookiePolicyPage() {
 
       <h2>Analytics</h2>
       <p>
-        We use Vercel Analytics for aggregate, anonymized traffic insights
-        (page views, geographic regions, basic device categories). It does not
-        set advertising cookies and does not identify individual users.
+        We do not use any third-party analytics or advertising cookies, and we
+        do not track or identify individual users.
       </p>
 
       <h2>Managing cookies</h2>

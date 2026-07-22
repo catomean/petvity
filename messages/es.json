@@ -1247,7 +1247,7 @@
     "faq5Q": "¿Puedo usar {app} en mi idioma?",
     "faq5A": "{app} admite español, inglés, alemán, francés, japonés, chino, coreano, turco y árabe (con diseño de derecha a izquierda).",
     "faq6Q": "¿Están seguros mis datos?",
-    "faq6A": "Todos los datos están limitados al propietario — solo puedes ver tus propias mascotas. Usamos conexiones cifradas, hash de contraseñas bcrypt y alojamos en la infraestructura edge global de Vercel.",
+    "faq6A": "Todos los datos están limitados al propietario — solo puedes ver tus propias mascotas. Usamos conexiones cifradas, hash de contraseñas bcrypt y alojamos en nuestra propia infraestructura europea autoalojada.",
     "ctaTitle": "Empieza a rastrear la salud de tu mascota hoy",
     "ctaDesc": "Gratis para siempre. No se requiere tarjeta de crédito.",
     "ctaCta": "Crear cuenta gratuita",
