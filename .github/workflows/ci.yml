@@ -38,9 +38,11 @@ jobs:
       - name: Verify
         run: pnpm run verify
 
-      # Build is DEFERRED, not skipped silently: `next build` prerenders
-      # /sitemap.xml, which queries Postgres (select handle from pets ...) at
-      # build time, so it is NOT hermetic. To gate it, add a `postgres` service
-      # + `pnpm db:push` before build (the revampit e2e-local pattern in
-      # dotfiles/templates/ci/README.md). Until then the floor gates
-      # lint + typecheck + the full 562-case test suite.
+      # Build is now GATED. It used to be deferred because next build prerendered
+      # /sitemap.xml, which queried Postgres — now the sitemap is `force-dynamic`
+      # (+ DB-blip-resilient), so the build is hermetic. Placeholder DB URL just
+      # satisfies tools that read the var without connecting.
+      - name: Build
+        env:
+          DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+        run: pnpm build
