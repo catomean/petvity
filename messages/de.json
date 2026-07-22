@@ -1247,7 +1247,7 @@
     "faq5Q": "Kann ich {app} in meiner Sprache nutzen?",
     "faq5A": "{app} unterstützt Deutsch, Englisch, Französisch, Spanisch, Japanisch, Chinesisch, Koreanisch, Türkisch und Arabisch (mit vollständigem Rechts-nach-Links-Layout).",
     "faq6Q": "Sind meine Daten sicher?",
-    "faq6A": "Alle Daten sind besitzerbegrenzt — du kannst nur deine eigenen Tiere sehen. Wir nutzen verschlüsselte Verbindungen, bcrypt-Passwort-Hashing und hosten auf Vercels globaler Edge-Infrastruktur.",
+    "faq6A": "Alle Daten sind besitzerbegrenzt — du kannst nur deine eigenen Tiere sehen. Wir nutzen verschlüsselte Verbindungen, bcrypt-Passwort-Hashing und hosten auf unserer eigenen selbstgehosteten europäischen Infrastruktur.",
     "ctaTitle": "Beginne heute, die Gesundheit deines Tieres zu verfolgen",
     "ctaDesc": "Kostenlos für immer. Keine Kreditkarte erforderlich.",
     "ctaCta": "Kostenloses Konto erstellen",

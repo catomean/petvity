@@ -67,10 +67,9 @@ export default function PrivacyPolicyPage() {
         own privacy practices; we share only the minimum data each one needs.
       </p>
       <ul>
-        <li><strong>Vercel</strong> — application hosting and edge delivery</li>
+        <li><strong>Hetzner</strong> — application hosting (self-hosted server in Germany; pet avatars and uploads are stored here on local disk)</li>
         <li><strong>Neon</strong> — managed PostgreSQL database (your data lives here)</li>
         <li><strong>Resend</strong> — transactional email delivery</li>
-        <li><strong>Vercel Blob</strong> — pet avatar storage</li>
         <li><strong>Google</strong> — only if you sign in with Google OAuth</li>
       </ul>
 

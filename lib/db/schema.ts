@@ -163,7 +163,7 @@ export const pets = pgTable("pets", {
   /** Weight stored as integer grams. 3500 = 3.5 kg. Display: divide by 1000. */
   weightGrams: integer("weight_grams"),
   bio: text("bio"),
-  /** Vercel Blob URL */
+  /** Local file storage URL (served by Caddy under /uploads/*) */
   avatarUrl: text("avatar_url"),
   isPublic: boolean("is_public").notNull().default(false),
   /** @handle for public influencer profiles. Must be unique when set. */
@@ -222,7 +222,7 @@ export const healthRecords = pgTable("health_records", {
   vetName: varchar("vet_name", { length: 150 }),
   clinic: varchar("clinic", { length: 150 }),
   notes: text("notes"),
-  /** Vercel Blob URL for lab PDFs, prescriptions, etc. */
+  /** Local file storage URL for lab PDFs, prescriptions, etc. */
   attachmentUrl: text("attachment_url"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),

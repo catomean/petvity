@@ -323,10 +323,11 @@ Algorithm:
 
 All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 
-> **Scheduling:** these schedules are still declared in `vercel.json` (legacy). Vercel
-> Cron no longer fires them on the self-hosted box — they need a host cron / systemd
-> timer that curls each route with the `CRON_SECRET` bearer token. Until that is wired,
-> the cron routes only run when invoked manually. (Tracked — see PR notes.)
+> **Scheduling:** the app is self-hosted on the Hetzner box (behind Caddy), so
+> there is no Vercel Cron. Each schedule below must be driven by a host cron /
+> systemd timer that curls the route with the `CRON_SECRET` bearer token. The
+> table below is the source of truth for the schedules. Until the timers are
+> wired, the cron routes only run when invoked manually. (Tracked — see PR notes.)
 
 | Route | Schedule | Purpose |
 |-------|----------|---------|
