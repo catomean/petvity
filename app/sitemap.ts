@@ -7,6 +7,13 @@ import { eq } from "drizzle-orm";
 const BASE = APP_URL;
 const LOCALES = ["en", "de", "fr", "es", "ja", "zh", "ko", "tr", "ar"];
 
+// Dynamic (not prerendered): the sitemap reads live DB rows (pets, listings,
+// pros), so it must NOT run at build time — that coupled `next build` to a
+// reachable Postgres and is why the build couldn't be gated in CI. Rendering
+// per-request also keeps the sitemap fresh as content changes, instead of
+// freezing it at deploy.
+export const dynamic = "force-dynamic";
+
 const MARKETING_PATHS = [
   { path: "", changeFrequency: "weekly" as const, priority: 1.0 },
   { path: "/features", changeFrequency: "monthly" as const, priority: 0.8 },
@@ -26,17 +33,27 @@ const MARKETING_PATHS = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const db = getInstance();
-
-  const [publicPets, availableListings, vetUserIds, sitterUserIds] = await Promise.all([
-    db.select({ handle: pets.handle, updatedAt: pets.updatedAt }).from(pets).where(eq(pets.isPublic, true)),
-    db
-      .select({ id: adoptionListings.id, updatedAt: adoptionListings.updatedAt })
-      .from(adoptionListings)
-      .where(eq(adoptionListings.status, "available")),
-    db.select({ userId: vetProfiles.userId, updatedAt: vetProfiles.updatedAt }).from(vetProfiles),
-    db.select({ userId: sitterProfiles.userId, updatedAt: sitterProfiles.updatedAt }).from(sitterProfiles),
-  ]);
+  // Resilient: a DB blip must not 500 the sitemap — degrade to the static
+  // marketing pages rather than fail the whole document (crawlers then still
+  // get the core URLs).
+  let publicPets: { handle: string | null; updatedAt: Date }[] = [];
+  let availableListings: { id: string; updatedAt: Date }[] = [];
+  let vetUserIds: { userId: string; updatedAt: Date }[] = [];
+  let sitterUserIds: { userId: string; updatedAt: Date }[] = [];
+  try {
+    const db = getInstance();
+    [publicPets, availableListings, vetUserIds, sitterUserIds] = await Promise.all([
+      db.select({ handle: pets.handle, updatedAt: pets.updatedAt }).from(pets).where(eq(pets.isPublic, true)),
+      db
+        .select({ id: adoptionListings.id, updatedAt: adoptionListings.updatedAt })
+        .from(adoptionListings)
+        .where(eq(adoptionListings.status, "available")),
+      db.select({ userId: vetProfiles.userId, updatedAt: vetProfiles.updatedAt }).from(vetProfiles),
+      db.select({ userId: sitterProfiles.userId, updatedAt: sitterProfiles.updatedAt }).from(sitterProfiles),
+    ]);
+  } catch (err) {
+    console.error("[sitemap] DB read failed — serving marketing paths only:", err);
+  }
 
   const entries: MetadataRoute.Sitemap = [];
   const now = new Date();

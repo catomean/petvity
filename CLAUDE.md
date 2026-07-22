@@ -41,9 +41,9 @@ scripts/hetzner/deploy.sh petvity   # run from the fleetcrown repo's scripts/het
 
 **Before declaring any change done, run `pnpm verify`** (lint + typecheck +
 test). It mirrors CI's hermetic gates, so green locally means green on `main`.
-CI (`.github/workflows/ci.yml`) runs the same gates on every push and PR. Build
-is not yet gated in CI (it prerenders `/sitemap.xml` from Postgres — see the
-workflow); until it is, still run `pnpm build` before a deploy.
+CI (`.github/workflows/ci.yml`) runs the same gates on every push and PR, plus
+`pnpm build` — the build is now hermetic (the sitemap is `force-dynamic`, no
+build-time DB) and gated, so a broken build can't reach `main`.
 
 **After every deployment:** `deploy.sh` health-checks the service; confirm `petvity.orangecat.ch` returns 2xx.
 
