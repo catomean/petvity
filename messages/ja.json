@@ -13,7 +13,8 @@
     "megamenuTitle": "できること",
     "speciesGuides": "動物種別ガイド",
     "register": "始める",
-    "login": "ログイン"
+    "login": "ログイン",
+    "tryDemo": "ライブデモを試す"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "エネルギーと気分が低い状態です",
     "summaryLowEnergy": "エネルギーが低い日です",
     "summaryLowMood": "つらい日を過ごしています",
-    "summaryBalanced": "バランスがとれています"
+    "summaryBalanced": "バランスがとれています",
+    "emotionalScoreLabel": "心の健康"
   },
   "speciesGuide": {
     "heroTitle": "{species}の健康トラッキング",

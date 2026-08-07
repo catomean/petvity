@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
       species: pet.species as SpeciesId,
       recentMetrics,
       overdueVaccinations: overdueCount,
+      petCreatedAt: pet.createdAt,
       now,
     });
 

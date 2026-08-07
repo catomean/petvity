@@ -26,7 +26,7 @@ export function HeroCTA() {
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link href="#how-it-works" className="btn-editorial-ghost justify-center">
-            See how it works
+            {t("howItWorks")}
           </Link>
         </>
       ) : (
@@ -35,8 +35,8 @@ export function HeroCTA() {
             {t("getStartedFree")}
             <ArrowRight className="w-4 h-4" />
           </Link>
-          <Link href="#how-it-works" className="btn-editorial-ghost justify-center">
-            See how it works
+          <Link href="/demo" className="btn-editorial-ghost justify-center">
+            {t("tryDemo")}
           </Link>
         </>
       )}

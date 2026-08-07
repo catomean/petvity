@@ -13,7 +13,8 @@
     "megamenuTitle": "Was du tun kannst",
     "speciesGuides": "Tier-Ratgeber",
     "register": "Loslegen",
-    "login": "Anmelden"
+    "login": "Anmelden",
+    "tryDemo": "Live-Demo testen"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "Wenig Energie und schlechte Stimmung",
     "summaryLowEnergy": "Ein energiearmer Tag",
     "summaryLowMood": "Hat einen schwierigen Tag",
-    "summaryBalanced": "Fühlt sich ausgeglichen"
+    "summaryBalanced": "Fühlt sich ausgeglichen",
+    "emotionalScoreLabel": "Emotionales Wohlbefinden"
   },
   "speciesGuide": {
     "heroTitle": "{species}-Gesundheitstracking",

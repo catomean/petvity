@@ -80,7 +80,7 @@ export default async function PetHealthPage({ params }: Params) {
   // Live signal computation for the reason banner
   const signalMetrics = metrics.filter((m) => m.date >= sinceSignal);
   const overdueCount = countOverdueVaccinations(petVacc, todayStr);
-  const petSignal = computePetSignal({ species, recentMetrics: signalMetrics, overdueVaccinations: overdueCount, now });
+  const petSignal = computePetSignal({ species, recentMetrics: signalMetrics, overdueVaccinations: overdueCount, petCreatedAt: pet.createdAt, now });
 
   const metricFieldMap: Record<MetricId, keyof typeof latest> = {
     weight: "weightGrams",

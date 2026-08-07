@@ -94,7 +94,7 @@ export default async function DashboardPage() {
     const petVacc = vaccByPet.get(pet.id) ?? [];
     const overdueCount = countOverdueVaccinations(petVacc, todayStr);
 
-    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now });
+    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, petCreatedAt: pet.createdAt, now });
     const twin   = computeDigitalTwin(recentMetrics, now);
 
     return { ...pet, signal, twin, overdueCount };

@@ -49,6 +49,13 @@ export async function POST(req: NextRequest) {
     })
     .returning();
 
+  // Public profile — /pets/luna doubles as the showcase for the
+  // public-influencer-profile feature. Handles are globally unique, so only
+  // claim it if no real user has taken it since the last reset.
+  const handleTaken = await db.query.pets.findFirst({
+    where: eq(pets.handle, "luna"),
+  });
+
   const [luna] = await db
     .insert(pets)
     .values({
@@ -59,6 +66,7 @@ export async function POST(req: NextRequest) {
       sex: "female",
       birthDate: "2022-05-12",
       bio: "Sunny golden retriever who fetches anything that fits in her mouth and greets every dog in the park by name.",
+      ...(handleTaken ? {} : { isPublic: true, handle: "luna" }),
     })
     .returning();
 

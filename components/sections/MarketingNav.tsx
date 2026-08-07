@@ -194,6 +194,12 @@ export default function MarketingNav() {
           ) : (
             <>
               <Link
+                href="/demo"
+                className="text-sm font-medium text-[var(--gold-dark)] hover:text-[var(--warm-ink)] transition-colors no-underline"
+              >
+                {t("tryDemo")}
+              </Link>
+              <Link
                 href="/login"
                 className="text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] transition-colors no-underline"
               >

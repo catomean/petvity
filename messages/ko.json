@@ -13,7 +13,8 @@
     "megamenuTitle": "할 수 있는 것",
     "speciesGuides": "종별 가이드",
     "register": "시작하기",
-    "login": "로그인"
+    "login": "로그인",
+    "tryDemo": "라이브 데모 체험"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "에너지와 기분이 낮습니다",
     "summaryLowEnergy": "에너지가 낮은 날입니다",
     "summaryLowMood": "힘든 하루를 보내고 있습니다",
-    "summaryBalanced": "균형 잡힌 상태입니다"
+    "summaryBalanced": "균형 잡힌 상태입니다",
+    "emotionalScoreLabel": "정서 건강"
   },
   "speciesGuide": {
     "heroTitle": "{species} 건강 추적",

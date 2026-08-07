@@ -13,7 +13,8 @@
     "megamenuTitle": "What you can do",
     "speciesGuides": "Species guides",
     "register": "Get started",
-    "login": "Log in"
+    "login": "Log in",
+    "tryDemo": "Try the live demo"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "Low energy and low mood",
     "summaryLowEnergy": "Low energy day",
     "summaryLowMood": "Having a tough day",
-    "summaryBalanced": "Feeling balanced"
+    "summaryBalanced": "Feeling balanced",
+    "emotionalScoreLabel": "Emotional wellness"
   },
   "speciesGuide": {
     "heroTitle": "{species} Health Tracking",

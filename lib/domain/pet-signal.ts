@@ -28,6 +28,12 @@ export type PetSignalInput = {
   recentMetrics: HealthMetricRow[];
   /** Number of vaccinations past their nextDueDate as of today. */
   overdueVaccinations: number;
+  /**
+   * When the pet profile was created. A profile younger than the no-log alert
+   * window with no data yet is "new", not "needs attention" — without this a
+   * pet shows an alarming Watch badge seconds after being added.
+   */
+  petCreatedAt?: Date | null;
   /** Injectable for tests; defaults to new Date(). */
   now?: Date;
 };
@@ -39,6 +45,7 @@ export type SignalOutOfRangeDetail = {
 };
 
 export type SignalReasonData =
+  | { type: "new_pet" }
   | { type: "no_metrics"; overdueVaccinations: number }
   | { type: "stale"; days: number; overdueVaccinations: number }
   | { type: "out_of_range"; details: SignalOutOfRangeDetail[]; overdueVaccinations: number }
@@ -76,12 +83,28 @@ export function computePetSignal({
   species,
   recentMetrics,
   overdueVaccinations,
+  petCreatedAt,
   now = new Date(),
 }: PetSignalInput): PetSignalResult {
   const dayMs = 24 * 60 * 60 * 1000;
 
   // ── Step 1: Check if we have any recent data ───────────────────────────────
   if (recentMetrics.length === 0) {
+    // Brand-new profile grace: no data AND nothing overdue AND the profile is
+    // younger than the alert window ⇒ there was never a day it could have
+    // missed. Healthy, with a nudge to log the first check-in.
+    const ageDays = petCreatedAt
+      ? (now.getTime() - petCreatedAt.getTime()) / dayMs
+      : Infinity;
+    if (overdueVaccinations === 0 && ageDays < NO_METRIC_LOG_ALERT_DAYS) {
+      return {
+        signal: "healthy",
+        reason: "New profile — log a first check-in to activate the signal",
+        reasonData: { type: "new_pet" },
+        outOfRangeMetrics: [],
+      };
+    }
+
     const baseSignal = overdueVaccinations > 0 ? "concern" : "watch";
     return {
       signal: baseSignal,
