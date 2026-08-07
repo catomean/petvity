@@ -667,7 +667,8 @@
     "housingType_apartment": "شقة",
     "housingType_farm": "مزرعة / ملكية ريفية",
     "housingType_other": "أخرى",
-    "allSpecies": "جميع الأنواع"
+    "allSpecies": "جميع الأنواع",
+    "loading": "جارٍ التحميل…"
   },
   "pets": {
     "name": "الاسم",
@@ -825,7 +826,10 @@
     "cat_accessories": "إكسسوارات",
     "cat_grooming": "عناية",
     "cat_other": "أخرى",
-    "sex_unknown": "غير معروف"
+    "sex_unknown": "غير معروف",
+    "adoptNoResults": "لا توجد حيوانات أليفة تطابق عوامل التصفية",
+    "adoptClearFilters": "مسح عوامل التصفية",
+    "adoptFree": "مجاني"
   },
   "twin": {
     "thriving": "يزدهر",

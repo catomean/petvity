@@ -40,7 +40,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
   const dest =
-    session?.user.role === "admin" ? "/admin/users" : "/portal/dashboard";
+    session?.user?.role === "admin" ? "/admin/users" : "/portal/dashboard";
 
   // ── NextAuth API routes — always public ──────────────────────────────────
   if (pathname.startsWith("/api/auth")) {

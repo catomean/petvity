@@ -667,7 +667,8 @@
     "housingType_apartment": "Appartement",
     "housingType_farm": "Ferme / propriété rurale",
     "housingType_other": "Autre",
-    "allSpecies": "Toutes les espèces"
+    "allSpecies": "Toutes les espèces",
+    "loading": "Chargement…"
   },
   "pets": {
     "name": "Nom",
@@ -825,7 +826,10 @@
     "cat_accessories": "Accessoires",
     "cat_grooming": "Toilettage",
     "cat_other": "Autre",
-    "sex_unknown": "Inconnu"
+    "sex_unknown": "Inconnu",
+    "adoptNoResults": "Aucun animal ne correspond à vos filtres",
+    "adoptClearFilters": "Réinitialiser les filtres",
+    "adoptFree": "Gratuit"
   },
   "twin": {
     "thriving": "Épanouissant",

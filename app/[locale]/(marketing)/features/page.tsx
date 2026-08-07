@@ -26,16 +26,16 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 const PILLAR_META = [
-  { icon: Activity,     color: "bg-[var(--teal-light)] text-[var(--teal)]",    titleKey: "fp1Title" as const, descKey: "fp1Desc" as const, bulletKeys: ["fp1B1","fp1B2","fp1B3","fp1B4"] as const },
-  { icon: Brain,        color: "bg-[var(--twin-bg)] text-[var(--twin)]",        titleKey: "fp2Title" as const, descKey: "fp2Desc" as const, bulletKeys: ["fp2B1","fp2B2","fp2B3","fp2B4"] as const },
-  { icon: Zap,          color: "bg-[var(--warm-bg)] text-[var(--warn)]",        titleKey: "fp3Title" as const, descKey: "fp3Desc" as const, bulletKeys: ["fp3B1","fp3B2","fp3B3","fp3B4"] as const },
-  { icon: FileText,     color: "bg-[var(--info-bg)] text-[var(--info)]",        titleKey: "fp4Title" as const, descKey: "fp4Desc" as const, bulletKeys: ["fp4B1","fp4B2","fp4B3","fp4B4"] as const },
-  { icon: Globe,        color: "bg-[var(--green-bg)] text-[var(--green-text)]", titleKey: "fp5Title" as const, descKey: "fp5Desc" as const, bulletKeys: ["fp5B1","fp5B2","fp5B3","fp5B4"] as const },
-  { icon: Search,       color: "bg-sky-50 text-sky-600",                        titleKey: "fp6Title" as const, descKey: "fp6Desc" as const, bulletKeys: ["fp6B1","fp6B2","fp6B3","fp6B4"] as const },
-  { icon: ShoppingBag,  color: "bg-rose-50 text-rose-600",                      titleKey: "fp7Title" as const, descKey: "fp7Desc" as const, bulletKeys: ["fp7B1","fp7B2","fp7B3","fp7B4"] as const },
-  { icon: Heart,        color: "bg-[var(--secondary-bg)] text-[var(--secondary)]", titleKey: "fp8Title" as const, descKey: "fp8Desc" as const, bulletKeys: ["fp8B1","fp8B2","fp8B3","fp8B4"] as const },
-  { icon: Globe,        color: "bg-emerald-50 text-emerald-600",                titleKey: "fp9Title" as const, descKey: "fp9Desc" as const, bulletKeys: ["fp9B1","fp9B2","fp9B3","fp9B4"] as const },
-  { icon: Shield,       color: "bg-[var(--teal-light)] text-[var(--teal)]",    titleKey: "fp10Title" as const, descKey: "fp10Desc" as const, bulletKeys: ["fp10B1","fp10B2","fp10B3","fp10B4"] as const },
+  { icon: Activity,     titleKey: "fp1Title" as const, descKey: "fp1Desc" as const, bulletKeys: ["fp1B1","fp1B2","fp1B3","fp1B4"] as const },
+  { icon: Brain,        titleKey: "fp2Title" as const, descKey: "fp2Desc" as const, bulletKeys: ["fp2B1","fp2B2","fp2B3","fp2B4"] as const },
+  { icon: Zap,          titleKey: "fp3Title" as const, descKey: "fp3Desc" as const, bulletKeys: ["fp3B1","fp3B2","fp3B3","fp3B4"] as const },
+  { icon: FileText,     titleKey: "fp4Title" as const, descKey: "fp4Desc" as const, bulletKeys: ["fp4B1","fp4B2","fp4B3","fp4B4"] as const },
+  { icon: Globe,        titleKey: "fp5Title" as const, descKey: "fp5Desc" as const, bulletKeys: ["fp5B1","fp5B2","fp5B3","fp5B4"] as const },
+  { icon: Search,       titleKey: "fp6Title" as const, descKey: "fp6Desc" as const, bulletKeys: ["fp6B1","fp6B2","fp6B3","fp6B4"] as const },
+  { icon: ShoppingBag,  titleKey: "fp7Title" as const, descKey: "fp7Desc" as const, bulletKeys: ["fp7B1","fp7B2","fp7B3","fp7B4"] as const },
+  { icon: Heart,        titleKey: "fp8Title" as const, descKey: "fp8Desc" as const, bulletKeys: ["fp8B1","fp8B2","fp8B3","fp8B4"] as const },
+  { icon: Globe,        titleKey: "fp9Title" as const, descKey: "fp9Desc" as const, bulletKeys: ["fp9B1","fp9B2","fp9B3","fp9B4"] as const },
+  { icon: Shield,       titleKey: "fp10Title" as const, descKey: "fp10Desc" as const, bulletKeys: ["fp10B1","fp10B2","fp10B3","fp10B4"] as const },
 ] as const;
 
 const CC_META = [
@@ -54,30 +54,23 @@ export default async function FeaturesPage({ params }: Params) {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       {/* Hero */}
-      <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
-        />
-        <div aria-hidden className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
-
+      <section className="section-cream relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="section-inner relative text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-[var(--teal-light)] text-[var(--teal)] text-xs font-semibold px-3 py-1.5 rounded-full mb-7 border border-[var(--teal-mid)]">
-            <Zap className="w-3 h-3" />
+          <p className="ed-eyebrow mb-7">
             {t("heroEyebrow")}
-          </div>
-          <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
+          </p>
+          <h1 className="ed-title mb-6">
             {t("heroTitle")}
           </h1>
           <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed mb-10">
             {t("heroDesc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/register" className="btn-primary text-base px-7 py-3.5 justify-center">
+            <Link href="/register" className="btn-editorial justify-center">
               {t("ctaButton")}
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/pricing" className="btn-outline text-base px-7 py-3.5 justify-center">
+            <Link href="/pricing" className="btn-editorial-ghost justify-center">
               {t("ctaPricing")}
             </Link>
           </div>
@@ -85,12 +78,12 @@ export default async function FeaturesPage({ params }: Params) {
       </section>
 
       {/* Feature pillars */}
-      <section id="features" className="py-20 bg-[var(--off)]">
+      <section id="features" className="py-20 section-cream-soft">
         <div className="section-inner">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {PILLAR_META.map(({ icon: Icon, color, titleKey, descKey, bulletKeys }) => (
+            {PILLAR_META.map(({ icon: Icon, titleKey, descKey, bulletKeys }) => (
               <div key={titleKey} className="card p-7 flex flex-col gap-5">
-                <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
+                <div className="ed-icon w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
@@ -115,7 +108,7 @@ export default async function FeaturesPage({ params }: Params) {
       <section className="py-20 bg-white">
         <div className="section-inner">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight mb-4">
+            <h2 className="ed-title mb-4">
               {t("ccTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)] max-w-xl mx-auto">
@@ -125,7 +118,7 @@ export default async function FeaturesPage({ params }: Params) {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {CC_META.map(({ icon: Icon, labelKey, descKey }) => (
               <div key={labelKey} className="flex items-start gap-4 p-5 rounded-2xl bg-[var(--off)]">
-                <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] text-[var(--teal)] flex items-center justify-center flex-shrink-0">
+                <div className="ed-icon w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
@@ -139,15 +132,19 @@ export default async function FeaturesPage({ params }: Params) {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[var(--teal)]">
-        <div className="section-inner text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4">
+      <section className="section-warm-dark relative overflow-hidden py-20">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+
+        <div className="section-inner relative text-center">
+          <h2 className="ed-title ed-title-on-dark mb-4">
             {t("ctaTitle")}
           </h2>
-          <p className="text-white/70 text-lg mb-8 max-w-xl mx-auto">
+          <p className="text-[var(--cream-soft)] opacity-80 text-lg mb-8 max-w-xl mx-auto">
             {t("ctaDesc")}
           </p>
-          <Link href="/register" className="btn-on-teal">
+          <Link href="/register" className="btn-editorial-light">
             {t("ctaButton")}
             <ArrowRight className="w-4 h-4" />
           </Link>

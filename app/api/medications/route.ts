@@ -8,13 +8,15 @@ import { requireSession } from "@/lib/auth/guards";
 const createMedicationSchema = z.object({
   petId: z.string().uuid(),
   name: z.string().min(1).max(150),
-  dosage: z.string().max(100).optional(),
-  frequency: z.string().max(100).optional(),
+  // Optional fields are nullish: the form sends `null` for empty inputs
+  // (buildBody uses `|| null`), and `.optional()` alone rejects null.
+  dosage: z.string().max(100).nullish(),
+  frequency: z.string().max(100).nullish(),
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  prescribedBy: z.string().max(150).optional(),
+  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullish(),
+  prescribedBy: z.string().max(150).nullish(),
   status: z.enum(medicationStatusEnum.enumValues).default("active"),
-  notes: z.string().max(500).optional(),
+  notes: z.string().max(500).nullish(),
 });
 
 export async function GET(req: NextRequest) {

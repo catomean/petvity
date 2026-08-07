@@ -667,7 +667,8 @@
     "housingType_apartment": "Wohnung",
     "housingType_farm": "Bauernhof / ländliches Grundstück",
     "housingType_other": "Sonstiges",
-    "allSpecies": "Alle Tierarten"
+    "allSpecies": "Alle Tierarten",
+    "loading": "Wird geladen…"
   },
   "pets": {
     "name": "Name",
@@ -825,7 +826,10 @@
     "cat_accessories": "Zubehör",
     "cat_grooming": "Pflege",
     "cat_other": "Sonstiges",
-    "sex_unknown": "Unbekannt"
+    "sex_unknown": "Unbekannt",
+    "adoptNoResults": "Keine Tiere entsprechen Ihren Filtern",
+    "adoptClearFilters": "Filter zurücksetzen",
+    "adoptFree": "Kostenlos"
   },
   "twin": {
     "thriving": "Florierend",

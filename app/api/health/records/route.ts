@@ -10,10 +10,12 @@ const createRecordSchema = z.object({
   type: z.enum(healthRecordTypeEnum.enumValues),
   title: z.string().min(1).max(200),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  vetName: z.string().max(150).optional(),
-  clinic: z.string().max(150).optional(),
-  notes: z.string().max(1000).optional(),
-  attachmentUrl: z.string().url().optional(),
+  // Optional fields are nullish: the form sends `null` for empty inputs
+  // (buildBody uses `|| null`), and `.optional()` alone rejects null.
+  vetName: z.string().max(150).nullish(),
+  clinic: z.string().max(150).nullish(),
+  notes: z.string().max(1000).nullish(),
+  attachmentUrl: z.string().url().nullish(),
 });
 
 export async function GET(req: NextRequest) {

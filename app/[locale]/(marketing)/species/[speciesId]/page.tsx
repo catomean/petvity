@@ -81,20 +81,12 @@ const EMOTIONAL_INFO = [
   { id: "socialization" as const, icon: Users },
 ] as const;
 
-/** Statically render all trackable species. "other" has no species-specific ranges. */
-export function generateStaticParams() {
-  return [
-    { speciesId: "dog" },
-    { speciesId: "cat" },
-    { speciesId: "horse" },
-    { speciesId: "bird" },
-    { speciesId: "rabbit" },
-    { speciesId: "guinea_pig" },
-    { speciesId: "hamster" },
-    { speciesId: "reptile" },
-    { speciesId: "fish" },
-  ];
-}
+/*
+ * No generateStaticParams here on purpose: the locale layout's getMessages()
+ * needs request context, so a static prerender of this route throws
+ * DYNAMIC_SERVER_USAGE at runtime (500 in prod, invisible in dev). Every other
+ * marketing page renders dynamically — this one must too.
+ */
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { speciesId, locale } = await params;
@@ -153,10 +145,10 @@ export default async function SpeciesGuidePage({ params }: Params) {
   return (
     <main>
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-b from-[var(--teal-light)] to-white py-16 lg:py-24">
+      <section className="section-cream py-16 lg:py-24">
         <div className="section-inner text-center">
           <div className="text-7xl mb-4">{species.emoji}</div>
-          <h1 className="text-4xl lg:text-5xl font-extrabold text-[var(--ink)] mb-4">
+          <h1 className="ed-title mb-4">
             {t("heroTitle", { species: speciesName })}
           </h1>
           {blurbKey && (
@@ -165,11 +157,11 @@ export default async function SpeciesGuidePage({ params }: Params) {
             </p>
           )}
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Link href="/register" className="btn-primary text-base px-6 py-3">
+            <Link href="/register" className="btn-editorial">
               {t("heroTrackCta", { species: speciesName })}
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/features" className="btn-outline text-base px-6 py-3">
+            <Link href="/features" className="btn-editorial-ghost">
               {t("heroFeaturesCta")}
             </Link>
           </div>
@@ -188,7 +180,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
       {/* ── Normal health ranges ─────────────────────────────────────── */}
       <section className="py-16 lg:py-20">
         <div className="section-inner">
-          <h2 className="text-2xl lg:text-3xl font-bold text-[var(--ink)] mb-2 text-center">
+          <h2 className="ed-title-sm mb-3 text-center">
             {t("rangesTitle", { species: speciesName })}
           </h2>
           <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
@@ -200,13 +192,13 @@ export default async function SpeciesGuidePage({ params }: Params) {
               const range = rangeValues[id];
               return (
                 <div key={id} className="card p-6 text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-3">
-                    <Icon className="w-6 h-6 text-[var(--teal)]" />
+                  <div className="ed-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    <Icon className="w-6 h-6" />
                   </div>
                   <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)] mb-1">
                     {t(PHYS_LABEL_KEY[id])}
                   </p>
-                  <p className="text-xl font-bold text-[var(--ink)]">
+                  <p className="text-xl font-bold text-[var(--warm-ink)]">
                     {range.min}–{range.max}
                     <span className="text-sm font-normal text-[var(--muted)] ms-1">{unit}</span>
                   </p>
@@ -221,9 +213,9 @@ export default async function SpeciesGuidePage({ params }: Params) {
       </section>
 
       {/* ── Emotional metrics ────────────────────────────────────────── */}
-      <section className="py-16 lg:py-20 bg-[var(--off)]">
+      <section className="py-16 lg:py-20 section-cream-soft">
         <div className="section-inner">
-          <h2 className="text-2xl lg:text-3xl font-bold text-[var(--ink)] mb-2 text-center">
+          <h2 className="ed-title-sm mb-3 text-center">
             {t("emotionalTitle")}
           </h2>
           <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
@@ -233,11 +225,11 @@ export default async function SpeciesGuidePage({ params }: Params) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {EMOTIONAL_INFO.map(({ id, icon: Icon }) => (
               <div key={id} className="card p-5 flex gap-4">
-                <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-5 h-5 text-[var(--teal)]" />
+                <div className="ed-icon w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-[var(--ink)] mb-1">
+                  <p className="font-semibold text-[var(--warm-ink)] mb-1">
                     {t((EMOT_LABEL_KEY[id] ?? id) as Parameters<typeof t>[0])}
                   </p>
                   <p className="text-sm text-[var(--muted)] leading-relaxed">
@@ -253,7 +245,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
       {/* ── Common breeds ────────────────────────────────────────────── */}
       <section className="py-16 lg:py-20">
         <div className="section-inner">
-          <h2 className="text-2xl lg:text-3xl font-bold text-[var(--ink)] mb-2 text-center">
+          <h2 className="ed-title-sm mb-3 text-center">
             {t("breedsTitle", { species: speciesName })}
           </h2>
           <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
@@ -264,7 +256,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
             {species.commonBreeds.map((breed) => (
               <span
                 key={breed}
-                className="bg-[var(--teal-light)] text-[var(--teal)] text-sm font-medium px-3 py-1.5 rounded-full"
+                className="bg-white border border-[var(--border)] text-[var(--ink2)] text-sm font-medium px-3.5 py-1.5 rounded-full shadow-sm"
               >
                 {breed}
               </span>
@@ -275,9 +267,9 @@ export default async function SpeciesGuidePage({ params }: Params) {
 
       {/* ── Care tips ────────────────────────────────────────────────── */}
       {tipKeys.length > 0 && (
-        <section className="py-16 lg:py-20 bg-[var(--off)]">
+        <section className="py-16 lg:py-20 section-cream">
           <div className="section-inner">
-            <h2 className="text-2xl lg:text-3xl font-bold text-[var(--ink)] mb-2 text-center">
+            <h2 className="ed-title-sm mb-3 text-center">
               {t("tipsTitle", { species: speciesName })}
             </h2>
             <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
@@ -299,18 +291,22 @@ export default async function SpeciesGuidePage({ params }: Params) {
       )}
 
       {/* ── CTA ──────────────────────────────────────────────────────── */}
-      <section className="py-16 lg:py-24 bg-gradient-to-b from-[var(--teal-light)] to-white">
-        <div className="section-inner text-center">
+      <section className="section-warm-dark relative overflow-hidden py-16 lg:py-24">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+
+        <div className="section-inner relative text-center">
           <div className="text-5xl mb-4">{species.emoji}</div>
-          <h2 className="text-3xl lg:text-4xl font-bold text-[var(--ink)] mb-4">
+          <h2 className="ed-title ed-title-on-dark mb-5">
             {t("ctaTitle", { species: speciesLc })}
           </h2>
-          <p className="text-[var(--ink2)] max-w-xl mx-auto mb-8">
+          <p className="text-lg text-[var(--cream-soft)] opacity-80 max-w-xl mx-auto mb-10 leading-relaxed">
             {t("ctaDesc")}
           </p>
-          <Link href="/register" className="btn-primary text-base px-8 py-3">
+          <Link href="/register" className="btn-editorial-light">
             {t("ctaButton")}
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

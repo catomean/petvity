@@ -24,10 +24,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 const VALUE_META = [
-  { icon: Heart,  color: "bg-[var(--accent-light)] text-[var(--accent)]", titleKey: "v1Title" as const, descKey: "v1Desc" as const },
-  { icon: Globe,  color: "bg-[var(--teal-light)] text-[var(--teal)]",     titleKey: "v2Title" as const, descKey: "v2Desc" as const },
-  { icon: Shield, color: "bg-[var(--info-bg)] text-[var(--info)]",         titleKey: "v3Title" as const, descKey: "v3Desc" as const },
-  { icon: Zap,    color: "bg-[var(--warm-bg)] text-[var(--warn)]",         titleKey: "v4Title" as const, descKey: "v4Desc" as const },
+  { icon: Heart,  color: "ed-icon", titleKey: "v1Title" as const, descKey: "v1Desc" as const },
+  { icon: Globe,  color: "ed-icon", titleKey: "v2Title" as const, descKey: "v2Desc" as const },
+  { icon: Shield, color: "ed-icon", titleKey: "v3Title" as const, descKey: "v3Desc" as const },
+  { icon: Zap,    color: "ed-icon", titleKey: "v4Title" as const, descKey: "v4Desc" as const },
 ] as const;
 
 const STAT_KEYS = [
@@ -44,23 +44,17 @@ export default async function AboutPage({ params }: Params) {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       {/* Hero */}
-      <section className="relative pt-28 pb-16 md:pt-36 md:pb-24">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
-        />
-        <div aria-hidden className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
-
+      <section className="section-cream relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="section-inner relative">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-[var(--teal-light)] text-[var(--teal)] text-xs font-semibold px-3 py-1.5 rounded-full mb-7 border border-[var(--teal-mid)]">
+            <div className="ed-eyebrow inline-flex items-center gap-2 mb-7">
               <PawPrint className="w-3 h-3" />
               {t("heroEyebrow")}
             </div>
-            <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
+            <h1 className="ed-title mb-6">
               {t("heroTitle")}
             </h1>
-            <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed">
+            <p className="text-lg md:text-xl text-[var(--ink2)] leading-relaxed">
               {t("heroDesc")}
             </p>
           </div>
@@ -68,11 +62,11 @@ export default async function AboutPage({ params }: Params) {
       </section>
 
       {/* Mission + stats */}
-      <section className="py-20 bg-[var(--off)]">
+      <section className="py-20 section-cream-soft">
         <div className="section-inner">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-[var(--muted)] mb-4">
+              <p className="ed-eyebrow mb-4">
                 {t("missionTitle")}
               </p>
               <p className="text-[var(--muted)] leading-relaxed text-lg">
@@ -83,7 +77,7 @@ export default async function AboutPage({ params }: Params) {
             <div className="grid grid-cols-2 gap-4">
               {STAT_KEYS.map(({ valueKey, labelKey }) => (
                 <div key={labelKey} className="card p-7 text-center">
-                  <p className="text-4xl font-extrabold text-[var(--teal)] mb-2">{t(valueKey)}</p>
+                  <p className="font-display text-4xl font-light text-[var(--warm-ink)] mb-2">{t(valueKey)}</p>
                   <p className="text-sm text-[var(--muted)]">{t(labelKey)}</p>
                 </div>
               ))}
@@ -112,9 +106,9 @@ export default async function AboutPage({ params }: Params) {
       </section>
 
       {/* Team */}
-      <section className="py-16 bg-[var(--off)] border-y border-[var(--border)]">
+      <section className="py-16 section-cream border-y border-[var(--border)]">
         <div className="section-inner max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-extrabold text-[var(--ink)] mb-4">
+          <h2 className="ed-title-sm mb-4">
             {t("teamTitle")}
           </h2>
           <p className="text-[var(--muted)] leading-relaxed text-sm">
@@ -124,20 +118,22 @@ export default async function AboutPage({ params }: Params) {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[var(--teal)]">
-        <div className="section-inner text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-4">
+      <section className="section-warm-dark relative overflow-hidden py-20">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+        <div className="section-inner relative text-center">
+          <h2 className="ed-title ed-title-on-dark mb-4">
             {t("ctaTitle")}
           </h2>
-          <p className="text-white/70 text-lg mb-8 max-w-xl mx-auto">
+          <p className="text-[var(--cream-soft)] opacity-80 text-lg mb-8 max-w-xl mx-auto">
             {t("ctaDesc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/register" className="btn-on-teal">
+            <Link href="/register" className="btn-editorial-light">
               {t("ctaButton")}
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/features" className="btn-on-teal-ghost">
+            <Link href="/features" className="btn-editorial-light">
               {t("ctaFeatures")}
             </Link>
           </div>

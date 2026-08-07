@@ -667,7 +667,8 @@
     "housingType_apartment": "아파트",
     "housingType_farm": "농장/농촌 부동산",
     "housingType_other": "기타",
-    "allSpecies": "모든 종"
+    "allSpecies": "모든 종",
+    "loading": "불러오는 중…"
   },
   "pets": {
     "name": "이름",
@@ -825,7 +826,10 @@
     "cat_accessories": "액세서리",
     "cat_grooming": "그루밍",
     "cat_other": "기타",
-    "sex_unknown": "미상"
+    "sex_unknown": "미상",
+    "adoptNoResults": "필터에 맞는 반려동물이 없습니다",
+    "adoptClearFilters": "필터 초기화",
+    "adoptFree": "무료"
   },
   "twin": {
     "thriving": "번성 중",

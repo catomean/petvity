@@ -10,11 +10,13 @@ const createVaccinationSchema = z.object({
   petId: z.string().uuid(),
   name: z.string().min(1).max(150),
   administeredDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  nextDueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  // Optional fields are nullish: the form sends `null` for empty inputs
+  // (buildBody uses `|| null`), and `.optional()` alone rejects null.
+  nextDueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullish(),
   status: z.enum(vaccinationStatusEnum.enumValues).default("up_to_date"),
-  batchNumber: z.string().max(100).optional(),
-  vetName: z.string().max(150).optional(),
-  notes: z.string().max(500).optional(),
+  batchNumber: z.string().max(100).nullish(),
+  vetName: z.string().max(150).nullish(),
+  notes: z.string().max(500).nullish(),
 });
 
 export async function GET(req: NextRequest) {

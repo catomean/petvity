@@ -667,7 +667,8 @@
     "housingType_apartment": "Daire",
     "housingType_farm": "Çiftlik / kırsal mülk",
     "housingType_other": "Diğer",
-    "allSpecies": "Tüm türler"
+    "allSpecies": "Tüm türler",
+    "loading": "Yükleniyor…"
   },
   "pets": {
     "name": "İsim",
@@ -825,7 +826,10 @@
     "cat_accessories": "Aksesuar",
     "cat_grooming": "Bakım",
     "cat_other": "Diğer",
-    "sex_unknown": "Bilinmiyor"
+    "sex_unknown": "Bilinmiyor",
+    "adoptNoResults": "Filtrelerinize uyan evcil hayvan yok",
+    "adoptClearFilters": "Filtreleri temizle",
+    "adoptFree": "Ücretsiz"
   },
   "twin": {
     "thriving": "Gelişiyor",
