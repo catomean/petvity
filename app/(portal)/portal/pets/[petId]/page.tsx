@@ -69,6 +69,7 @@ export default async function PetProfilePage({ params }: Params) {
     species: pet.species as SpeciesId,
     recentMetrics,
     overdueVaccinations: overdueCount,
+    petCreatedAt: pet.createdAt,
     now,
   });
 

@@ -30,7 +30,9 @@ const PRIVATE_API_PREFIXES = [
 ];
 
 // Non-localized auth pages — bypass intl routing entirely
-const AUTH_PATHS = ["/login", "/register", "/forgot-password", "/reset-password"];
+// (/demo signs visitors into the shared demo account; logged-in users are
+// bounced to their dashboard like on any auth page)
+const AUTH_PATHS = ["/login", "/register", "/forgot-password", "/reset-password", "/demo"];
 
 // Non-localized public pages — bypass intl routing AND don't redirect logged-in users.
 // /unsubscribe is here so the email link works whether the recipient is logged in or not.

@@ -13,7 +13,8 @@
     "megamenuTitle": "Ce que vous pouvez faire",
     "speciesGuides": "Guides par espèce",
     "register": "Commencer",
-    "login": "Se connecter"
+    "login": "Se connecter",
+    "tryDemo": "Essayer la démo"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "Peu d'énergie et moral bas",
     "summaryLowEnergy": "Une journée sans énergie",
     "summaryLowMood": "Une journée difficile",
-    "summaryBalanced": "Se sent équilibré"
+    "summaryBalanced": "Se sent équilibré",
+    "emotionalScoreLabel": "Bien-être émotionnel"
   },
   "speciesGuide": {
     "heroTitle": "Suivi de santé du {species}",

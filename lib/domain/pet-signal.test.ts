@@ -38,6 +38,40 @@ describe("computePetSignal", () => {
     expect(result.signal).toBe("watch");
   });
 
+  it("returns healthy (new_pet) for a young profile with no data yet", () => {
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [],
+      overdueVaccinations: 0,
+      petCreatedAt: new Date(NOW.getTime() - 2 * 86400000), // 2 days old
+      now: NOW,
+    });
+    expect(result.signal).toBe("healthy");
+    expect(result.reasonData.type).toBe("new_pet");
+  });
+
+  it("still returns watch for an old profile with no data, even when createdAt is passed", () => {
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [],
+      overdueVaccinations: 0,
+      petCreatedAt: new Date(NOW.getTime() - 30 * 86400000),
+      now: NOW,
+    });
+    expect(result.signal).toBe("watch");
+  });
+
+  it("overdue vaccination overrides the new-profile grace", () => {
+    const result = computePetSignal({
+      species: "dog",
+      recentMetrics: [],
+      overdueVaccinations: 1,
+      petCreatedAt: new Date(NOW.getTime() - 2 * 86400000),
+      now: NOW,
+    });
+    expect(result.signal).toBe("concern");
+  });
+
   it("returns watch when last log is 7+ days ago", () => {
     const staleRow: HealthMetricRow = { ...normalDogRow, date: "2026-01-07" };
     const result = computePetSignal({

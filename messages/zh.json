@@ -13,7 +13,8 @@
     "megamenuTitle": "您可以做什么",
     "speciesGuides": "物种指南",
     "register": "开始使用",
-    "login": "登录"
+    "login": "登录",
+    "tryDemo": "试用在线演示"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "精力不足，情绪低落",
     "summaryLowEnergy": "能量较低的一天",
     "summaryLowMood": "今天过得不顺",
-    "summaryBalanced": "感觉平衡"
+    "summaryBalanced": "感觉平衡",
+    "emotionalScoreLabel": "情绪健康"
   },
   "speciesGuide": {
     "heroTitle": "{species}健康追踪",

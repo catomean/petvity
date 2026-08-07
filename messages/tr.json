@@ -13,7 +13,8 @@
     "megamenuTitle": "Neler yapabilirsiniz",
     "speciesGuides": "Tür rehberleri",
     "register": "Başla",
-    "login": "Giriş yap"
+    "login": "Giriş yap",
+    "tryDemo": "Canlı demoyu deneyin"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "Düşük enerji ve düşük ruh hali",
     "summaryLowEnergy": "Düşük enerjili bir gün",
     "summaryLowMood": "Zor bir gün geçiriyor",
-    "summaryBalanced": "Dengeli hissediyor"
+    "summaryBalanced": "Dengeli hissediyor",
+    "emotionalScoreLabel": "Duygusal sağlık"
   },
   "speciesGuide": {
     "heroTitle": "{species} Sağlık Takibi",

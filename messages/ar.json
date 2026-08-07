@@ -13,7 +13,8 @@
     "megamenuTitle": "ما يمكنك فعله",
     "speciesGuides": "أدلة الأنواع",
     "register": "ابدأ الآن",
-    "login": "تسجيل الدخول"
+    "login": "تسجيل الدخول",
+    "tryDemo": "جرّب العرض التجريبي"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "طاقة منخفضة ومزاج منخفض",
     "summaryLowEnergy": "يوم منخفض الطاقة",
     "summaryLowMood": "يمر بيوم صعب",
-    "summaryBalanced": "يشعر بالتوازن"
+    "summaryBalanced": "يشعر بالتوازن",
+    "emotionalScoreLabel": "العافية العاطفية"
   },
   "speciesGuide": {
     "heroTitle": "تتبع صحة {species}",

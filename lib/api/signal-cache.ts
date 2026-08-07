@@ -39,6 +39,7 @@ export async function refreshSignalCache(petId: string, now = new Date()): Promi
     species: pet.species as SpeciesId,
     recentMetrics,
     overdueVaccinations: overdueCount,
+    petCreatedAt: pet.createdAt,
     now,
   });
 

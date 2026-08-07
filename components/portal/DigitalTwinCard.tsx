@@ -110,6 +110,11 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
                   {twin.scorePercent}
                 </span>
                 <span className="text-sm text-[var(--muted)] ms-1">/ 100</span>
+                {/* Distinguishes this emotional-only score from the all-metric
+                    wellness % on the health page */}
+                <p className="text-[11px] uppercase tracking-wide text-[var(--muted)] mt-0.5">
+                  {tTwin("emotionalScoreLabel")}
+                </p>
               </div>
             </div>
 

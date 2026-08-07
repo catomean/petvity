@@ -71,7 +71,7 @@ export default async function CheckinPage() {
     const recentMetrics = metricsByPet.get(pet.id) ?? [];
     const petVacc = vaccByPet.get(pet.id) ?? [];
     const overdueCount = countOverdueVaccinations(petVacc, todayStr);
-    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, now });
+    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, petCreatedAt: pet.createdAt, now });
     return { ...pet, signal };
   });
 

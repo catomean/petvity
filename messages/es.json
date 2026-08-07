@@ -13,7 +13,8 @@
     "megamenuTitle": "Lo que puedes hacer",
     "speciesGuides": "Guías por especie",
     "register": "Empezar",
-    "login": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "tryDemo": "Probar la demo"
   },
   "footer": {
     "sections": {
@@ -877,7 +878,8 @@
     "summaryLowEnergyLowMood": "Poca energía y bajo estado de ánimo",
     "summaryLowEnergy": "Un día de poca energía",
     "summaryLowMood": "Teniendo un día difícil",
-    "summaryBalanced": "Se siente equilibrado"
+    "summaryBalanced": "Se siente equilibrado",
+    "emotionalScoreLabel": "Bienestar emocional"
   },
   "speciesGuide": {
     "heroTitle": "Seguimiento de salud del {species}",

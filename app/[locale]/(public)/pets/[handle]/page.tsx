@@ -111,6 +111,7 @@ export default async function PublicPetPage({ params }: Params) {
     species: pet.species as SpeciesId,
     recentMetrics: signalMetrics,
     overdueVaccinations: overdueCount,
+    petCreatedAt: pet.createdAt,
   });
   const signal = signalResult.signal;
 
