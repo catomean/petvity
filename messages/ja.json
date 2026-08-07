@@ -667,7 +667,8 @@
     "housingType_apartment": "アパート・マンション",
     "housingType_farm": "農場・郊外の物件",
     "housingType_other": "その他",
-    "allSpecies": "すべての種"
+    "allSpecies": "すべての種",
+    "loading": "読み込み中…"
   },
   "pets": {
     "name": "名前",
@@ -825,7 +826,10 @@
     "cat_accessories": "アクセサリー",
     "cat_grooming": "グルーミング",
     "cat_other": "その他",
-    "sex_unknown": "不明"
+    "sex_unknown": "不明",
+    "adoptNoResults": "条件に一致するペットが見つかりません",
+    "adoptClearFilters": "フィルターをクリア",
+    "adoptFree": "無料"
   },
   "twin": {
     "thriving": "絶好調",

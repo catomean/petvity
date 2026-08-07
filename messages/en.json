@@ -667,7 +667,8 @@
     "housingType_apartment": "Apartment",
     "housingType_farm": "Farm / rural property",
     "housingType_other": "Other",
-    "allSpecies": "All species"
+    "allSpecies": "All species",
+    "loading": "Loading…"
   },
   "pets": {
     "name": "Name",
@@ -825,7 +826,10 @@
     "cat_accessories": "Accessories",
     "cat_grooming": "Grooming",
     "cat_other": "Other",
-    "sex_unknown": "Unknown"
+    "sex_unknown": "Unknown",
+    "adoptNoResults": "No pets match your filters",
+    "adoptClearFilters": "Clear filters",
+    "adoptFree": "Free"
   },
   "twin": {
     "thriving": "Thriving",

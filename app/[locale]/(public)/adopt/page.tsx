@@ -37,6 +37,8 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
   const { locale } = await params;
   const { species: speciesFilter, location: locationFilter } = await searchParams;
   const t = await getTranslations({ locale, namespace: "public" });
+  // Filter-bar labels live in the portal namespace (shared with /portal/adopt).
+  const tPortal = await getTranslations({ locale, namespace: "portal" });
   const db = getInstance();
 
   const activeSpecies = FILTER_SPECIES.includes(speciesFilter as SpeciesId) ? (speciesFilter as SpeciesId) : null;
@@ -129,7 +131,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                     : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--teal)] hover:text-[var(--teal)]"
                 }`}
               >
-                {t("adoptFilterAll")}
+                {tPortal("adoptFilterAll")}
               </button>
               {FILTER_SPECIES.map((sp) => (
                 <button
@@ -158,13 +160,13 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                   type="text"
                   name="location"
                   defaultValue={activeLocation}
-                  placeholder={t("adoptFilterLocation")}
+                  placeholder={tPortal("adoptFilterLocation")}
                   className="form-input ps-9 text-sm py-2 w-full"
                 />
               </div>
               <button type="submit" className="btn-outline text-sm py-2 px-4 flex items-center gap-1.5">
                 <Search className="w-3.5 h-3.5" />
-                {t("adoptSearch")}
+                {tPortal("adoptSearch")}
               </button>
               {/* Preserve species when submitting location */}
               {activeSpecies && <input type="hidden" name="species" value={activeSpecies} />}

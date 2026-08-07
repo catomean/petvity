@@ -667,7 +667,8 @@
     "housingType_apartment": "公寓",
     "housingType_farm": "农场/乡村住宅",
     "housingType_other": "其他",
-    "allSpecies": "所有种类"
+    "allSpecies": "所有种类",
+    "loading": "加载中…"
   },
   "pets": {
     "name": "名字",
@@ -825,7 +826,10 @@
     "cat_accessories": "配件",
     "cat_grooming": "美容",
     "cat_other": "其他",
-    "sex_unknown": "未知"
+    "sex_unknown": "未知",
+    "adoptNoResults": "没有符合筛选条件的宠物",
+    "adoptClearFilters": "清除筛选",
+    "adoptFree": "免费"
   },
   "twin": {
     "thriving": "蓬勃发展",
