@@ -72,7 +72,7 @@ function RegisterForm() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-1 text-[var(--ink)]">
+      <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">
         Start for free
       </h1>
       <p className="text-sm text-[var(--muted)] mb-6">
@@ -94,12 +94,12 @@ function RegisterForm() {
                 onClick={() => setIntendedRole(id)}
                 className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 text-center transition-all ${
                   selected
-                    ? "border-[var(--teal)] bg-[var(--teal-light)]"
+                    ? "border-[var(--gold)] bg-[var(--gold-light)]"
                     : "border-[var(--border)] hover:border-[var(--teal-light)] hover:bg-[var(--off)]"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${selected ? "text-[var(--teal)]" : "text-[var(--muted)]"}`} />
-                <span className={`text-xs font-semibold leading-tight ${selected ? "text-[var(--teal)]" : "text-[var(--ink2)]"}`}>
+                <Icon className={`w-5 h-5 ${selected ? "text-[var(--gold-dark)]" : "text-[var(--muted)]"}`} />
+                <span className={`text-xs font-semibold leading-tight ${selected ? "text-[var(--gold-dark)]" : "text-[var(--ink2)]"}`}>
                   {label}
                 </span>
                 <span className="text-xs text-[var(--muted)] leading-tight hidden sm:block">{desc}</span>
@@ -182,7 +182,7 @@ function RegisterForm() {
 
       <p className="mt-6 text-center text-sm text-[var(--muted)]">
         Already have an account?{" "}
-        <Link href="/login" className="text-[var(--teal)] hover:underline font-medium">
+        <Link href="/login" className="text-[var(--gold-dark)] hover:underline font-medium">
           Log in
         </Link>
       </p>

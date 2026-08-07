@@ -66,12 +66,12 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
     .limit(200);
 
   return (
-    <div className="min-h-screen bg-[var(--off)]">
+    <div className="min-h-screen bg-[var(--cream-soft)]">
       {/* Nav */}
-      <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
+      <nav className="bg-[var(--cream)] border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
         <Link
           href={`/${locale}`}
-          className="font-bold text-[var(--teal)] text-lg no-underline flex items-center gap-2"
+          className="font-bold text-[var(--warm-ink)] text-lg no-underline flex items-center gap-2"
         >
           <PawPrint className="w-5 h-5" />
           {APP.name}
@@ -79,29 +79,29 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors"
+            className="text-sm text-[var(--ink2)] hover:text-[var(--gold-dark)] no-underline transition-colors"
           >
             {t("signIn")}
           </Link>
-          <Link href="/register" className="btn-primary text-sm py-2 px-4">
+          <Link href="/register" className="btn-editorial-sm">
             {t("joinFree")}
           </Link>
         </div>
       </nav>
 
       {/* Hero */}
-      <div className="bg-white border-b border-[var(--border)]">
+      <div className="section-cream border-b border-[var(--border)]">
         <div className="max-w-5xl mx-auto px-6 py-12 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-[var(--accent-light)] flex items-center justify-center mx-auto mb-4">
-            <ShoppingBag className="w-7 h-7 text-[var(--accent)]" />
+          <div className="w-14 h-14 rounded-2xl ed-icon flex items-center justify-center mx-auto mb-4">
+            <ShoppingBag className="w-7 h-7" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
+          <h1 className="ed-title mb-3">
             {t("shopHeroTitle")}
           </h1>
           <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-6">
             {t("shopHeroDesc")}
           </p>
-          <Link href="/register" className="btn-primary inline-flex items-center gap-2">
+          <Link href="/register" className="btn-editorial inline-flex items-center gap-2">
             <ShoppingBag className="w-4 h-4" />
             {t("shopHeroButton")}
           </Link>
@@ -113,10 +113,10 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
         <div className="max-w-5xl mx-auto px-6 py-3 flex gap-2 overflow-x-auto">
           <Link
             href={`/${locale}/shop`}
-            className={`flex-shrink-0 text-sm font-medium px-3 py-1.5 rounded-full transition-colors no-underline ${
+            className={`flex-shrink-0 text-sm font-medium px-3 py-1.5 rounded-full border transition-colors no-underline ${
               !activeCategory
-                ? "bg-[var(--teal)] text-white"
-                : "bg-[var(--off)] text-[var(--ink2)] hover:bg-[var(--teal-light)]"
+                ? "bg-[var(--warm-ink)] text-[var(--cream)] border-[var(--warm-ink)]"
+                : "bg-transparent text-[var(--ink2)] border-[var(--border)] hover:border-[var(--gold)]"
             }`}
           >
             {t("shopAll")}
@@ -125,10 +125,10 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
             <Link
               key={id}
               href={`/${locale}/shop?category=${id}`}
-              className={`flex-shrink-0 flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full transition-colors no-underline ${
+              className={`flex-shrink-0 flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full border transition-colors no-underline ${
                 activeCategory === id
-                  ? "bg-[var(--teal)] text-white"
-                  : "bg-[var(--off)] text-[var(--ink2)] hover:bg-[var(--teal-light)]"
+                  ? "bg-[var(--warm-ink)] text-[var(--cream)] border-[var(--warm-ink)]"
+                  : "bg-transparent text-[var(--ink2)] border-[var(--border)] hover:border-[var(--gold)]"
               }`}
             >
               <span>{cfg.emoji}</span>
@@ -149,7 +149,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                 ? t("shopEmptyCategory", { category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]).toLowerCase() })
                 : t("shopEmptyAny")}
             </p>
-            <Link href="/register" className="btn-primary">
+            <Link href="/register" className="btn-editorial">
               {t("shopEmptyAction")}
             </Link>
           </div>
@@ -185,7 +185,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
 
                     {/* Info */}
                     <div className="p-4 flex flex-col flex-1">
-                      <p className="font-semibold text-[var(--ink)] leading-snug group-hover:text-[var(--teal)] transition-colors">
+                      <p className="font-semibold text-[var(--ink)] leading-snug group-hover:text-[var(--gold-dark)] transition-colors">
                         {product.name}
                       </p>
                       {product.description && (
@@ -204,7 +204,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                         <span className="text-lg font-bold text-[var(--ink)]">
                           {formatPrice(product.priceCents)}
                         </span>
-                        <span className="btn-primary text-xs py-1.5 px-3">
+                        <span className="btn-editorial-sm">
                           {t("shopView")}
                         </span>
                       </div>
@@ -218,13 +218,13 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
       </div>
 
       {/* Seller CTA footer */}
-      <div className="border-t border-[var(--border)] bg-white">
+      <div className="section-warm-dark">
         <div className="max-w-5xl mx-auto px-6 py-10 text-center">
-          <p className="font-medium text-[var(--ink)] mb-2">{t("shopCtaTitle")}</p>
-          <p className="text-sm text-[var(--muted)] mb-5">
+          <p className="ed-title-sm ed-title-on-dark mb-2">{t("shopCtaTitle")}</p>
+          <p className="text-sm text-[var(--cream-soft)] opacity-80 mb-5">
             {t("shopCtaDesc", { app: APP.name })}
           </p>
-          <Link href="/register" className="btn-primary inline-flex items-center gap-2">
+          <Link href="/register" className="btn-editorial-light inline-flex items-center gap-2">
             <Package className="w-4 h-4" />
             {t("shopCtaButton")}
           </Link>

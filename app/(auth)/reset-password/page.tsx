@@ -24,10 +24,10 @@ function ResetPasswordForm() {
   if (!token) {
     return (
       <>
-        <h1 className="text-2xl font-bold mb-2 text-[var(--ink)]">Invalid link</h1>
+        <h1 className="font-display font-medium text-3xl mb-2 text-[var(--warm-ink)]">Invalid link</h1>
         <p className="text-sm text-[var(--muted)] mb-6">
           This reset link is missing a token.{" "}
-          <Link href="/forgot-password" className="text-[var(--teal)] hover:underline">
+          <Link href="/forgot-password" className="text-[var(--gold-dark)] hover:underline">
             Request a new one.
           </Link>
         </p>
@@ -39,9 +39,9 @@ function ResetPasswordForm() {
     return (
       <div className="text-center">
         <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
-          <CheckCircle className="w-7 h-7 text-[var(--teal)]" />
+          <CheckCircle className="w-7 h-7 text-[var(--gold-dark)]" />
         </div>
-        <h1 className="text-2xl font-bold mb-2 text-[var(--ink)]">Password updated</h1>
+        <h1 className="font-display font-medium text-3xl mb-2 text-[var(--warm-ink)]">Password updated</h1>
         <p className="text-sm text-[var(--muted)] mb-7">
           Your password has been changed. You can now log in with your new password.
         </p>
@@ -86,7 +86,7 @@ function ResetPasswordForm() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-1 text-[var(--ink)]">Set new password</h1>
+      <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">Set new password</h1>
       <p className="text-sm text-[var(--muted)] mb-7">
         Choose a strong password — at least {PASSWORD_MIN_LENGTH} characters.
       </p>
