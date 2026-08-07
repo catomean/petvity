@@ -10,6 +10,7 @@ import { BCRYPT_SALT_ROUNDS, PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { sendEmail } from "@/lib/email";
 import { ownerWelcome } from "@/lib/email/templates";
 import { requireSession } from "@/lib/auth/guards";
+import { isDemoEmail } from "@/lib/config/demo";
 import { makeUnsubscribeUrl } from "@/lib/auth/unsubscribe-token";
 
 const updateAccountSchema = z.object({
@@ -132,6 +133,14 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (parsed.data.newPassword) {
+      // The shared demo account must stay explorable — a visitor changing its
+      // password would lock out everyone after them.
+      if (isDemoEmail(user.email)) {
+        return NextResponse.json(
+          { success: false, error: "The demo account's password cannot be changed" },
+          { status: 403 },
+        );
+      }
       if (!user.password) {
         return NextResponse.json(
           { success: false, error: "Password change is not available for OAuth accounts" },

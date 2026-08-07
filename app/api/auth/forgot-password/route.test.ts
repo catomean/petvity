@@ -31,6 +31,19 @@ describe("POST /api/auth/forgot-password", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
+    // Reset flows require a configured email pipeline; without it the route
+    // answers 503 for every address (tested below).
+    vi.stubEnv("RESEND_API_KEY", "re_test_key");
+  });
+
+  it("returns 503 for every address when email is unconfigured (no silent lockout)", async () => {
+    vi.stubEnv("RESEND_API_KEY", "");
+    const known = await POST(makeRequest({ email: "owner@example.com" }));
+    const unknown = await POST(makeRequest({ email: "unknown@example.com" }));
+    expect(known.status).toBe(503);
+    expect(unknown.status).toBe(503);
+    // Uniform response — still no enumeration signal.
+    expect(await known.json()).toEqual(await unknown.json());
   });
 
   it("returns 400 when email is missing", async () => {
