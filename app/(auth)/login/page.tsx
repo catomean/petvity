@@ -59,7 +59,7 @@ function LoginForm() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold mb-1 text-[var(--ink)]">Welcome back</h1>
+      <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">Welcome back</h1>
       <p className="text-sm text-[var(--muted)] mb-7">
         Your pets missed you 🐾
       </p>
@@ -90,7 +90,7 @@ function LoginForm() {
             </label>
             <Link
               href="/forgot-password"
-              className="text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline transition-colors"
+              className="text-sm text-[var(--muted)] hover:text-[var(--gold-dark)] no-underline transition-colors"
             >
               Forgot password?
             </Link>
@@ -129,7 +129,7 @@ function LoginForm() {
 
       <p className="mt-6 text-center text-sm text-[var(--muted)]">
         No account?{" "}
-        <Link href="/register" className="text-[var(--teal)] hover:underline font-medium">
+        <Link href="/register" className="text-[var(--gold-dark)] hover:underline font-medium">
           Start for free
         </Link>
       </p>

@@ -132,14 +132,14 @@ export default async function PublicPetPage({ params }: Params) {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--off)]">
+    <div className="min-h-screen bg-[var(--cream)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(petSchema) }} />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between">
-        <Link href={`/${locale}`} className="font-bold text-[var(--teal)] text-lg no-underline">
+        <Link href={`/${locale}`} className="font-bold text-[var(--warm-ink)] text-lg no-underline">
           {APP.name}
         </Link>
-        <Link href="/register" className="btn-primary text-sm py-2 px-4">
+        <Link href="/register" className="btn-editorial-sm">
           {t("trackYourPet")}
         </Link>
       </nav>
@@ -148,8 +148,8 @@ export default async function PublicPetPage({ params }: Params) {
       <div className="max-w-xl mx-auto px-4 py-10">
         <div className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm">
           {/* Avatar header */}
-          <div className="bg-[var(--teal)] h-28 flex items-end justify-center pb-0 relative">
-            <div className="absolute bottom-0 translate-y-1/2 w-24 h-24 rounded-full bg-[var(--teal-light)] border-4 border-white flex items-center justify-center text-4xl overflow-hidden">
+          <div className="bg-[var(--warm-dark)] h-28 flex items-end justify-center pb-0 relative">
+            <div className="absolute bottom-0 translate-y-1/2 w-24 h-24 rounded-full bg-[var(--gold-light)] border-4 border-white flex items-center justify-center text-4xl overflow-hidden">
               {pet.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -165,7 +165,7 @@ export default async function PublicPetPage({ params }: Params) {
 
           {/* Info */}
           <div className="pt-16 pb-6 px-6 text-center">
-            <h1 className="text-2xl font-bold text-[var(--ink)]">{pet.name}</h1>
+            <h1 className="font-display font-light text-4xl text-[var(--warm-ink)]">{pet.name}</h1>
             {pet.handle && (
               <p className="text-sm text-[var(--muted)] mb-2">@{pet.handle}</p>
             )}
@@ -245,7 +245,7 @@ export default async function PublicPetPage({ params }: Params) {
           <p className="text-sm text-[var(--muted)] mb-3">
             {t("trackOwn", { app: APP.name })}
           </p>
-          <Link href="/register" className="btn-primary">
+          <Link href="/register" className="btn-editorial">
             {tNav("getStartedFree")}
           </Link>
         </div>

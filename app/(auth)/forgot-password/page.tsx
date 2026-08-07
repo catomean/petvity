@@ -37,15 +37,15 @@ export default function ForgotPasswordPage() {
     return (
       <>
         <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
-          <Mail className="w-7 h-7 text-[var(--teal)]" />
+          <Mail className="w-7 h-7 text-[var(--gold-dark)]" />
         </div>
-        <h1 className="text-2xl font-bold mb-2 text-[var(--ink)] text-center">Check your inbox</h1>
+        <h1 className="font-display font-medium text-3xl mb-2 text-[var(--warm-ink)] text-center">Check your inbox</h1>
         <p className="text-sm text-[var(--muted)] text-center mb-7 leading-relaxed">
           If <strong className="text-[var(--ink2)]">{email}</strong> is registered, we sent a
           password reset link. Check your spam folder if it doesn&apos;t arrive.
         </p>
         <p className="text-center text-sm text-[var(--muted)]">
-          <Link href="/login" className="text-[var(--teal)] hover:underline font-medium">
+          <Link href="/login" className="text-[var(--gold-dark)] hover:underline font-medium">
             Back to login
           </Link>
         </p>
@@ -57,13 +57,13 @@ export default function ForgotPasswordPage() {
     <>
       <Link
         href="/login"
-        className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--gold-dark)] no-underline mb-6 transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />
         Back to login
       </Link>
 
-      <h1 className="text-2xl font-bold mb-1 text-[var(--ink)]">Reset your password</h1>
+      <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">Reset your password</h1>
       <p className="text-sm text-[var(--muted)] mb-7">
         Enter your email and we&apos;ll send you a reset link.
       </p>

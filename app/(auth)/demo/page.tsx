@@ -34,7 +34,7 @@ export default function DemoPage() {
     <div className="text-center py-10">
       {failed ? (
         <>
-          <h1 className="text-xl font-bold mb-2 text-[var(--ink)]">
+          <h1 className="font-display font-medium text-2xl mb-2 text-[var(--warm-ink)]">
             The demo is being refreshed
           </h1>
           <p className="text-sm text-[var(--muted)] mb-6">
@@ -46,7 +46,7 @@ export default function DemoPage() {
         </>
       ) : (
         <>
-          <div className="w-8 h-8 mx-auto mb-4 rounded-full border-2 border-[var(--border)] border-t-[var(--teal)] animate-spin" aria-hidden />
+          <div className="w-8 h-8 mx-auto mb-4 rounded-full border-2 border-[var(--border)] border-t-[var(--gold)] animate-spin" aria-hidden />
           <p className="text-sm text-[var(--muted)]">Opening the live demo…</p>
         </>
       )}
