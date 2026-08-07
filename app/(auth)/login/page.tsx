@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 import { safeReturnTo } from "@/lib/auth/safe-redirect";
+import { DEMO_ACCOUNT } from "@/lib/config/demo";
 
 function LoginForm() {
   const router = useRouter();
@@ -17,6 +18,23 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
+
+  async function handleDemo() {
+    setError("");
+    setDemoLoading(true);
+    const res = await signIn("credentials", {
+      email: DEMO_ACCOUNT.email,
+      password: DEMO_ACCOUNT.password,
+      redirect: false,
+    });
+    setDemoLoading(false);
+    if (res?.error) {
+      setError("The demo is being refreshed — please try again in a minute.");
+    } else {
+      router.push("/portal/dashboard");
+    }
+  }
 
   useEffect(() => { emailRef.current?.focus(); }, []);
 
@@ -93,6 +111,21 @@ function LoginForm() {
           {loading ? "Signing in…" : "Continue to dashboard"}
         </button>
       </form>
+
+      <div className="mt-6 flex items-center gap-3" aria-hidden>
+        <span className="h-px flex-1 bg-[var(--border)]" />
+        <span className="text-xs uppercase tracking-wide text-[var(--muted)]">or</span>
+        <span className="h-px flex-1 bg-[var(--border)]" />
+      </div>
+
+      <button
+        type="button"
+        onClick={handleDemo}
+        disabled={demoLoading}
+        className="btn-outline w-full justify-center mt-6 py-3 text-base disabled:opacity-60"
+      >
+        {demoLoading ? "Opening the demo…" : "Explore the demo — no account needed"}
+      </button>
 
       <p className="mt-6 text-center text-sm text-[var(--muted)]">
         No account?{" "}
