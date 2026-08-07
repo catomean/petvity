@@ -40,21 +40,15 @@ export default async function ProsPage({ params }: Params) {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       {/* Hero */}
-      <section className="relative pt-28 pb-20 md:pt-36 md:pb-28">
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-br from-[var(--off)] via-white to-[var(--teal-wash)] pointer-events-none"
-        />
-        <div aria-hidden className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[var(--teal-light)] opacity-30 blur-[120px] pointer-events-none -translate-y-1/3 translate-x-1/3" />
-
+      <section className="section-cream relative pt-28 pb-20 md:pt-36 md:pb-28">
         <div className="section-inner relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-[var(--teal-light)] text-[var(--teal)] text-xs font-semibold px-3 py-1.5 rounded-full mb-7 border border-[var(--teal-mid)]">
+            <div className="eyebrow-editorial mb-7">
               <Stethoscope className="w-3 h-3" />
               {t("heroEyebrow")}
             </div>
 
-            <h1 className="text-[2.8rem] md:text-[3.6rem] font-extrabold text-[var(--ink)] leading-[1.05] tracking-tight mb-6">
+            <h1 className="ed-title mb-6">
               {t("heroTitle")}
             </h1>
 
@@ -63,12 +57,12 @@ export default async function ProsPage({ params }: Params) {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-10">
-              <Link href="/register?role=vet" className="btn-primary text-base px-7 py-3.5 justify-center">
+              <Link href="/register?role=vet" className="btn-editorial justify-center">
                 <Stethoscope className="w-4 h-4" />
                 {t("ctaVetButton")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link href="/register?role=sitter" className="btn-outline text-base px-7 py-3.5 justify-center">
+              <Link href="/register?role=sitter" className="btn-editorial-ghost justify-center">
                 <Heart className="w-4 h-4" />
                 {t("ctaSitterButton")}
               </Link>
@@ -78,16 +72,16 @@ export default async function ProsPage({ params }: Params) {
       </section>
 
       {/* Vet benefits */}
-      <section id="veterinarians" className="py-24 md:py-32 bg-[var(--off)]">
+      <section id="veterinarians" className="py-24 md:py-32 section-cream-soft">
         <div className="section-inner">
           <div className="text-center mb-16">
-            <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
-              <Stethoscope className="w-7 h-7 text-[var(--teal)]" />
+            <div className="ed-icon w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5">
+              <Stethoscope className="w-7 h-7" />
             </div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--teal)] mb-3">
+            <p className="ed-eyebrow mb-3">
               {t("vetTabLabel")}
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
+            <h2 className="ed-title mb-5">
               {t("vetHeroTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
@@ -100,8 +94,8 @@ export default async function ProsPage({ params }: Params) {
               const Icon = VET_BENEFIT_ICONS[i];
               return (
                 <div key={key} className="card p-7">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5 text-[var(--teal)]" />
+                  <div className="ed-icon w-10 h-10 rounded-xl flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5" />
                   </div>
                   <p className="text-sm text-[var(--muted)] leading-relaxed">{t(key)}</p>
                 </div>
@@ -111,7 +105,7 @@ export default async function ProsPage({ params }: Params) {
 
           {/* How it works */}
           <div className="bg-white rounded-2xl border border-[var(--border)] p-8">
-            <h3 className="text-xl font-bold text-[var(--ink)] mb-8 text-center">
+            <h3 className="ed-title-sm mb-8 text-center">
               {t("vetHowTitle")}
             </h3>
             <div className="grid md:grid-cols-3 gap-8">
@@ -120,7 +114,7 @@ export default async function ProsPage({ params }: Params) {
                   {i < 2 && (
                     <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--border)]" />
                   )}
-                  <div className="w-14 h-14 rounded-2xl bg-[var(--teal)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4 shadow-[var(--brand-shadow)]">
+                  <div className="ed-num w-14 h-14 rounded-full text-lg flex items-center justify-center mx-auto mb-4">
                     {String(i + 1).padStart(2, "0")}
                   </div>
                   <p className="text-sm text-[var(--ink2)]">{t(key)}</p>
@@ -128,7 +122,7 @@ export default async function ProsPage({ params }: Params) {
               ))}
             </div>
             <div className="text-center mt-10">
-              <Link href="/register?role=vet" className="btn-primary">
+              <Link href="/register?role=vet" className="btn-editorial">
                 {t("vetCtaButton")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -141,13 +135,13 @@ export default async function ProsPage({ params }: Params) {
       <section id="sitters" className="py-24 md:py-32 bg-white">
         <div className="section-inner">
           <div className="text-center mb-16">
-            <div className="w-14 h-14 rounded-2xl bg-[var(--secondary-bg)] flex items-center justify-center mx-auto mb-5">
-              <Heart className="w-7 h-7 text-[var(--secondary)]" />
+            <div className="ed-icon w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5">
+              <Heart className="w-7 h-7" />
             </div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--secondary)] mb-3">
+            <p className="ed-eyebrow mb-3">
               {t("sitterTabLabel")}
             </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[var(--ink)] tracking-tight mb-5">
+            <h2 className="ed-title mb-5">
               {t("sitterHeroTitle")}
             </h2>
             <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
@@ -160,8 +154,8 @@ export default async function ProsPage({ params }: Params) {
               const Icon = SITTER_BENEFIT_ICONS[i];
               return (
                 <div key={key} className="card p-7">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--secondary-bg)] flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5 text-[var(--secondary)]" />
+                  <div className="ed-icon w-10 h-10 rounded-xl flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5" />
                   </div>
                   <p className="text-sm text-[var(--muted)] leading-relaxed">{t(key)}</p>
                 </div>
@@ -170,8 +164,8 @@ export default async function ProsPage({ params }: Params) {
           </div>
 
           {/* How it works */}
-          <div className="bg-[var(--off)] rounded-2xl p-8">
-            <h3 className="text-xl font-bold text-[var(--ink)] mb-8 text-center">
+          <div className="section-cream-soft rounded-2xl p-8">
+            <h3 className="ed-title-sm mb-8 text-center">
               {t("sitterHowTitle")}
             </h3>
             <div className="grid md:grid-cols-3 gap-8">
@@ -180,7 +174,7 @@ export default async function ProsPage({ params }: Params) {
                   {i < 2 && (
                     <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--border)]" />
                   )}
-                  <div className="w-14 h-14 rounded-2xl bg-[var(--secondary)] text-white font-extrabold text-lg flex items-center justify-center mx-auto mb-4 shadow-[var(--secondary-shadow)]">
+                  <div className="ed-num w-14 h-14 rounded-full text-lg flex items-center justify-center mx-auto mb-4">
                     {String(i + 1).padStart(2, "0")}
                   </div>
                   <p className="text-sm text-[var(--ink2)]">{t(key)}</p>
@@ -188,7 +182,7 @@ export default async function ProsPage({ params }: Params) {
               ))}
             </div>
             <div className="text-center mt-10">
-              <Link href="/register?role=sitter" className="btn-primary">
+              <Link href="/register?role=sitter" className="btn-editorial">
                 {t("sitterCtaButton")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -198,16 +192,16 @@ export default async function ProsPage({ params }: Params) {
       </section>
 
       {/* Trust section */}
-      <section className="py-20 bg-[var(--off)] border-y border-[var(--border)]">
+      <section className="py-20 section-cream border-y border-[var(--border)]">
         <div className="section-inner">
-          <h2 className="text-3xl font-extrabold text-[var(--ink)] text-center mb-10">
+          <h2 className="ed-title text-center mb-10">
             {t("trustTitle")}
           </h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {(["trust1","trust2","trust3"] as const).map((key) => (
               <div key={key} className="card p-7 text-center">
-                <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-5 h-5 text-[var(--teal)]" />
+                <div className="ed-icon w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-5 h-5" />
                 </div>
                 <h3 className="font-bold text-[var(--ink)] mb-2">{t(`${key}Title`, { app: APP.name })}</h3>
                 <p className="text-sm text-[var(--muted)] leading-relaxed">{t(`${key}Desc`, { app: APP.name })}</p>
@@ -218,23 +212,25 @@ export default async function ProsPage({ params }: Params) {
       </section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden bg-[var(--teal)] py-24 md:py-32">
-        <div aria-hidden className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+      <section className="section-warm-dark relative overflow-hidden py-24 md:py-32">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
 
         <div className="section-inner relative text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-5">
+          <h2 className="ed-title ed-title-on-dark mb-5">
             {t("ctaTitle")}
           </h2>
-          <p className="text-lg text-[var(--teal-mid)] mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-[var(--cream-soft)] opacity-80 mb-10 max-w-xl mx-auto leading-relaxed">
             {t("ctaDesc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register?role=vet" className="btn-on-teal shadow-[var(--cta-shadow)]">
+            <Link href="/register?role=vet" className="btn-editorial-light">
               <Stethoscope className="w-4 h-4" />
               {t("ctaVetButton")}
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/register?role=sitter" className="btn-on-teal-ghost">
+            <Link href="/register?role=sitter" className="btn-editorial-light">
               <Heart className="w-4 h-4" />
               {t("ctaSitterButton")}
             </Link>
