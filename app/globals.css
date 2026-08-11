@@ -77,19 +77,32 @@
   /* Keep legacy aliases */
   --off-bg: var(--off);
 
-  /* ── Editorial brand layer (marketing surface) ──────────────────────────
-     Warm, premium, photography-led design language for the public marketing
-     pages: deep cream + warm-dark + muted gold, paired with the Cormorant
-     display serif. Lives alongside the teal/terracotta product palette — the
-     product UI (portal/admin) keeps teal; the marketing face wears this. */
-  --cream:      #F4F0E9;   /* primary warm page cream */
-  --cream-soft: #FBF9F5;   /* lighter cream for raised panels */
-  --warm-dark:  #1F231D;   /* olive-charcoal for dark editorial sections */
-  --warm-ink:   #2A2926;   /* warm near-black display text */
-  --gold:       #A98F63;   /* muted gold accent */
-  --gold-dark:  #8F784F;   /* gold hover */
-  --gold-light: #EFE7D7;   /* soft gold tint for icon chips */
-  --display-serif: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  /* ── Obsidian luxury layer (marketing surface) ──────────────────────────
+     Dark, precise, luxury-futurist design language for the public marketing
+     pages: obsidian black + warm platinum + champagne gold, paired with an
+     ultra-light geometric display face and instrument-style mono labels.
+     Lives alongside the teal/terracotta product palette — the product UI
+     (portal/admin) keeps its light theme; the marketing face wears this. */
+  --obsidian:      #08080A;   /* page ground — near-black, faint warm bias */
+  --obsidian-deep: #050506;   /* deepest band (final CTA, footer) */
+  --carbon:        #0F0F13;   /* raised section surface */
+  --onyx:          #131318;   /* card surface on dark */
+  --hairline:      #26262C;   /* borders on dark */
+  --hairline-soft: #1B1B20;   /* subtle dividers on dark */
+  --platinum:      #ECE9E2;   /* primary text on dark — warm platinum */
+  --platinum-dim:  #B6B3AC;   /* secondary text on dark */
+  --mist-dark:     #86847E;   /* muted text on dark */
+  --champagne:        #C9B586;   /* accent — champagne gold */
+  --champagne-bright: #E3D2A9;   /* accent hover / highlights */
+  --champagne-dim:    #8F7F5B;   /* subdued accent, borders */
+  --danger-soft:   #F0A8A8;   /* danger-tinted text legible on dark */
+
+  /* Kept for the light app-mockup card headers on the marketing pages */
+  --warm-dark:  #1F231D;   /* olive-charcoal (mockup card headers) */
+  --warm-ink:   #2A2926;   /* warm near-black text inside light cards */
+
+  --display-face: var(--font-display), "Jost", "Futura", "Century Gothic", sans-serif;
+  --mono-face: var(--font-mono), "IBM Plex Mono", ui-monospace, monospace;
 
   /* Shadows */
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
@@ -182,69 +195,86 @@ body {
   box-shadow: none;
 }
 
-/* ── Editorial marketing classes (petvity.com brand language) ───────────────── */
+/* ── Obsidian luxury classes (petvity.com brand language) ───────────────────── */
 
-/* Display serif — premium emotional headline voice. */
-.font-display { font-family: var(--display-serif); }
+/* Display face — ultra-light geometric, the luxury-futurist headline voice. */
+.font-display { font-family: var(--display-face); }
 
-/* Warm cream hero/section backdrop — replaces the teal-blob SaaS gradient. */
-.hero-editorial { background: var(--cream); }
-.section-cream  { background: var(--cream); }
-.section-cream-soft { background: var(--cream-soft); }
-.section-warm-dark { background: var(--warm-dark); color: var(--cream); }
-
-/* Editorial headline — light-weight Cormorant, large, tight tracking. */
-.display-title {
-  font-family: var(--display-serif);
-  font-weight: 300;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-  color: var(--warm-ink);
+/* Page ground + section bands. The hero carries a faint champagne aurora and
+   a fine engineering grid — the one ambient moment; everything else is flat. */
+.lux-hero {
+  background:
+    radial-gradient(ellipse 55% 45% at 72% 18%, color-mix(in srgb, var(--champagne) 9%, transparent), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 12% 85%, color-mix(in srgb, var(--champagne) 4%, transparent), transparent 70%),
+    linear-gradient(color-mix(in srgb, #FFFFFF 2.5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, #FFFFFF 2.5%, transparent) 1px, transparent 1px),
+    var(--obsidian);
+  background-size: auto, auto, 72px 72px, 72px 72px, auto;
 }
-.display-title em { font-style: italic; }   /* emphasis line, no colour shift */
+.lux-section        { background: var(--obsidian); }
+.lux-section-raised { background: var(--carbon); }
+.lux-section-deep   { background: var(--obsidian-deep); color: var(--platinum); }
 
-/* Understated uppercase eyebrow (replaces the filled teal pill on marketing). */
+/* Hero headline — thin, vast, platinum; the emphasis word turns champagne. */
+.display-title {
+  font-family: var(--display-face);
+  font-weight: 200;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--platinum);
+  text-wrap: balance;
+}
+.display-title em { font-style: normal; color: var(--champagne); }
+
+/* Instrument eyebrow — mono, tracked wide, champagne. */
+.ed-eyebrow,
 .eyebrow-editorial {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
-  font-weight: 500;
+  font-family: var(--mono-face);
+  font-size: 11px;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--gold-dark);
+  letter-spacing: 0.28em;
+  color: var(--champagne);
 }
 
-/* Editorial pill buttons — dark or outline, uppercase, tracked. */
+/* Primary pill — champagne fill, obsidian text, soft gold bloom on hover. */
 .btn-editorial {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--warm-ink);
-  color: var(--cream);
-  border: 1px solid var(--warm-ink);
+  background: var(--champagne);
+  color: var(--obsidian);
+  border: 1px solid var(--champagne);
   border-radius: 100px;
   padding: 14px 30px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   font-family: var(--font-sans);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.18s, transform 0.1s;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s, transform 0.1s;
   white-space: nowrap;
 }
-.btn-editorial:hover  { background: #000; }
+.btn-editorial:hover {
+  background: var(--champagne-bright);
+  border-color: var(--champagne-bright);
+  box-shadow: 0 0 32px color-mix(in srgb, var(--champagne) 30%, transparent);
+}
 .btn-editorial:active { transform: scale(0.98); }
 
+/* Ghost pill — hairline border, platinum text, champagne on hover. */
 .btn-editorial-ghost {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background: transparent;
-  color: var(--warm-ink);
-  border: 1px solid color-mix(in srgb, var(--warm-ink) 28%, transparent);
+  color: var(--platinum);
+  border: 1px solid var(--hairline);
   border-radius: 100px;
   padding: 14px 30px;
   font-size: 13px;
@@ -257,39 +287,16 @@ body {
   transition: all 0.18s;
   white-space: nowrap;
 }
-.btn-editorial-ghost:hover { border-color: var(--warm-ink); background: color-mix(in srgb, var(--warm-ink) 5%, transparent); }
+.btn-editorial-ghost:hover { border-color: var(--champagne-dim); color: var(--champagne-bright); }
 
-/* Cream pill for dark editorial sections (e.g. the final CTA band). */
-.btn-editorial-light {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--cream);
-  color: var(--warm-ink);
-  border: 1px solid var(--cream);
-  border-radius: 100px;
-  padding: 14px 30px;
-  font-size: 13px;
-  font-weight: 500;
-  font-family: var(--font-sans);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  text-decoration: none;
-  cursor: pointer;
-  transition: opacity 0.18s, transform 0.1s;
-  white-space: nowrap;
-}
-.btn-editorial-light:hover  { opacity: 0.9; }
-.btn-editorial-light:active { transform: scale(0.98); }
-
-/* Compact editorial pill — for nav CTAs where the full pill is too large. */
-.btn-editorial-sm {
+/* Compact ghost pill — for card-level secondary actions. */
+.btn-editorial-ghost-sm {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--warm-ink);
-  color: var(--cream);
-  border: 1px solid var(--warm-ink);
+  background: transparent;
+  color: var(--platinum-dim);
+  border: 1px solid var(--hairline);
   border-radius: 100px;
   padding: 9px 18px;
   font-size: 12px;
@@ -299,53 +306,132 @@ body {
   letter-spacing: 0.1em;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.18s, transform 0.1s;
+  transition: all 0.18s;
   white-space: nowrap;
 }
-.btn-editorial-sm:hover  { background: #000; }
+.btn-editorial-ghost-sm:hover { border-color: var(--champagne-dim); color: var(--champagne-bright); }
+
+/* Platinum pill for the deepest bands (final CTA). */
+.btn-editorial-light {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--platinum);
+  color: var(--obsidian);
+  border: 1px solid var(--platinum);
+  border-radius: 100px;
+  padding: 14px 30px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.1s;
+  white-space: nowrap;
+}
+.btn-editorial-light:hover  { opacity: 0.88; }
+.btn-editorial-light:active { transform: scale(0.98); }
+
+/* Compact champagne pill — nav CTAs. */
+.btn-editorial-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--champagne);
+  color: var(--obsidian);
+  border: 1px solid var(--champagne);
+  border-radius: 100px;
+  padding: 9px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, transform 0.1s;
+  white-space: nowrap;
+}
+.btn-editorial-sm:hover  { background: var(--champagne-bright); border-color: var(--champagne-bright); }
 .btn-editorial-sm:active { transform: scale(0.98); }
 
-/* Section eyebrow — uppercase tracked gold (replaces teal SaaS eyebrows). */
-.ed-eyebrow {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--gold-dark);
-}
-
-/* Section headings — Cormorant serif, light, large. */
+/* Section headings — display face, thin, platinum. */
 .ed-title {
-  font-family: var(--display-serif);
-  font-weight: 300;
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  color: var(--warm-ink);
+  font-family: var(--display-face);
+  font-weight: 200;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--platinum);
   font-size: clamp(2.4rem, 5vw, 3.5rem);
+  text-wrap: balance;
 }
+.ed-title em { font-style: normal; color: var(--champagne); }
 .ed-title-sm {
-  font-family: var(--display-serif);
+  font-family: var(--display-face);
   font-weight: 300;
-  line-height: 1.06;
-  letter-spacing: -0.015em;
-  color: var(--warm-ink);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--platinum);
   font-size: clamp(2rem, 4vw, 2.7rem);
+  text-wrap: balance;
 }
-.ed-title-on-dark { color: var(--cream); }   /* pair with .ed-title on dark bands */
+.ed-title-on-dark { color: var(--platinum); }   /* legacy pair for deep bands */
 
-/* Numbered step badge — warm-ink disc, cream serif numeral. */
+/* Numbered step marker — hairline ring, champagne mono numeral. */
 .ed-num {
-  background: var(--warm-ink);
-  color: var(--cream);
-  font-family: var(--display-serif);
+  background: transparent;
+  border: 1px solid var(--champagne-dim);
+  color: var(--champagne);
+  font-family: var(--mono-face);
   font-weight: 400;
 }
 
-/* Icon badge — soft gold tint (replaces teal-light icon chips). */
+/* Icon badge — champagne tint on dark. */
 .ed-icon {
-  background: var(--gold-light);
-  color: var(--gold-dark);
+  background: color-mix(in srgb, var(--champagne) 12%, transparent);
+  color: var(--champagne);
+}
+
+/* Card on dark — onyx surface, hairline edge, faint top light-catch. */
+.lux-card {
+  background: var(--onyx);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #FFFFFF 4%, transparent);
+  transition: border-color 0.2s ease;
+}
+.lux-card-hover:hover { border-color: var(--champagne-dim); }
+
+/* Small hairline chip on dark (species strip, tags). */
+.lux-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: color-mix(in srgb, #FFFFFF 4%, transparent);
+  border: 1px solid var(--hairline);
+  color: var(--platinum-dim);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+/* Hero entrance — one orchestrated reveal, then stillness. */
+@media (prefers-reduced-motion: no-preference) {
+  .lux-rise {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: lux-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .lux-rise-2 { animation-delay: 0.12s; }
+  .lux-rise-3 { animation-delay: 0.24s; }
+  .lux-rise-4 { animation-delay: 0.36s; }
+  @keyframes lux-rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
 
 .btn-outline {

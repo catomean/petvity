@@ -69,9 +69,9 @@ export default async function PricingPage({ params }: Params) {
   ] as const;
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-[var(--obsidian)] text-[var(--platinum)] overflow-x-hidden">
       {/* Hero */}
-      <section className="section-cream relative pt-28 pb-16 md:pt-36 md:pb-24">
+      <section className="lux-section relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="section-inner relative text-center max-w-2xl mx-auto">
           <div className="eyebrow-editorial mb-7">
             <Zap className="w-3 h-3" />
@@ -80,36 +80,36 @@ export default async function PricingPage({ params }: Params) {
           <h1 className="ed-title mb-6">
             {t("heroTitle")}
           </h1>
-          <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed">
+          <p className="text-lg md:text-xl text-[var(--mist-dark)] leading-relaxed">
             {t("heroDesc")}
           </p>
         </div>
       </section>
 
       {/* Pricing cards */}
-      <section className="py-16 section-cream-soft">
+      <section className="py-16 lux-section-raised">
         <div className="section-inner">
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {plans.map(({ nameKey, priceKey, periodKey, descKey, ctaKey, href, primary, featureKeys }) => (
               <div
                 key={nameKey}
-                className={`card p-8 flex flex-col relative ${
+                className={`lux-card p-8 flex flex-col relative ${
                   primary
-                    ? "border-[var(--gold)] shadow-[var(--shadow-lg)] ring-1 ring-[var(--gold)]"
+                    ? "border-[var(--champagne)] ring-1 ring-[var(--champagne)]"
                     : ""
                 }`}
               >
                 <div className="mb-6">
-                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--muted)] mb-2">{t(nameKey)}</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--mist-dark)] mb-2">{t(nameKey)}</p>
                   <div className="flex items-baseline gap-1.5 mb-3">
-                    <span className={`font-display font-light ${t(priceKey) === "$0" ? "text-6xl text-[var(--warm-ink)]" : "text-2xl text-[var(--muted)]"}`}>
+                    <span className={`font-display font-light ${t(priceKey) === "$0" ? "text-6xl text-[var(--champagne)]" : "text-2xl text-[var(--mist-dark)]"}`}>
                       {t(priceKey)}
                     </span>
                     {periodKey && (
-                      <span className="text-sm text-[var(--muted)]">/ {t(periodKey)}</span>
+                      <span className="text-sm text-[var(--mist-dark)]">/ {t(periodKey)}</span>
                     )}
                   </div>
-                  <p className="text-sm text-[var(--muted)] leading-relaxed">{t(descKey)}</p>
+                  <p className="text-sm text-[var(--mist-dark)] leading-relaxed">{t(descKey)}</p>
                 </div>
 
                 <Link
@@ -126,8 +126,8 @@ export default async function PricingPage({ params }: Params) {
 
                 <ul className="space-y-2.5 flex-1">
                   {featureKeys.map((fk) => (
-                    <li key={fk} className="flex items-start gap-2.5 text-sm text-[var(--ink2)]">
-                      <CheckCircle className="w-4 h-4 text-[var(--green-text)] flex-shrink-0 mt-0.5" />
+                    <li key={fk} className="flex items-start gap-2.5 text-sm text-[var(--platinum-dim)]">
+                      <CheckCircle className="w-4 h-4 text-[var(--champagne)] flex-shrink-0 mt-0.5" />
                       {t(fk)}
                     </li>
                   ))}
@@ -139,7 +139,7 @@ export default async function PricingPage({ params }: Params) {
       </section>
 
       {/* Trust strip */}
-      <section className="py-12 bg-white border-y border-[var(--border)]">
+      <section className="py-12 border-y border-[var(--hairline-soft)]">
         <div className="section-inner">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
             {[
@@ -147,7 +147,7 @@ export default async function PricingPage({ params }: Params) {
               { icon: Users,  label: t("plan1F1") },
               { icon: Globe,  label: t("plan1F9") },
             ].map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-3 text-[var(--ink2)]">
+              <div key={label} className="flex items-center gap-3 text-[var(--platinum-dim)]">
                 <div className="ed-icon w-9 h-9 rounded-xl flex items-center justify-center">
                   <Icon className="w-4 h-4" />
                 </div>
@@ -159,16 +159,16 @@ export default async function PricingPage({ params }: Params) {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 section-cream">
+      <section className="py-20 lux-section">
         <div className="section-inner max-w-3xl mx-auto">
           <h2 className="ed-title text-center mb-12">
             {t("faqTitle")}
           </h2>
           <div className="space-y-4">
             {FAQ_KEYS.map((key) => (
-              <div key={key} className="card p-6">
-                <p className="font-semibold text-[var(--ink)] mb-2">{t(`${key}Q`, { app: APP.name })}</p>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">{t(`${key}A`, { app: APP.name })}</p>
+              <div key={key} className="lux-card p-6">
+                <p className="font-semibold text-[var(--platinum)] mb-2">{t(`${key}Q`, { app: APP.name })}</p>
+                <p className="text-sm text-[var(--mist-dark)] leading-relaxed">{t(`${key}A`, { app: APP.name })}</p>
               </div>
             ))}
           </div>
@@ -176,16 +176,16 @@ export default async function PricingPage({ params }: Params) {
       </section>
 
       {/* CTA */}
-      <section className="section-warm-dark relative overflow-hidden py-20">
-        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
-        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+      <section className="lux-section-deep relative overflow-hidden py-20">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--champagne) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
 
         <div className="section-inner relative text-center">
           <h2 className="ed-title ed-title-on-dark mb-4">
             {t("ctaTitle")}
           </h2>
-          <p className="text-lg text-[var(--cream-soft)] opacity-80 mb-8">{t("ctaDesc")}</p>
+          <p className="text-lg text-[var(--platinum-dim)] opacity-80 mb-8">{t("ctaDesc")}</p>
           <Link href="/register" className="btn-editorial-light">
             {t("ctaButton")}
             <ArrowRight className="w-4 h-4" />

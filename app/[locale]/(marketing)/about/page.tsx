@@ -42,9 +42,9 @@ export default async function AboutPage({ params }: Params) {
   const t = await getTranslations({ locale, namespace: "about" });
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-[var(--obsidian)] text-[var(--platinum)] overflow-x-hidden">
       {/* Hero */}
-      <section className="section-cream relative pt-28 pb-16 md:pt-36 md:pb-24">
+      <section className="lux-section relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="section-inner relative">
           <div className="max-w-2xl">
             <div className="ed-eyebrow inline-flex items-center gap-2 mb-7">
@@ -54,7 +54,7 @@ export default async function AboutPage({ params }: Params) {
             <h1 className="ed-title mb-6">
               {t("heroTitle")}
             </h1>
-            <p className="text-lg md:text-xl text-[var(--ink2)] leading-relaxed">
+            <p className="text-lg md:text-xl text-[var(--platinum-dim)] leading-relaxed">
               {t("heroDesc")}
             </p>
           </div>
@@ -62,23 +62,23 @@ export default async function AboutPage({ params }: Params) {
       </section>
 
       {/* Mission + stats */}
-      <section className="py-20 section-cream-soft">
+      <section className="py-20 lux-section-raised">
         <div className="section-inner">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <p className="ed-eyebrow mb-4">
                 {t("missionTitle")}
               </p>
-              <p className="text-[var(--muted)] leading-relaxed text-lg">
+              <p className="text-[var(--mist-dark)] leading-relaxed text-lg">
                 {t("missionBody")}
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               {STAT_KEYS.map(({ valueKey, labelKey }) => (
-                <div key={labelKey} className="card p-7 text-center">
-                  <p className="font-display text-4xl font-light text-[var(--warm-ink)] mb-2">{t(valueKey)}</p>
-                  <p className="text-sm text-[var(--muted)]">{t(labelKey)}</p>
+                <div key={labelKey} className="lux-card p-7 text-center">
+                  <p className="font-display text-4xl font-light text-[var(--champagne)] mb-2">{t(valueKey)}</p>
+                  <p className="text-sm text-[var(--mist-dark)]">{t(labelKey)}</p>
                 </div>
               ))}
             </div>
@@ -87,17 +87,17 @@ export default async function AboutPage({ params }: Params) {
       </section>
 
       {/* Values */}
-      <section className="py-20 bg-white">
+      <section className="py-20">
         <div className="section-inner">
           <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {VALUE_META.map(({ icon: Icon, color, titleKey, descKey }) => (
-              <div key={titleKey} className="card p-7 flex gap-5">
+              <div key={titleKey} className="lux-card p-7 flex gap-5">
                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-[var(--ink)] mb-2">{t(titleKey)}</h3>
-                  <p className="text-sm text-[var(--muted)] leading-relaxed">{t(descKey)}</p>
+                  <h3 className="font-bold text-[var(--platinum)] mb-2">{t(titleKey)}</h3>
+                  <p className="text-sm text-[var(--mist-dark)] leading-relaxed">{t(descKey)}</p>
                 </div>
               </div>
             ))}
@@ -106,26 +106,26 @@ export default async function AboutPage({ params }: Params) {
       </section>
 
       {/* Team */}
-      <section className="py-16 section-cream border-y border-[var(--border)]">
+      <section className="py-16 lux-section border-y border-[var(--hairline-soft)]">
         <div className="section-inner max-w-3xl mx-auto text-center">
           <h2 className="ed-title-sm mb-4">
             {t("teamTitle")}
           </h2>
-          <p className="text-[var(--muted)] leading-relaxed text-sm">
+          <p className="text-[var(--mist-dark)] leading-relaxed text-sm">
             {t("teamBody")}
           </p>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="section-warm-dark relative overflow-hidden py-20">
-        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+      <section className="lux-section-deep relative overflow-hidden py-20">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--champagne) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
         <div className="section-inner relative text-center">
           <h2 className="ed-title ed-title-on-dark mb-4">
             {t("ctaTitle")}
           </h2>
-          <p className="text-[var(--cream-soft)] opacity-80 text-lg mb-8 max-w-xl mx-auto">
+          <p className="text-[var(--platinum-dim)] opacity-80 text-lg mb-8 max-w-xl mx-auto">
             {t("ctaDesc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

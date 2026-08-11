@@ -111,6 +111,29 @@ This version has breaking changes — APIs, conventions, and file structure may 
 --tooltip-shadow:   0 2px 8px rgb(0 0 0 / 0.08)
 ```
 
+**Obsidian luxury layer (marketing surface only — homepage + `(marketing)` pages, nav, footer):**
+```
+--obsidian:      #08080A    Marketing page ground (near-black, warm bias)
+--obsidian-deep: #050506    Deepest band (final CTA, footer)
+--carbon:        #0F0F13    Raised section surface
+--onyx:          #131318    Card surface on dark (.lux-card)
+--hairline:      #26262C    Borders on dark
+--hairline-soft: #1B1B20    Subtle dividers on dark
+--platinum:      #ECE9E2    Primary text on dark
+--platinum-dim:  #B6B3AC    Secondary text on dark
+--mist-dark:     #86847E    Muted text on dark
+--champagne:        #C9B586    Accent — champagne gold (CTAs, eyebrows, emphasis)
+--champagne-bright: #E3D2A9    Accent hover
+--champagne-dim:    #8F7F5B    Subdued accent, borders
+--danger-soft:   #F0A8A8    Danger-tinted text legible on dark
+```
+Classes: `.lux-hero` (aurora + grid ground), `.lux-section` / `.lux-section-raised` / `.lux-section-deep`,
+`.lux-card` + `.lux-card-hover`, `.lux-chip`, `.display-title` / `.ed-title` / `.ed-title-sm` (Jost 200,
+`em` renders champagne), `.ed-eyebrow` (IBM Plex Mono, tracked uppercase champagne), `.btn-editorial`
+(champagne pill), `.btn-editorial-ghost(-sm)`, `.btn-editorial-light`, `.btn-editorial-sm`, `.ed-num`,
+`.ed-icon`, `.lux-rise` (hero entrance, reduced-motion-safe). The portal/admin product UI stays on the
+light teal/terracotta palette — never mix the two surfaces.
+
 ### Semantic CSS Classes (defined in `globals.css` — use these, not arbitrary Tailwind values)
 
 **Layout:**
@@ -159,7 +182,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ### Typography
 
-System font stack via `--font-sans`: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif.
+- `--font-sans`: Plus Jakarta Sans (next/font) — body everywhere.
+- `--font-display`: Jost 200/300/400 (next/font) — marketing headlines (`.display-title`, `.ed-title*`).
+- `--font-mono`: IBM Plex Mono 400/500 (next/font) — marketing eyebrows and instrument-style labels.
 
 ### RTL Support
 

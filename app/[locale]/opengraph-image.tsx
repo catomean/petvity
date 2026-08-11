@@ -18,7 +18,7 @@ export default function OgImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: `linear-gradient(135deg, ${TOKENS.teal} 0%, ${TOKENS.tealDark} 100%)`,
+          background: `linear-gradient(135deg, ${TOKENS.obsidian} 0%, ${TOKENS.carbon} 100%)`,
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
       >
@@ -31,7 +31,7 @@ export default function OgImage() {
             width: 400,
             height: 400,
             borderRadius: "50%",
-            background: "rgba(255,255,255,0.06)",
+            background: `${TOKENS.champagne}14`,
             display: "flex",
           }}
         />
@@ -43,7 +43,7 @@ export default function OgImage() {
             width: 320,
             height: 320,
             borderRadius: "50%",
-            background: "rgba(255,255,255,0.04)",
+            background: `${TOKENS.champagne}0D`,
             display: "flex",
           }}
         />
@@ -54,7 +54,7 @@ export default function OgImage() {
             width: 96,
             height: 96,
             borderRadius: 24,
-            background: "rgba(255,255,255,0.15)",
+            background: TOKENS.champagne,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -69,9 +69,9 @@ export default function OgImage() {
         <div
           style={{
             fontSize: 72,
-            fontWeight: 800,
-            color: "white",
-            letterSpacing: "-2px",
+            fontWeight: 300,
+            color: TOKENS.platinum,
+            letterSpacing: "2px",
             marginBottom: 16,
           }}
         >
@@ -82,7 +82,7 @@ export default function OgImage() {
         <div
           style={{
             fontSize: 28,
-            color: "rgba(255,255,255,0.75)",
+            color: TOKENS.platinumDim,
             textAlign: "center",
             maxWidth: 700,
             lineHeight: 1.4,
