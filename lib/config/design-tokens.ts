@@ -55,6 +55,20 @@ export const TOKENS = {
   muted:         "#78716C",
   faint:         "#C4BBB3",
 
+  /* Obsidian luxury layer (marketing surface) */
+  obsidian:        "#08080A",
+  obsidianDeep:    "#050506",
+  carbon:          "#0F0F13",
+  onyx:            "#131318",
+  hairline:        "#26262C",
+  hairlineSoft:    "#1B1B20",
+  platinum:        "#ECE9E2",
+  platinumDim:     "#B6B3AC",
+  mistDark:        "#86847E",
+  champagne:       "#C9B586",
+  champagneBright: "#E3D2A9",
+  champagneDim:    "#8F7F5B",
+
   /* Backgrounds */
   off:           "#FAF8F5",
   light:         "#F0EBE3",

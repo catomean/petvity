@@ -138,7 +138,7 @@ export const HEALTH_METRIC_CONFIG: Record<MetricId, MetricDef> = {
     normalRange: { default: { min: 3, max: 5 } },
     icon: "Zap",
     description: "1 = depleted, 5 = very energetic",
-    chartColor: "var(--gold)",
+    chartColor: "var(--champagne)",
   },
 
   mood: {

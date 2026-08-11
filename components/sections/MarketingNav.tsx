@@ -77,19 +77,17 @@ export default function MarketingNav() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-200 ${
-        scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-[var(--border)]"
-          : "bg-transparent"
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-200 bg-[var(--obsidian)]/85 backdrop-blur-xl ${
+        scrolled ? "border-b border-[var(--hairline-soft)]" : "border-b border-transparent"
       }`}
     >
       <div className="section-inner h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 no-underline flex-shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-[var(--warm-dark)] flex items-center justify-center">
-            <PawPrint className="w-4 h-4 text-[var(--cream)]" />
+          <div className="w-8 h-8 rounded-lg bg-[var(--champagne)] flex items-center justify-center">
+            <PawPrint className="w-4 h-4 text-[var(--obsidian)]" />
           </div>
-          <span className="font-bold text-[var(--ink)] text-lg">{APP.name}</span>
+          <span className="font-semibold text-[var(--platinum)] text-lg tracking-wide">{APP.name}</span>
         </Link>
 
         {/* Desktop nav */}
@@ -98,7 +96,7 @@ export default function MarketingNav() {
           <div ref={featuresRef} className="relative">
             <button
               onClick={() => setFeaturesOpen((o) => !o)}
-              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] hover:bg-[var(--off)] transition-colors"
+              className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] hover:bg-white/[0.06] transition-colors"
             >
               {t("features")}
               <ChevronDown
@@ -108,8 +106,8 @@ export default function MarketingNav() {
 
             {/* Megamenu */}
             {featuresOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-white rounded-2xl border border-[var(--border)] shadow-xl p-5">
-                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] mb-4 px-1">
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-[var(--carbon)] rounded-2xl border border-[var(--hairline)] shadow-xl p-5">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--mist-dark)] mb-4 px-1">
                   {t("megamenuTitle")}
                 </p>
                 <div className="grid grid-cols-2 gap-1">
@@ -118,20 +116,20 @@ export default function MarketingNav() {
                       key={label}
                       href={href}
                       onClick={() => setFeaturesOpen(false)}
-                      className="flex items-start gap-3 p-3 rounded-xl hover:bg-[var(--off)] transition-colors no-underline group"
+                      className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.05] transition-colors no-underline group"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[var(--teal)] transition-colors">
-                        <Icon className="w-4 h-4 text-[var(--teal)] group-hover:text-white transition-colors" />
+                      <div className="w-8 h-8 rounded-lg bg-[var(--champagne)]/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[var(--champagne)] transition-colors">
+                        <Icon className="w-4 h-4 text-[var(--champagne)] group-hover:text-[var(--obsidian)] transition-colors" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-[var(--ink)] leading-tight">{label}</p>
-                        <p className="text-xs text-[var(--muted)] mt-0.5 leading-snug">{desc}</p>
+                        <p className="text-sm font-semibold text-[var(--platinum)] leading-tight">{label}</p>
+                        <p className="text-xs text-[var(--mist-dark)] mt-0.5 leading-snug">{desc}</p>
                       </div>
                     </Link>
                   ))}
                 </div>
-                <div className="mt-4 pt-4 border-t border-[var(--border)]">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] mb-3">
+                <div className="mt-4 pt-4 border-t border-[var(--hairline)]">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--mist-dark)] mb-3">
                     {t("speciesGuides")}
                   </p>
                   <div className="flex items-center gap-2 flex-wrap">
@@ -140,7 +138,7 @@ export default function MarketingNav() {
                         key={label}
                         href={href}
                         onClick={() => setFeaturesOpen(false)}
-                        className="flex items-center gap-1.5 text-xs font-medium text-[var(--ink2)] bg-[var(--off)] hover:bg-[var(--teal-light)] hover:text-[var(--teal)] px-3 py-1.5 rounded-full no-underline transition-colors"
+                        className="flex items-center gap-1.5 text-xs font-medium text-[var(--platinum-dim)] bg-white/[0.05] hover:bg-white/[0.09] hover:text-[var(--platinum)] px-3 py-1.5 rounded-full no-underline transition-colors"
                       >
                         <span>{emoji}</span>{label}
                       </Link>
@@ -148,7 +146,7 @@ export default function MarketingNav() {
                     <Link
                       href="/adopt"
                       onClick={() => setFeaturesOpen(false)}
-                      className="flex items-center gap-1.5 text-xs font-medium text-[var(--danger-text)] bg-[var(--danger-bg)] hover:brightness-95 px-3 py-1.5 rounded-full no-underline transition-colors ms-auto"
+                      className="flex items-center gap-1.5 text-xs font-medium text-[var(--danger-soft)] bg-white/[0.05] hover:bg-white/[0.09] px-3 py-1.5 rounded-full no-underline transition-colors ms-auto"
                     >
                       ❤️ {t("adopt")}
                     </Link>
@@ -160,25 +158,25 @@ export default function MarketingNav() {
 
           <Link
             href="/#how-it-works"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] hover:bg-[var(--off)] transition-colors no-underline"
+            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] hover:bg-white/[0.06] transition-colors no-underline"
           >
             {t("howItWorks")}
           </Link>
           <Link
             href="/pricing"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] hover:bg-[var(--off)] transition-colors no-underline"
+            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] hover:bg-white/[0.06] transition-colors no-underline"
           >
             {t("pricing")}
           </Link>
           <Link
             href="/pros"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--warm-ink)] hover:bg-[var(--gold-light)] transition-colors no-underline"
+            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--champagne)] hover:bg-white/[0.06] transition-colors no-underline"
           >
             {t("forPros")}
           </Link>
           <Link
             href="/adopt"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors no-underline"
+            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--danger-soft)] hover:bg-white/[0.06] transition-colors no-underline"
           >
             ❤️ {t("adopt")}
           </Link>
@@ -186,7 +184,7 @@ export default function MarketingNav() {
 
         {/* Desktop CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <div className="w-32"><LocaleSwitcher current={locale} /></div>
+          <div className="w-32"><LocaleSwitcher current={locale} tone="dark" /></div>
           {status === "loading" ? null : status === "authenticated" ? (
             <Link href={dashboardHref} className="btn-editorial-sm">
               {t("goToDashboard")}
@@ -195,13 +193,13 @@ export default function MarketingNav() {
             <>
               <Link
                 href="/demo"
-                className="text-sm font-medium text-[var(--gold-dark)] hover:text-[var(--warm-ink)] transition-colors no-underline"
+                className="text-sm font-medium text-[var(--champagne)] hover:text-[var(--champagne-bright)] transition-colors no-underline"
               >
                 {t("tryDemo")}
               </Link>
               <Link
                 href="/login"
-                className="text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] transition-colors no-underline"
+                className="text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] transition-colors no-underline"
               >
                 {t("logIn")}
               </Link>
@@ -215,7 +213,7 @@ export default function MarketingNav() {
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen((o) => !o)}
-          className="md:hidden p-2 rounded-lg hover:bg-[var(--off)] transition-colors"
+          className="md:hidden p-2 rounded-lg text-[var(--platinum)] hover:bg-white/[0.06] transition-colors"
           aria-label="Toggle menu"
         >
           {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -224,9 +222,9 @@ export default function MarketingNav() {
 
       {/* Mobile drawer */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t border-[var(--border)] shadow-lg">
+        <div className="md:hidden bg-[var(--carbon)] border-t border-[var(--hairline)] shadow-lg">
           <div className="section-inner py-4 flex flex-col gap-1">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] px-3 pb-2">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--mist-dark)] px-3 pb-2">
               {t("features")}
             </p>
             {FEATURE_ITEMS.map(({ icon: Icon, label, desc, href }) => (
@@ -234,19 +232,19 @@ export default function MarketingNav() {
                 key={label}
                 href={href}
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[var(--off)] transition-colors no-underline"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.05] transition-colors no-underline"
               >
-                <div className="w-7 h-7 rounded-lg bg-[var(--teal-light)] flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-3.5 h-3.5 text-[var(--teal)]" />
+                <div className="w-7 h-7 rounded-lg bg-[var(--champagne)]/10 flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-3.5 h-3.5 text-[var(--champagne)]" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-[var(--ink)]">{label}</p>
-                  <p className="text-xs text-[var(--muted)]">{desc}</p>
+                  <p className="text-sm font-medium text-[var(--platinum)]">{label}</p>
+                  <p className="text-xs text-[var(--mist-dark)]">{desc}</p>
                 </div>
               </Link>
             ))}
-            <div className="border-t border-[var(--border)] mt-3 pt-3">
-              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] px-3 pb-2">
+            <div className="border-t border-[var(--hairline)] mt-3 pt-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--mist-dark)] px-3 pb-2">
                 {t("speciesGuides")}
               </p>
               <div className="flex gap-2 px-3 pb-3 flex-wrap">
@@ -255,25 +253,25 @@ export default function MarketingNav() {
                     key={label}
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-1 text-sm font-medium text-[var(--ink2)] bg-[var(--off)] px-3 py-1.5 rounded-full no-underline"
+                    className="flex items-center gap-1 text-sm font-medium text-[var(--platinum-dim)] bg-white/[0.05] px-3 py-1.5 rounded-full no-underline"
                   >
                     <span>{emoji}</span>{label}
                   </Link>
                 ))}
               </div>
             </div>
-            <div className="border-t border-[var(--border)] pt-3 flex flex-col gap-2">
+            <div className="border-t border-[var(--hairline)] pt-3 flex flex-col gap-2">
               <Link
                 href="/pros"
                 onClick={() => setMenuOpen(false)}
-                className="px-3 py-2.5 text-sm font-medium text-[var(--warm-ink)] no-underline"
+                className="px-3 py-2.5 text-sm font-medium text-[var(--champagne)] no-underline"
               >
                 🩺 {t("forPros")}
               </Link>
               <Link
                 href="/adopt"
                 onClick={() => setMenuOpen(false)}
-                className="px-3 py-2.5 text-sm font-medium text-[var(--danger-text)] no-underline"
+                className="px-3 py-2.5 text-sm font-medium text-[var(--danger-soft)] no-underline"
               >
                 ❤️ {t("adopt")}
               </Link>
@@ -290,7 +288,7 @@ export default function MarketingNav() {
                   <Link
                     href="/login"
                     onClick={() => setMenuOpen(false)}
-                    className="px-3 py-2.5 text-sm font-medium text-[var(--ink2)] hover:text-[var(--ink)] no-underline"
+                    className="px-3 py-2.5 text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] no-underline"
                   >
                     {t("logIn")}
                   </Link>
@@ -303,8 +301,8 @@ export default function MarketingNav() {
                   </Link>
                 </>
               )}
-              <div className="pt-2 border-t border-[var(--border)] mt-1">
-                <LocaleSwitcher current={locale} />
+              <div className="pt-2 border-t border-[var(--hairline)] mt-1">
+                <LocaleSwitcher current={locale} tone="dark" />
               </div>
             </div>
           </div>

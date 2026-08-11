@@ -53,21 +53,21 @@ export default async function HomePage({ params }: Params) {
       name: "Sarah M.",
       pet: t("t1Pet"),
       initials: "SM",
-      color: "bg-[var(--teal-light)] text-[var(--teal)]",
+      color: "bg-white/[0.06] text-[var(--champagne)]",
     },
     {
       quote: t("t2Quote"),
       name: "James T.",
       pet: t("t2Pet"),
       initials: "JT",
-      color: "bg-[var(--warm-bg)] text-[var(--warm-text)]",
+      color: "bg-white/[0.06] text-[var(--champagne)]",
     },
     {
       quote: t("t3Quote"),
       name: "Amara O.",
       pet: t("t3Pet"),
       initials: "AO",
-      color: "bg-[var(--twin-bg)] text-[var(--twin)]",
+      color: "bg-white/[0.06] text-[var(--champagne)]",
     },
   ];
 
@@ -138,29 +138,29 @@ export default async function HomePage({ params }: Params) {
   };
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-[var(--obsidian)] text-[var(--platinum)] overflow-x-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }} />
       <MarketingNav />
 
       <main>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="hero-editorial relative pt-28 pb-20 md:pt-36 md:pb-28">
+      <section className="lux-hero relative pt-28 pb-20 md:pt-36 md:pb-28">
         <div className="section-inner relative">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Copy */}
             <div>
-              <div className="eyebrow-editorial mb-7">
+              <div className="eyebrow-editorial lux-rise mb-7">
                 {t("heroBadge")}
               </div>
 
-              <h1 className="display-title text-[3.4rem] md:text-[5rem] mb-6">
+              <h1 className="display-title lux-rise lux-rise-2 text-[3.4rem] md:text-[5rem] mb-6">
                 {t("heroTitle1")}
                 <br />
                 <em>{t("heroTitle2")}</em>
               </h1>
 
-              <p className="text-lg md:text-xl text-[var(--ink2)] leading-relaxed mb-9 max-w-lg">
+              <p className="text-lg md:text-xl text-[var(--platinum-dim)] leading-relaxed mb-9 max-w-lg lux-rise lux-rise-3">
                 {t("heroSubtitle", { app: APP.name })}
               </p>
 
@@ -169,8 +169,8 @@ export default async function HomePage({ params }: Params) {
               {/* Trust strip */}
               <div className="flex flex-wrap gap-x-6 gap-y-2">
                 {trustItems.map((item) => (
-                  <span key={item} className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)]">
-                    <CheckCircle className="w-3.5 h-3.5 text-[var(--green-text)] flex-shrink-0" />
+                  <span key={item} className="inline-flex items-center gap-1.5 text-sm text-[var(--mist-dark)]">
+                    <CheckCircle className="w-3.5 h-3.5 text-[var(--champagne)] flex-shrink-0" />
                     {item}
                   </span>
                 ))}
@@ -178,9 +178,9 @@ export default async function HomePage({ params }: Params) {
             </div>
 
             {/* Right: App mockup */}
-            <div className="relative">
+            <div className="relative lux-rise lux-rise-4">
               {/* Glow behind card */}
-              <div aria-hidden className="absolute inset-8 bg-[var(--gold)] opacity-10 blur-3xl rounded-3xl pointer-events-none" />
+              <div aria-hidden className="absolute inset-8 bg-[var(--champagne)] opacity-10 blur-3xl rounded-3xl pointer-events-none" />
 
               <div className="card relative shadow-[var(--shadow-lg)] rounded-2xl overflow-hidden">
                 {/* Card header */}
@@ -233,16 +233,16 @@ export default async function HomePage({ params }: Params) {
       </section>
 
       {/* ── Species strip ─────────────────────────────────────────────────── */}
-      <div className="border-y border-[var(--border)] bg-[var(--off)]">
+      <div className="border-y border-[var(--hairline-soft)] bg-[var(--carbon)]">
         <div className="section-inner py-6">
-          <p className="text-center text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--faint)] mb-5">
+          <p className="text-center text-[10px] font-medium uppercase tracking-[0.3em] text-[var(--mist-dark)] mb-5">
             {t("speciesEyebrow")}
           </p>
           <div className="flex flex-wrap justify-center gap-2.5">
             {SPECIES_DISPLAY.map((s) => (
               <span
                 key={s.id}
-                className="inline-flex items-center gap-1.5 bg-white border border-[var(--border)] text-[var(--ink2)] text-xs font-medium px-3.5 py-1.5 rounded-full shadow-sm"
+                className="lux-chip"
               >
                 <span className="text-sm">{s.emoji}</span>
                 {tPub(`species_${s.id}` as Parameters<typeof tPub>[0])}
@@ -262,7 +262,7 @@ export default async function HomePage({ params }: Params) {
             <h2 className="ed-title mb-5">
               {t("featuresTitle")}
             </h2>
-            <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
+            <p className="text-lg text-[var(--platinum-dim)] max-w-xl mx-auto leading-relaxed">
               {t("featuresDesc")}
             </p>
           </div>
@@ -275,7 +275,7 @@ export default async function HomePage({ params }: Params) {
                 <h3 className="ed-title-sm mb-5 leading-tight">
                   {t("trackingTitle")}
                 </h3>
-                <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">{t("trackingBody")}</p>
+                <p className="text-lg text-[var(--platinum-dim)] leading-relaxed mb-8">{t("trackingBody")}</p>
                 <Link href="/register" className="btn-editorial">
                   {t("trackingCta")}
                   <ArrowRight className="w-4 h-4" />
@@ -310,7 +310,7 @@ export default async function HomePage({ params }: Params) {
                 <h3 className="ed-title-sm mb-5 leading-tight">
                   {t("recordsTitle")}
                 </h3>
-                <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">{t("recordsBody")}</p>
+                <p className="text-lg text-[var(--platinum-dim)] leading-relaxed mb-8">{t("recordsBody")}</p>
                 <Link href="/register" className="btn-editorial">
                   {t("recordsCta")}
                   <ArrowRight className="w-4 h-4" />
@@ -338,7 +338,7 @@ export default async function HomePage({ params }: Params) {
       </section>
 
       {/* ── Digital Twin ─────────────────────────────────────────────────── */}
-      <section className="py-24 md:py-32 section-cream-soft">
+      <section className="py-24 md:py-32 lux-section-raised">
         <div className="section-inner">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Visual */}
@@ -399,13 +399,13 @@ export default async function HomePage({ params }: Params) {
                 {t("twinTitle1")}
                 <br /><span className="italic">{t("twinTitle2")}</span>, {t("twinTitle3")}
               </h2>
-              <p className="text-lg text-[var(--muted)] leading-relaxed mb-5">
+              <p className="text-lg text-[var(--platinum-dim)] leading-relaxed mb-5">
                 {t("twinP1")}
               </p>
-              <p className="text-base text-[var(--muted)] leading-relaxed mb-8">
+              <p className="text-base text-[var(--platinum-dim)] leading-relaxed mb-8">
                 {t("twinP2")}
               </p>
-              <Link href="/register" className="btn-primary">
+              <Link href="/register" className="btn-editorial">
                 {t("twinCta")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -415,7 +415,7 @@ export default async function HomePage({ params }: Params) {
       </section>
 
       {/* ── Wellness signals ─────────────────────────────────────────────── */}
-      <section className="bg-[var(--off)] border-y border-[var(--border)] py-24 md:py-32">
+      <section className="border-y border-[var(--hairline-soft)] py-24 md:py-32">
         <div className="section-inner">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
@@ -426,10 +426,10 @@ export default async function HomePage({ params }: Params) {
                 {t("signalsTitle1")}
                 <br />{t("signalsTitle2")}
               </h2>
-              <p className="text-lg text-[var(--muted)] leading-relaxed mb-8">
+              <p className="text-lg text-[var(--platinum-dim)] leading-relaxed mb-8">
                 {t("signalsP")}
               </p>
-              <Link href="/register" className="btn-primary">
+              <Link href="/register" className="btn-editorial">
                 {t("signalsCta")} <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -440,30 +440,27 @@ export default async function HomePage({ params }: Params) {
                   signalKey: "signalHealthy" as const,
                   descKey: "signalHealthyDesc" as const,
                   badge: "bg-[var(--green-bg)] text-[var(--green-text)]",
-                  border: "border-[var(--green-border)]",
                   icon: CheckCircle,
                 },
                 {
                   signalKey: "signalWatch" as const,
                   descKey: "signalWatchDesc" as const,
                   badge: "bg-[var(--warn-bg)] text-[var(--warn-text)]",
-                  border: "border-[var(--warn-border)]",
                   icon: TrendingUp,
                 },
                 {
                   signalKey: "signalConcern" as const,
                   descKey: "signalConcernDesc" as const,
                   badge: "bg-[var(--danger-bg)] text-[var(--danger-text)]",
-                  border: "border-[var(--danger-border)]",
                   icon: Activity,
                 },
-              ].map(({ signalKey, descKey, badge, border, icon: Icon }) => (
-                <div key={signalKey} className={`card border-2 ${border} p-5 flex items-start gap-4`}>
+              ].map(({ signalKey, descKey, badge, icon: Icon }) => (
+                <div key={signalKey} className="lux-card p-5 flex items-start gap-4">
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 mt-0.5 ${badge} flex items-center gap-1`}>
                     <Icon className="w-3 h-3" />
                     {t(signalKey)}
                   </span>
-                  <p className="text-sm text-[var(--ink2)] leading-relaxed">{t(descKey)}</p>
+                  <p className="text-sm text-[var(--platinum-dim)] leading-relaxed">{t(descKey)}</p>
                 </div>
               ))}
             </div>
@@ -481,20 +478,20 @@ export default async function HomePage({ params }: Params) {
             <h2 className="ed-title mb-5">
               {t("ecosystemTitle")}
             </h2>
-            <p className="text-lg text-[var(--muted)] max-w-xl mx-auto leading-relaxed">
+            <p className="text-lg text-[var(--platinum-dim)] max-w-xl mx-auto leading-relaxed">
               {t("ecosystemDesc")}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {/* Find a Pro */}
-            <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
+            <div className="lux-card lux-card-hover p-7 flex flex-col gap-5">
               <div className="ed-icon w-12 h-12 rounded-2xl flex items-center justify-center">
                 <Stethoscope className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("vetTitle")}</h3>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                <h3 className="text-xl font-semibold text-[var(--platinum)] mb-2">{t("vetTitle")}</h3>
+                <p className="text-sm text-[var(--mist-dark)] leading-relaxed">
                   {t("vetDesc")}
                 </p>
               </div>
@@ -506,23 +503,23 @@ export default async function HomePage({ params }: Params) {
                 ].map(({ icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5">
                     <span className="text-base w-5 flex-shrink-0">{icon}</span>
-                    <span className="text-sm text-[var(--ink2)]">{text}</span>
+                    <span className="text-sm text-[var(--platinum-dim)]">{text}</span>
                   </div>
                 ))}
               </div>
-              <Link href="/register" className="btn-outline text-sm justify-center mt-2">
+              <Link href="/register" className="btn-editorial-ghost-sm justify-center mt-2">
                 {t("vetCta")} <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
             {/* Marketplace */}
-            <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
+            <div className="lux-card lux-card-hover p-7 flex flex-col gap-5">
               <div className="ed-icon w-12 h-12 rounded-2xl flex items-center justify-center">
                 <ShoppingBag className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("mktTitle")}</h3>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                <h3 className="text-xl font-semibold text-[var(--platinum)] mb-2">{t("mktTitle")}</h3>
+                <p className="text-sm text-[var(--mist-dark)] leading-relaxed">
                   {t("mktDesc")}
                 </p>
               </div>
@@ -533,28 +530,28 @@ export default async function HomePage({ params }: Params) {
                   { icon: "🛏️", name: "Ortho Bed",    price: "$89.99" },
                   { icon: "💊", name: "Probiotics",   price: "$22.99" },
                 ].map(({ icon, name, price }) => (
-                  <div key={name} className="bg-[var(--off)] rounded-xl p-2.5 flex items-center gap-2">
+                  <div key={name} className="bg-white/[0.04] border border-[var(--hairline-soft)] rounded-xl p-2.5 flex items-center gap-2">
                     <span className="text-base">{icon}</span>
                     <div className="min-w-0">
-                      <p className="text-xs font-medium text-[var(--ink)] truncate">{name}</p>
-                      <p className="text-xs text-[var(--gold-dark)] font-semibold">{price}</p>
+                      <p className="text-xs font-medium text-[var(--platinum)] truncate">{name}</p>
+                      <p className="text-xs text-[var(--champagne)] font-semibold">{price}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <Link href={`/${locale}/shop`} className="btn-outline text-sm justify-center mt-2">
+              <Link href={`/${locale}/shop`} className="btn-editorial-ghost-sm justify-center mt-2">
                 {t("mktCta")} <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
             {/* Adoption */}
-            <div className="card p-7 flex flex-col gap-5 hover:shadow-[var(--shadow-md)] transition-shadow">
+            <div className="lux-card lux-card-hover p-7 flex flex-col gap-5">
               <div className="ed-icon w-12 h-12 rounded-2xl flex items-center justify-center">
                 <Heart className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[var(--ink)] mb-2">{t("adoptTitle")}</h3>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">
+                <h3 className="text-xl font-semibold text-[var(--platinum)] mb-2">{t("adoptTitle")}</h3>
+                <p className="text-sm text-[var(--mist-dark)] leading-relaxed">
                   {t("adoptDesc")}
                 </p>
               </div>
@@ -566,11 +563,11 @@ export default async function HomePage({ params }: Params) {
                 ].map(({ icon, text }) => (
                   <div key={text} className="flex items-center gap-2.5">
                     <span className="text-base w-5 flex-shrink-0">{icon}</span>
-                    <span className="text-sm text-[var(--ink2)]">{text}</span>
+                    <span className="text-sm text-[var(--platinum-dim)]">{text}</span>
                   </div>
                 ))}
               </div>
-              <Link href={`/${locale}/adopt`} className="btn-outline text-sm justify-center mt-2">
+              <Link href={`/${locale}/adopt`} className="btn-editorial-ghost-sm justify-center mt-2">
                 {t("adoptCta")} <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -592,23 +589,23 @@ export default async function HomePage({ params }: Params) {
 
           <div className="grid md:grid-cols-3 gap-6">
             {TESTIMONIALS.map(({ quote, name, pet, initials, color }) => (
-              <div key={name} className="card card-hover p-7 flex flex-col gap-5">
+              <div key={name} className="lux-card lux-card-hover p-7 flex flex-col gap-5">
                 {/* Stars */}
                 <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[var(--star)] text-[var(--star)]" />
+                    <Star key={i} className="w-4 h-4 fill-[var(--champagne)] text-[var(--champagne)]" />
                   ))}
                 </div>
-                <blockquote className="text-sm text-[var(--ink2)] leading-relaxed flex-1">
+                <blockquote className="text-sm text-[var(--platinum-dim)] leading-relaxed flex-1">
                   &ldquo;{quote}&rdquo;
                 </blockquote>
-                <div className="flex items-center gap-3 pt-2 border-t border-[var(--border)]">
+                <div className="flex items-center gap-3 pt-2 border-t border-[var(--hairline-soft)]">
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${color}`}>
                     {initials}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-[var(--ink)]">{name}</p>
-                    <p className="text-xs text-[var(--muted)]">{pet}</p>
+                    <p className="text-sm font-semibold text-[var(--platinum)]">{name}</p>
+                    <p className="text-xs text-[var(--mist-dark)]">{pet}</p>
                   </div>
                 </div>
               </div>
@@ -618,7 +615,7 @@ export default async function HomePage({ params }: Params) {
       </section>
 
       {/* ── How it works ─────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="bg-[var(--off)] border-y border-[var(--border)] py-24 md:py-32">
+      <section id="how-it-works" className="lux-section-raised border-y border-[var(--hairline-soft)] py-24 md:py-32">
         <div className="section-inner">
           <div className="text-center mb-16">
             <p className="ed-eyebrow mb-3">
@@ -627,7 +624,7 @@ export default async function HomePage({ params }: Params) {
             <h2 className="ed-title mb-5">
               {t("howTitle")}
             </h2>
-            <p className="text-lg text-[var(--muted)]">
+            <p className="text-lg text-[var(--platinum-dim)]">
               {t("howDesc")}
             </p>
           </div>
@@ -640,13 +637,13 @@ export default async function HomePage({ params }: Params) {
             ].map(({ n, titleKey, descKey }, i) => (
               <div key={n} className="text-center relative">
                 {i < 2 && (
-                  <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--border)]" />
+                  <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--hairline)]" />
                 )}
                 <div className="w-14 h-14 rounded-full ed-num text-xl flex items-center justify-center mx-auto mb-5">
                   {n}
                 </div>
-                <h3 className="font-bold text-[var(--ink)] mb-2 text-base">{t(titleKey)}</h3>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">{t(descKey)}</p>
+                <h3 className="font-semibold text-[var(--platinum)] mb-2 text-base">{t(titleKey)}</h3>
+                <p className="text-sm text-[var(--mist-dark)] leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
           </div>
@@ -658,22 +655,22 @@ export default async function HomePage({ params }: Params) {
         <div className="section-inner text-center">
           <p className="ed-eyebrow mb-3">{t("pricingEyebrow")}</p>
           <h2 className="ed-title mb-5">{t("pricingTitle")}</h2>
-          <p className="text-lg text-[var(--muted)] max-w-lg mx-auto mb-12 leading-relaxed">
+          <p className="text-lg text-[var(--platinum-dim)] max-w-lg mx-auto mb-12 leading-relaxed">
             {t("pricingDesc")}
           </p>
 
-          <div className="card max-w-sm mx-auto p-8 text-left shadow-[var(--shadow-lg)]">
+          <div className="lux-card max-w-sm mx-auto p-8 text-left">
             <div className="flex items-baseline gap-1 mb-1">
-              <span className="font-display text-6xl font-light text-[var(--warm-ink)]">$0</span>
-              <span className="text-[var(--muted)] text-base">/ month</span>
+              <span className="font-display text-6xl font-extralight text-[var(--champagne)]">$0</span>
+              <span className="text-[var(--mist-dark)] text-base">/ month</span>
             </div>
-            <p className="text-sm text-[var(--muted)] mb-7">{t("pricingNoCreditCard")}</p>
+            <p className="text-sm text-[var(--mist-dark)] mb-7">{t("pricingNoCreditCard")}</p>
 
             <ul className="space-y-3.5 mb-8">
               {PRICING_FEATURES.map((item) => (
                 <li key={item} className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-[var(--green-text)] flex-shrink-0" />
-                  <span className="text-sm text-[var(--ink2)]">{item}</span>
+                  <CheckCircle className="w-4 h-4 text-[var(--champagne)] flex-shrink-0" />
+                  <span className="text-sm text-[var(--platinum-dim)]">{item}</span>
                 </li>
               ))}
             </ul>
@@ -687,18 +684,18 @@ export default async function HomePage({ params }: Params) {
       </section>
 
       {/* ── Final CTA ────────────────────────────────────────────────────── */}
-      <section className="section-warm-dark relative overflow-hidden py-24 md:py-32">
-        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
-        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+      <section className="lux-section-deep relative overflow-hidden py-24 md:py-32">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--champagne) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
 
         <div className="section-inner relative text-center">
-          <CalendarDays className="w-11 h-11 text-[var(--gold)] mx-auto mb-7 opacity-90" />
+          <CalendarDays className="w-11 h-11 text-[var(--champagne)] mx-auto mb-7 opacity-90" />
           <h2 className="ed-title ed-title-on-dark mb-5">
             {t("finalTitle1")}
             <br />{t("finalTitle2")}
           </h2>
-          <p className="text-lg text-[var(--cream-soft)] opacity-80 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-[var(--platinum-dim)] opacity-80 mb-10 max-w-xl mx-auto leading-relaxed">
             {t("finalDesc")}
           </p>
           <Link href="/register" className="btn-editorial-light">

@@ -143,16 +143,16 @@ export default async function SpeciesGuidePage({ params }: Params) {
   const tipKeys   = CARE_TIP_KEYS[species.id] ?? [];
 
   return (
-    <main>
+    <main className="bg-[var(--obsidian)] text-[var(--platinum)] overflow-x-hidden">
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="section-cream py-16 lg:py-24">
+      <section className="lux-section py-16 lg:py-24">
         <div className="section-inner text-center">
           <div className="text-7xl mb-4">{species.emoji}</div>
           <h1 className="ed-title mb-4">
             {t("heroTitle", { species: speciesName })}
           </h1>
           {blurbKey && (
-            <p className="text-lg text-[var(--ink2)] max-w-2xl mx-auto mb-8 leading-relaxed">
+            <p className="text-lg text-[var(--platinum-dim)] max-w-2xl mx-auto mb-8 leading-relaxed">
               {t(blurbKey as Parameters<typeof t>[0])}
             </p>
           )}
@@ -167,11 +167,11 @@ export default async function SpeciesGuidePage({ params }: Params) {
           </div>
 
           {/* Quick stats */}
-          <div className="flex items-center justify-center gap-8 mt-10 flex-wrap text-sm text-[var(--muted)]">
+          <div className="flex items-center justify-center gap-8 mt-10 flex-wrap text-sm text-[var(--mist-dark)]">
             <span>{t("heroLifespan", { min: species.typicalLifespanYears.min, max: species.typicalLifespanYears.max })}</span>
-            <span className="hidden sm:inline text-[var(--border)]">|</span>
+            <span className="hidden sm:inline text-[var(--hairline)]">|</span>
             <span>{t("heroBreedCount", { count: species.commonBreeds.length })}</span>
-            <span className="hidden sm:inline text-[var(--border)]">|</span>
+            <span className="hidden sm:inline text-[var(--hairline)]">|</span>
             <span>{t("heroMetricCount")}</span>
           </div>
         </div>
@@ -183,7 +183,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
           <h2 className="ed-title-sm mb-3 text-center">
             {t("rangesTitle", { species: speciesName })}
           </h2>
-          <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
+          <p className="text-[var(--mist-dark)] text-center mb-10 max-w-xl mx-auto">
             {t("rangesDesc")}
           </p>
 
@@ -191,18 +191,18 @@ export default async function SpeciesGuidePage({ params }: Params) {
             {PHYSICAL_INFO.map(({ id, icon: Icon, unit }) => {
               const range = rangeValues[id];
               return (
-                <div key={id} className="card p-6 text-center">
+                <div key={id} className="lux-card p-6 text-center">
                   <div className="ed-icon w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3">
                     <Icon className="w-6 h-6" />
                   </div>
-                  <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)] mb-1">
+                  <p className="text-xs font-medium uppercase tracking-wider text-[var(--mist-dark)] mb-1">
                     {t(PHYS_LABEL_KEY[id])}
                   </p>
-                  <p className="text-xl font-bold text-[var(--warm-ink)]">
+                  <p className="text-xl font-semibold text-[var(--champagne)]">
                     {range.min}–{range.max}
-                    <span className="text-sm font-normal text-[var(--muted)] ms-1">{unit}</span>
+                    <span className="text-sm font-normal text-[var(--mist-dark)] ms-1">{unit}</span>
                   </p>
-                  <p className="text-xs text-[var(--muted)] mt-1">
+                  <p className="text-xs text-[var(--mist-dark)] mt-1">
                     {t(PHYS_DESC_KEY[id])}
                   </p>
                 </div>
@@ -213,26 +213,26 @@ export default async function SpeciesGuidePage({ params }: Params) {
       </section>
 
       {/* ── Emotional metrics ────────────────────────────────────────── */}
-      <section className="py-16 lg:py-20 section-cream-soft">
+      <section className="py-16 lg:py-20 lux-section-raised">
         <div className="section-inner">
           <h2 className="ed-title-sm mb-3 text-center">
             {t("emotionalTitle")}
           </h2>
-          <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
+          <p className="text-[var(--mist-dark)] text-center mb-10 max-w-xl mx-auto">
             {t("emotionalDesc")}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
             {EMOTIONAL_INFO.map(({ id, icon: Icon }) => (
-              <div key={id} className="card p-5 flex gap-4">
+              <div key={id} className="lux-card p-5 flex gap-4">
                 <div className="ed-icon w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-[var(--warm-ink)] mb-1">
+                  <p className="font-semibold text-[var(--platinum)] mb-1">
                     {t((EMOT_LABEL_KEY[id] ?? id) as Parameters<typeof t>[0])}
                   </p>
-                  <p className="text-sm text-[var(--muted)] leading-relaxed">
+                  <p className="text-sm text-[var(--mist-dark)] leading-relaxed">
                     {t((EMOT_DESC_KEY[id] ?? id) as Parameters<typeof t>[0])}
                   </p>
                 </div>
@@ -248,7 +248,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
           <h2 className="ed-title-sm mb-3 text-center">
             {t("breedsTitle", { species: speciesName })}
           </h2>
-          <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
+          <p className="text-[var(--mist-dark)] text-center mb-10 max-w-xl mx-auto">
             {t("breedsDesc", { species: speciesLc })}
           </p>
 
@@ -256,7 +256,7 @@ export default async function SpeciesGuidePage({ params }: Params) {
             {species.commonBreeds.map((breed) => (
               <span
                 key={breed}
-                className="bg-white border border-[var(--border)] text-[var(--ink2)] text-sm font-medium px-3.5 py-1.5 rounded-full shadow-sm"
+                className="lux-chip"
               >
                 {breed}
               </span>
@@ -267,20 +267,20 @@ export default async function SpeciesGuidePage({ params }: Params) {
 
       {/* ── Care tips ────────────────────────────────────────────────── */}
       {tipKeys.length > 0 && (
-        <section className="py-16 lg:py-20 section-cream">
+        <section className="py-16 lg:py-20 lux-section">
           <div className="section-inner">
             <h2 className="ed-title-sm mb-3 text-center">
               {t("tipsTitle", { species: speciesName })}
             </h2>
-            <p className="text-[var(--muted)] text-center mb-10 max-w-xl mx-auto">
+            <p className="text-[var(--mist-dark)] text-center mb-10 max-w-xl mx-auto">
               {t("tipsDesc", { species: speciesLc })}
             </p>
 
             <ul className="space-y-3 max-w-2xl mx-auto">
               {tipKeys.map((key) => (
-                <li key={key} className="flex items-start gap-3 card p-4">
-                  <CheckCircle className="w-5 h-5 text-[var(--green-text)] flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-[var(--ink2)] leading-relaxed">
+                <li key={key} className="flex items-start gap-3 lux-card p-4">
+                  <CheckCircle className="w-5 h-5 text-[var(--champagne)] flex-shrink-0 mt-0.5" />
+                  <span className="text-sm text-[var(--platinum-dim)] leading-relaxed">
                     {t(key as Parameters<typeof t>[0])}
                   </span>
                 </li>
@@ -291,17 +291,17 @@ export default async function SpeciesGuidePage({ params }: Params) {
       )}
 
       {/* ── CTA ──────────────────────────────────────────────────────── */}
-      <section className="section-warm-dark relative overflow-hidden py-16 lg:py-24">
-        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
-        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+      <section className="lux-section-deep relative overflow-hidden py-16 lg:py-24">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--champagne) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
 
         <div className="section-inner relative text-center">
           <div className="text-5xl mb-4">{species.emoji}</div>
           <h2 className="ed-title ed-title-on-dark mb-5">
             {t("ctaTitle", { species: speciesLc })}
           </h2>
-          <p className="text-lg text-[var(--cream-soft)] opacity-80 max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg text-[var(--platinum-dim)] opacity-80 max-w-xl mx-auto mb-10 leading-relaxed">
             {t("ctaDesc")}
           </p>
           <Link href="/register" className="btn-editorial-light">

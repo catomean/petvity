@@ -52,9 +52,9 @@ export default async function FeaturesPage({ params }: Params) {
   const t = await getTranslations({ locale, namespace: "features" });
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-[var(--obsidian)] text-[var(--platinum)] overflow-x-hidden">
       {/* Hero */}
-      <section className="section-cream relative pt-28 pb-16 md:pt-36 md:pb-24">
+      <section className="lux-section relative pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="section-inner relative text-center max-w-3xl mx-auto">
           <p className="ed-eyebrow mb-7">
             {t("heroEyebrow")}
@@ -62,7 +62,7 @@ export default async function FeaturesPage({ params }: Params) {
           <h1 className="ed-title mb-6">
             {t("heroTitle")}
           </h1>
-          <p className="text-lg md:text-xl text-[var(--muted)] leading-relaxed mb-10">
+          <p className="text-lg md:text-xl text-[var(--mist-dark)] leading-relaxed mb-10">
             {t("heroDesc")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -78,21 +78,21 @@ export default async function FeaturesPage({ params }: Params) {
       </section>
 
       {/* Feature pillars */}
-      <section id="features" className="py-20 section-cream-soft">
+      <section id="features" className="py-20 lux-section-raised">
         <div className="section-inner">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {PILLAR_META.map(({ icon: Icon, titleKey, descKey, bulletKeys }) => (
-              <div key={titleKey} className="card p-7 flex flex-col gap-5">
+              <div key={titleKey} className="lux-card p-7 flex flex-col gap-5">
                 <div className="ed-icon w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-[var(--ink)] mb-2">{t(titleKey)}</h2>
-                  <p className="text-sm text-[var(--muted)] leading-relaxed mb-4">{t(descKey, { app: APP.name })}</p>
+                  <h2 className="text-lg font-bold text-[var(--platinum)] mb-2">{t(titleKey)}</h2>
+                  <p className="text-sm text-[var(--mist-dark)] leading-relaxed mb-4">{t(descKey, { app: APP.name })}</p>
                   <ul className="space-y-2">
                     {bulletKeys.map((bk) => (
-                      <li key={bk} className="flex items-start gap-2 text-sm text-[var(--ink2)]">
-                        <CheckCircle className="w-4 h-4 text-[var(--green-text)] flex-shrink-0 mt-0.5" />
+                      <li key={bk} className="flex items-start gap-2 text-sm text-[var(--platinum-dim)]">
+                        <CheckCircle className="w-4 h-4 text-[var(--champagne)] flex-shrink-0 mt-0.5" />
                         {t(bk)}
                       </li>
                     ))}
@@ -105,25 +105,25 @@ export default async function FeaturesPage({ params }: Params) {
       </section>
 
       {/* Cross-cutting capabilities */}
-      <section className="py-20 bg-white">
+      <section className="py-20">
         <div className="section-inner">
           <div className="text-center mb-12">
             <h2 className="ed-title mb-4">
               {t("ccTitle")}
             </h2>
-            <p className="text-lg text-[var(--muted)] max-w-xl mx-auto">
+            <p className="text-lg text-[var(--mist-dark)] max-w-xl mx-auto">
               {t("ccDesc")}
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {CC_META.map(({ icon: Icon, labelKey, descKey }) => (
-              <div key={labelKey} className="flex items-start gap-4 p-5 rounded-2xl bg-[var(--off)]">
+              <div key={labelKey} className="flex items-start gap-4 p-5 rounded-2xl bg-white/[0.04] border border-[var(--hairline-soft)]">
                 <div className="ed-icon w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-[var(--ink)] text-sm mb-1">{t(labelKey)}</p>
-                  <p className="text-sm text-[var(--muted)]">{t(descKey)}</p>
+                  <p className="font-semibold text-[var(--platinum)] text-sm mb-1">{t(labelKey)}</p>
+                  <p className="text-sm text-[var(--mist-dark)]">{t(descKey)}</p>
                 </div>
               </div>
             ))}
@@ -132,16 +132,16 @@ export default async function FeaturesPage({ params }: Params) {
       </section>
 
       {/* CTA */}
-      <section className="section-warm-dark relative overflow-hidden py-20">
-        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--cream) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
-        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--gold)] opacity-[0.06] pointer-events-none" />
+      <section className="lux-section-deep relative overflow-hidden py-20">
+        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--champagne) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
+        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
 
         <div className="section-inner relative text-center">
           <h2 className="ed-title ed-title-on-dark mb-4">
             {t("ctaTitle")}
           </h2>
-          <p className="text-[var(--cream-soft)] opacity-80 text-lg mb-8 max-w-xl mx-auto">
+          <p className="text-[var(--platinum-dim)] opacity-80 text-lg mb-8 max-w-xl mx-auto">
             {t("ctaDesc")}
           </p>
           <Link href="/register" className="btn-editorial-light">

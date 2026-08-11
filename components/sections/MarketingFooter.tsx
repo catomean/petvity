@@ -59,23 +59,23 @@ export default async function MarketingFooter() {
   ];
 
   return (
-    <footer className="bg-[var(--warm-dark)] text-[var(--cream)]">
+    <footer className="bg-[var(--obsidian-deep)] text-[var(--platinum)] border-t border-[var(--hairline-soft)]">
       <div className="section-inner py-16">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-flex items-center gap-2 no-underline mb-4">
-              <div className="w-8 h-8 rounded-lg bg-[var(--gold)] flex items-center justify-center">
-                <PawPrint className="w-4 h-4 text-[var(--warm-dark)]" />
+              <div className="w-8 h-8 rounded-lg bg-[var(--champagne)] flex items-center justify-center">
+                <PawPrint className="w-4 h-4 text-[var(--obsidian)]" />
               </div>
-              <span className="font-bold text-white text-lg">{APP.name}</span>
+              <span className="font-semibold text-[var(--platinum)] text-lg tracking-wide">{APP.name}</span>
             </Link>
-            <p className="text-sm text-stone-400 leading-relaxed mb-5">
+            <p className="text-sm text-[var(--mist-dark)] leading-relaxed mb-5">
               {APP.tagline}
             </p>
             <a
               href={`mailto:${APP.email}`}
-              className="text-sm text-stone-400 hover:text-[var(--gold)] transition-colors no-underline"
+              className="text-sm text-[var(--mist-dark)] hover:text-[var(--champagne)] transition-colors no-underline"
             >
               {APP.email}
             </a>
@@ -84,7 +84,7 @@ export default async function MarketingFooter() {
           {/* Link columns */}
           {LINK_SECTIONS.map(({ heading, links }) => (
             <div key={heading}>
-              <p className="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--champagne-dim)] mb-4">
                 {heading}
               </p>
               <ul className="space-y-3">
@@ -92,7 +92,7 @@ export default async function MarketingFooter() {
                   <li key={label}>
                     <Link
                       href={href}
-                      className="text-sm text-stone-400 hover:text-white transition-colors no-underline"
+                      className="text-sm text-[var(--mist-dark)] hover:text-[var(--platinum)] transition-colors no-underline"
                     >
                       {label}
                     </Link>
@@ -104,18 +104,18 @@ export default async function MarketingFooter() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-stone-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-stone-500">
+        <div className="border-t border-[var(--hairline-soft)] mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-[var(--mist-dark)]">
             © {APP.foundingYear} {APP.name}. {t("bottom.rights")}
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/legal/privacy" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
+            <Link href="/legal/privacy" className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors">
               {t("bottom.privacy")}
             </Link>
-            <Link href="/legal/terms" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
+            <Link href="/legal/terms" className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors">
               {t("bottom.terms")}
             </Link>
-            <Link href="/legal/cookies" className="text-xs text-stone-500 hover:text-stone-300 no-underline transition-colors">
+            <Link href="/legal/cookies" className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors">
               {t("bottom.cookies")}
             </Link>
           </div>

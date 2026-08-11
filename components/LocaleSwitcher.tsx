@@ -26,6 +26,8 @@ interface Props {
   current: LocaleCode;
   /** Compact (icon-only trigger) for tight spaces, default false (shows label too). */
   compact?: boolean;
+  /** Trigger styling context — "dark" for the obsidian marketing nav, default light (portal). */
+  tone?: "light" | "dark";
 }
 
 /**
@@ -33,7 +35,7 @@ interface Props {
  * /[locale]/ segment in the URL (marketing pages) or refreshes in place
  * (portal/admin). Works in both authenticated and anonymous contexts.
  */
-export default function LocaleSwitcher({ current, compact = false }: Props) {
+export default function LocaleSwitcher({ current, compact = false, tone = "light" }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -75,7 +77,11 @@ export default function LocaleSwitcher({ current, compact = false }: Props) {
         aria-label="Change language"
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium text-[var(--ink2)] hover:bg-[var(--light)] hover:text-[var(--ink)] transition-colors disabled:opacity-60"
+        className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-colors disabled:opacity-60 ${
+          tone === "dark"
+            ? "text-[var(--platinum-dim)] hover:bg-white/[0.06] hover:text-[var(--platinum)]"
+            : "text-[var(--ink2)] hover:bg-[var(--light)] hover:text-[var(--ink)]"
+        }`}
       >
         <Globe className="w-4 h-4 flex-shrink-0" />
         {!compact && (
