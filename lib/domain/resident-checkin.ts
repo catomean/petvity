@@ -1,11 +1,12 @@
 /**
- * Deterministic daily check-in generator for the resident pet.
+ * Deterministic daily check-in generator for the resident pets.
  *
- * Values are seeded from the calendar date, so the series is continuous and
- * reproducible (re-running a day yields the same row) while still looking
- * like a life: weight drifts on a slow seasonal curve, moods wobble, roughly
- * one day in eleven is an anxious one (vacuum day), and some days carry a
- * note. Everything stays inside the cat normal ranges except the deliberate
+ * Values are seeded from the calendar date (and a per-pet salt), so each
+ * series is continuous and reproducible (re-running a day yields the same
+ * row) while still looking like a life: weight drifts on a slow seasonal
+ * curve, moods wobble, roughly one day in N is an anxious one (vacuum day
+ * for the cat, thunderstorm for the dog), and some days carry a note.
+ * Everything stays inside the species' normal ranges except the deliberate
  * anxiety spikes — so the wellness signal is mostly healthy with the
  * occasional, realistic "watch".
  */
@@ -21,6 +22,25 @@ export interface ResidentCheckin {
   notes: string | null;
 }
 
+export interface CheckinProfile {
+  /** Distinguishes pets sharing a date so their series differ. 0 = the original cat. */
+  seedSalt: number;
+  baseWeightGrams: number;
+  /** Peak amplitude of the ~90-day seasonal weight curve. */
+  seasonalAmplitudeGrams: number;
+  /** Daily weight jitter total span (± half of this). */
+  weightJitterGrams: number;
+  tempMinCentidegrees: number;
+  tempSpanCentidegrees: number;
+  heartRateMin: number;
+  heartRateSpan: number;
+  /** Every Nth day is an anxious one. */
+  anxiousEveryNDays: number;
+  /** Note shown on anxious days (index into notes) + general pool. */
+  anxiousNote: string;
+  notes: string[];
+}
+
 /** mulberry32 — tiny deterministic PRNG */
 function prng(seed: number): () => number {
   let a = seed >>> 0;
@@ -33,39 +53,30 @@ function prng(seed: number): () => number {
   };
 }
 
-const NOTES = [
-  "Spent the whole morning in the kitchen sunbeam. Purring at industrial volume.",
-  "Chased the red dot for ten minutes, then pretended it never happened.",
-  "Vacuum day. We are not amused.",
-  "Brought a toy mouse to breakfast. Very proud.",
-  "Long nap on the warm laptop. Productivity (mine) at zero.",
-  "Extra zoomies at 6am. The hallway survived.",
-  "Sat by the window chattering at pigeons for an hour.",
-  "New cardboard box arrived. It is home now.",
-  "Ate slowly today, then demanded seconds an hour later.",
-  "Groomed to perfection. Ignored me elegantly all afternoon.",
-];
-
 /** Day index since a fixed epoch — drives slow, continuous curves. */
 function dayIndex(dateStr: string): number {
   return Math.floor(Date.parse(dateStr + "T00:00:00Z") / 86_400_000);
 }
 
-export function generateResidentCheckin(dateStr: string): ResidentCheckin {
+export function generateResidentCheckin(
+  dateStr: string,
+  profile: CheckinProfile,
+): ResidentCheckin {
   const day = dayIndex(dateStr);
-  const rand = prng(day * 2654435761);
+  const rand = prng((day * 2654435761) ^ profile.seedSalt);
 
-  // Weight: 4.3 kg base, ±120 g seasonal curve over ~90 days, ±25 g daily noise
-  const seasonal = Math.sin((day / 90) * 2 * Math.PI) * 120;
-  const weightGrams = Math.round(4300 + seasonal + (rand() - 0.5) * 50);
+  const seasonal =
+    Math.sin((day / 90) * 2 * Math.PI) * profile.seasonalAmplitudeGrams;
+  const weightGrams = Math.round(
+    profile.baseWeightGrams + seasonal + (rand() - 0.5) * profile.weightJitterGrams,
+  );
 
-  // Temperature: 38.4–38.9 °C (cat normal 38.0–39.25)
-  const temperatureCentidegrees = 3840 + Math.round(rand() * 50);
+  const temperatureCentidegrees =
+    profile.tempMinCentidegrees + Math.round(rand() * profile.tempSpanCentidegrees);
 
-  // Heart rate: 150–185 bpm (cat normal 120–220)
-  const heartRateBpm = 150 + Math.round(rand() * 35);
+  const heartRateBpm = profile.heartRateMin + Math.round(rand() * profile.heartRateSpan);
 
-  const anxiousDay = day % 11 === 0; // roughly every ~11 days
+  const anxiousDay = day % profile.anxiousEveryNDays === 0;
   const lazyDay = rand() < 0.2;
 
   const energy = anxiousDay ? 3 : lazyDay ? 3 : rand() < 0.55 ? 4 : 5;
@@ -74,9 +85,9 @@ export function generateResidentCheckin(dateStr: string): ResidentCheckin {
   const socialization = anxiousDay ? 2 : rand() < 0.5 ? 4 : 5;
 
   const notes = anxiousDay
-    ? NOTES[2]
+    ? profile.anxiousNote
     : rand() < 0.3
-      ? NOTES[Math.floor(rand() * NOTES.length)]
+      ? profile.notes[Math.floor(rand() * profile.notes.length)]
       : null;
 
   return { weightGrams, temperatureCentidegrees, heartRateBpm, energy, mood, anxiety, socialization, notes };
