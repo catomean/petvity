@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "You keep everything — your pets, health logs, orders, and adoption listings stay exactly as they are. A \"Verified\" badge can be granted after review.",
     "becomeProConfirm": "Continue",
     "dashProBookingRequests": "{count, plural, one {# booking request awaiting your reply} other {# booking requests awaiting your reply}}",
-    "dashSellerOpenOrders": "{count, plural, one {# order waiting to be fulfilled} other {# orders waiting to be fulfilled}}"
+    "dashSellerOpenOrders": "{count, plural, one {# order waiting to be fulfilled} other {# orders waiting to be fulfilled}}",
+    "groomers": "Groomers",
+    "findNoGroomers": "No groomers found",
+    "findNoGroomersCity": "No groomers match “{city}” yet. Try a different city.",
+    "findNoGroomersBody": "No groomers have joined yet. Do you offer grooming? Create your profile and connect with pet owners near you.",
+    "findRegisterGroomer": "Register as a groomer",
+    "findGroomerFallback": "Groomer",
+    "findGroomerVisitHint": "One-hour grooming session",
+    "findPriceFrom": "from {price}",
+    "becomeProGroomerTitle": "Groomer",
+    "becomeProGroomerDesc": "Offer baths, haircuts, and coat care. Set your starting price and salon, and appear in Find a Pro.",
+    "profGroomerTitle": "Groomer Profile",
+    "profGroomerBioPlaceholder": "Tell owners about your grooming experience, favourite breeds, and how you handle anxious pets…",
+    "profSalonName": "Salon name",
+    "profSalonNamePlaceholder": "e.g. Salon Pfotenschick",
+    "profPriceFrom": "Starting price ($)",
+    "service_bath_brush": "Bath & Brush",
+    "service_full_groom": "Full Groom",
+    "service_haircut": "Haircut & Styling",
+    "service_deshedding": "De-shedding",
+    "service_nail_trim": "Nail Trim",
+    "service_teeth_cleaning": "Teeth Cleaning"
   },
   "pets": {
     "name": "Name",
@@ -869,7 +890,9 @@
     "sex_unknown": "Unknown",
     "adoptNoResults": "No pets match your filters",
     "adoptClearFilters": "Clear filters",
-    "adoptFree": "Free"
+    "adoptFree": "Free",
+    "proGroomer": "Pet Groomer",
+    "proPriceFrom": "from ${price}"
   },
   "twin": {
     "thriving": "Thriving",

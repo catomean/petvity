@@ -15,6 +15,13 @@
       "when": 1786625270865,
       "tag": "0001_lethal_mongu",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786633186277,
+      "tag": "0002_tiny_the_spike",
+      "breakpoints": true
     }
   ]
 }

@@ -51,7 +51,7 @@ export default async function DashboardPage() {
   const petIds = userPets.map((p) => p.id);
 
   const isProfessional =
-    session.user.role === "veterinarian" || session.user.role === "pet_sitter";
+    session.user.role === "veterinarian" || session.user.role === "pet_sitter" || session.user.role === "groomer";
 
   // Batch-fetch metrics + vaccinations + pending adoption applications
   // + role-specific attention counts (pro booking requests, seller open orders)

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
+import { Stethoscope, Home, Scissors, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { formatPrice, formatDateShort } from "@/lib/utils/format";
 import { EmptyState } from "@/components/portal/PageState";
@@ -41,6 +41,23 @@ interface SitterRow {
   reviewCount: number;
 }
 
+interface GroomerRow {
+  id: string;
+  userId: string;
+  name: string | null;
+  salonName: string | null;
+  bio: string | null;
+  services: string | null;
+  priceFrom: number | null;
+  city: string | null;
+  country: string | null;
+  phone: string | null;
+  isAcceptingClients: boolean;
+  isVerified: boolean;
+  avgRating: number | null;
+  reviewCount: number;
+}
+
 interface PetOption {
   id: string;
   name: string | null;
@@ -49,8 +66,9 @@ interface PetOption {
 interface BookingTarget {
   professionalId: string;
   name: string | null;
-  role: "veterinarian" | "pet_sitter";
+  role: "veterinarian" | "pet_sitter" | "groomer";
   pricePerDay: number | null;
+  priceFrom: number | null;
 }
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
@@ -122,7 +140,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
         </div>
         {vet.isAcceptingClients && (
           <button
-            onClick={() => onBook({ professionalId: vet.userId, name: vet.name, role: "veterinarian", pricePerDay: null })}
+            onClick={() => onBook({ professionalId: vet.userId, name: vet.name, role: "veterinarian", pricePerDay: null, priceFrom: null })}
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
@@ -178,7 +196,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
         </div>
         {sitter.isAcceptingClients && (
           <button
-            onClick={() => onBook({ professionalId: sitter.userId, name: sitter.name, role: "pet_sitter", pricePerDay: sitter.pricePerDay })}
+            onClick={() => onBook({ professionalId: sitter.userId, name: sitter.name, role: "pet_sitter", pricePerDay: sitter.pricePerDay, priceFrom: null })}
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
@@ -211,19 +229,21 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
-type Tab = "vets" | "sitters";
+type Tab = "vets" | "sitters" | "groomers";
 
 export default function FindPage() {
   const t = useTranslations("portal");
   const [tab, setTab] = useState<Tab>("vets");
   const [vets, setVets] = useState<VetRow[]>([]);
   const [sitters, setSitters] = useState<SitterRow[]>([]);
+  const [groomers, setGroomers] = useState<GroomerRow[]>([]);
   const [pets, setPets] = useState<PetOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [cityFilter, setCityFilter] = useState("");
   const [debouncedCity, setDebouncedCity] = useState("");
   const [vetsHasMore, setVetsHasMore] = useState(false);
   const [sittersHasMore, setSittersHasMore] = useState(false);
+  const [groomersHasMore, setGroomersHasMore] = useState(false);
   const [bookingTarget, setBookingTarget] = useState<BookingTarget | null>(null);
 
   // Debounce city input 300ms before triggering a refetch
@@ -243,9 +263,10 @@ export default function FindPage() {
       setLoading(true);
       try {
         const cityParam = debouncedCity ? `?city=${encodeURIComponent(debouncedCity)}` : "";
-        const [vetRes, sitterRes] = await Promise.all([
+        const [vetRes, sitterRes, groomerRes] = await Promise.all([
           fetch(`/api/vets${cityParam}`),
           fetch(`/api/sitters${cityParam}`),
+          fetch(`/api/groomers${cityParam}`),
         ]);
         if (vetRes.ok) {
           const json = await vetRes.json();
@@ -256,6 +277,11 @@ export default function FindPage() {
           const json = await sitterRes.json();
           setSitters(json.data ?? []);
           setSittersHasMore(json.meta?.hasMore ?? false);
+        }
+        if (groomerRes.ok) {
+          const json = await groomerRes.json();
+          setGroomers(json.data ?? []);
+          setGroomersHasMore(json.meta?.hasMore ?? false);
         }
       } finally {
         setLoading(false);
@@ -275,7 +301,7 @@ export default function FindPage() {
       {/* Tabs + search */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex gap-1 bg-[var(--off)] p-1 rounded-xl w-fit">
-          {(["vets", "sitters"] as Tab[]).map((tabId) => (
+          {(["vets", "sitters", "groomers"] as Tab[]).map((tabId) => (
             <button
               key={tabId}
               onClick={() => setTab(tabId)}
@@ -285,7 +311,7 @@ export default function FindPage() {
                   : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
-              {tabId === "vets" ? t("veterinarians") : t("petSitters")}
+              {tabId === "vets" ? t("veterinarians") : tabId === "sitters" ? t("petSitters") : t("groomers")}
             </button>
           ))}
         </div>
@@ -326,6 +352,26 @@ export default function FindPage() {
             )}
           </div>
         )
+      ) : tab === "groomers" ? (
+        groomers.length === 0 ? (
+          <EmptyState
+            icon={Scissors}
+            title={t("findNoGroomers")}
+            body={debouncedCity
+              ? t("findNoGroomersCity", { city: debouncedCity })
+              : t("findNoGroomersBody")}
+            cta={debouncedCity ? undefined : { label: t("findRegisterGroomer"), href: "/register?role=groomer" }}
+          />
+        ) : (
+          <div className="space-y-3">
+            {groomers.map((groomer) => (
+              <GroomerCard key={groomer.id} groomer={groomer} onBook={setBookingTarget} />
+            ))}
+            {groomersHasMore && (
+              <p className="text-xs text-center text-[var(--muted)] pt-2">{t("findResultsLimited")}</p>
+            )}
+          </div>
+        )
       ) : (
         sitters.length === 0 ? (
           <EmptyState
@@ -354,6 +400,60 @@ export default function FindPage() {
           pets={pets}
           onClose={() => setBookingTarget(null)}
         />
+      )}
+    </div>
+  );
+}
+
+
+function GroomerCard({ groomer, onBook }: { groomer: GroomerRow; onBook: (t: BookingTarget) => void }) {
+  const t = useTranslations("portal");
+  const locale = useLocale();
+  return (
+    <div className="card p-5">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-[var(--role-groomer-bg)] flex items-center justify-center text-[var(--role-groomer)] font-bold text-sm flex-shrink-0">
+            {(groomer.name ?? "G")[0].toUpperCase()}
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="font-semibold text-[var(--ink)]">{groomer.name ?? t("findGroomerFallback")}</p>
+              {groomer.isVerified && <VerifiedBadge />}
+              <AcceptingBadge accepting={groomer.isAcceptingClients} />
+              <StarRating avg={groomer.avgRating} count={groomer.reviewCount} />
+            </div>
+            {groomer.salonName && <p className="text-sm text-[var(--role-groomer)] mt-0.5">{groomer.salonName}</p>}
+            {groomer.priceFrom != null && (
+              <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">
+                {t("findPriceFrom", { price: formatPrice(groomer.priceFrom, locale) })}
+              </p>
+            )}
+          </div>
+        </div>
+        {groomer.isAcceptingClients && (
+          <button
+            onClick={() => onBook({ professionalId: groomer.userId, name: groomer.name, role: "groomer", pricePerDay: null, priceFrom: groomer.priceFrom })}
+            className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
+          >
+            <CalendarPlus className="w-3.5 h-3.5" />
+            {t("book")}
+          </button>
+        )}
+      </div>
+      {groomer.services && <p className="text-sm text-[var(--muted)] mt-2">{formatServices(groomer.services, t)}</p>}
+      {(groomer.city || groomer.country) && (
+        <div className="flex items-center gap-1.5 mt-1 text-sm text-[var(--muted)]">
+          <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+          <span>{[groomer.city, groomer.country].filter(Boolean).join(", ")}</span>
+        </div>
+      )}
+      {groomer.bio && <p className="text-sm text-[var(--ink2)] mt-2 line-clamp-2">{groomer.bio}</p>}
+      {groomer.phone && (
+        <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
+          <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+          <a href={`tel:${groomer.phone}`} className="hover:text-[var(--teal)] transition-colors">{groomer.phone}</a>
+        </div>
       )}
     </div>
   );
@@ -454,7 +554,11 @@ function BookingModal({
                 ? target.pricePerDay != null
                   ? `${t("petSitters")} · ${formatPrice(target.pricePerDay, locale)}${t("findPerDay")}`
                   : t("petSitters")
-                : t("findVetVisitHint")}
+                : target.role === "groomer"
+                  ? target.priceFrom != null
+                    ? `${t("findGroomerVisitHint")} · ${t("findPriceFrom", { price: formatPrice(target.priceFrom, locale) })}`
+                    : t("findGroomerVisitHint")
+                  : t("findVetVisitHint")}
             </p>
           </div>
           <button onClick={onClose} className="p-2 -me-2 text-[var(--muted)] hover:text-[var(--ink)] transition-colors rounded-lg">

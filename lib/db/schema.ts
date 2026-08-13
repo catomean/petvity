@@ -19,6 +19,7 @@ export const userRoleEnum = pgEnum("user_role", [
   "pet_owner",
   "veterinarian",
   "pet_sitter",
+  "groomer",
   "admin",
 ]);
 
@@ -325,6 +326,28 @@ export const sitterProfiles = pgTable("sitter_profiles", {
   services: text("services"),
   /** Daily rate in cents (e.g. 5000 = $50.00) */
   pricePerDay: integer("price_per_day"),
+  city: varchar("city", { length: 100 }),
+  country: varchar("country", { length: 2 }),
+  phone: varchar("phone", { length: 50 }),
+  isAcceptingClients: boolean("is_accepting_clients").notNull().default(true),
+  /** Set by admin after credential verification */
+  isVerified: boolean("is_verified").notNull().default(false),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const groomerProfiles = pgTable("groomer_profiles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: "cascade" }),
+  salonName: varchar("salon_name", { length: 200 }),
+  bio: text("bio"),
+  /** Comma-separated: bath_brush,full_groom,haircut,deshedding,nail_trim,teeth_cleaning */
+  services: text("services"),
+  /** Starting price in cents ("from $X") — sessions vary by breed and coat */
+  priceFrom: integer("price_from"),
   city: varchar("city", { length: 100 }),
   country: varchar("country", { length: 2 }),
   phone: varchar("phone", { length: 50 }),

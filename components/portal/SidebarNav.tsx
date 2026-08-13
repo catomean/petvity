@@ -42,7 +42,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
   const pathname = usePathname();
   const t = useTranslations("portal");
   const initials = userName?.[0]?.toUpperCase() ?? "?";
-  const isProfessional = userRole === "veterinarian" || userRole === "pet_sitter";
+  const isProfessional = userRole === "veterinarian" || userRole === "pet_sitter" || userRole === "groomer";
 
   const NAV_ITEMS = [
     { href: "/portal/dashboard", icon: Home, label: t("dashboard") },

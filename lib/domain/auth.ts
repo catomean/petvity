@@ -16,7 +16,7 @@ export const registerSchema = z.object({
    * Professionals (vets, sitters) declare their role at sign-up.
    * Admin email always overrides to "admin". Omitting defaults to "pet_owner".
    */
-  intendedRole: z.enum(["pet_owner", "veterinarian", "pet_sitter"]).optional(),
+  intendedRole: z.enum(["pet_owner", "veterinarian", "pet_sitter", "groomer"]).optional(),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
@@ -30,10 +30,10 @@ export type RegisterInput = z.infer<typeof registerSchema>;
  */
 export function resolveRole(
   email: string,
-  intendedRole?: "pet_owner" | "veterinarian" | "pet_sitter",
+  intendedRole?: "pet_owner" | "veterinarian" | "pet_sitter" | "groomer",
 ): UserRole {
   const adminEmails = getAdminEmails();
   if (adminEmails.includes(email.toLowerCase())) return "admin";
-  if (intendedRole === "veterinarian" || intendedRole === "pet_sitter") return intendedRole;
+  if (intendedRole === "veterinarian" || intendedRole === "pet_sitter" || intendedRole === "groomer") return intendedRole;
   return "pet_owner";
 }

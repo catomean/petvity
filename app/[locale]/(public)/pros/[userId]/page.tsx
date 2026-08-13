@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { eq, desc } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
-import { vetProfiles, sitterProfiles, users, reviews } from "@/lib/db/schema";
+import { vetProfiles, sitterProfiles, groomerProfiles, users, reviews } from "@/lib/db/schema";
 import { APP, APP_URL } from "@/lib/config/app";
-import { BadgeCheck, MapPin, Phone, Star, Stethoscope, Home } from "lucide-react";
+import { BadgeCheck, MapPin, Phone, Star, Stethoscope, Home, Scissors } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -67,7 +67,7 @@ export default async function PublicProPage({ params }: Params) {
   const db = getInstance();
 
   // Query both profile types in parallel; one will be null
-  const [[vetRow], [sitterRow], reviewRows] = await Promise.all([
+  const [[vetRow], [sitterRow], [groomerRow], reviewRows] = await Promise.all([
     db
       .select({
         name: users.name,
@@ -105,6 +105,24 @@ export default async function PublicProPage({ params }: Params) {
 
     db
       .select({
+        name: users.name,
+        salonName: groomerProfiles.salonName,
+        bio: groomerProfiles.bio,
+        services: groomerProfiles.services,
+        priceFrom: groomerProfiles.priceFrom,
+        city: groomerProfiles.city,
+        country: groomerProfiles.country,
+        phone: groomerProfiles.phone,
+        isAcceptingClients: groomerProfiles.isAcceptingClients,
+        isVerified: groomerProfiles.isVerified,
+      })
+      .from(groomerProfiles)
+      .innerJoin(users, eq(users.id, groomerProfiles.userId))
+      .where(eq(groomerProfiles.userId, userId))
+      .limit(1),
+
+    db
+      .select({
         id: reviews.id,
         rating: reviews.rating,
         comment: reviews.comment,
@@ -117,10 +135,11 @@ export default async function PublicProPage({ params }: Params) {
       .orderBy(desc(reviews.createdAt)),
   ]);
 
-  if (!vetRow && !sitterRow) notFound();
+  if (!vetRow && !sitterRow && !groomerRow) notFound();
 
   const isVet = !!vetRow;
-  const profile = vetRow ?? sitterRow!;
+  const isGroomer = !vetRow && !sitterRow && !!groomerRow;
+  const profile = vetRow ?? sitterRow ?? groomerRow!;
   const location = [profile.city, profile.country].filter(Boolean).join(", ");
 
   const avgRating =
@@ -131,7 +150,7 @@ export default async function PublicProPage({ params }: Params) {
   const proSchema = {
     "@context": "https://schema.org",
     "@type": isVet ? "VeterinaryCare" : "LocalBusiness",
-    name: profile.name ?? (isVet ? "Veterinarian" : "Pet Sitter"),
+    name: profile.name ?? (isVet ? "Veterinarian" : isGroomer ? "Pet Groomer" : "Pet Sitter"),
     url: `${APP_URL}/${locale}/pros/${userId}`,
     ...(profile.city || profile.country
       ? {
@@ -180,12 +199,12 @@ export default async function PublicProPage({ params }: Params) {
             {/* Avatar + name */}
             <div className="flex items-end gap-4 -mt-10 mb-4">
               <div className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center bg-[var(--accent-light)] text-[var(--accent)] flex-shrink-0">
-                {isVet ? <Stethoscope className="w-9 h-9" /> : <Home className="w-9 h-9" />}
+                {isVet ? <Stethoscope className="w-9 h-9" /> : isGroomer ? <Scissors className="w-9 h-9" /> : <Home className="w-9 h-9" />}
               </div>
               <div className="pb-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="font-display font-light text-3xl text-[var(--warm-ink)]">
-                    {profile.name ?? (isVet ? t("proVet") : t("proSitter"))}
+                    {profile.name ?? (isVet ? t("proVet") : isGroomer ? t("proGroomer") : t("proSitter"))}
                   </h1>
                   {profile.isVerified && (
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--green-text)] bg-[var(--green-bg)] px-2 py-0.5 rounded-full">
@@ -195,8 +214,9 @@ export default async function PublicProPage({ params }: Params) {
                   )}
                 </div>
                 <p className="text-sm text-[var(--muted)]">
-                  {isVet ? t("proVet") : t("proSitter")}
+                  {isVet ? t("proVet") : isGroomer ? t("proGroomer") : t("proSitter")}
                   {isVet && vetRow.specialty ? ` · ${vetRow.specialty}` : ""}
+                  {isGroomer && groomerRow.salonName ? ` · ${groomerRow.salonName}` : ""}
                 </p>
               </div>
             </div>
@@ -245,6 +265,20 @@ export default async function PublicProPage({ params }: Params) {
             {/* Bio */}
             {profile.bio && (
               <p className="text-sm text-[var(--ink2)] leading-relaxed">{profile.bio}</p>
+            )}
+
+            {/* Groomer: services + starting price */}
+            {isGroomer && groomerRow && (
+              <div className="mt-3 pt-3 border-t border-[var(--border)]">
+                {groomerRow.services && (
+                  <p className="text-sm text-[var(--muted)]">{formatServices(groomerRow.services, tPortal)}</p>
+                )}
+                {groomerRow.priceFrom != null && (
+                  <p className="text-sm font-semibold text-[var(--accent)] mt-1">
+                    {t("proPriceFrom", { price: (groomerRow.priceFrom / 100).toFixed(0) })}
+                  </p>
+                )}
+              </div>
             )}
 
             {/* Sitter: services + price */}

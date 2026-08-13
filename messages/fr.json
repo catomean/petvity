@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "Vous gardez tout — animaux, carnets de santé, commandes et annonces d'adoption restent intacts. Un badge « Vérifié » peut être accordé après examen.",
     "becomeProConfirm": "Continuer",
     "dashProBookingRequests": "{count, plural, one {# demande de réservation attend votre réponse} other {# demandes de réservation attendent votre réponse}}",
-    "dashSellerOpenOrders": "{count, plural, one {# commande à traiter} other {# commandes à traiter}}"
+    "dashSellerOpenOrders": "{count, plural, one {# commande à traiter} other {# commandes à traiter}}",
+    "groomers": "Toiletteurs",
+    "findNoGroomers": "Aucun toiletteur trouvé",
+    "findNoGroomersCity": "Aucun toiletteur ne correspond à « {city} » pour l'instant. Essayez une autre ville.",
+    "findNoGroomersBody": "Aucun toiletteur n'a encore rejoint. Vous proposez du toilettage ? Créez votre profil et connectez-vous aux propriétaires près de chez vous.",
+    "findRegisterGroomer": "S'inscrire comme toiletteur",
+    "findGroomerFallback": "Toiletteur",
+    "findGroomerVisitHint": "Séance de toilettage d'une heure",
+    "findPriceFrom": "à partir de {price}",
+    "becomeProGroomerTitle": "Toiletteur",
+    "becomeProGroomerDesc": "Proposez bains, coupes et soins du pelage. Fixez votre prix de départ et votre salon, et apparaissez dans la recherche de pros.",
+    "profGroomerTitle": "Profil de toiletteur",
+    "profGroomerBioPlaceholder": "Parlez de votre expérience, de vos races préférées et de votre approche des animaux anxieux…",
+    "profSalonName": "Nom du salon",
+    "profSalonNamePlaceholder": "p. ex. Salon Pfotenschick",
+    "profPriceFrom": "Prix de départ ($)",
+    "service_bath_brush": "Bain & brossage",
+    "service_full_groom": "Toilettage complet",
+    "service_haircut": "Coupe & stylisme",
+    "service_deshedding": "Épilation du sous-poil",
+    "service_nail_trim": "Coupe des griffes",
+    "service_teeth_cleaning": "Nettoyage des dents"
   },
   "pets": {
     "name": "Nom",
@@ -869,7 +890,9 @@
     "sex_unknown": "Inconnu",
     "adoptNoResults": "Aucun animal ne correspond à vos filtres",
     "adoptClearFilters": "Réinitialiser les filtres",
-    "adoptFree": "Gratuit"
+    "adoptFree": "Gratuit",
+    "proGroomer": "Toiletteur",
+    "proPriceFrom": "à partir de {price} $"
   },
   "twin": {
     "thriving": "Épanouissant",

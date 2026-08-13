@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "Alles bleibt erhalten — Haustiere, Gesundheitsdaten, Bestellungen und Vermittlungsanzeigen. Ein „Verifiziert“-Abzeichen kann nach Prüfung vergeben werden.",
     "becomeProConfirm": "Weiter",
     "dashProBookingRequests": "{count, plural, one {# Buchungsanfrage wartet auf Antwort} other {# Buchungsanfragen warten auf Antwort}}",
-    "dashSellerOpenOrders": "{count, plural, one {# Bestellung wartet auf Bearbeitung} other {# Bestellungen warten auf Bearbeitung}}"
+    "dashSellerOpenOrders": "{count, plural, one {# Bestellung wartet auf Bearbeitung} other {# Bestellungen warten auf Bearbeitung}}",
+    "groomers": "Hundefriseure",
+    "findNoGroomers": "Keine Groomer gefunden",
+    "findNoGroomersCity": "Keine Groomer passen bisher zu „{city}“. Versuchen Sie eine andere Stadt.",
+    "findNoGroomersBody": "Noch keine Groomer dabei. Bieten Sie Fellpflege an? Erstellen Sie Ihr Profil und erreichen Sie Tierhalter in Ihrer Nähe.",
+    "findRegisterGroomer": "Als Groomer registrieren",
+    "findGroomerFallback": "Groomer",
+    "findGroomerVisitHint": "Einstündiger Pflegetermin",
+    "findPriceFrom": "ab {price}",
+    "becomeProGroomerTitle": "Groomer",
+    "becomeProGroomerDesc": "Bieten Sie Bäder, Haarschnitte und Fellpflege an. Startpreis und Salon festlegen und in der Profi-Suche erscheinen.",
+    "profGroomerTitle": "Groomer-Profil",
+    "profGroomerBioPlaceholder": "Erzählen Sie von Ihrer Groomer-Erfahrung, Lieblingsrassen und dem Umgang mit ängstlichen Tieren …",
+    "profSalonName": "Salonname",
+    "profSalonNamePlaceholder": "z. B. Salon Pfotenschick",
+    "profPriceFrom": "Startpreis ($)",
+    "service_bath_brush": "Baden & Bürsten",
+    "service_full_groom": "Komplettpflege",
+    "service_haircut": "Haarschnitt & Styling",
+    "service_deshedding": "Unterwolle entfernen",
+    "service_nail_trim": "Krallen schneiden",
+    "service_teeth_cleaning": "Zahnreinigung"
   },
   "pets": {
     "name": "Name",
@@ -869,7 +890,9 @@
     "sex_unknown": "Unbekannt",
     "adoptNoResults": "Keine Tiere entsprechen Ihren Filtern",
     "adoptClearFilters": "Filter zurücksetzen",
-    "adoptFree": "Kostenlos"
+    "adoptFree": "Kostenlos",
+    "proGroomer": "Hundefriseur",
+    "proPriceFrom": "ab ${price}"
   },
   "twin": {
     "thriving": "Florierend",
