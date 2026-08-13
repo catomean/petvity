@@ -150,7 +150,7 @@ export default function MedicationsPage() {
                 <input
                   type="text"
                   placeholder={t("medsSearch")}
-                  className="form-input text-sm py-1.5 ps-8 w-44"
+                  className="form-input form-input-icon text-sm py-1.5 w-44"
                   value={searchQ}
                   onChange={(e) => setSearchQ(e.target.value)}
                   aria-label={t("medsSearch")}

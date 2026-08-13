@@ -2,13 +2,13 @@ import { APP_CURRENCY } from "@/lib/config/app";
 
 /**
  * Format a YYYY-MM-DD date string for display.
- * Uses the runtime locale (browser on client, server locale on SSR) — consistent
- * with formatIsoDate / formatIsoDateTime. For per-request locale, pass it explicitly.
+ * Defaults to "en", never the runtime's own locale — the server box (de_CH)
+ * and the visitor's browser disagree, causing hydration mismatches.
  * e.g. "2026-01-15" → "Jan 15, 2026" (en) / "2026年1月15日" (ja)
  */
 export function formatDateShort(date: string, locale?: string): string {
   const d = date.includes("T") ? new Date(date) : new Date(date + "T00:00:00");
-  return d.toLocaleDateString(locale, { year: "numeric", month: "short", day: "numeric" });
+  return d.toLocaleDateString(locale ?? "en", { year: "numeric", month: "short", day: "numeric" });
 }
 
 /**
@@ -68,7 +68,9 @@ export function formatPetAge(birthDate: string | null, t: AgeT): string {
  * e.g. 2999, "en" → "$29.99" · 2999, "de" → "29,99 $"
  */
 export function formatPrice(cents: number, locale?: string): string {
-  return new Intl.NumberFormat(locale, { style: "currency", currency: APP_CURRENCY }).format(cents / 100);
+  // Default to "en", never the runtime's own locale: the server box and the
+  // visitor's browser disagree, which would hydrate "8,90 $" into "$8.90".
+  return new Intl.NumberFormat(locale ?? "en", { style: "currency", currency: APP_CURRENCY }).format(cents / 100);
 }
 
 /**
@@ -78,7 +80,7 @@ export function formatPrice(cents: number, locale?: string): string {
  */
 export function formatAdoptionFee(feeCents: number | null, locale?: string): string {
   if (feeCents === null || feeCents === 0) return "Free";
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(locale ?? "en", {
     style: "currency",
     currency: APP_CURRENCY,
     maximumFractionDigits: 0,
@@ -90,7 +92,7 @@ export function formatAdoptionFee(feeCents: number | null, locale?: string): str
  * e.g. "2026-01-15T10:30:00Z" → "Jan 15, 2026"
  */
 export function formatIsoDate(iso: string, locale?: string): string {
-  return new Date(iso).toLocaleDateString(locale, {
+  return new Date(iso).toLocaleDateString(locale ?? "en", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -102,7 +104,7 @@ export function formatIsoDate(iso: string, locale?: string): string {
  * e.g. "2026-01-15T10:30:00Z" → "Jan 15, 10:30 AM"
  */
 export function formatIsoDateTime(iso: string, locale?: string): string {
-  return new Date(iso).toLocaleString(locale, {
+  return new Date(iso).toLocaleString(locale ?? "en", {
     month: "short",
     day: "numeric",
     hour: "2-digit",

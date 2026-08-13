@@ -161,7 +161,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                   name="location"
                   defaultValue={activeLocation}
                   placeholder={tPortal("adoptFilterLocation")}
-                  className="form-input ps-9 text-sm py-2 w-full"
+                  className="form-input form-input-icon text-sm py-2 w-full"
                 />
               </div>
               <button type="submit" className="btn-editorial-ghost text-sm py-2 px-4 flex items-center gap-1.5">

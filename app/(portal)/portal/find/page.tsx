@@ -290,7 +290,7 @@ export default function FindPage() {
         <div className="relative sm:ms-auto">
           <Search className="w-4 h-4 text-[var(--muted)] absolute start-3 top-1/2 -translate-y-1/2" />
           <input
-            className="form-input ps-9 text-sm"
+            className="form-input form-input-icon text-sm"
             placeholder={t("filterByCity")}
             value={cityFilter}
             onChange={(e) => setCityFilter(e.target.value)}
