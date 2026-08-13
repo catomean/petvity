@@ -78,11 +78,11 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
           <Store className="w-5 h-5 text-[var(--teal)]" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-[var(--ink)]">
+          <h1 className="page-title">
             {isNew ? t("becomeSeller") : t("sellerProfile")}
           </h1>
           {isNew && (
-            <p className="text-sm text-[var(--muted)] mt-0.5">
+            <p className="page-sub">
               {t("sellerSetupSubtitle")}
             </p>
           )}

@@ -7,6 +7,7 @@ import type { BookingStatusId } from "@/lib/config/orders";
 import { formatIsoDate } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
+import HubTabs from "@/components/portal/HubTabs";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -41,7 +42,7 @@ function StatusBadge({ status }: { status: BookingRow["status"] }) {
   const cfg = BOOKING_STATUS_CONFIG[status];
   const Icon = STATUS_ICONS[status];
   return (
-    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.className}`}>
+    <span className={`badge ${cfg.className}`}>
       <Icon className="w-3 h-3" />
       {t(`bookingStatus_${status}` as Parameters<typeof t>[0])}
     </span>
@@ -102,9 +103,10 @@ export default function BookingsPage() {
 
   return (
     <div>
+      <HubTabs tabs={[{ href: "/portal/find", label: t("findAPro") }, { href: "/portal/bookings", label: t("bookings") }]} />
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("bookings")}</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">{t("bookingsSubtitle")}</p>
+        <h1 className="page-title">{t("bookings")}</h1>
+        <p className="page-sub">{t("bookingsSubtitle")}</p>
       </div>
 
       {mutationError && (
@@ -342,8 +344,8 @@ function ReviewModal({
   const roleLabel = t(`role_${b.professionalRole}` as Parameters<typeof t>[0]);
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+    <div className="modal-overlay">
+      <div className="modal-panel">
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--border)]">
           <div>
             <h2 className="font-semibold text-[var(--ink)]">{t("bookingsLeaveReview")}</h2>

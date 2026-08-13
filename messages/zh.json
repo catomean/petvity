@@ -50,7 +50,9 @@
       "shop": "商城",
       "about": "关于我们",
       "liveDemo": "试用在线演示",
-      "joinAsGroomer": "成为美容师"
+      "joinAsGroomer": "成为美容师",
+      "findAPro": "查找专业人士",
+      "blog": "博客"
     },
     "bottom": {
       "rights": "版权所有。",
@@ -742,7 +744,10 @@
     "navSectionCare": "护理团队",
     "navSectionShop": "商城",
     "navSectionAdoption": "领养",
-    "navSectionBusiness": "您的业务"
+    "navSectionBusiness": "您的业务",
+    "navMyStore": "我的店铺",
+    "settingsGrowTitle": "与 Petvity 一起成长",
+    "settingsGrowDesc": "提供服务或开店 — 您的宠物和数据保持不变。"
   },
   "pets": {
     "name": "名字",
@@ -905,7 +910,22 @@
     "adoptClearFilters": "清除筛选",
     "adoptFree": "免费",
     "proGroomer": "宠物美容师",
-    "proPriceFrom": "${price}起"
+    "proPriceFrom": "${price}起",
+    "dirMetaTitle": "查找兽医、寄养员或美容师 · {app}",
+    "dirMetaTitleCity": "{city}的兽医、寄养员与美容师 · {app}",
+    "dirMetaDesc": "浏览值得信赖的兽医、寄养员和美容师。真实可预约时间，仅来自已完成预约的评价，在{app}上直接预约。",
+    "dirHeroTitle": "为您的宠物找到对的人",
+    "dirHeroDesc": "兽医、寄养员和美容师 — 自由浏览，查看真实评价，按实时可约时间预约。",
+    "dirTabVets": "兽医",
+    "dirTabSitters": "寄养员",
+    "dirTabGroomers": "美容师",
+    "dirCount": "{count, plural, other {# 位专业人士}}",
+    "dirEmpty": "这里还没有专业人士",
+    "dirEmptyCity": "“{city}”暂无结果",
+    "dirEmptyDesc": "目录正在增长。您是专业人士吗？您的档案今天就能上线。",
+    "dirJoinCta": "以专业人士身份加入",
+    "dirProviderCtaTitle": "您照顾宠物，我们带来客户。",
+    "dirProviderCtaDesc": "公开的店面、不会被重复预订的日历、来自真实工作的评价。免费加入。"
   },
   "twin": {
     "thriving": "蓬勃发展",
@@ -1499,5 +1519,16 @@
     "vs2Title": "建立您的专业资料",
     "vs3Desc": "您所在地区的宠物主人可以找到您并预约。我们的团队核实资质以解锁您的信任徽章。",
     "vs3Title": "被发现并获得认证"
+  },
+  "blog": {
+    "metaTitle": "博客 · {app}",
+    "metaDesc": "{app}的产品动态与真诚笔记。",
+    "eyebrow": "来自团队",
+    "title": "博客",
+    "subtitle": "关于平台建设的产品动态与真诚笔记。",
+    "readPost": "阅读文章",
+    "backToBlog": "全部文章",
+    "ctaJoin": "免费开始",
+    "ctaFind": "查找专业人士"
   }
 }

@@ -275,8 +275,8 @@ export default function AdminOrdersPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">Orders</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">Manage and fulfil customer orders</p>
+          <h1 className="page-title">Orders</h1>
+          <p className="page-sub">Manage and fulfil customer orders</p>
         </div>
       </div>
 
@@ -285,7 +285,7 @@ export default function AdminOrdersPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           <div className="card p-4">
             <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">Total orders</p>
-            <p className="text-2xl font-bold text-[var(--ink)]">{orders.length}</p>
+            <p className="page-title">{orders.length}</p>
           </div>
           <div className="card p-4">
             <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">Revenue</p>

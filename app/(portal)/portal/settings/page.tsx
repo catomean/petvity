@@ -4,7 +4,8 @@ import { useState, useTransition, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { User, Lock, CheckCircle, Mail, AlertTriangle, X, Download } from "lucide-react";
+import { User, Lock, CheckCircle, Mail, AlertTriangle, X, Download, Store, Stethoscope, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 
@@ -150,14 +151,14 @@ export default function SettingsPage() {
   return (
     <div className="max-w-lg space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("settingsTitle")}</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">{t("settingsSubtitle")}</p>
+        <h1 className="page-title">{t("settingsTitle")}</h1>
+        <p className="page-sub">{t("settingsSubtitle")}</p>
       </div>
 
       {/* ── Profile ───────────────────────────────────────────────────── */}
       <div className="card p-6">
         <div className="flex items-center gap-2 mb-5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
+          <div className="icon-tile bg-[var(--teal-light)]">
             <User className="w-4 h-4 text-[var(--teal)]" />
           </div>
           <h2 className="font-semibold text-[var(--ink)]">{t("settingsProfile")}</h2>
@@ -221,7 +222,7 @@ export default function SettingsPage() {
       {/* ── Email preferences ───────────────────────────────────────── */}
       <div className="card p-6">
         <div className="flex items-center gap-2 mb-5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
+          <div className="icon-tile bg-[var(--teal-light)]">
             <Mail className="w-4 h-4 text-[var(--teal)]" />
           </div>
           <h2 className="font-semibold text-[var(--ink)]">{t("settingsEmailPrefs")}</h2>
@@ -254,7 +255,7 @@ export default function SettingsPage() {
       {/* ── Password ─────────────────────────────────────────────────── */}
       <div className="card p-6">
         <div className="flex items-center gap-2 mb-5">
-          <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
+          <div className="icon-tile bg-[var(--teal-light)]">
             <Lock className="w-4 h-4 text-[var(--teal)]" />
           </div>
           <h2 className="font-semibold text-[var(--ink)]">{t("settingsChangePassword")}</h2>
@@ -321,7 +322,7 @@ export default function SettingsPage() {
       {/* ── Data export ─────────────────────────────────────────────── */}
       <div className="card p-6">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
+          <div className="icon-tile bg-[var(--teal-light)]">
             <Download className="w-4 h-4 text-[var(--teal)]" />
           </div>
           <h2 className="font-semibold text-[var(--ink)]">{t("settingsYourData")}</h2>
@@ -338,10 +339,34 @@ export default function SettingsPage() {
         </a>
       </div>
 
+      {/* ── Grow with Petvity — where the seller/pro upgrades live now ── */}
+      {session?.user?.role === "pet_owner" && (
+        <div className="card p-6">
+          <h2 className="font-semibold text-[var(--ink)] mb-1">{t("settingsGrowTitle")}</h2>
+          <p className="text-sm text-[var(--muted)] mb-4">{t("settingsGrowDesc")}</p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <Link href="/portal/seller-profile" className="card card-hover p-4 flex items-center gap-3 no-underline">
+              <div className="icon-tile bg-[var(--teal-light)]">
+                <Store className="w-4 h-4 text-[var(--teal)]" />
+              </div>
+              <span className="text-sm font-medium text-[var(--ink)] flex-1">{t("becomeSeller")}</span>
+              <ArrowRight className="w-4 h-4 text-[var(--muted)]" />
+            </Link>
+            <Link href="/portal/become-a-pro" className="card card-hover p-4 flex items-center gap-3 no-underline">
+              <div className="icon-tile bg-[var(--teal-light)]">
+                <Stethoscope className="w-4 h-4 text-[var(--teal)]" />
+              </div>
+              <span className="text-sm font-medium text-[var(--ink)] flex-1">{t("becomePro")}</span>
+              <ArrowRight className="w-4 h-4 text-[var(--muted)]" />
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* ── Danger zone ─────────────────────────────────────────────── */}
       <div className="card p-6 border-[var(--danger)]">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 rounded-lg bg-[var(--danger-bg)] flex items-center justify-center">
+          <div className="icon-tile bg-[var(--danger-bg)]">
             <AlertTriangle className="w-4 h-4 text-[var(--danger-text)]" />
           </div>
           <h2 className="font-semibold text-[var(--danger-text)]">{t("settingsDangerZone")}</h2>

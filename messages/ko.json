@@ -50,7 +50,9 @@
       "shop": "샵",
       "about": "소개",
       "liveDemo": "라이브 데모 체험",
-      "joinAsGroomer": "미용사로 참여"
+      "joinAsGroomer": "미용사로 참여",
+      "findAPro": "전문가 찾기",
+      "blog": "블로그"
     },
     "bottom": {
       "rights": "All rights reserved.",
@@ -742,7 +744,10 @@
     "navSectionCare": "케어 팀",
     "navSectionShop": "마켓",
     "navSectionAdoption": "입양",
-    "navSectionBusiness": "내 비즈니스"
+    "navSectionBusiness": "내 비즈니스",
+    "navMyStore": "내 스토어",
+    "settingsGrowTitle": "Petvity와 함께 성장",
+    "settingsGrowDesc": "서비스를 제공하거나 상점을 여세요 — 반려동물과 데이터는 그대로 유지됩니다."
   },
   "pets": {
     "name": "이름",
@@ -905,7 +910,22 @@
     "adoptClearFilters": "필터 초기화",
     "adoptFree": "무료",
     "proGroomer": "반려동물 미용사",
-    "proPriceFrom": "${price}부터"
+    "proPriceFrom": "${price}부터",
+    "dirMetaTitle": "수의사·시터·미용사 찾기 · {app}",
+    "dirMetaTitleCity": "{city}의 수의사·시터·미용사 · {app}",
+    "dirMetaDesc": "신뢰할 수 있는 수의사, 시터, 미용사를 둘러보세요. 실제 예약 가능 시간, 완료된 예약의 리뷰만, {app}에서 바로 예약.",
+    "dirHeroTitle": "반려동물을 위한 든든한 사람들",
+    "dirHeroDesc": "수의사·시터·미용사 — 자유롭게 둘러보고, 진짜 리뷰를 확인하고, 실시간 가능 시간으로 예약하세요.",
+    "dirTabVets": "수의사",
+    "dirTabSitters": "시터",
+    "dirTabGroomers": "미용사",
+    "dirCount": "{count, plural, other {#명의 전문가}}",
+    "dirEmpty": "아직 전문가가 없습니다",
+    "dirEmptyCity": "“{city}” 결과가 아직 없습니다",
+    "dirEmptyDesc": "디렉터리는 성장 중입니다. 전문가라면 오늘 바로 프로필을 공개할 수 있습니다.",
+    "dirJoinCta": "전문가로 참여",
+    "dirProviderCtaTitle": "당신은 반려동물을 돌봅니다. 우리는 고객을 데려옵니다.",
+    "dirProviderCtaDesc": "공개 스토어프런트, 중복 예약이 불가능한 캘린더, 실제 작업으로 쌓인 리뷰. 무료 가입."
   },
   "twin": {
     "thriving": "번성 중",
@@ -1499,5 +1519,16 @@
     "vs2Title": "전문가 프로필 구축하기",
     "vs3Desc": "당신 지역의 반려동물 보호자들이 당신을 찾아 예약할 수 있습니다. 우리 팀이 자격을 확인하여 신뢰 배지를 잠금 해제합니다.",
     "vs3Title": "발견되고 인증받기"
+  },
+  "blog": {
+    "metaTitle": "블로그 · {app}",
+    "metaDesc": "{app}의 제품 소식과 솔직한 기록.",
+    "eyebrow": "팀에서",
+    "title": "블로그",
+    "subtitle": "플랫폼을 만들어가는 제품 소식과 솔직한 기록.",
+    "readPost": "글 읽기",
+    "backToBlog": "전체 글",
+    "ctaJoin": "무료로 시작",
+    "ctaFind": "전문가 찾기"
   }
 }

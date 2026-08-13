@@ -59,7 +59,7 @@ export default function MarketingNav() {
   // The four platform pillars — each links to its real surface.
   const PILLARS = [
     { icon: Activity,    label: t("pillarHealth"), desc: t("pillarHealthDesc"), href: "/features" },
-    { icon: Search,      label: t("pillarPros"),   desc: t("pillarProsDesc"),   href: "/pros" },
+    { icon: Search,      label: t("pillarPros"),   desc: t("pillarProsDesc"),   href: "/find" },
     { icon: ShoppingBag, label: t("pillarShop"),   desc: t("pillarShopDesc"),   href: "/shop" },
     { icon: Heart,       label: t("pillarAdopt"),  desc: t("pillarAdoptDesc"),  href: "/adopt" },
   ];

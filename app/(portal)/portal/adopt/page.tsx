@@ -12,6 +12,7 @@ import type { SpeciesId } from "@/lib/config/species";
 import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
+import HubTabs from "@/components/portal/HubTabs";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -145,6 +146,7 @@ export default function AdoptPage() {
 
   return (
     <div>
+      <HubTabs tabs={[{ href: "/portal/adopt", label: t("adopt") }, { href: "/portal/adoptions", label: t("myAdoptions") }]} />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -152,7 +154,7 @@ export default function AdoptPage() {
             <Heart className="w-6 h-6 text-[var(--danger-text)]" />
             {t("adoptTitle")}
           </h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">{t("adoptSubtitle")}</p>
+          <p className="page-sub">{t("adoptSubtitle")}</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           <Link href="/portal/adopt/applications" className="btn-ghost text-sm flex items-center gap-2">

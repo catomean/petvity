@@ -139,8 +139,8 @@ export default function MedicationsPage() {
             <ChevronLeft className="w-3.5 h-3.5" />
             {petName || t("petFallback")}
           </Link>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("medsTitle")}</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">{t("medsSubtitle")}</p>
+          <h1 className="page-title">{t("medsTitle")}</h1>
+          <p className="page-sub">{t("medsSubtitle")}</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
           {rows.length > 0 && !showForm && (
@@ -185,7 +185,7 @@ export default function MedicationsPage() {
         <div className="card p-6 mb-6 border-2 border-[var(--teal-light)]">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[var(--teal-light)] flex items-center justify-center">
+              <div className="icon-tile bg-[var(--teal-light)]">
                 <Pill className="w-4 h-4 text-[var(--teal)]" />
               </div>
               <h2 className="font-semibold text-[var(--ink)]">

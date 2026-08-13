@@ -50,7 +50,9 @@
       "shop": "Shop",
       "about": "Über uns",
       "liveDemo": "Live-Demo testen",
-      "joinAsGroomer": "Als Groomer beitreten"
+      "joinAsGroomer": "Als Groomer beitreten",
+      "findAPro": "Profi finden",
+      "blog": "Blog"
     },
     "bottom": {
       "rights": "Alle Rechte vorbehalten.",
@@ -742,7 +744,10 @@
     "navSectionCare": "Betreuung",
     "navSectionShop": "Marktplatz",
     "navSectionAdoption": "Vermittlung",
-    "navSectionBusiness": "Ihr Geschäft"
+    "navSectionBusiness": "Ihr Geschäft",
+    "navMyStore": "Mein Shop",
+    "settingsGrowTitle": "Mit Petvity wachsen",
+    "settingsGrowDesc": "Dienste anbieten oder einen Shop eröffnen — Ihre Tiere und Daten bleiben unverändert."
   },
   "pets": {
     "name": "Name",
@@ -905,7 +910,22 @@
     "adoptClearFilters": "Filter zurücksetzen",
     "adoptFree": "Kostenlos",
     "proGroomer": "Hundefriseur",
-    "proPriceFrom": "ab ${price}"
+    "proPriceFrom": "ab ${price}",
+    "dirMetaTitle": "Tierarzt, Tiersitter oder Groomer finden · {app}",
+    "dirMetaTitleCity": "Tierärzte, Sitter & Groomer in {city} · {app}",
+    "dirMetaDesc": "Vertrauenswürdige Tierärzte, Tiersitter und Groomer durchsuchen. Echte Verfügbarkeit, Bewertungen nur aus abgeschlossenen Buchungen, Direktbuchung auf {app}.",
+    "dirHeroTitle": "Die Menschen für Ihr Tier",
+    "dirHeroDesc": "Tierärzte, Sitter und Groomer — frei stöbern, echte Bewertungen sehen und mit Live-Verfügbarkeit buchen.",
+    "dirTabVets": "Tierärzte",
+    "dirTabSitters": "Tiersitter",
+    "dirTabGroomers": "Groomer",
+    "dirCount": "{count, plural, one {# Profi} other {# Profis}}",
+    "dirEmpty": "Hier noch keine Profis",
+    "dirEmptyCity": "Noch keine Treffer für „{city}“",
+    "dirEmptyDesc": "Dieses Verzeichnis wächst. Sind Sie Profi? Ihr Profil wäre heute live.",
+    "dirJoinCta": "Als Profi beitreten",
+    "dirProviderCtaTitle": "Sie kümmern sich um Tiere. Wir bringen Ihnen Kundschaft.",
+    "dirProviderCtaDesc": "Ein öffentlicher Auftritt, ein Kalender ohne Doppelbuchungen und Bewertungen aus echter Arbeit. Kostenlos."
   },
   "twin": {
     "thriving": "Florierend",
@@ -1499,5 +1519,16 @@
     "ctaDesc": "Kostenlos beizutreten. Kein monatliches Abonnement. Baue deinen Ruf mit echten Bewertungen von Kunden auf, denen die Gesundheit ihrer Tiere bereits wichtig ist.",
     "ctaVetButton": "Als Tierarzt beitreten",
     "ctaSitterButton": "Als Tierbetreuer beitreten"
+  },
+  "blog": {
+    "metaTitle": "Blog · {app}",
+    "metaDesc": "Produktneuigkeiten und ehrliche Notizen von {app}.",
+    "eyebrow": "Vom Team",
+    "title": "Blog",
+    "subtitle": "Produktneuigkeiten und ehrliche Notizen zum Aufbau der Plattform.",
+    "readPost": "Beitrag lesen",
+    "backToBlog": "Alle Beiträge",
+    "ctaJoin": "Kostenlos starten",
+    "ctaFind": "Profi finden"
   }
 }

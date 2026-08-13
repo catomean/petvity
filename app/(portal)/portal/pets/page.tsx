@@ -93,8 +93,8 @@ export default async function PetsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--ink)]">{t("myPets")}</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">
+          <h1 className="page-title">{t("myPets")}</h1>
+          <p className="page-sub">
             {userPets.length === 0
               ? t("noPetsAction")
               : t("petsCount", { count: userPets.length })}

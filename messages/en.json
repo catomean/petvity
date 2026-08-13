@@ -50,7 +50,9 @@
       "shop": "Shop",
       "about": "About",
       "liveDemo": "Try the live demo",
-      "joinAsGroomer": "Join as a groomer"
+      "joinAsGroomer": "Join as a groomer",
+      "findAPro": "Find a professional",
+      "blog": "Blog"
     },
     "bottom": {
       "rights": "All rights reserved.",
@@ -742,7 +744,10 @@
     "navSectionCare": "Care team",
     "navSectionShop": "Marketplace",
     "navSectionAdoption": "Adoption",
-    "navSectionBusiness": "Your business"
+    "navSectionBusiness": "Your business",
+    "navMyStore": "My Store",
+    "settingsGrowTitle": "Grow with Petvity",
+    "settingsGrowDesc": "Offer services or open a shop — your pets and data stay exactly as they are."
   },
   "pets": {
     "name": "Name",
@@ -905,7 +910,22 @@
     "adoptClearFilters": "Clear filters",
     "adoptFree": "Free",
     "proGroomer": "Pet Groomer",
-    "proPriceFrom": "from ${price}"
+    "proPriceFrom": "from ${price}",
+    "dirMetaTitle": "Find a Vet, Pet Sitter or Groomer · {app}",
+    "dirMetaTitleCity": "Vets, Sitters & Groomers in {city} · {app}",
+    "dirMetaDesc": "Browse trusted veterinarians, pet sitters, and groomers. Real availability, reviews from completed bookings only, direct booking on {app}.",
+    "dirHeroTitle": "Find your pet's people",
+    "dirHeroDesc": "Veterinarians, sitters, and groomers — browse freely, see real reviews, and book with live availability.",
+    "dirTabVets": "Veterinarians",
+    "dirTabSitters": "Pet Sitters",
+    "dirTabGroomers": "Groomers",
+    "dirCount": "{count, plural, one {# professional} other {# professionals}}",
+    "dirEmpty": "No professionals here yet",
+    "dirEmptyCity": "No results for “{city}” yet",
+    "dirEmptyDesc": "This directory is growing. Are you a professional? Your profile would be live today.",
+    "dirJoinCta": "Join as a professional",
+    "dirProviderCtaTitle": "You take care of pets. We bring you clients.",
+    "dirProviderCtaDesc": "A public storefront, a calendar nobody can double-book, and reviews earned from real work. Free to join."
   },
   "twin": {
     "thriving": "Thriving",
@@ -1499,5 +1519,16 @@
     "ctaDesc": "Free to join. No monthly subscription. Build your reputation with real reviews from clients who already care about their pets' health.",
     "ctaVetButton": "Join as a veterinarian",
     "ctaSitterButton": "Join as a pet sitter"
+  },
+  "blog": {
+    "metaTitle": "Blog · {app}",
+    "metaDesc": "Product news and honest notes from {app}.",
+    "eyebrow": "From the team",
+    "title": "Blog",
+    "subtitle": "Product news and honest notes on building the pet care platform.",
+    "readPost": "Read the post",
+    "backToBlog": "All posts",
+    "ctaJoin": "Get started free",
+    "ctaFind": "Find a professional"
   }
 }

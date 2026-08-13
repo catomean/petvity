@@ -24,6 +24,7 @@ export default async function MarketingFooter() {
         { label: t("links.features"), href: "/features" },
         { label: t("links.pricing"),  href: "/pricing" },
         { label: t("links.shop"),     href: "/shop" },
+        { label: t("links.findAPro"), href: "/find" },
         { label: t("links.adoptAPet"), href: "/adopt" },
       ],
     },
@@ -44,6 +45,7 @@ export default async function MarketingFooter() {
       heading: t("sections.company"),
       links: [
         { label: t("links.about"),     href: "/about" },
+        { label: t("links.blog"),      href: "/blog" },
         { label: t("links.liveDemo"),  href: "/demo" },
         { label: t("links.contactUs"), href: `mailto:${APP.supportEmail}` },
       ],

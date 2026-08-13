@@ -50,7 +50,9 @@
       "shop": "Boutique",
       "about": "À propos",
       "liveDemo": "Essayer la démo",
-      "joinAsGroomer": "Devenir toiletteur"
+      "joinAsGroomer": "Devenir toiletteur",
+      "findAPro": "Trouver un professionnel",
+      "blog": "Blog"
     },
     "bottom": {
       "rights": "Tous droits réservés.",
@@ -742,7 +744,10 @@
     "navSectionCare": "Équipe de soin",
     "navSectionShop": "Marketplace",
     "navSectionAdoption": "Adoption",
-    "navSectionBusiness": "Votre activité"
+    "navSectionBusiness": "Votre activité",
+    "navMyStore": "Ma boutique",
+    "settingsGrowTitle": "Grandir avec Petvity",
+    "settingsGrowDesc": "Proposez des services ou ouvrez une boutique — vos animaux et données restent intacts."
   },
   "pets": {
     "name": "Nom",
@@ -905,7 +910,22 @@
     "adoptClearFilters": "Réinitialiser les filtres",
     "adoptFree": "Gratuit",
     "proGroomer": "Toiletteur",
-    "proPriceFrom": "à partir de {price} $"
+    "proPriceFrom": "à partir de {price} $",
+    "dirMetaTitle": "Trouver un vétérinaire, pet sitter ou toiletteur · {app}",
+    "dirMetaTitleCity": "Vétérinaires, sitters et toiletteurs à {city} · {app}",
+    "dirMetaDesc": "Parcourez des vétérinaires, pet sitters et toiletteurs de confiance. Disponibilités réelles, avis issus de réservations effectuées, réservation directe sur {app}.",
+    "dirHeroTitle": "Les bonnes personnes pour votre animal",
+    "dirHeroDesc": "Vétérinaires, sitters et toiletteurs — parcourez librement, lisez de vrais avis et réservez selon les disponibilités.",
+    "dirTabVets": "Vétérinaires",
+    "dirTabSitters": "Pet sitters",
+    "dirTabGroomers": "Toiletteurs",
+    "dirCount": "{count, plural, one {# professionnel} other {# professionnels}}",
+    "dirEmpty": "Pas encore de professionnels ici",
+    "dirEmptyCity": "Aucun résultat pour « {city} »",
+    "dirEmptyDesc": "Cet annuaire grandit. Vous êtes professionnel ? Votre profil serait en ligne aujourd'hui.",
+    "dirJoinCta": "Rejoindre comme professionnel",
+    "dirProviderCtaTitle": "Vous prenez soin des animaux. Nous vous amenons des clients.",
+    "dirProviderCtaDesc": "Une vitrine publique, un calendrier sans double réservation, des avis gagnés par un vrai travail. Gratuit."
   },
   "twin": {
     "thriving": "Épanouissant",
@@ -1499,5 +1519,16 @@
     "ctaDesc": "Gratuit pour rejoindre. Pas d'abonnement mensuel. Construisez votre réputation avec de vrais avis de clients qui se soucient déjà de la santé de leurs animaux.",
     "ctaVetButton": "Rejoindre en tant que vétérinaire",
     "ctaSitterButton": "Rejoindre en tant que gardien"
+  },
+  "blog": {
+    "metaTitle": "Blog · {app}",
+    "metaDesc": "Actualités produit et notes honnêtes de {app}.",
+    "eyebrow": "Par l'équipe",
+    "title": "Blog",
+    "subtitle": "Actualités produit et notes honnêtes sur la construction de la plateforme.",
+    "readPost": "Lire l'article",
+    "backToBlog": "Tous les articles",
+    "ctaJoin": "Commencer gratuitement",
+    "ctaFind": "Trouver un professionnel"
   }
 }

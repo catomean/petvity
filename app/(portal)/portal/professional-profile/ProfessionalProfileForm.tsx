@@ -154,7 +154,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
           <div className="w-9 h-9 rounded-xl bg-[var(--teal-light)] flex items-center justify-center">
             <Icon className="w-5 h-5 text-[var(--teal)]" />
           </div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">{title}</h1>
+          <h1 className="page-title">{title}</h1>
         </div>
         <p className="text-sm text-[var(--muted)] ms-12">
           {hasProfile ? t("profSubtitleUpdate") : t("profSubtitleSetup")}

@@ -151,8 +151,8 @@ export default function MyProductsPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--ink)]">{t("myProductsTitle")}</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">{t("myProductsSubtitle")}</p>
+          <h1 className="page-title">{t("myProductsTitle")}</h1>
+          <p className="page-sub">{t("myProductsSubtitle")}</p>
         </div>
         <div className="flex items-center gap-2">
           <Link href="/portal/my-products/orders" className="btn-outline flex items-center gap-2">
