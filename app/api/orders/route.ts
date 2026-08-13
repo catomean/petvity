@@ -7,6 +7,7 @@ import { orders, orderItems, products, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { orderConfirmation, sellerOrderNotification } from "@/lib/email/templates";
 import { formatPrice } from "@/lib/utils/format";
+import { paymentsEnabled, createOrderCheckoutSession } from "@/lib/payments/stripe";
 
 const createSchema = z.object({
   items: z.array(
@@ -31,7 +32,7 @@ export async function GET() {
     .orderBy(desc(orders.createdAt));
 
   if (userOrders.length === 0) {
-    return NextResponse.json({ success: true, data: [] });
+    return NextResponse.json({ success: true, data: [], meta: { paymentsEnabled: paymentsEnabled() } });
   }
 
   const orderIds = userOrders.map((o) => o.id);
@@ -63,7 +64,7 @@ export async function GET() {
     items: itemsByOrder.get(o.id) ?? [],
   }));
 
-  return NextResponse.json({ success: true, data });
+  return NextResponse.json({ success: true, data, meta: { paymentsEnabled: paymentsEnabled() } });
 }
 
 /** POST /api/orders — place an order */
@@ -244,8 +245,33 @@ export async function POST(req: NextRequest) {
     // Never fail the order response due to email error
   }
 
+  // Payments configured → hand the buyer to Stripe Checkout. The webhook marks
+  // the order paid; a session failure never loses the order (it stays payable
+  // from the orders page).
+  let checkoutUrl: string | null = null;
+  if (paymentsEnabled()) {
+    try {
+      const checkout = await createOrderCheckoutSession({
+        orderId: order.id,
+        customerEmail: buyer?.email ?? null,
+        items: insertedItems.map((i) => ({
+          name: productMap.get(i.productId)?.name ?? "Item",
+          unitAmountCents: i.priceCents,
+          quantity: i.quantity,
+        })),
+      });
+      await db
+        .update(orders)
+        .set({ checkoutSessionId: checkout.sessionId, updatedAt: new Date() })
+        .where(eq(orders.id, order.id));
+      checkoutUrl = checkout.url;
+    } catch (e) {
+      console.error("Stripe checkout session failed for order", order.id, e);
+    }
+  }
+
   return NextResponse.json(
-    { success: true, data: { ...order, items: insertedItems } },
+    { success: true, data: { ...order, items: insertedItems, checkoutUrl } },
     { status: 201 },
   );
 }

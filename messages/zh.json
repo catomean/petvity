@@ -669,7 +669,22 @@
     "housingType_farm": "农场/乡村住宅",
     "housingType_other": "其他",
     "allSpecies": "所有种类",
-    "loading": "加载中…"
+    "loading": "加载中…",
+    "ordersPaid": "已支付",
+    "ordersAwaitingPayment": "待支付",
+    "ordersPayNow": "立即支付",
+    "ordersPayingNow": "跳转中…",
+    "ordersPaymentSuccess": "已收到付款 — 谢谢！您的订单已确认。",
+    "ordersPaymentCancelled": "付款已取消。您的订单已保存 — 随时可在下方付款。",
+    "availabilityTitle": "不可预约日期",
+    "availabilityDesc": "屏蔽您无法接受预约的日期。与之重叠的请求（或已有预约）将被自动拒绝。",
+    "availabilityFrom": "开始",
+    "availabilityUntil": "结束",
+    "availabilityReason": "备注（可选）",
+    "availabilityReasonPlaceholder": "例如：休假",
+    "availabilityAdd": "屏蔽日期",
+    "availabilityEmpty": "没有屏蔽的日期 — 您每天都显示为可预约。",
+    "availabilityRemove": "移除"
   },
   "pets": {
     "name": "名字",

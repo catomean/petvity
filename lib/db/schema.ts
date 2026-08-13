@@ -7,6 +7,7 @@ import {
   boolean,
   integer,
   timestamp,
+  date,
   jsonb,
   index,
   uniqueIndex,
@@ -385,6 +386,21 @@ export const bookings = pgTable("bookings", {
   index("bookings_professional_id_idx").on(t.professionalId),
 ]);
 
+/** Date ranges a vet/sitter has marked themselves unavailable — the booking
+ *  API rejects requests that overlap these (or an existing active booking). */
+export const professionalBlockedDates = pgTable("professional_blocked_dates", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  professionalId: uuid("professional_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  /** Inclusive range, date-only (whole days off) */
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date").notNull(),
+  reason: varchar("reason", { length: 200 }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+},
+(t) => [index("professional_blocked_dates_professional_id_idx").on(t.professionalId)]);
+
 // ─── Marketplace ──────────────────────────────────────────────────────────────
 
 export const productCategoryEnum = pgEnum("product_category", [
@@ -430,6 +446,11 @@ export const orders = pgTable("orders", {
   status: orderStatusEnum("status").notNull().default("pending"),
   /** Snapshot of total at order time (sum of line items) */
   totalCents: integer("total_cents").notNull(),
+  /** Set by the Stripe webhook when the checkout session completes. Null when
+   *  unpaid — which is also the permanent state when payments are not enabled. */
+  paidAt: timestamp("paid_at", { mode: "date" }),
+  /** Latest Stripe Checkout Session for this order (retry-safe: re-pay replaces it) */
+  checkoutSessionId: varchar("checkout_session_id", { length: 255 }),
   notes: text("notes"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),

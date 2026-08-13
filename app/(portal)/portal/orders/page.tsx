@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { ShoppingBag, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp, CreditCard } from "lucide-react";
 import { ProductArt } from "@/components/shop/ProductArt";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
@@ -26,6 +26,7 @@ interface Order {
   id: string;
   status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
   totalCents: number;
+  paidAt: string | null;
   notes: string | null;
   createdAt: string;
   items: OrderItem[];
@@ -45,17 +46,37 @@ const STATUS_ICONS: Record<OrderStatusId, React.ElementType> = {
 
 /* ─── Order Card ─────────────────────────────────────────────────────────── */
 
-function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) => void }) {
+function OrderCard({ order, paymentsEnabled, onCancel }: {
+  order: Order;
+  paymentsEnabled: boolean;
+  onCancel: (id: string) => void;
+}) {
   const t = useTranslations("portal");
   const [expanded, setExpanded] = useState(false);
   const [cancelling, setCancelling] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState("");
   const cfg = ORDER_STATUS_CONFIG[order.status];
   const Icon = STATUS_ICONS[order.status];
+  const awaitingPayment = paymentsEnabled && !order.paidAt && order.status !== "cancelled";
 
   async function handleCancel() {
     setCancelling(true);
     await onCancel(order.id);
     setCancelling(false);
+  }
+
+  async function handlePay() {
+    setPayError("");
+    setPaying(true);
+    const res = await fetch(`/api/orders/${order.id}/pay`, { method: "POST" });
+    const data = await res.json().catch(() => null);
+    if (data?.success && data.data?.checkoutUrl) {
+      window.location.href = data.data.checkoutUrl;
+      return;
+    }
+    setPaying(false);
+    setPayError(data?.error ?? t("loadFailed"));
   }
 
   return (
@@ -78,6 +99,18 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
+          {order.paidAt && (
+            <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[var(--green-bg)] text-[var(--green-text)]">
+              <CreditCard className="w-3 h-3" />
+              {t("ordersPaid")}
+            </span>
+          )}
+          {awaitingPayment && (
+            <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[var(--warn-bg)] text-[var(--warn-text)]">
+              <Clock className="w-3 h-3" />
+              {t("ordersAwaitingPayment")}
+            </span>
+          )}
           <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.className}`}>
             <Icon className="w-3 h-3" />
             {t(`orderStatus_${order.status}` as Parameters<typeof t>[0])}
@@ -116,17 +149,31 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
             </p>
           )}
 
+          {payError && <p className="alert-error text-xs">{payError}</p>}
+
           <div className="flex items-center justify-between pt-2 border-t border-[var(--border)]">
             <span className="text-sm font-semibold text-[var(--ink)]">{t("ordersTotal", { price: formatPrice(order.totalCents) })}</span>
-            {order.status === "pending" && (
-              <button
-                onClick={handleCancel}
-                disabled={cancelling}
-                className="text-xs text-[var(--danger-text)] hover:underline disabled:opacity-60"
-              >
-                {cancelling ? t("ordersCancelling") : t("ordersCancelOrder")}
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {awaitingPayment && (
+                <button
+                  onClick={handlePay}
+                  disabled={paying}
+                  className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-60"
+                >
+                  <CreditCard className="w-3.5 h-3.5" />
+                  {paying ? t("ordersPayingNow") : t("ordersPayNow")}
+                </button>
+              )}
+              {order.status === "pending" && (
+                <button
+                  onClick={handleCancel}
+                  disabled={cancelling}
+                  className="text-xs text-[var(--danger-text)] hover:underline disabled:opacity-60"
+                >
+                  {cancelling ? t("ordersCancelling") : t("ordersCancelOrder")}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -138,7 +185,13 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
 
 export default function OrdersPage() {
   const t = useTranslations("portal");
+  // Read once on mount (avoids the useSearchParams Suspense requirement)
+  const [paymentReturn, setPaymentReturn] = useState<string | null>(null);
+  useEffect(() => {
+    setPaymentReturn(new URLSearchParams(window.location.search).get("payment"));
+  }, []);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [paymentsEnabled, setPaymentsEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
   const [cancelError, setCancelError] = useState("");
@@ -148,7 +201,11 @@ export default function OrdersPage() {
     setFetchError("");
     fetch("/api/orders")
       .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setOrders(data ?? []); setLoading(false); })
+      .then(({ data, meta }) => {
+        setOrders(data ?? []);
+        setPaymentsEnabled(Boolean(meta?.paymentsEnabled));
+        setLoading(false);
+      })
       .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
   }
 
@@ -184,6 +241,12 @@ export default function OrdersPage() {
         </Link>
       </div>
 
+      {paymentReturn === "success" && (
+        <p className="alert-success mb-4">{t("ordersPaymentSuccess")}</p>
+      )}
+      {paymentReturn === "cancelled" && (
+        <p className="alert-error mb-4">{t("ordersPaymentCancelled")}</p>
+      )}
       {cancelError && <p className="alert-error mb-4">{cancelError}</p>}
 
       {loading ? (
@@ -202,7 +265,7 @@ export default function OrdersPage() {
       ) : (
         <div className="space-y-3">
           {orders.map((order) => (
-            <OrderCard key={order.id} order={order} onCancel={cancelOrder} />
+            <OrderCard key={order.id} order={order} paymentsEnabled={paymentsEnabled} onCancel={cancelOrder} />
           ))}
         </div>
       )}

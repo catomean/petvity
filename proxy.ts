@@ -23,6 +23,7 @@ const PRIVATE_API_PREFIXES = [
   "/api/sitters",
   "/api/sellers",
   "/api/bookings",
+  "/api/availability",
   "/api/reviews",
   "/api/orders",
   // /api/cron/* is intentionally NOT gated — cron routes self-authenticate via

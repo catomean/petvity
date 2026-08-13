@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, or, and } from "drizzle-orm";
+import { eq, or, and, lt, gt, lte, gte, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { bookings, pets, users, reviews } from "@/lib/db/schema";
+import { bookings, pets, users, reviews, professionalBlockedDates } from "@/lib/db/schema";
+import { BLOCKING_BOOKING_STATUSES } from "@/lib/domain/scheduling";
 import { sendEmail } from "@/lib/email";
 import { bookingRequestReceived } from "@/lib/email/templates";
 
@@ -107,6 +108,48 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Conflict guard: the professional's time must be free. Half-open interval
+  // overlap against active (pending/confirmed) bookings…
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const [clash] = await db
+    .select({ id: bookings.id })
+    .from(bookings)
+    .where(
+      and(
+        eq(bookings.professionalId, professionalId),
+        inArray(bookings.status, [...BLOCKING_BOOKING_STATUSES]),
+        lt(bookings.startDate, end),
+        gt(bookings.endDate, start),
+      ),
+    )
+    .limit(1);
+  if (clash) {
+    return NextResponse.json(
+      { success: false, error: "This professional is already booked during that time. Please pick different dates." },
+      { status: 409 },
+    );
+  }
+
+  // …and against their self-declared unavailable dates (inclusive day ranges).
+  const [blocked] = await db
+    .select({ id: professionalBlockedDates.id })
+    .from(professionalBlockedDates)
+    .where(
+      and(
+        eq(professionalBlockedDates.professionalId, professionalId),
+        lte(professionalBlockedDates.startDate, endDate.slice(0, 10)),
+        gte(professionalBlockedDates.endDate, startDate.slice(0, 10)),
+      ),
+    )
+    .limit(1);
+  if (blocked) {
+    return NextResponse.json(
+      { success: false, error: "This professional is unavailable during that period. Please pick different dates." },
+      { status: 409 },
+    );
+  }
+
   const [booking] = await db
     .insert(bookings)
     .values({
@@ -114,8 +157,8 @@ export async function POST(req: NextRequest) {
       petId,
       professionalId,
       professionalRole: professional.role,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
+      startDate: start,
+      endDate: end,
       notes: notes ?? null,
     })
     .returning();

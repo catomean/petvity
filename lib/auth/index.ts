@@ -68,16 +68,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
             (user as { emailVerified?: Date | null }).emailVerified ?? null;
 
           const existingRole =
-            (user as { role?: string }).role ?? "pet_owner";
-          const correctRole = resolveRole(user.email ?? "");
+            ((user as { role?: UserRole }).role ?? "pet_owner") as UserRole;
+          // ADMIN_EMAILS may only PROMOTE at login — resolveRole without an
+          // intendedRole returns "pet_owner" for everyone else, and writing
+          // that back would silently demote every vet/sitter on their next
+          // login (and did, until this guard).
+          const effectiveRole: UserRole =
+            resolveRole(user.email ?? "") === "admin" ? "admin" : existingRole;
 
-          if (correctRole !== existingRole && user.id) {
+          if (effectiveRole !== existingRole && user.id) {
             await db
               .update(users)
-              .set({ role: correctRole })
+              .set({ role: effectiveRole })
               .where(eq(users.id, user.id));
           }
-          token.role = correctRole;
+          token.role = effectiveRole;
         }
 
         // Re-read name from DB on any update trigger so settings changes take effect immediately
