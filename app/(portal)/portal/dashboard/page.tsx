@@ -158,10 +158,10 @@ export default async function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--ink)]">
+          <h1 className="page-title">
             {t(new Date().getHours() < 12 ? "greetingMorning" : new Date().getHours() < 18 ? "greetingAfternoon" : "greetingEvening", { name: session.user.name?.split(" ")[0] ?? "" })}
           </h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">
+          <p className="page-sub">
             {userPets.length === 0
               ? t("checkinNoPets")
               : loggedToday === userPets.length

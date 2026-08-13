@@ -50,7 +50,9 @@
       "shop": "Mağaza",
       "about": "Hakkımızda",
       "liveDemo": "Canlı demoyu dene",
-      "joinAsGroomer": "Kuaför olarak katıl"
+      "joinAsGroomer": "Kuaför olarak katıl",
+      "findAPro": "Profesyonel bul",
+      "blog": "Blog"
     },
     "bottom": {
       "rights": "Tüm hakları saklıdır.",
@@ -742,7 +744,10 @@
     "navSectionCare": "Bakım ekibi",
     "navSectionShop": "Pazar",
     "navSectionAdoption": "Sahiplendirme",
-    "navSectionBusiness": "İşiniz"
+    "navSectionBusiness": "İşiniz",
+    "navMyStore": "Mağazam",
+    "settingsGrowTitle": "Petvity ile büyüyün",
+    "settingsGrowDesc": "Hizmet sunun veya mağaza açın — hayvanlarınız ve verileriniz aynen kalır."
   },
   "pets": {
     "name": "İsim",
@@ -905,7 +910,22 @@
     "adoptClearFilters": "Filtreleri temizle",
     "adoptFree": "Ücretsiz",
     "proGroomer": "Pet kuaförü",
-    "proPriceFrom": "${price}'dan itibaren"
+    "proPriceFrom": "${price}'dan itibaren",
+    "dirMetaTitle": "Veteriner, bakıcı veya kuaför bul · {app}",
+    "dirMetaTitleCity": "{city} veterinerleri, bakıcıları ve kuaförleri · {app}",
+    "dirMetaDesc": "Güvenilir veterinerlere, bakıcılara ve kuaförlere göz atın. Gerçek müsaitlik, yalnızca tamamlanan rezervasyonlardan yorumlar, {app} üzerinden doğrudan rezervasyon.",
+    "dirHeroTitle": "Dostunuz için doğru insanlar",
+    "dirHeroDesc": "Veterinerler, bakıcılar ve kuaförler — özgürce göz atın, gerçek yorumları görün, canlı müsaitlikle rezervasyon yapın.",
+    "dirTabVets": "Veterinerler",
+    "dirTabSitters": "Bakıcılar",
+    "dirTabGroomers": "Kuaförler",
+    "dirCount": "{count, plural, one {# profesyonel} other {# profesyonel}}",
+    "dirEmpty": "Burada henüz profesyonel yok",
+    "dirEmptyCity": "“{city}” için sonuç yok",
+    "dirEmptyDesc": "Bu dizin büyüyor. Profesyonel misiniz? Profiliniz bugün yayında olurdu.",
+    "dirJoinCta": "Profesyonel olarak katıl",
+    "dirProviderCtaTitle": "Siz hayvanlara bakın. Müşterileri biz getirelim.",
+    "dirProviderCtaDesc": "Herkese açık bir vitrin, çift rezervasyona kapalı bir takvim ve gerçek işten kazanılan yorumlar. Katılım ücretsiz."
   },
   "twin": {
     "thriving": "Gelişiyor",
@@ -1499,5 +1519,16 @@
     "vs2Title": "Profesyonel profilinizi oluşturun",
     "vs3Desc": "Bölgenizdeki evcil hayvan sahipleri sizi bulabilir ve rezervasyon yaptırabilir. Ekibimiz güven rozetinizi açmak için kimlik bilgilerini doğrular.",
     "vs3Title": "Keşfedilip doğrulanın"
+  },
+  "blog": {
+    "metaTitle": "Blog · {app}",
+    "metaDesc": "{app}'dan ürün haberleri ve dürüst notlar.",
+    "eyebrow": "Ekipten",
+    "title": "Blog",
+    "subtitle": "Platformun inşasına dair ürün haberleri ve dürüst notlar.",
+    "readPost": "Yazıyı oku",
+    "backToBlog": "Tüm yazılar",
+    "ctaJoin": "Ücretsiz başla",
+    "ctaFind": "Profesyonel bul"
   }
 }

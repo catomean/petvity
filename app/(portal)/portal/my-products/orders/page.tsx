@@ -68,7 +68,7 @@ function SellerOrderCard({ order }: { order: SellerOrder }) {
         onClick={() => setExpanded((v) => !v)}
       >
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] flex items-center justify-center flex-shrink-0">
+          <div className="icon-tile icon-tile-lg bg-[var(--teal-light)]">
             <ShoppingBag className="w-5 h-5 text-[var(--teal)]" />
           </div>
           <div className="min-w-0">
@@ -81,7 +81,7 @@ function SellerOrderCard({ order }: { order: SellerOrder }) {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.className}`}>
+          <span className={`badge ${cfg.className}`}>
             <Icon className="w-3 h-3" />
             {t(`orderStatus_${order.status}` as Parameters<typeof t>[0])}
           </span>
@@ -174,8 +174,8 @@ export default function SellerOrdersPage() {
           >
             <ArrowLeft className="w-3 h-3" /> {t("sellerOrdersBack")}
           </Link>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("sellerOrdersTitle")}</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">
+          <h1 className="page-title">{t("sellerOrdersTitle")}</h1>
+          <p className="page-sub">
             {t("sellerOrdersSubtitle")}
           </p>
         </div>

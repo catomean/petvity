@@ -9,6 +9,7 @@ import type { OrderStatusId } from "@/lib/config/orders";
 import { formatPrice, formatIsoDate } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
+import HubTabs from "@/components/portal/HubTabs";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -86,7 +87,7 @@ function OrderCard({ order, paymentsEnabled, onCancel }: {
         onClick={() => setExpanded((v) => !v)}
       >
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] flex items-center justify-center flex-shrink-0">
+          <div className="icon-tile icon-tile-lg bg-[var(--teal-light)]">
             <ShoppingBag className="w-5 h-5 text-[var(--teal)]" />
           </div>
           <div className="min-w-0">
@@ -100,18 +101,18 @@ function OrderCard({ order, paymentsEnabled, onCancel }: {
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           {order.paidAt && (
-            <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[var(--green-bg)] text-[var(--green-text)]">
+            <span className="badge badge-green">
               <CreditCard className="w-3 h-3" />
               {t("ordersPaid")}
             </span>
           )}
           {awaitingPayment && (
-            <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-[var(--warn-bg)] text-[var(--warn-text)]">
+            <span className="badge badge-warn">
               <Clock className="w-3 h-3" />
               {t("ordersAwaitingPayment")}
             </span>
           )}
-          <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${cfg.className}`}>
+          <span className={`badge ${cfg.className}`}>
             <Icon className="w-3 h-3" />
             {t(`orderStatus_${order.status}` as Parameters<typeof t>[0])}
           </span>
@@ -230,10 +231,11 @@ export default function OrdersPage() {
 
   return (
     <div>
+      <HubTabs tabs={[{ href: "/portal/shop", label: t("shop") }, { href: "/portal/orders", label: t("orders") }]} />
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("orders")}</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">{t("ordersSubtitle")}</p>
+          <h1 className="page-title">{t("orders")}</h1>
+          <p className="page-sub">{t("ordersSubtitle")}</p>
         </div>
         <Link href="/portal/shop" className="btn-outline flex items-center gap-2">
           <ShoppingBag className="w-4 h-4" />

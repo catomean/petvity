@@ -537,6 +537,101 @@ body {
   text-decoration: underline;
 }
 
+/* ── Portal primitives — the vocabulary every portal page speaks ───────────── */
+
+/* Page header: one title + one subtitle, identical on every page. */
+.page-title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.page-sub {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Badge: small status pill. Tone via modifier; content via children. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+.badge-green   { background: var(--green-bg);   color: var(--green-text); }
+.badge-warn    { background: var(--warn-bg);    color: var(--warn-text); }
+.badge-danger  { background: var(--danger-bg);  color: var(--danger-text); }
+.badge-teal    { background: var(--teal-light); color: var(--teal); }
+.badge-accent  { background: var(--accent-light); color: var(--accent); }
+.badge-neutral { background: var(--off);        color: var(--muted); }
+
+/* Icon tile: the rounded square behind a section/list icon.
+   Layout only — size defaults to 32px; color via bg-/text- utilities. */
+.icon-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+}
+.icon-tile-lg { width: 40px; height: 40px; border-radius: 12px; }
+
+/* Modal: one overlay, one panel — never rebuilt per feature. */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.4);
+  z-index: 50;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+}
+@media (min-width: 640px) {
+  .modal-overlay { align-items: center; }
+}
+.modal-panel {
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 28rem;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Hub tabs: segmented control linking sibling pages of one hub. */
+.hub-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--off);
+  padding: 4px;
+  border-radius: 12px;
+  width: fit-content;
+  margin-bottom: 24px;
+}
+.hub-tab {
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.hub-tab:hover { color: var(--ink); }
+.hub-tab-active {
+  background: white;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
 /* ── Signal badges ──────────────────────────────────────────────────────────── */
 
 .signal-healthy {

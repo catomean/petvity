@@ -8,6 +8,7 @@ import { APP } from "@/lib/config/app";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { ProductArt } from "@/components/shop/ProductArt";
 import { useTranslations } from "next-intl";
+import HubTabs from "@/components/portal/HubTabs";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -238,11 +239,12 @@ export default function ShopPage() {
 
   return (
     <div>
+      <HubTabs tabs={[{ href: "/portal/shop", label: t("shop") }, { href: "/portal/orders", label: t("orders") }]} />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("shop")}</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">{t("shopSubtitle")}</p>
+          <h1 className="page-title">{t("shop")}</h1>
+          <p className="page-sub">{t("shopSubtitle")}</p>
         </div>
         <button
           onClick={() => { setSuccess(false); setCartOpen(true); }}

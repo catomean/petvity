@@ -43,8 +43,8 @@ export default async function AdminOverviewPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">Overview</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">Platform at a glance</p>
+        <h1 className="page-title">Overview</h1>
+        <p className="page-sub">Platform at a glance</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">

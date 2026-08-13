@@ -73,7 +73,7 @@ export default function AvailabilityManager() {
   return (
     <div className="card p-6 mt-6">
       <div className="flex items-center gap-2 mb-1">
-        <div className="w-8 h-8 rounded-lg bg-[var(--warn-bg)] flex items-center justify-center">
+        <div className="icon-tile bg-[var(--warn-bg)]">
           <CalendarOff className="w-4 h-4 text-[var(--warn-text)]" />
         </div>
         <h2 className="font-semibold text-[var(--ink)]">{t("availabilityTitle")}</h2>

@@ -56,8 +56,8 @@ export default function MyApplicationsPage() {
           <ChevronLeft className="w-3.5 h-3.5" />
           {t("myAppsBack")}
         </Link>
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("myAppsTitle")}</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">{t("myAppsSubtitle")}</p>
+        <h1 className="page-title">{t("myAppsTitle")}</h1>
+        <p className="page-sub">{t("myAppsSubtitle")}</p>
       </div>
 
       {loading ? (

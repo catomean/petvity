@@ -87,8 +87,8 @@ export default function AdminUsersPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--ink)]">Users</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">Manage accounts, roles, and professional verification</p>
+          <h1 className="page-title">Users</h1>
+          <p className="page-sub">Manage accounts, roles, and professional verification</p>
         </div>
       </div>
 
@@ -101,11 +101,11 @@ export default function AdminUsersPage() {
           { icon: BadgeCheck, label: "Verified profiles", value: verified },
         ].map(({ icon: Icon, label, value }) => (
           <div key={label} className="card p-5 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] flex items-center justify-center flex-shrink-0">
+            <div className="icon-tile icon-tile-lg bg-[var(--teal-light)]">
               <Icon className="w-5 h-5 text-[var(--teal)]" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-[var(--ink)]">{loading ? "—" : value}</p>
+              <p className="page-title">{loading ? "—" : value}</p>
               <p className="text-xs text-[var(--muted)]">{label}</p>
             </div>
           </div>

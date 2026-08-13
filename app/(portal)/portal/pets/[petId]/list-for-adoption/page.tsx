@@ -171,8 +171,8 @@ export default function ListForAdoptionPage() {
           <Heart className="w-5 h-5 text-[var(--teal)]" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("listAdoptTitle", { name: pet.name })}</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">{t("listAdoptSubtitle", { name: pet.name })}</p>
+          <h1 className="page-title">{t("listAdoptTitle", { name: pet.name })}</h1>
+          <p className="page-sub">{t("listAdoptSubtitle", { name: pet.name })}</p>
         </div>
       </div>
 

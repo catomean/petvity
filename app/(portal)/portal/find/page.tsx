@@ -6,6 +6,7 @@ import { Stethoscope, Home, Scissors, BadgeCheck, MapPin, Phone, Search, Calenda
 import { useTranslations, useLocale } from "next-intl";
 import { formatPrice, formatDateShort } from "@/lib/utils/format";
 import { EmptyState } from "@/components/portal/PageState";
+import HubTabs from "@/components/portal/HubTabs";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -76,7 +77,7 @@ interface BookingTarget {
 function VerifiedBadge() {
   const t = useTranslations("portal");
   return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--teal)] bg-[var(--teal-light)] px-2 py-0.5 rounded-full">
+    <span className="badge badge-teal">
       <BadgeCheck className="w-3 h-3" />
       {t("verified")}
     </span>
@@ -292,10 +293,11 @@ export default function FindPage() {
 
   return (
     <div>
+      <HubTabs tabs={[{ href: "/portal/find", label: t("findAPro") }, { href: "/portal/bookings", label: t("bookings") }]} />
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("findTitle")}</h1>
-        <p className="text-sm text-[var(--muted)] mt-0.5">{t("findSubtitle")}</p>
+        <h1 className="page-title">{t("findTitle")}</h1>
+        <p className="page-sub">{t("findSubtitle")}</p>
       </div>
 
       {/* Tabs + search */}
@@ -542,8 +544,8 @@ function BookingModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+    <div className="modal-overlay">
+      <div className="modal-panel">
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--border)]">
           <div>
             <h2 className="font-semibold text-[var(--ink)]">

@@ -67,7 +67,7 @@ export default function BecomeAProPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("becomeProTitle")}</h1>
+      <h1 className="page-title">{t("becomeProTitle")}</h1>
       <p className="text-sm text-[var(--muted)] mt-0.5 mb-6">{t("becomeProSubtitle")}</p>
 
       {error && <p className="alert-error mb-4">{error}</p>}

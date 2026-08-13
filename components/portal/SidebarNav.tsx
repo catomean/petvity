@@ -12,19 +12,16 @@ import {
   LogOut,
   Search,
   Stethoscope,
-  CalendarCheck,
-  ShoppingBag,
   ShoppingCart,
   Heart,
   Store,
-  ClipboardList,
-  Package,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
 
-function isActive(pathname: string, href: string): boolean {
+function isActive(pathname: string, href: string, match?: string[]): boolean {
   if (href === "/portal/dashboard") return pathname === href;
-  return pathname === href || pathname.startsWith(href + "/");
+  const prefixes = match ?? [href];
+  return prefixes.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
 
 import LocaleSwitcher from "@/components/LocaleSwitcher";
@@ -44,57 +41,43 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
   const initials = userName?.[0]?.toUpperCase() ?? "?";
   const isProfessional = userRole === "veterinarian" || userRole === "pet_sitter" || userRole === "groomer";
 
-  // Grouped so ~10 links read as four small decisions, not one long list.
-  const NAV_SECTIONS: { label: string | null; items: { href: string; icon: React.ElementType; label: string }[] }[] = [
-    {
-      label: null,
-      items: [
-        { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
-        { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
-        { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
-      ],
-    },
-    {
-      label: t("navSectionCare"),
-      items: [
-        { href: "/portal/find", icon: Search, label: t("findAPro") },
-        { href: "/portal/bookings", icon: CalendarCheck, label: t("bookings") },
-      ],
-    },
-    {
-      label: t("navSectionShop"),
-      items: [
-        { href: "/portal/shop", icon: ShoppingCart, label: t("shop") },
-        { href: "/portal/orders", icon: ShoppingBag, label: t("orders") },
-      ],
-    },
-    {
-      label: t("navSectionAdoption"),
-      items: [
-        { href: "/portal/adopt", icon: Heart, label: t("adopt") },
-        { href: "/portal/adoptions", icon: ClipboardList, label: t("myAdoptions") },
-      ],
-    },
+  // Six entries. Each hub (Care, Shop, Adopt) is ONE entry; its sibling
+  // pages are tabs inside the hub. Upsells (become a seller / offer
+  // services) live in Settings, not in daily navigation.
+  type NavItem = { href: string; icon: React.ElementType; label: string; match?: string[] };
+  const NAV_ITEMS: NavItem[] = [
+    { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
+    { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
+    { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
+    { href: "/portal/find", icon: Search, label: t("navSectionCare"), match: ["/portal/find", "/portal/bookings"] },
+    { href: "/portal/shop", icon: ShoppingCart, label: t("shop"), match: ["/portal/shop", "/portal/orders"] },
+    { href: "/portal/adopt", icon: Heart, label: t("adopt"), match: ["/portal/adopt", "/portal/adoptions"] },
+    ...(hasSeller
+      ? [{ href: "/portal/my-products", icon: Store, label: t("navMyStore"), match: ["/portal/my-products", "/portal/seller-profile"] }]
+      : []),
+    ...(isProfessional
+      ? [{ href: "/portal/professional-profile", icon: Stethoscope, label: t("myProfile") }]
+      : []),
   ];
 
   // Mobile tab bar: max 5 items — standard for reliable touch targets.
   // Settings is accessible via the top-bar avatar link, so we use the slot for Bookings
   // (the natural follow-up destination after using Find a Pro).
   // Professionals swap "Find" for their own profile since they are the pro.
-  const MOBILE_NAV_ITEMS_DEFAULT = [
+  const MOBILE_NAV_ITEMS_DEFAULT: NavItem[] = [
     { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
     { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
     { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
-    { href: "/portal/find", icon: Search, label: t("findAPro") },
-    { href: "/portal/bookings", icon: CalendarCheck, label: t("bookings") },
+    { href: "/portal/find", icon: Search, label: t("navSectionCare"), match: ["/portal/find", "/portal/bookings"] },
+    { href: "/portal/shop", icon: ShoppingCart, label: t("shop"), match: ["/portal/shop", "/portal/orders"] },
   ];
 
-  const MOBILE_NAV_ITEMS_PRO = [
+  const MOBILE_NAV_ITEMS_PRO: NavItem[] = [
     { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
     { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
     { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
     { href: "/portal/professional-profile", icon: Stethoscope, label: t("myProfile") },
-    { href: "/portal/bookings", icon: CalendarCheck, label: t("bookings") },
+    { href: "/portal/find", icon: Search, label: t("navSectionCare"), match: ["/portal/find", "/portal/bookings"] },
   ];
 
   return (
@@ -116,72 +99,16 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto">
-          {NAV_SECTIONS.map(({ label: sectionLabel, items }) => (
-            <div key={sectionLabel ?? "main"} className={sectionLabel ? "pt-4" : ""}>
-              {sectionLabel && (
-                <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--faint)]">
-                  {sectionLabel}
-                </p>
-              )}
-              {items.map(({ href, icon: Icon, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`nav-link ${isActive(pathname, href) ? "nav-link-active" : "nav-link-inactive"}`}
-                >
-                  <Icon className="w-4 h-4 flex-shrink-0" />
-                  {label}
-                </Link>
-              ))}
-            </div>
+          {NAV_ITEMS.map(({ href, icon: Icon, label, match }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`nav-link ${isActive(pathname, href, match) ? "nav-link-active" : "nav-link-inactive"}`}
+            >
+              <Icon className="w-4 h-4 flex-shrink-0" />
+              {label}
+            </Link>
           ))}
-          <p className="px-3 pt-4 pb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--faint)]">
-            {t("navSectionBusiness")}
-          </p>
-          {hasSeller && (
-            <>
-              <Link
-                href="/portal/my-products"
-                className={`nav-link ${isActive(pathname, "/portal/my-products") ? "nav-link-active" : "nav-link-inactive"}`}
-              >
-                <Store className="w-4 h-4 flex-shrink-0" />
-                {t("myProducts")}
-              </Link>
-              <Link
-                href="/portal/seller-profile"
-                className={`nav-link ${isActive(pathname, "/portal/seller-profile") ? "nav-link-active" : "nav-link-inactive"}`}
-              >
-                <Package className="w-4 h-4 flex-shrink-0" />
-                {t("sellerProfile")}
-              </Link>
-            </>
-          )}
-          {!hasSeller && (
-            <Link
-              href="/portal/seller-profile"
-              className={`nav-link ${isActive(pathname, "/portal/seller-profile") ? "nav-link-active" : "nav-link-muted"}`}
-            >
-              <Store className="w-4 h-4 flex-shrink-0" />
-              {t("becomeSeller")}
-            </Link>
-          )}
-          {isProfessional ? (
-            <Link
-              href="/portal/professional-profile"
-              className={`nav-link ${isActive(pathname, "/portal/professional-profile") ? "nav-link-active" : "nav-link-inactive"}`}
-            >
-              <Stethoscope className="w-4 h-4 flex-shrink-0" />
-              {t("myProfile")}
-            </Link>
-          ) : userRole === "pet_owner" ? (
-            <Link
-              href="/portal/become-a-pro"
-              className={`nav-link ${isActive(pathname, "/portal/become-a-pro") ? "nav-link-active" : "nav-link-muted"}`}
-            >
-              <Stethoscope className="w-4 h-4 flex-shrink-0" />
-              {t("becomePro")}
-            </Link>
-          ) : null}
         </nav>
 
         {/* Bottom section */}
@@ -242,14 +169,14 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
 
       {/* ── Mobile bottom nav ────────────────────────────────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-[var(--border)] flex safe-area-inset-bottom z-20">
-        {(isProfessional ? MOBILE_NAV_ITEMS_PRO : MOBILE_NAV_ITEMS_DEFAULT).map(({ href, icon: Icon, label }) => (
+        {(isProfessional ? MOBILE_NAV_ITEMS_PRO : MOBILE_NAV_ITEMS_DEFAULT).map(({ href, icon: Icon, label, match }) => (
           <Link
             key={href}
             href={href}
-            className={`mobile-tab-item ${isActive(pathname, href) ? "mobile-tab-item-active" : "mobile-tab-item-inactive"}`}
+            className={`mobile-tab-item ${isActive(pathname, href, match) ? "mobile-tab-item-active" : "mobile-tab-item-inactive"}`}
           >
             <Icon
-              className={`w-5 h-5 ${isActive(pathname, href) ? "stroke-2" : "stroke-[1.5]"}`}
+              className={`w-5 h-5 ${isActive(pathname, href, match) ? "stroke-2" : "stroke-[1.5]"}`}
             />
             {label}
           </Link>

@@ -50,7 +50,9 @@
       "shop": "Tienda",
       "about": "Sobre nosotros",
       "liveDemo": "Probar la demo",
-      "joinAsGroomer": "Únete como peluquero"
+      "joinAsGroomer": "Únete como peluquero",
+      "findAPro": "Encontrar profesional",
+      "blog": "Blog"
     },
     "bottom": {
       "rights": "Todos los derechos reservados.",
@@ -742,7 +744,10 @@
     "navSectionCare": "Equipo de cuidado",
     "navSectionShop": "Marketplace",
     "navSectionAdoption": "Adopción",
-    "navSectionBusiness": "Tu negocio"
+    "navSectionBusiness": "Tu negocio",
+    "navMyStore": "Mi tienda",
+    "settingsGrowTitle": "Crece con Petvity",
+    "settingsGrowDesc": "Ofrece servicios o abre una tienda — tus mascotas y datos quedan intactos."
   },
   "pets": {
     "name": "Nombre",
@@ -905,7 +910,22 @@
     "adoptClearFilters": "Borrar filtros",
     "adoptFree": "Gratis",
     "proGroomer": "Peluquero de mascotas",
-    "proPriceFrom": "desde ${price}"
+    "proPriceFrom": "desde ${price}",
+    "dirMetaTitle": "Encuentra veterinario, cuidador o peluquero · {app}",
+    "dirMetaTitleCity": "Veterinarios, cuidadores y peluqueros en {city} · {app}",
+    "dirMetaDesc": "Explora veterinarios, cuidadores y peluqueros de confianza. Disponibilidad real, reseñas solo de reservas completadas, reserva directa en {app}.",
+    "dirHeroTitle": "La gente adecuada para tu mascota",
+    "dirHeroDesc": "Veterinarios, cuidadores y peluqueros — explora libremente, lee reseñas reales y reserva con disponibilidad en vivo.",
+    "dirTabVets": "Veterinarios",
+    "dirTabSitters": "Cuidadores",
+    "dirTabGroomers": "Peluqueros",
+    "dirCount": "{count, plural, one {# profesional} other {# profesionales}}",
+    "dirEmpty": "Aún no hay profesionales aquí",
+    "dirEmptyCity": "Sin resultados para «{city}»",
+    "dirEmptyDesc": "Este directorio está creciendo. ¿Eres profesional? Tu perfil estaría en línea hoy.",
+    "dirJoinCta": "Únete como profesional",
+    "dirProviderCtaTitle": "Tú cuidas mascotas. Nosotros te traemos clientes.",
+    "dirProviderCtaDesc": "Un escaparate público, un calendario sin dobles reservas y reseñas ganadas con trabajo real. Gratis."
   },
   "twin": {
     "thriving": "Floreciente",
@@ -1499,5 +1519,16 @@
     "ctaDesc": "Gratis para unirse. Sin suscripción mensual. Construye tu reputación con reseñas reales de clientes que ya se preocupan por la salud de sus mascotas.",
     "ctaVetButton": "Unirse como veterinario",
     "ctaSitterButton": "Unirse como cuidador"
+  },
+  "blog": {
+    "metaTitle": "Blog · {app}",
+    "metaDesc": "Novedades del producto y notas honestas de {app}.",
+    "eyebrow": "Del equipo",
+    "title": "Blog",
+    "subtitle": "Novedades y notas honestas sobre la construcción de la plataforma.",
+    "readPost": "Leer la entrada",
+    "backToBlog": "Todas las entradas",
+    "ctaJoin": "Empieza gratis",
+    "ctaFind": "Encontrar un profesional"
   }
 }

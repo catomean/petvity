@@ -11,6 +11,7 @@ import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG } from "@/lib/config/a
 import { formatAdoptionFee } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
+import HubTabs from "@/components/portal/HubTabs";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -339,10 +340,11 @@ export default function AdoptionsPage() {
 
   return (
     <div>
+      <HubTabs tabs={[{ href: "/portal/adopt", label: t("adopt") }, { href: "/portal/adoptions", label: t("myAdoptions") }]} />
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)]">{t("adoptionsTitle")}</h1>
-          <p className="text-sm text-[var(--muted)] mt-0.5">{t("adoptionsSubtitle")}</p>
+          <h1 className="page-title">{t("adoptionsTitle")}</h1>
+          <p className="page-sub">{t("adoptionsSubtitle")}</p>
         </div>
         <Link href="/portal/adopt" className="btn-outline flex items-center gap-2 text-sm">
           <Heart className="w-4 h-4" />
