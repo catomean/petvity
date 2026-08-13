@@ -7,6 +7,7 @@ import { APP, APP_URL } from "@/lib/config/app";
 import { PRODUCT_CATEGORY_CONFIG } from "@/lib/config/products";
 import type { ProductCategoryId } from "@/lib/config/products";
 import { ShoppingBag, PawPrint, ChevronLeft, ShoppingCart } from "lucide-react";
+import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -116,17 +117,13 @@ export default async function PublicProductDetailPage({ params }: Params) {
         {/* Product card */}
         <div className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm mb-5">
           {/* Image */}
-          <div className="aspect-video bg-[var(--off)] flex items-center justify-center text-8xl overflow-hidden">
-            {row.imageUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={row.imageUrl}
-                alt={row.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span>{catCfg?.emoji ?? "📦"}</span>
-            )}
+          <div className="aspect-video bg-[var(--off)] flex items-center justify-center overflow-hidden">
+            <ProductArt
+              imageUrl={row.imageUrl}
+              alt={row.name}
+              category={row.category}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           <div className="p-6">

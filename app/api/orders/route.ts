@@ -44,6 +44,7 @@ export async function GET() {
       priceCents: orderItems.priceCents,
       productName: products.name,
       productImageUrl: products.imageUrl,
+      productCategory: products.category,
     })
     .from(orderItems)
     .innerJoin(products, eq(products.id, orderItems.productId))

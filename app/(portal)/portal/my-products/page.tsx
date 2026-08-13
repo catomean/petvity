@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Store, Plus, Pencil, X, Package, Eye, EyeOff, ShoppingBag } from "lucide-react";
+import { Store, Plus, Pencil, X, Eye, EyeOff, ShoppingBag } from "lucide-react";
 import { PRODUCT_CATEGORY_OPTIONS } from "@/lib/config/products";
+import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice } from "@/lib/utils/format";
 import { useTranslations } from "next-intl";
 
@@ -306,13 +307,13 @@ export default function MyProductsPage() {
           {items.map((p) => (
             <div key={p.id} className={`card p-4 flex items-center gap-4 ${!p.isActive ? "opacity-60" : ""}`}>
               {/* Icon placeholder */}
-              <div className="w-12 h-12 rounded-xl bg-[var(--off)] flex items-center justify-center flex-shrink-0">
-                {p.imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.imageUrl} alt={p.name} className="w-12 h-12 rounded-xl object-cover" />
-                ) : (
-                  <Package className="w-5 h-5 text-[var(--muted)]" />
-                )}
+              <div className="w-12 h-12 rounded-xl bg-[var(--off)] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <ProductArt
+                  imageUrl={p.imageUrl}
+                  alt={p.name}
+                  category={p.category}
+                  className="w-12 h-12 rounded-xl object-cover"
+                />
               </div>
 
               <div className="flex-1 min-w-0">

@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import {
-  ShoppingBag, Clock, CheckCircle, Truck, Package, XCircle,
+  ShoppingBag, Clock, CheckCircle, Truck, XCircle,
   ChevronDown, ChevronUp, User, Store, BadgeCheck,
 } from "lucide-react";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
+import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice, formatIsoDate, formatIsoDateTime } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
 
@@ -22,6 +23,7 @@ interface OrderItem {
   priceCents: number;
   productName: string;
   productImageUrl: string | null;
+  productCategory: string;
   sellerId: string | null;
   sellerName: string | null;
   sellerEmail: string | null;
@@ -151,13 +153,13 @@ function OrderRow({
           <div className="space-y-2 py-3 border-b border-[var(--border)]">
             {order.items.map((item) => (
               <div key={item.id} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0 border border-[var(--border)]">
-                  {item.productImageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.productImageUrl} alt={item.productName} className="w-full h-full object-cover rounded-lg" />
-                  ) : (
-                    <Package className="w-3.5 h-3.5 text-[var(--faint)]" />
-                  )}
+                <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0 border border-[var(--border)] overflow-hidden">
+                  <ProductArt
+                    imageUrl={item.productImageUrl}
+                    alt={item.productName}
+                    category={item.productCategory}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-[var(--ink)] truncate">{item.productName}</p>

@@ -47,6 +47,7 @@ export async function GET() {
       priceCents: orderItems.priceCents,
       productName: products.name,
       productImageUrl: products.imageUrl,
+      productCategory: products.category,
       sellerId: products.sellerId,
       sellerName: sellers.name,
       sellerEmail: sellers.email,

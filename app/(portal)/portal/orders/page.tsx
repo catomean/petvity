@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Package, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { ShoppingBag, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { ProductArt } from "@/components/shop/ProductArt";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
 import { formatPrice, formatIsoDate } from "@/lib/utils/format";
@@ -18,6 +19,7 @@ interface OrderItem {
   priceCents: number;
   productName: string;
   productImageUrl: string | null;
+  productCategory: string;
 }
 
 interface Order {
@@ -88,13 +90,13 @@ function OrderCard({ order, onCancel }: { order: Order; onCancel: (id: string) =
         <div className="border-t border-[var(--border)] px-4 py-3 space-y-3">
           {order.items.map((item) => (
             <div key={item.id} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[var(--off)] flex items-center justify-center flex-shrink-0">
-                {item.productImageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.productImageUrl} alt={item.productName} className="w-full h-full object-cover rounded-lg" />
-                ) : (
-                  <Package className="w-4 h-4 text-[var(--faint)]" />
-                )}
+              <div className="w-10 h-10 rounded-lg bg-[var(--off)] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <ProductArt
+                  imageUrl={item.productImageUrl}
+                  alt={item.productName}
+                  category={item.productCategory}
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-[var(--ink)]">{item.productName}</p>

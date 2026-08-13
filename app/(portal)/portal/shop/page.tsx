@@ -6,6 +6,7 @@ import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X, Store, BadgeCheck }
 import { formatPrice } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
+import { ProductArt } from "@/components/shop/ProductArt";
 import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -87,13 +88,13 @@ function CartDrawer({
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
               {cart.map(({ product, quantity }) => (
                 <div key={product.id} className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-[var(--off)] flex items-center justify-center flex-shrink-0">
-                    {product.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover rounded-xl" />
-                    ) : (
-                      <Package className="w-5 h-5 text-[var(--faint)]" />
-                    )}
+                  <div className="w-12 h-12 rounded-xl bg-[var(--off)] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <ProductArt
+                      imageUrl={product.imageUrl}
+                      alt={product.name}
+                      category={product.category}
+                      className="w-full h-full object-cover rounded-xl"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-[var(--ink)] leading-snug">{product.name}</p>
@@ -298,16 +299,12 @@ export default function ShopPage() {
             return (
               <div key={product.id} className="card overflow-hidden flex flex-col">
                 <div className="h-36 bg-[var(--off)] flex items-center justify-center">
-                  {product.imageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={product.imageUrl}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Package className="w-10 h-10 text-[var(--faint)]" />
-                  )}
+                  <ProductArt
+                    imageUrl={product.imageUrl}
+                    alt={product.name}
+                    category={product.category}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="p-3 flex flex-col flex-1">
                   <span className="text-xs text-[var(--muted)] mb-0.5">
