@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "Her şey kalır — evcil hayvanlar, sağlık kayıtları, siparişler ve sahiplendirme ilanları aynen durur. \"Doğrulanmış\" rozeti incelemeden sonra verilebilir.",
     "becomeProConfirm": "Devam",
     "dashProBookingRequests": "{count, plural, one {# rezervasyon talebi yanıtınızı bekliyor} other {# rezervasyon talebi yanıtınızı bekliyor}}",
-    "dashSellerOpenOrders": "{count, plural, one {# sipariş işlem bekliyor} other {# sipariş işlem bekliyor}}"
+    "dashSellerOpenOrders": "{count, plural, one {# sipariş işlem bekliyor} other {# sipariş işlem bekliyor}}",
+    "groomers": "Pet kuaförleri",
+    "findNoGroomers": "Kuaför bulunamadı",
+    "findNoGroomersCity": "“{city}” ile eşleşen kuaför henüz yok. Başka bir şehir deneyin.",
+    "findNoGroomersBody": "Henüz kuaför katılmadı. Tüy bakımı mı sunuyorsunuz? Profilinizi oluşturun ve yakınınızdaki hayvan sahipleriyle bağlantı kurun.",
+    "findRegisterGroomer": "Kuaför olarak kaydol",
+    "findGroomerFallback": "Kuaför",
+    "findGroomerVisitHint": "Bir saatlik bakım seansı",
+    "findPriceFrom": "{price}'dan itibaren",
+    "becomeProGroomerTitle": "Pet kuaförü",
+    "becomeProGroomerDesc": "Yıkama, tıraş ve tüy bakımı sunun. Başlangıç fiyatınızı ve salonunuzu belirleyin, profesyonel aramasında görünün.",
+    "profGroomerTitle": "Kuaför Profili",
+    "profGroomerBioPlaceholder": "Deneyiminizi, sevdiğiniz ırkları ve gergin evcil hayvanlara yaklaşımınızı anlatın…",
+    "profSalonName": "Salon adı",
+    "profSalonNamePlaceholder": "örn. Salon Pfotenschick",
+    "profPriceFrom": "Başlangıç fiyatı ($)",
+    "service_bath_brush": "Yıkama & Fırçalama",
+    "service_full_groom": "Tam bakım",
+    "service_haircut": "Tıraş & Şekillendirme",
+    "service_deshedding": "Ölü tüy alımı",
+    "service_nail_trim": "Tırnak kesimi",
+    "service_teeth_cleaning": "Diş temizliği"
   },
   "pets": {
     "name": "İsim",
@@ -869,7 +890,9 @@
     "sex_unknown": "Bilinmiyor",
     "adoptNoResults": "Filtrelerinize uyan evcil hayvan yok",
     "adoptClearFilters": "Filtreleri temizle",
-    "adoptFree": "Ücretsiz"
+    "adoptFree": "Ücretsiz",
+    "proGroomer": "Pet kuaförü",
+    "proPriceFrom": "${price}'dan itibaren"
   },
   "twin": {
     "thriving": "Gelişiyor",

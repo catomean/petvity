@@ -24,7 +24,7 @@ const createSchema = z
   });
 
 function requireProfessional(role: string) {
-  return role === "veterinarian" || role === "pet_sitter";
+  return role === "veterinarian" || role === "pet_sitter" || role === "groomer";
 }
 
 /** GET /api/availability — the current professional's blocked ranges */

@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { users, vetProfiles, sitterProfiles } from "@/lib/db/schema";
+import { users, vetProfiles, sitterProfiles, groomerProfiles } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { professionalVerified, professionalUnverified } from "@/lib/email/templates";
 import { APP_URL } from "@/lib/config/app";
@@ -27,7 +27,7 @@ function notifyProfessional(opts: {
 
 type Params = { params: Promise<{ userId: string }> };
 
-/** PATCH /api/admin/professionals/[userId] — toggle isVerified on a vet or sitter profile */
+/** PATCH /api/admin/professionals/[userId] — toggle isVerified on a vet, sitter, or groomer profile */
 export async function PATCH(req: NextRequest, { params }: Params) {
   const { error } = await requireAdmin();
   if (error) return error;
@@ -91,8 +91,25 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     return NextResponse.json({ success: true, data: { isVerified: updated.isVerified } });
   }
 
+  if (user.role === "groomer") {
+    const [updated] = await db
+      .update(groomerProfiles)
+      .set({ isVerified, updatedAt: new Date() })
+      .where(eq(groomerProfiles.userId, userId))
+      .returning({ isVerified: groomerProfiles.isVerified });
+
+    if (!updated) {
+      return NextResponse.json(
+        { success: false, error: "Groomer profile not found. The user must set up their profile first." },
+        { status: 404 },
+      );
+    }
+    notifyProfessional({ user, isVerified, profileUrl: `${APP_URL}/portal/professional-profile` });
+    return NextResponse.json({ success: true, data: { isVerified: updated.isVerified } });
+  }
+
   return NextResponse.json(
-    { success: false, error: "User is not a veterinarian or pet sitter." },
+    { success: false, error: "User is not a professional (vet, sitter, or groomer)." },
     { status: 400 },
   );
 }

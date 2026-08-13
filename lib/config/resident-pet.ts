@@ -168,6 +168,21 @@ export const RESIDENT_COMMUNITY = {
       isVerified: true,
     },
   },
+  groomer: {
+    account: { email: "groomer.roth@petvity.com", name: "Nadia Roth" },
+    role: "groomer" as const,
+    profile: {
+      salonName: "Salon Pfotenschick",
+      bio: "Certified groomer with a patient hand for anxious dogs and double coats. Every session ends with a treat and a very good hair day.",
+      services: "bath_brush,full_groom,haircut,deshedding,nail_trim",
+      priceFrom: 6500,
+      city: "Zürich",
+      country: "CH",
+      phone: "+41 79 555 08 21",
+      isAcceptingClients: true,
+      isVerified: true,
+    },
+  },
   seller: {
     account: { email: "shop.pfoten@petvity.com", name: "Pfoten & Co." },
     profile: {
@@ -229,6 +244,15 @@ export const RESIDENT_COMMUNITY = {
       daysAgo: 21,
       notes: "Midday walks, Mon–Fri while travelling.",
       review: { rating: 5, comment: "Sam sent photos from every walk and kept perfect notes in the check-ins. Rosie now sits by the door at Sam o'clock." },
+    },
+    {
+      ownerEmail: "rosie@petvity.com",
+      petHandle: "rosie",
+      professionalEmail: "groomer.roth@petvity.com",
+      professionalRole: "groomer" as const,
+      daysAgo: 12,
+      notes: "De-shedding and nail trim before summer.",
+      review: { rating: 5, comment: "Nadia took her time with Rosie's undercoat and even filed the nails she usually fights over. Came home fluffy, calm, and smelling like a meadow." },
     },
   ],
 } as const;

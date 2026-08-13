@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "一切保留 — 宠物、健康记录、订单和领养信息均不变。「已认证」徽章可在审核后授予。",
     "becomeProConfirm": "继续",
     "dashProBookingRequests": "{count, plural, other {# 个预约请求等待您回复}}",
-    "dashSellerOpenOrders": "{count, plural, other {# 个订单待处理}}"
+    "dashSellerOpenOrders": "{count, plural, other {# 个订单待处理}}",
+    "groomers": "宠物美容师",
+    "findNoGroomers": "未找到美容师",
+    "findNoGroomersCity": "暂无匹配“{city}”的美容师。请尝试其他城市。",
+    "findNoGroomersBody": "还没有美容师加入。您提供宠物美容吗？创建您的个人资料，与附近的宠物主人建立联系。",
+    "findRegisterGroomer": "注册成为美容师",
+    "findGroomerFallback": "美容师",
+    "findGroomerVisitHint": "一小时美容服务",
+    "findPriceFrom": "{price}起",
+    "becomeProGroomerTitle": "宠物美容师",
+    "becomeProGroomerDesc": "提供洗澡、剪毛和毛发护理。设置起价和沙龙，即可出现在专业人士搜索中。",
+    "profGroomerTitle": "美容师资料",
+    "profGroomerBioPlaceholder": "介绍您的美容经验、擅长犬种以及如何安抚紧张的宠物…",
+    "profSalonName": "沙龙名称",
+    "profSalonNamePlaceholder": "例如：Salon Pfotenschick",
+    "profPriceFrom": "起价 ($)",
+    "service_bath_brush": "洗澡梳毛",
+    "service_full_groom": "全套美容",
+    "service_haircut": "剪毛造型",
+    "service_deshedding": "去死毛",
+    "service_nail_trim": "剪指甲",
+    "service_teeth_cleaning": "洁牙"
   },
   "pets": {
     "name": "名字",
@@ -869,7 +890,9 @@
     "sex_unknown": "未知",
     "adoptNoResults": "没有符合筛选条件的宠物",
     "adoptClearFilters": "清除筛选",
-    "adoptFree": "免费"
+    "adoptFree": "免费",
+    "proGroomer": "宠物美容师",
+    "proPriceFrom": "${price}起"
   },
   "twin": {
     "thriving": "蓬勃发展",

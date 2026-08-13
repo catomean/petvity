@@ -4,12 +4,12 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { PawPrint, Stethoscope, Heart } from "lucide-react";
+import { PawPrint, Stethoscope, Heart, Scissors } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { USER_ROLE_CONFIG } from "@/lib/config/users";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 
-const INTENDED_ROLES = ["pet_owner", "veterinarian", "pet_sitter"] as const;
+const INTENDED_ROLES = ["pet_owner", "veterinarian", "pet_sitter", "groomer"] as const;
 type IntendedRole = (typeof INTENDED_ROLES)[number];
 
 /* Labels come from the role SSOT; icons and the sign-up pitch are auth-page UI. */
@@ -17,6 +17,7 @@ const ROLE_UI: Record<IntendedRole, { icon: React.ElementType; desc: string }> =
   pet_owner:    { icon: PawPrint,    desc: "Track my pet's health" },
   veterinarian: { icon: Stethoscope, desc: "Offer vet services" },
   pet_sitter:   { icon: Heart,       desc: "Offer sitting & boarding" },
+  groomer:      { icon: Scissors,    desc: "Offer grooming services" },
 };
 
 const ROLE_OPTIONS = INTENDED_ROLES.map((id) => ({
@@ -35,7 +36,7 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [intendedRole, setIntendedRole] = useState<IntendedRole>(
-    roleParam === "vet" ? "veterinarian" : roleParam === "sitter" ? "pet_sitter" : "pet_owner",
+    roleParam === "vet" ? "veterinarian" : roleParam === "sitter" ? "pet_sitter" : roleParam === "groomer" ? "groomer" : "pet_owner",
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);

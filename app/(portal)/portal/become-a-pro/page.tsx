@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Stethoscope, Home, ArrowRight, BadgeCheck } from "lucide-react";
+import { Stethoscope, Home, Scissors, ArrowRight, BadgeCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 /**
@@ -14,7 +14,7 @@ import { useTranslations } from "next-intl";
  * services short of creating a second account.
  */
 
-type ProRole = "veterinarian" | "pet_sitter";
+type ProRole = "veterinarian" | "pet_sitter" | "groomer";
 
 export default function BecomeAProPage() {
   const t = useTranslations("portal");
@@ -25,7 +25,7 @@ export default function BecomeAProPage() {
   const [error, setError] = useState("");
 
   const role = session?.user?.role;
-  const alreadyPro = role === "veterinarian" || role === "pet_sitter";
+  const alreadyPro = role === "veterinarian" || role === "pet_sitter" || role === "groomer";
 
   async function confirm() {
     if (!choice) return;
@@ -61,6 +61,7 @@ export default function BecomeAProPage() {
 
   const OPTIONS: { id: ProRole; icon: React.ElementType; title: string; desc: string }[] = [
     { id: "pet_sitter", icon: Home, title: t("becomeProSitterTitle"), desc: t("becomeProSitterDesc") },
+    { id: "groomer", icon: Scissors, title: t("becomeProGroomerTitle"), desc: t("becomeProGroomerDesc") },
     { id: "veterinarian", icon: Stethoscope, title: t("becomeProVetTitle"), desc: t("becomeProVetDesc") },
   ];
 
@@ -71,7 +72,7 @@ export default function BecomeAProPage() {
 
       {error && <p className="alert-error mb-4">{error}</p>}
 
-      <div className="grid sm:grid-cols-2 gap-4 mb-6">
+      <div className="grid sm:grid-cols-3 gap-4 mb-6">
         {OPTIONS.map(({ id, icon: Icon, title, desc }) => (
           <button
             key={id}

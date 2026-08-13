@@ -6,7 +6,7 @@ import { getInstance } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 
 const schema = z.object({
-  role: z.enum(["veterinarian", "pet_sitter"]),
+  role: z.enum(["veterinarian", "pet_sitter", "groomer"]),
 });
 
 /** POST /api/account/role — upgrade the own account to a professional role.

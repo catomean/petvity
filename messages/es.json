@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "Lo conservas todo — mascotas, registros de salud, pedidos y anuncios de adopción quedan intactos. La insignia «Verificado» puede otorgarse tras revisión.",
     "becomeProConfirm": "Continuar",
     "dashProBookingRequests": "{count, plural, one {# solicitud de reserva espera tu respuesta} other {# solicitudes de reserva esperan tu respuesta}}",
-    "dashSellerOpenOrders": "{count, plural, one {# pedido pendiente de gestionar} other {# pedidos pendientes de gestionar}}"
+    "dashSellerOpenOrders": "{count, plural, one {# pedido pendiente de gestionar} other {# pedidos pendientes de gestionar}}",
+    "groomers": "Peluqueros",
+    "findNoGroomers": "No se encontraron peluqueros",
+    "findNoGroomersCity": "Ningún peluquero coincide con «{city}» todavía. Prueba con otra ciudad.",
+    "findNoGroomersBody": "Aún no hay peluqueros. ¿Ofreces peluquería canina? Crea tu perfil y conecta con dueños cerca de ti.",
+    "findRegisterGroomer": "Registrarse como peluquero",
+    "findGroomerFallback": "Peluquero",
+    "findGroomerVisitHint": "Sesión de peluquería de una hora",
+    "findPriceFrom": "desde {price}",
+    "becomeProGroomerTitle": "Peluquero",
+    "becomeProGroomerDesc": "Ofrece baños, cortes y cuidado del pelaje. Fija tu precio inicial y tu salón, y aparece en la búsqueda de profesionales.",
+    "profGroomerTitle": "Perfil de peluquero",
+    "profGroomerBioPlaceholder": "Cuenta tu experiencia, tus razas favoritas y cómo tratas a las mascotas nerviosas…",
+    "profSalonName": "Nombre del salón",
+    "profSalonNamePlaceholder": "p. ej. Salon Pfotenschick",
+    "profPriceFrom": "Precio inicial ($)",
+    "service_bath_brush": "Baño y cepillado",
+    "service_full_groom": "Peluquería completa",
+    "service_haircut": "Corte y estilismo",
+    "service_deshedding": "Deslanado",
+    "service_nail_trim": "Corte de uñas",
+    "service_teeth_cleaning": "Limpieza dental"
   },
   "pets": {
     "name": "Nombre",
@@ -869,7 +890,9 @@
     "sex_unknown": "Desconocido",
     "adoptNoResults": "Ningún animal coincide con tus filtros",
     "adoptClearFilters": "Borrar filtros",
-    "adoptFree": "Gratis"
+    "adoptFree": "Gratis",
+    "proGroomer": "Peluquero de mascotas",
+    "proPriceFrom": "desde ${price}"
   },
   "twin": {
     "thriving": "Floreciente",

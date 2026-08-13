@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
     .from(users)
     .where(eq(users.id, professionalId))
     .limit(1);
-  if (!professional || (professional.role !== "veterinarian" && professional.role !== "pet_sitter")) {
+  if (!professional || (professional.role !== "veterinarian" && professional.role !== "pet_sitter" && professional.role !== "groomer")) {
     return NextResponse.json(
       { success: false, error: "Professional not found." },
       { status: 404 },

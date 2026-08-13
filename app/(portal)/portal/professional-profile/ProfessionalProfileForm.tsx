@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Stethoscope, Home, CheckCircle, Save } from "lucide-react";
-import { SITTER_SERVICES } from "@/lib/config/professionals";
+import { Stethoscope, Home, Scissors, CheckCircle, Save } from "lucide-react";
+import { SITTER_SERVICES, GROOMER_SERVICES } from "@/lib/config/professionals";
 import { useTranslations } from "next-intl";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -28,17 +28,29 @@ type SitterProfile = {
   isAcceptingClients: boolean;
 };
 
+type GroomerProfile = {
+  salonName: string | null;
+  bio: string | null;
+  services: string | null;
+  priceFrom: number | null;
+  city: string | null;
+  country: string | null;
+  phone: string | null;
+  isAcceptingClients: boolean;
+};
+
 /* ─── Component ──────────────────────────────────────────────────────────── */
 
 interface Props {
-  role: "veterinarian" | "pet_sitter";
-  initialData: VetProfile | SitterProfile | null;
+  role: "veterinarian" | "pet_sitter" | "groomer";
+  initialData: VetProfile | SitterProfile | GroomerProfile | null;
 }
 
 export default function ProfessionalProfileForm({ role, initialData }: Props) {
   const t = useTranslations("portal");
   const isVet = role === "veterinarian";
-  const apiUrl = isVet ? "/api/vets/me" : "/api/sitters/me";
+  const isGroomer = role === "groomer";
+  const apiUrl = isVet ? "/api/vets/me" : isGroomer ? "/api/groomers/me" : "/api/sitters/me";
   const hasProfile = initialData !== null;
 
   /* ── Vet state ────────────────────────────────────────────────────────── */
@@ -54,16 +66,18 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
     isAcceptingClients: vetInit?.isAcceptingClients ?? true,
   });
 
-  /* ── Sitter state ─────────────────────────────────────────────────────── */
-  const sitterInit = initialData as SitterProfile | null;
+  /* ── Sitter / groomer state (both are service-based) ──────────────────── */
+  const sitterInit = initialData as (SitterProfile & Partial<GroomerProfile>) | null;
   const selectedServices = new Set(
     (sitterInit?.services ?? "").split(",").filter(Boolean),
   );
+  const initialPriceCents = isGroomer ? sitterInit?.priceFrom : sitterInit?.pricePerDay;
   const [sitterForm, setSitterForm] = useState({
+    salonName: sitterInit?.salonName ?? "",
     bio: sitterInit?.bio ?? "",
     services: selectedServices,
-    pricePerDay: sitterInit?.pricePerDay != null
-      ? String(sitterInit.pricePerDay / 100)
+    pricePerDay: initialPriceCents != null
+      ? String(initialPriceCents / 100)
       : "",
     city: sitterInit?.city ?? "",
     country: sitterInit?.country ?? "",
@@ -93,9 +107,10 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
           isAcceptingClients: vetForm.isAcceptingClients,
         }
       : {
+          ...(isGroomer ? { salonName: sitterForm.salonName.trim() || null } : {}),
           bio: sitterForm.bio.trim() || null,
           services: [...sitterForm.services].join(",") || null,
-          pricePerDay: sitterForm.pricePerDay
+          [isGroomer ? "priceFrom" : "pricePerDay"]: sitterForm.pricePerDay
             ? Math.round(parseFloat(sitterForm.pricePerDay) * 100)
             : null,
           city: sitterForm.city.trim() || null,
@@ -128,8 +143,8 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
     });
   }
 
-  const Icon = isVet ? Stethoscope : Home;
-  const title = isVet ? t("profVetTitle") : t("profSitterTitle");
+  const Icon = isVet ? Stethoscope : isGroomer ? Scissors : Home;
+  const title = isVet ? t("profVetTitle") : isGroomer ? t("profGroomerTitle") : t("profSitterTitle");
 
   return (
     <div className="max-w-2xl">
@@ -164,7 +179,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
             <label className="form-label">{t("petBioLabel")}</label>
             <textarea
               className="form-input min-h-[100px] resize-y"
-              placeholder={isVet ? t("profVetBioPlaceholder") : t("profSitterBioPlaceholder")}
+              placeholder={isVet ? t("profVetBioPlaceholder") : isGroomer ? t("profGroomerBioPlaceholder") : t("profSitterBioPlaceholder")}
               value={isVet ? vetForm.bio : sitterForm.bio}
               onChange={(e) =>
                 isVet
@@ -247,12 +262,23 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
             <h2 className="font-medium text-sm uppercase tracking-wide text-[var(--muted)]">
               {t("profServices")}
             </h2>
+            {isGroomer && (
+              <div>
+                <label className="form-label">{t("profSalonName")}</label>
+                <input
+                  className="form-input"
+                  placeholder={t("profSalonNamePlaceholder")}
+                  value={sitterForm.salonName}
+                  onChange={(e) => setSitterForm((f) => ({ ...f, salonName: e.target.value }))}
+                />
+              </div>
+            )}
             <div>
               <label className="block text-sm font-medium text-[var(--ink2)] mb-2">
                 {t("profServicesOffered")}
               </label>
               <div className="flex flex-wrap gap-2">
-                {SITTER_SERVICES.map(({ value, label }) => {
+                {(isGroomer ? GROOMER_SERVICES : SITTER_SERVICES).map(({ value, label }) => {
                   const active = sitterForm.services.has(value);
                   return (
                     <button
@@ -274,7 +300,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="form-label">
-                  {t("profDailyRate")}
+                  {isGroomer ? t("profPriceFrom") : t("profDailyRate")}
                 </label>
                 <input
                   type="number"

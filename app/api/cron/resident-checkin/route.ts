@@ -9,6 +9,7 @@ import {
   healthRecords,
   vetProfiles,
   sitterProfiles,
+  groomerProfiles,
   sellerProfiles,
   products,
   adoptionListings,
@@ -52,7 +53,7 @@ function isoFrom(now: Date, days: number): string {
 async function ensureUser(
   db: Db,
   account: { email: string; name: string },
-  role: "pet_owner" | "veterinarian" | "pet_sitter",
+  role: "pet_owner" | "veterinarian" | "pet_sitter" | "groomer",
   now: Date,
 ) {
   // No password on purpose: machine-only, nobody can log in as a resident.
@@ -153,6 +154,12 @@ async function ensureCommunity(
   if (!(await db.query.sitterProfiles.findFirst({ where: eq(sitterProfiles.userId, sitter.id) }))) {
     await db.insert(sitterProfiles).values({ userId: sitter.id, ...RESIDENT_COMMUNITY.sitter.profile });
     created.push("sitter");
+  }
+
+  const groomer = await ensureUser(db, RESIDENT_COMMUNITY.groomer.account, RESIDENT_COMMUNITY.groomer.role, now);
+  if (!(await db.query.groomerProfiles.findFirst({ where: eq(groomerProfiles.userId, groomer.id) }))) {
+    await db.insert(groomerProfiles).values({ userId: groomer.id, ...RESIDENT_COMMUNITY.groomer.profile });
+    created.push("groomer");
   }
 
   const seller = await ensureUser(db, RESIDENT_COMMUNITY.seller.account, "pet_owner", now);

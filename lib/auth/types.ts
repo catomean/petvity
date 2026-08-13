@@ -1,6 +1,6 @@
 import type { DefaultSession } from "next-auth";
 
-export type UserRole = "pet_owner" | "veterinarian" | "pet_sitter" | "admin";
+export type UserRole = "pet_owner" | "veterinarian" | "pet_sitter" | "groomer" | "admin";
 
 declare module "next-auth" {
   interface Session {

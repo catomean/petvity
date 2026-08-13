@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "تحتفظ بكل شيء — الحيوانات والسجلات الصحية والطلبات وإعلانات التبني تبقى كما هي. يمكن منح شارة «موثّق» بعد المراجعة.",
     "becomeProConfirm": "متابعة",
     "dashProBookingRequests": "{count, plural, one {طلب حجز واحد بانتظار ردك} two {طلبا حجز بانتظار ردك} few {# طلبات حجز بانتظار ردك} other {# طلب حجز بانتظار ردك}}",
-    "dashSellerOpenOrders": "{count, plural, one {طلب واحد بانتظار المعالجة} two {طلبان بانتظار المعالجة} few {# طلبات بانتظار المعالجة} other {# طلب بانتظار المعالجة}}"
+    "dashSellerOpenOrders": "{count, plural, one {طلب واحد بانتظار المعالجة} two {طلبان بانتظار المعالجة} few {# طلبات بانتظار المعالجة} other {# طلب بانتظار المعالجة}}",
+    "groomers": "مزيّنو الحيوانات",
+    "findNoGroomers": "لم يُعثر على مزيّنين",
+    "findNoGroomersCity": "لا يوجد مزيّنون يطابقون «{city}» بعد. جرّب مدينة أخرى.",
+    "findNoGroomersBody": "لم ينضم أي مزيّن بعد. هل تقدم خدمات العناية بالمظهر؟ أنشئ ملفك وتواصل مع أصحاب الحيوانات بالقرب منك.",
+    "findRegisterGroomer": "سجّل كمزيّن",
+    "findGroomerFallback": "مزيّن",
+    "findGroomerVisitHint": "جلسة عناية لمدة ساعة",
+    "findPriceFrom": "ابتداءً من {price}",
+    "becomeProGroomerTitle": "مزيّن حيوانات",
+    "becomeProGroomerDesc": "قدّم الاستحمام وقص الشعر والعناية بالفراء. حدد سعرك المبدئي وصالونك واظهر في البحث عن المحترفين.",
+    "profGroomerTitle": "ملف المزيّن",
+    "profGroomerBioPlaceholder": "تحدّث عن خبرتك وسلالاتك المفضلة وطريقة تعاملك مع الحيوانات القلقة…",
+    "profSalonName": "اسم الصالون",
+    "profSalonNamePlaceholder": "مثال: Salon Pfotenschick",
+    "profPriceFrom": "السعر المبدئي ($)",
+    "service_bath_brush": "استحمام وتمشيط",
+    "service_full_groom": "عناية كاملة",
+    "service_haircut": "قص وتصفيف",
+    "service_deshedding": "إزالة الوبر الميت",
+    "service_nail_trim": "قص الأظافر",
+    "service_teeth_cleaning": "تنظيف الأسنان"
   },
   "pets": {
     "name": "الاسم",
@@ -869,7 +890,9 @@
     "sex_unknown": "غير معروف",
     "adoptNoResults": "لا توجد حيوانات أليفة تطابق عوامل التصفية",
     "adoptClearFilters": "مسح عوامل التصفية",
-    "adoptFree": "مجاني"
+    "adoptFree": "مجاني",
+    "proGroomer": "مزيّن حيوانات",
+    "proPriceFrom": "ابتداءً من {price}$"
   },
   "twin": {
     "thriving": "يزدهر",

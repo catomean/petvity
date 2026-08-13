@@ -35,11 +35,13 @@
   --danger-bg: #FEE2E2;
   --danger-text: #991B1B;  /* 6.36:1 on --danger-bg — WCAG AA for badges/alerts */
 
-  /* User role badge colors (vet, sitter, admin — owner uses --teal) */
+  /* User role badge colors (vet, sitter, groomer, admin — owner uses --teal) */
   --role-vet-bg: #EFF6FF;
   --role-vet:    #1D4ED8;
   --role-sitter-bg: #FFFBEB;
   --role-sitter:    #92400E;
+  --role-groomer-bg: #FDF2F8;
+  --role-groomer:    #BE185D;
   --role-admin-bg: #F3E8FF;
   --role-admin:    #6B21A8;
 

@@ -13,3 +13,14 @@ export const SITTER_SERVICES = [
 
 export type SitterServiceId = (typeof SITTER_SERVICES)[number]["value"];
 
+export const GROOMER_SERVICES = [
+  { value: "bath_brush",     label: "Bath & Brush" },
+  { value: "full_groom",     label: "Full Groom" },
+  { value: "haircut",        label: "Haircut & Styling" },
+  { value: "deshedding",     label: "De-shedding" },
+  { value: "nail_trim",      label: "Nail Trim" },
+  { value: "teeth_cleaning", label: "Teeth Cleaning" },
+] as const;
+
+export type GroomerServiceId = (typeof GROOMER_SERVICES)[number]["value"];
+

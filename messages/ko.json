@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "모든 것이 유지됩니다 — 반려동물, 건강 기록, 주문, 입양 공고 모두 그대로입니다. '인증' 배지는 검토 후 부여됩니다.",
     "becomeProConfirm": "계속",
     "dashProBookingRequests": "{count, plural, other {#건의 예약 요청이 답변을 기다립니다}}",
-    "dashSellerOpenOrders": "{count, plural, other {#건의 주문이 처리 대기 중입니다}}"
+    "dashSellerOpenOrders": "{count, plural, other {#건의 주문이 처리 대기 중입니다}}",
+    "groomers": "미용사",
+    "findNoGroomers": "미용사를 찾을 수 없습니다",
+    "findNoGroomersCity": "아직 “{city}”에 맞는 미용사가 없습니다. 다른 도시를 시도해 보세요.",
+    "findNoGroomersBody": "아직 미용사가 없습니다. 미용 서비스를 제공하시나요? 프로필을 만들고 근처 반려인과 연결되세요.",
+    "findRegisterGroomer": "미용사로 등록",
+    "findGroomerFallback": "미용사",
+    "findGroomerVisitHint": "1시간 미용 세션",
+    "findPriceFrom": "{price}부터",
+    "becomeProGroomerTitle": "미용사",
+    "becomeProGroomerDesc": "목욕, 컷, 털 관리 서비스를 제공하세요. 시작 가격과 샵을 설정하면 전문가 검색에 표시됩니다.",
+    "profGroomerTitle": "미용사 프로필",
+    "profGroomerBioPlaceholder": "미용 경력, 자신 있는 견종, 불안해하는 반려동물을 다루는 방법을 소개하세요…",
+    "profSalonName": "샵 이름",
+    "profSalonNamePlaceholder": "예: Salon Pfotenschick",
+    "profPriceFrom": "시작 가격 ($)",
+    "service_bath_brush": "목욕 & 빗질",
+    "service_full_groom": "전체 미용",
+    "service_haircut": "컷 & 스타일링",
+    "service_deshedding": "죽은 털 제거",
+    "service_nail_trim": "발톱 손질",
+    "service_teeth_cleaning": "치아 관리"
   },
   "pets": {
     "name": "이름",
@@ -869,7 +890,9 @@
     "sex_unknown": "미상",
     "adoptNoResults": "필터에 맞는 반려동물이 없습니다",
     "adoptClearFilters": "필터 초기화",
-    "adoptFree": "무료"
+    "adoptFree": "무료",
+    "proGroomer": "반려동물 미용사",
+    "proPriceFrom": "${price}부터"
   },
   "twin": {
     "thriving": "번성 중",

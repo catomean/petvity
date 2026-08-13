@@ -68,12 +68,12 @@ describe("PATCH /api/admin/professionals/[userId]", () => {
     expect(body.error).toContain("User not found");
   });
 
-  it("returns 400 when user is not a vet or sitter", async () => {
+  it("returns 400 when user is not a professional", async () => {
     db._queueSelectResult([{ role: "pet_owner" }]); // pet_owner cannot be verified
     const res = await PATCH(makePatchRequest({ isVerified: true }), ROUTE_CONTEXT);
     expect(res.status).toBe(400);
     const body = await res.json();
-    expect(body.error).toContain("not a veterinarian or pet sitter");
+    expect(body.error).toContain("not a professional");
   });
 
   it("returns 200 when verifying a veterinarian", async () => {

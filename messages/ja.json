@@ -708,7 +708,28 @@
     "becomeProKeepsEverything": "すべてそのまま — ペット、健康記録、注文、譲渡掲載は変わりません。「認証済み」バッジは審査後に付与されます。",
     "becomeProConfirm": "続ける",
     "dashProBookingRequests": "{count, plural, other {#件の予約リクエストが返信待ちです}}",
-    "dashSellerOpenOrders": "{count, plural, other {#件の注文が対応待ちです}}"
+    "dashSellerOpenOrders": "{count, plural, other {#件の注文が対応待ちです}}",
+    "groomers": "トリマー",
+    "findNoGroomers": "トリマーが見つかりません",
+    "findNoGroomersCity": "「{city}」に一致するトリマーはまだいません。別の都市をお試しください。",
+    "findNoGroomersBody": "トリマーはまだ登録されていません。トリミングを提供していますか？プロフィールを作成して、近くの飼い主とつながりましょう。",
+    "findRegisterGroomer": "トリマーとして登録",
+    "findGroomerFallback": "トリマー",
+    "findGroomerVisitHint": "1時間のトリミング",
+    "findPriceFrom": "{price}から",
+    "becomeProGroomerTitle": "トリマー",
+    "becomeProGroomerDesc": "シャンプーやカット、被毛ケアを提供。開始価格とサロンを設定して、プロ検索に表示されます。",
+    "profGroomerTitle": "トリマープロフィール",
+    "profGroomerBioPlaceholder": "経験、得意な犬種、怖がりなペットへの接し方などを紹介しましょう…",
+    "profSalonName": "サロン名",
+    "profSalonNamePlaceholder": "例：Salon Pfotenschick",
+    "profPriceFrom": "開始価格 ($)",
+    "service_bath_brush": "シャンプー＆ブラッシング",
+    "service_full_groom": "フルグルーミング",
+    "service_haircut": "カット＆スタイリング",
+    "service_deshedding": "拜毛ケア",
+    "service_nail_trim": "爪切り",
+    "service_teeth_cleaning": "歯のクリーニング"
   },
   "pets": {
     "name": "名前",
@@ -869,7 +890,9 @@
     "sex_unknown": "不明",
     "adoptNoResults": "条件に一致するペットが見つかりません",
     "adoptClearFilters": "フィルターをクリア",
-    "adoptFree": "無料"
+    "adoptFree": "無料",
+    "proGroomer": "トリマー",
+    "proPriceFrom": "${price}から"
   },
   "twin": {
     "thriving": "絶好調",
