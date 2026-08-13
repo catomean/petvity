@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, vaccinations, adoptionListings, adoptionApplications } from "@/lib/db/schema";
-import { and, count, desc, eq, gte, inArray } from "drizzle-orm";
+import { pets, healthMetrics, vaccinations, adoptionListings, adoptionApplications, bookings, orders, orderItems, products } from "@/lib/db/schema";
+import { and, count, countDistinct, desc, eq, gte, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
@@ -12,7 +12,7 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId } from "@/lib/config/species";
 import type { TwinTrend } from "@/lib/domain/digital-twin";
-import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe, Heart } from "lucide-react";
+import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe, Heart, CalendarCheck, Store } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { translateSignalReason } from "@/lib/i18n/signal-reason";
@@ -50,8 +50,12 @@ export default async function DashboardPage() {
 
   const petIds = userPets.map((p) => p.id);
 
-  // Batch-fetch metrics + vaccinations + pending adoption applications in parallel
-  const [allMetrics, allVacc, [pendingAppsRow]] = await Promise.all([
+  const isProfessional =
+    session.user.role === "veterinarian" || session.user.role === "pet_sitter";
+
+  // Batch-fetch metrics + vaccinations + pending adoption applications
+  // + role-specific attention counts (pro booking requests, seller open orders)
+  const [allMetrics, allVacc, [pendingAppsRow], [proBookingsRow], [sellerOrdersRow]] = await Promise.all([
     petIds.length > 0
       ? db
           .select()
@@ -70,9 +74,29 @@ export default async function DashboardPage() {
         eq(adoptionListings.ownerId, session.user.id),
         eq(adoptionApplications.status, "pending"),
       )),
+    isProfessional
+      ? db
+          .select({ total: count() })
+          .from(bookings)
+          .where(and(
+            eq(bookings.professionalId, session.user.id),
+            eq(bookings.status, "pending"),
+          ))
+      : Promise.resolve([{ total: 0 }]),
+    db
+      .select({ total: countDistinct(orders.id) })
+      .from(orders)
+      .innerJoin(orderItems, eq(orderItems.orderId, orders.id))
+      .innerJoin(products, eq(products.id, orderItems.productId))
+      .where(and(
+        eq(products.sellerId, session.user.id),
+        inArray(orders.status, ["pending", "confirmed"]),
+      )),
   ]);
 
   const pendingAppsCount = pendingAppsRow?.total ?? 0;
+  const proBookingsCount = proBookingsRow?.total ?? 0;
+  const sellerOrdersCount = sellerOrdersRow?.total ?? 0;
 
   // Group in memory by petId
   const metricsByPet = new Map<string, typeof allMetrics>();
@@ -165,9 +189,33 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      {/* Needs-attention strip — shown when there are pending applications or vaccines due */}
-      {(pendingAppsCount > 0 || vaccDueSoonCount > 0) && (
+      {/* Needs-attention strip — everything across the user's roles that wants a reply */}
+      {(pendingAppsCount > 0 || vaccDueSoonCount > 0 || proBookingsCount > 0 || sellerOrdersCount > 0) && (
         <div className="mb-6 flex flex-col sm:flex-row gap-3">
+          {proBookingsCount > 0 && (
+            <Link
+              href="/portal/bookings"
+              className="flex-1 flex items-center gap-3 rounded-xl border border-[var(--teal)] bg-[var(--teal-light)] px-4 py-3 no-underline hover:brightness-95 transition-colors"
+            >
+              <CalendarCheck className="w-4 h-4 text-[var(--teal)] flex-shrink-0" />
+              <span className="text-sm font-medium text-[var(--ink)] flex-1">
+                {t("dashProBookingRequests", { count: proBookingsCount })}
+              </span>
+              <span className="text-xs font-medium text-[var(--teal)]">{t("dashReview")} →</span>
+            </Link>
+          )}
+          {sellerOrdersCount > 0 && (
+            <Link
+              href="/portal/my-products/orders"
+              className="flex-1 flex items-center gap-3 rounded-xl border border-[var(--teal)] bg-[var(--teal-light)] px-4 py-3 no-underline hover:brightness-95 transition-colors"
+            >
+              <Store className="w-4 h-4 text-[var(--teal)] flex-shrink-0" />
+              <span className="text-sm font-medium text-[var(--ink)] flex-1">
+                {t("dashSellerOpenOrders", { count: sellerOrdersCount })}
+              </span>
+              <span className="text-xs font-medium text-[var(--teal)]">{t("dashReview")} →</span>
+            </Link>
+          )}
           {pendingAppsCount > 0 && (
             <Link
               href="/portal/adoptions"
