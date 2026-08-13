@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ShoppingBag,
-  Package,
   Clock,
   CheckCircle,
   Truck,
@@ -16,6 +15,7 @@ import {
 } from "lucide-react";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
+import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice, formatIsoDate } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
 import { useTranslations } from "next-intl";
@@ -29,6 +29,7 @@ interface SellerItem {
   priceCents: number;
   productName: string;
   productImageUrl: string | null;
+  productCategory: string;
 }
 
 interface SellerOrder {
@@ -101,13 +102,13 @@ function SellerOrderCard({ order }: { order: SellerOrder }) {
 
           {order.items.map((item) => (
             <div key={item.id} className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[var(--off)] flex items-center justify-center flex-shrink-0">
-                {item.productImageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.productImageUrl} alt={item.productName} className="w-full h-full object-cover rounded-lg" />
-                ) : (
-                  <Package className="w-4 h-4 text-[var(--faint)]" />
-                )}
+              <div className="w-10 h-10 rounded-lg bg-[var(--off)] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <ProductArt
+                  imageUrl={item.productImageUrl}
+                  alt={item.productName}
+                  category={item.productCategory}
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-[var(--ink)]">{item.productName}</p>

@@ -6,6 +6,7 @@ import { APP } from "@/lib/config/app";
 import { PRODUCT_CATEGORY_CONFIG } from "@/lib/config/products";
 import type { ProductCategoryId } from "@/lib/config/products";
 import { ShoppingBag, PawPrint, Package } from "lucide-react";
+import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -95,7 +96,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
           <div className="w-14 h-14 rounded-2xl ed-icon flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="w-7 h-7" />
           </div>
-          <h1 className="ed-title mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
             {t("shopHeroTitle")}
           </h1>
           <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-6">
@@ -170,17 +171,13 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                     className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden hover:shadow-md transition-shadow group flex flex-col no-underline"
                   >
                     {/* Image */}
-                    <div className="aspect-square bg-[var(--off)] flex items-center justify-center text-5xl overflow-hidden">
-                      {product.imageUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={product.imageUrl}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span>{catCfg?.emoji ?? "📦"}</span>
-                      )}
+                    <div className="aspect-square bg-[var(--off)] flex items-center justify-center overflow-hidden">
+                      <ProductArt
+                        imageUrl={product.imageUrl}
+                        alt={product.name}
+                        category={product.category}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
 
                     {/* Info */}
