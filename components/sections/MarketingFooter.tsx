@@ -21,9 +21,9 @@ export default async function MarketingFooter() {
     {
       heading: t("sections.product"),
       links: [
-        { label: t("links.features"),   href: "/features" },
-        { label: t("links.howItWorks"), href: "/#how-it-works" },
-        { label: t("links.pricing"),    href: "/pricing" },
+        { label: t("links.features"), href: "/features" },
+        { label: t("links.pricing"),  href: "/pricing" },
+        { label: t("links.shop"),     href: "/shop" },
         { label: t("links.adoptAPet"), href: "/adopt" },
       ],
     },
@@ -35,17 +35,17 @@ export default async function MarketingFooter() {
       heading: t("sections.professionals"),
       links: [
         { label: t("links.forVetsSitters"), href: "/pros" },
-        { label: t("links.joinAsVet"),      href: "/register?role=vet" },
-        { label: t("links.joinAsSitter"),   href: "/register?role=sitter" },
-        { label: t("links.contactUs"),      href: `mailto:${APP.supportEmail}` },
+        { label: t("links.joinAsVet"),     href: "/register?role=vet" },
+        { label: t("links.joinAsSitter"),  href: "/register?role=sitter" },
+        { label: t("links.joinAsGroomer"), href: "/register?role=groomer" },
       ],
     },
     {
-      heading: t("sections.support"),
+      heading: t("sections.company"),
       links: [
-        { label: t("links.helpCentre"), href: "#" },
-        { label: t("links.status"),     href: "#" },
-        { label: t("links.community"),  href: "#" },
+        { label: t("links.about"),     href: "/about" },
+        { label: t("links.liveDemo"),  href: "/demo" },
+        { label: t("links.contactUs"), href: `mailto:${APP.supportEmail}` },
       ],
     },
     {

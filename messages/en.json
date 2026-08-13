@@ -10,19 +10,27 @@
     "logIn": "Log in",
     "getStartedFree": "Get started free",
     "goToDashboard": "Go to dashboard",
-    "megamenuTitle": "What you can do",
     "speciesGuides": "Species guides",
     "register": "Get started",
     "login": "Log in",
-    "tryDemo": "Try the live demo"
+    "tryDemo": "Try the live demo",
+    "platform": "Platform",
+    "pillarHealth": "Health & Digital Twin",
+    "pillarHealthDesc": "Daily check-ins, vitals, and a living emotional portrait.",
+    "pillarPros": "Vets, Sitters & Groomers",
+    "pillarProsDesc": "Find, book, and review trusted professionals near you.",
+    "pillarShop": "Marketplace",
+    "pillarShopDesc": "Food, toys, and care essentials from real sellers.",
+    "pillarAdopt": "Adoption",
+    "pillarAdoptDesc": "List a pet or find your next companion — humanely."
   },
   "footer": {
     "sections": {
       "product": "Product",
       "guides": "Guides",
       "professionals": "Professionals",
-      "support": "Support",
-      "legal": "Legal"
+      "legal": "Legal",
+      "company": "Company"
     },
     "links": {
       "features": "Features",
@@ -36,12 +44,13 @@
       "joinAsVet": "Join as a veterinarian",
       "joinAsSitter": "Join as a pet sitter",
       "contactUs": "Contact us",
-      "helpCentre": "Help centre",
-      "status": "Status",
-      "community": "Community",
       "privacyPolicy": "Privacy Policy",
       "termsOfService": "Terms of Service",
-      "cookiePolicy": "Cookie Policy"
+      "cookiePolicy": "Cookie Policy",
+      "shop": "Shop",
+      "about": "About",
+      "liveDemo": "Try the live demo",
+      "joinAsGroomer": "Join as a groomer"
     },
     "bottom": {
       "rights": "All rights reserved.",
@@ -729,7 +738,11 @@
     "service_haircut": "Haircut & Styling",
     "service_deshedding": "De-shedding",
     "service_nail_trim": "Nail Trim",
-    "service_teeth_cleaning": "Teeth Cleaning"
+    "service_teeth_cleaning": "Teeth Cleaning",
+    "navSectionCare": "Care team",
+    "navSectionShop": "Marketplace",
+    "navSectionAdoption": "Adoption",
+    "navSectionBusiness": "Your business"
   },
   "pets": {
     "name": "Name",
@@ -1038,7 +1051,7 @@
     "heroBadge": "10 species · Digital Twin · Free forever",
     "heroTitle1": "Your pet has a signal.",
     "heroTitle2": "Now you can read it.",
-    "heroSubtitle": "One daily check-in builds a living Digital Twin — physical vitals plus emotional state, compared against species-specific norms. When something shifts, {app} tells you what, and connects you to a vet who can act on it.",
+    "heroSubtitle": "One daily check-in builds a living Digital Twin of your pet. When something shifts, {app} tells you what — and puts everything you need next in one place: trusted vets, sitters and groomers, a marketplace, and a humane adoption network.",
     "trustNoCreditCard": "No credit card",
     "trustUnlimitedPets": "Unlimited pets",
     "trustCancelAnytime": "Cancel anytime",
@@ -1078,8 +1091,8 @@
     "ecosystemEyebrow": "The full platform",
     "ecosystemTitle": "Everything pet care needs",
     "ecosystemDesc": "Health tracking is just the start. Petvity is the only platform that covers the complete care journey — from daily check-ins to finding a vet to giving a pet a home.",
-    "vetTitle": "Find a Vet or Sitter",
-    "vetDesc": "Search verified veterinarians and pet sitters near you. Read reviews, check availability, and book directly — without leaving the app.",
+    "vetTitle": "Find a Vet, Sitter or Groomer",
+    "vetDesc": "Search trusted veterinarians, sitters, and groomers near you. See real reviews and availability, and book directly — without leaving the platform.",
     "vetBullet1": "Search by specialty or location",
     "vetBullet2": "Verified reviews from real bookings",
     "vetBullet3": "Book and manage appointments",

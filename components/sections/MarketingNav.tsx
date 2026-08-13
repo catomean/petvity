@@ -3,28 +3,34 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  Activity, Syringe, FileText, Globe, Zap, Brain,
-  PawPrint, Menu, X, ChevronDown, Search, ShoppingBag, Heart,
+  Activity, Search, ShoppingBag, Heart,
+  PawPrint, Menu, X, ChevronDown,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
+import { SPECIES_CONFIG, SPECIES_OPTIONS } from "@/lib/config/species";
+import type { SpeciesId } from "@/lib/config/species";
 import { useTranslations, useLocale } from "next-intl";
 import { useSession } from "next-auth/react";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import type { LocaleCode } from "@/lib/config/locales";
 
+/**
+ * Marketing header. Deliberately small: three destinations and two actions.
+ * Everything else lives one hover away in the Platform menu — four pillars,
+ * each linking to its real surface, plus the species guides.
+ */
 export default function MarketingNav() {
   const t = useTranslations("nav");
+  const tPub = useTranslations("public");
   const locale = useLocale() as LocaleCode;
   const { status, data: session } = useSession();
   // Returning users get one CTA pointing where they actually want to go.
-  // status === "loading" hides the CTAs until resolved — avoids flashing
-  // "Log in" then swapping to "Dashboard" once the session loads.
   const dashboardHref = session?.user?.role === "admin" ? "/admin/users" : "/portal/dashboard";
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [featuresOpen, setFeaturesOpen] = useState(false);
+  const [platformOpen, setPlatformOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const featuresRef = useRef<HTMLDivElement>(null);
+  const platformRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -34,7 +40,7 @@ export default function MarketingNav() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") { setFeaturesOpen(false); setMenuOpen(false); }
+      if (e.key === "Escape") { setPlatformOpen(false); setMenuOpen(false); }
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -42,38 +48,30 @@ export default function MarketingNav() {
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
-      if (featuresRef.current && !featuresRef.current.contains(e.target as Node)) {
-        setFeaturesOpen(false);
+      if (platformRef.current && !platformRef.current.contains(e.target as Node)) {
+        setPlatformOpen(false);
       }
     }
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
-  // Feature menu items with hardcoded labels (not translated — marketing copy stays in English)
-  const FEATURE_ITEMS = [
-    { icon: Activity,    label: "Health Tracking",    desc: "Daily vitals, mood, energy — all in one place.",               href: "/features" },
-    { icon: Brain,       label: "Digital Twin",       desc: "Living emotional portrait: Thriving, Content, Struggling.",    href: "/features" },
-    { icon: Zap,         label: "Wellness Signals",   desc: "Auto healthy / watch / concern scoring.",                      href: "/features" },
-    { icon: Syringe,     label: "Vaccinations",       desc: "Stay ahead of boosters and immunity gaps.",                    href: "/features" },
-    { icon: FileText,    label: "Health Records",     desc: "Vet visits, lab results, surgery history.",                    href: "/features" },
-    { icon: Globe,       label: "Public Profiles",    desc: "Shareable pet pages — your pet, the influencer.",             href: "/features" },
-    { icon: Search,      label: "Find a Vet or Sitter", desc: "Book verified local professionals in minutes.",             href: "/features" },
-    { icon: ShoppingBag, label: "Pet Marketplace",    desc: "Shop for food, accessories, and health essentials.",           href: "/features" },
-    { icon: Heart,       label: "Adoption Listings",  desc: "List or find pets for adoption, fully managed.",              href: "/features" },
+  // The four platform pillars — each links to its real surface.
+  const PILLARS = [
+    { icon: Activity,    label: t("pillarHealth"), desc: t("pillarHealthDesc"), href: "/features" },
+    { icon: Search,      label: t("pillarPros"),   desc: t("pillarProsDesc"),   href: "/pros" },
+    { icon: ShoppingBag, label: t("pillarShop"),   desc: t("pillarShopDesc"),   href: "/shop" },
+    { icon: Heart,       label: t("pillarAdopt"),  desc: t("pillarAdoptDesc"),  href: "/adopt" },
   ];
 
-  const GUIDES_ITEMS = [
-    { emoji: "🐕", label: "Dogs",        href: "/species/dog" },
-    { emoji: "🐈", label: "Cats",        href: "/species/cat" },
-    { emoji: "🐴", label: "Horses",      href: "/species/horse" },
-    { emoji: "🐦", label: "Birds",       href: "/species/bird" },
-    { emoji: "🐇", label: "Rabbits",     href: "/species/rabbit" },
-    { emoji: "🐹", label: "Guinea Pigs", href: "/species/guinea_pig" },
-    { emoji: "🐹", label: "Hamsters",    href: "/species/hamster" },
-    { emoji: "🦎", label: "Reptiles",    href: "/species/reptile" },
-    { emoji: "🐟", label: "Fish",        href: "/species/fish" },
-  ];
+  const GUIDES = SPECIES_OPTIONS.filter(({ value }) => value !== "other").map(({ value }) => ({
+    href: `/species/${value}`,
+    emoji: SPECIES_CONFIG[value as SpeciesId].emoji,
+    label: tPub(`species_${value}` as Parameters<typeof tPub>[0]),
+  }));
+
+  const linkCls =
+    "px-3 py-2 rounded-lg text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] hover:bg-white/[0.06] transition-colors no-underline";
 
   return (
     <header
@@ -90,32 +88,27 @@ export default function MarketingNav() {
           <span className="font-semibold text-[var(--platinum)] text-lg tracking-wide">{APP.name}</span>
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop nav — Platform ▾ · Pricing · Adopt */}
         <nav className="hidden md:flex items-center gap-1">
-          {/* Features megamenu trigger */}
-          <div ref={featuresRef} className="relative">
+          <div ref={platformRef} className="relative">
             <button
-              onClick={() => setFeaturesOpen((o) => !o)}
+              onClick={() => setPlatformOpen((o) => !o)}
               className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] hover:bg-white/[0.06] transition-colors"
             >
-              {t("features")}
+              {t("platform")}
               <ChevronDown
-                className={`w-3.5 h-3.5 transition-transform duration-150 ${featuresOpen ? "rotate-180" : ""}`}
+                className={`w-3.5 h-3.5 transition-transform duration-150 ${platformOpen ? "rotate-180" : ""}`}
               />
             </button>
 
-            {/* Megamenu */}
-            {featuresOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-[var(--carbon)] rounded-2xl border border-[var(--hairline)] shadow-xl p-5">
-                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--mist-dark)] mb-4 px-1">
-                  {t("megamenuTitle")}
-                </p>
-                <div className="grid grid-cols-2 gap-1">
-                  {FEATURE_ITEMS.map(({ icon: Icon, label, desc, href }) => (
+            {platformOpen && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[440px] bg-[var(--carbon)] rounded-2xl border border-[var(--hairline)] shadow-xl p-5">
+                <div className="grid grid-cols-1 gap-1">
+                  {PILLARS.map(({ icon: Icon, label, desc, href }) => (
                     <Link
-                      key={label}
+                      key={href}
                       href={href}
-                      onClick={() => setFeaturesOpen(false)}
+                      onClick={() => setPlatformOpen(false)}
                       className="flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.05] transition-colors no-underline group"
                     >
                       <div className="w-8 h-8 rounded-lg bg-[var(--champagne)]/10 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-[var(--champagne)] transition-colors">
@@ -133,46 +126,24 @@ export default function MarketingNav() {
                     {t("speciesGuides")}
                   </p>
                   <div className="flex items-center gap-2 flex-wrap">
-                    {GUIDES_ITEMS.map(({ emoji, label, href }) => (
+                    {GUIDES.map(({ emoji, label, href }) => (
                       <Link
-                        key={label}
+                        key={href}
                         href={href}
-                        onClick={() => setFeaturesOpen(false)}
+                        onClick={() => setPlatformOpen(false)}
                         className="flex items-center gap-1.5 text-xs font-medium text-[var(--platinum-dim)] bg-white/[0.05] hover:bg-white/[0.09] hover:text-[var(--platinum)] px-3 py-1.5 rounded-full no-underline transition-colors"
                       >
                         <span>{emoji}</span>{label}
                       </Link>
                     ))}
-                    <Link
-                      href="/adopt"
-                      onClick={() => setFeaturesOpen(false)}
-                      className="flex items-center gap-1.5 text-xs font-medium text-[var(--danger-soft)] bg-white/[0.05] hover:bg-white/[0.09] px-3 py-1.5 rounded-full no-underline transition-colors ms-auto"
-                    >
-                      ❤️ {t("adopt")}
-                    </Link>
                   </div>
                 </div>
               </div>
             )}
           </div>
 
-          <Link
-            href="/#how-it-works"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] hover:bg-white/[0.06] transition-colors no-underline"
-          >
-            {t("howItWorks")}
-          </Link>
-          <Link
-            href="/pricing"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] hover:bg-white/[0.06] transition-colors no-underline"
-          >
+          <Link href="/pricing" className={linkCls}>
             {t("pricing")}
-          </Link>
-          <Link
-            href="/pros"
-            className="px-3 py-2 rounded-lg text-sm font-medium text-[var(--champagne)] hover:bg-white/[0.06] transition-colors no-underline"
-          >
-            {t("forPros")}
           </Link>
           <Link
             href="/adopt"
@@ -182,7 +153,7 @@ export default function MarketingNav() {
           </Link>
         </nav>
 
-        {/* Desktop CTA */}
+        {/* Desktop actions */}
         <div className="hidden md:flex items-center gap-3">
           <div className="w-32"><LocaleSwitcher current={locale} tone="dark" /></div>
           {status === "loading" ? null : status === "authenticated" ? (
@@ -191,12 +162,6 @@ export default function MarketingNav() {
             </Link>
           ) : (
             <>
-              <Link
-                href="/demo"
-                className="text-sm font-medium text-[var(--champagne)] hover:text-[var(--champagne-bright)] transition-colors no-underline"
-              >
-                {t("tryDemo")}
-              </Link>
               <Link
                 href="/login"
                 className="text-sm font-medium text-[var(--platinum-dim)] hover:text-[var(--platinum)] transition-colors no-underline"
@@ -220,16 +185,13 @@ export default function MarketingNav() {
         </button>
       </div>
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer — same IA as desktop: pillars, guides, actions */}
       {menuOpen && (
-        <div className="md:hidden bg-[var(--carbon)] border-t border-[var(--hairline)] shadow-lg">
+        <div className="md:hidden bg-[var(--carbon)] border-t border-[var(--hairline)] shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="section-inner py-4 flex flex-col gap-1">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--mist-dark)] px-3 pb-2">
-              {t("features")}
-            </p>
-            {FEATURE_ITEMS.map(({ icon: Icon, label, desc, href }) => (
+            {PILLARS.map(({ icon: Icon, label, desc, href }) => (
               <Link
-                key={label}
+                key={href}
                 href={href}
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.05] transition-colors no-underline"
@@ -243,14 +205,21 @@ export default function MarketingNav() {
                 </div>
               </Link>
             ))}
+            <Link
+              href="/pricing"
+              onClick={() => setMenuOpen(false)}
+              className="px-3 py-2.5 text-sm font-medium text-[var(--platinum-dim)] no-underline"
+            >
+              {t("pricing")}
+            </Link>
             <div className="border-t border-[var(--hairline)] mt-3 pt-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-[var(--mist-dark)] px-3 pb-2">
                 {t("speciesGuides")}
               </p>
               <div className="flex gap-2 px-3 pb-3 flex-wrap">
-                {GUIDES_ITEMS.map(({ emoji, label, href }) => (
+                {GUIDES.map(({ emoji, label, href }) => (
                   <Link
-                    key={label}
+                    key={href}
                     href={href}
                     onClick={() => setMenuOpen(false)}
                     className="flex items-center gap-1 text-sm font-medium text-[var(--platinum-dim)] bg-white/[0.05] px-3 py-1.5 rounded-full no-underline"
@@ -261,20 +230,6 @@ export default function MarketingNav() {
               </div>
             </div>
             <div className="border-t border-[var(--hairline)] pt-3 flex flex-col gap-2">
-              <Link
-                href="/pros"
-                onClick={() => setMenuOpen(false)}
-                className="px-3 py-2.5 text-sm font-medium text-[var(--champagne)] no-underline"
-              >
-                🩺 {t("forPros")}
-              </Link>
-              <Link
-                href="/adopt"
-                onClick={() => setMenuOpen(false)}
-                className="px-3 py-2.5 text-sm font-medium text-[var(--danger-soft)] no-underline"
-              >
-                ❤️ {t("adopt")}
-              </Link>
               {status === "loading" ? null : status === "authenticated" ? (
                 <Link
                   href={dashboardHref}

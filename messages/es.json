@@ -10,19 +10,27 @@
     "logIn": "Iniciar sesión",
     "getStartedFree": "Empezar gratis",
     "goToDashboard": "Ir al panel",
-    "megamenuTitle": "Lo que puedes hacer",
     "speciesGuides": "Guías por especie",
     "register": "Empezar",
     "login": "Iniciar sesión",
-    "tryDemo": "Probar la demo"
+    "tryDemo": "Probar la demo",
+    "platform": "Plataforma",
+    "pillarHealth": "Salud y gemelo digital",
+    "pillarHealthDesc": "Chequeos diarios, constantes y un retrato emocional vivo.",
+    "pillarPros": "Veterinarios, cuidadores y peluqueros",
+    "pillarProsDesc": "Encuentra, reserva y valora profesionales de confianza.",
+    "pillarShop": "Marketplace",
+    "pillarShopDesc": "Comida, juguetes y cuidados de vendedores reales.",
+    "pillarAdopt": "Adopción",
+    "pillarAdoptDesc": "Publica una mascota o encuentra tu próximo compañero."
   },
   "footer": {
     "sections": {
       "product": "Producto",
       "guides": "Guías",
       "professionals": "Profesionales",
-      "support": "Soporte",
-      "legal": "Legal"
+      "legal": "Legal",
+      "company": "Empresa"
     },
     "links": {
       "features": "Funciones",
@@ -36,12 +44,13 @@
       "joinAsVet": "Únete como veterinario",
       "joinAsSitter": "Únete como cuidador",
       "contactUs": "Contáctanos",
-      "helpCentre": "Centro de ayuda",
-      "status": "Estado",
-      "community": "Comunidad",
       "privacyPolicy": "Política de privacidad",
       "termsOfService": "Términos de servicio",
-      "cookiePolicy": "Política de cookies"
+      "cookiePolicy": "Política de cookies",
+      "shop": "Tienda",
+      "about": "Sobre nosotros",
+      "liveDemo": "Probar la demo",
+      "joinAsGroomer": "Únete como peluquero"
     },
     "bottom": {
       "rights": "Todos los derechos reservados.",
@@ -729,7 +738,11 @@
     "service_haircut": "Corte y estilismo",
     "service_deshedding": "Deslanado",
     "service_nail_trim": "Corte de uñas",
-    "service_teeth_cleaning": "Limpieza dental"
+    "service_teeth_cleaning": "Limpieza dental",
+    "navSectionCare": "Equipo de cuidado",
+    "navSectionShop": "Marketplace",
+    "navSectionAdoption": "Adopción",
+    "navSectionBusiness": "Tu negocio"
   },
   "pets": {
     "name": "Nombre",
@@ -1038,7 +1051,7 @@
     "heroBadge": "10 especies · Gemelo digital · Gratis para siempre",
     "heroTitle1": "Tu mascota tiene una señal.",
     "heroTitle2": "Ahora puedes leerla.",
-    "heroSubtitle": "Un registro diario construye un gemelo digital vivo — signos vitales físicos más estado emocional, comparados con las normas específicas de la especie. Cuando algo cambia, {app} te dice qué — y te conecta con un veterinario.",
+    "heroSubtitle": "Un chequeo diario construye un gemelo digital vivo de tu mascota. Cuando algo cambia, {app} te dice qué — y reúne lo siguiente en un solo lugar: veterinarios, cuidadores y peluqueros de confianza, un marketplace y una red de adopción humana.",
     "trustNoCreditCard": "Sin tarjeta de crédito",
     "trustUnlimitedPets": "Mascotas ilimitadas",
     "trustCancelAnytime": "Cancela cuando quieras",
@@ -1078,8 +1091,8 @@
     "ecosystemEyebrow": "La plataforma completa",
     "ecosystemTitle": "Todo lo que el cuidado de mascotas necesita",
     "ecosystemDesc": "El seguimiento de salud es solo el comienzo. Petvity es la única plataforma que cubre el recorrido completo de cuidado.",
-    "vetTitle": "Encontrar un veterinario o cuidador",
-    "vetDesc": "Busca veterinarios y cuidadores verificados cerca de ti. Lee reseñas, verifica disponibilidad y reserva directamente.",
+    "vetTitle": "Encuentra veterinario, cuidador o peluquero",
+    "vetDesc": "Busca veterinarios, cuidadores y peluqueros de confianza cerca de ti. Reseñas reales, disponibilidad y reserva directa — sin salir de la plataforma.",
     "vetBullet1": "Busca por especialidad o ubicación",
     "vetBullet2": "Reseñas verificadas de reservas reales",
     "vetBullet3": "Reservar y gestionar citas",
