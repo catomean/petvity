@@ -6,15 +6,24 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PawPrint, Stethoscope, Heart } from "lucide-react";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
+import { USER_ROLE_CONFIG } from "@/lib/config/users";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 
-type IntendedRole = "pet_owner" | "veterinarian" | "pet_sitter";
+const INTENDED_ROLES = ["pet_owner", "veterinarian", "pet_sitter"] as const;
+type IntendedRole = (typeof INTENDED_ROLES)[number];
 
-const ROLE_OPTIONS: { id: IntendedRole; icon: React.ElementType; label: string; desc: string }[] = [
-  { id: "pet_owner",    icon: PawPrint,     label: "Pet owner",   desc: "Track my pet's health" },
-  { id: "veterinarian", icon: Stethoscope,  label: "Veterinarian", desc: "Offer vet services" },
-  { id: "pet_sitter",   icon: Heart,        label: "Pet sitter",   desc: "Offer sitting & boarding" },
-];
+/* Labels come from the role SSOT; icons and the sign-up pitch are auth-page UI. */
+const ROLE_UI: Record<IntendedRole, { icon: React.ElementType; desc: string }> = {
+  pet_owner:    { icon: PawPrint,    desc: "Track my pet's health" },
+  veterinarian: { icon: Stethoscope, desc: "Offer vet services" },
+  pet_sitter:   { icon: Heart,       desc: "Offer sitting & boarding" },
+};
+
+const ROLE_OPTIONS = INTENDED_ROLES.map((id) => ({
+  id,
+  label: USER_ROLE_CONFIG[id].label,
+  ...ROLE_UI[id],
+}));
 
 function RegisterForm() {
   const router = useRouter();
@@ -94,12 +103,12 @@ function RegisterForm() {
                 onClick={() => setIntendedRole(id)}
                 className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 text-center transition-all ${
                   selected
-                    ? "border-[var(--gold)] bg-[var(--gold-light)]"
+                    ? "border-[var(--teal)] bg-[var(--teal-light)]"
                     : "border-[var(--border)] hover:border-[var(--teal-light)] hover:bg-[var(--off)]"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${selected ? "text-[var(--gold-dark)]" : "text-[var(--muted)]"}`} />
-                <span className={`text-xs font-semibold leading-tight ${selected ? "text-[var(--gold-dark)]" : "text-[var(--ink2)]"}`}>
+                <Icon className={`w-5 h-5 ${selected ? "text-[var(--teal)]" : "text-[var(--muted)]"}`} />
+                <span className={`text-xs font-semibold leading-tight ${selected ? "text-[var(--teal)]" : "text-[var(--ink2)]"}`}>
                   {label}
                 </span>
                 <span className="text-xs text-[var(--muted)] leading-tight hidden sm:block">{desc}</span>
@@ -111,9 +120,7 @@ function RegisterForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Your name
-          </label>
+          <label className="form-label">Your name</label>
           <input
             ref={nameRef}
             type="text"
@@ -126,9 +133,7 @@ function RegisterForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Email
-          </label>
+          <label className="form-label">Email</label>
           <input
             type="email"
             autoComplete="email"
@@ -141,23 +146,19 @@ function RegisterForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Password
-          </label>
+          <label className="form-label">Password</label>
           <PasswordInput
             value={password}
             onChange={setPassword}
             autoComplete="new-password"
             required
             minLength={PASSWORD_MIN_LENGTH}
-            placeholder="At least 8 characters"
+            placeholder={`At least ${PASSWORD_MIN_LENGTH} characters`}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Confirm password
-          </label>
+          <label className="form-label">Confirm password</label>
           <PasswordInput
             value={confirm}
             onChange={setConfirm}
@@ -182,13 +183,15 @@ function RegisterForm() {
 
       <p className="mt-6 text-center text-sm text-[var(--muted)]">
         Already have an account?{" "}
-        <Link href="/login" className="text-[var(--gold-dark)] hover:underline font-medium">
+        <Link href="/login" className="link-accent">
           Log in
         </Link>
       </p>
 
       <p className="mt-5 text-center text-xs text-[var(--muted)] leading-relaxed">
-        By continuing, you agree to our Terms of Service and Privacy Policy.
+        By continuing, you agree to our{" "}
+        <Link href="/en/legal/terms" className="link-accent font-normal">Terms of Service</Link>{" "}and{" "}
+        <Link href="/en/legal/privacy" className="link-accent font-normal">Privacy Policy</Link>.
       </p>
     </>
   );

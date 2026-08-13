@@ -365,7 +365,7 @@ function ReviewModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("bookingsCommentLabel")}</label>
+            <label className="form-label">{t("bookingsCommentLabel")}</label>
             <textarea
               className="form-input min-h-[88px] resize-none"
               placeholder={t("bookingsCommentPlaceholder")}

@@ -119,7 +119,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
 
       {/* Date */}
       <div className="card p-5">
-        <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+        <label className="form-label">
           {t("logDate")}
         </label>
         <input
@@ -138,7 +138,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {physicalFields.map(({ key, label, unit, step, placeholder, hint }) => (
             <div key={key}>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {label}
                 <span className="text-[var(--muted)] font-normal ms-1">{unit}</span>
               </label>
@@ -172,7 +172,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
             const labelKey = `metric${metricId.charAt(0).toUpperCase()}${metricId.slice(1)}Label` as Parameters<typeof t>[0];
             return (
               <div key={metricId}>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                <label className="form-label">
                   {t(labelKey)}
                 </label>
                 <select
@@ -201,7 +201,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
 
       {/* Notes */}
       <div className="card p-5">
-        <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+        <label className="form-label">
           {t("logNotes")} <span className="text-[var(--faint)] font-normal">{t("notesOptional")}</span>
         </label>
         <textarea

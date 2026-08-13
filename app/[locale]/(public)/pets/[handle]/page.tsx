@@ -132,7 +132,7 @@ export default async function PublicPetPage({ params }: Params) {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--cream)]">
+    <div className="min-h-screen bg-[var(--off)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(petSchema) }} />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between">
@@ -149,7 +149,7 @@ export default async function PublicPetPage({ params }: Params) {
         <div className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm">
           {/* Avatar header */}
           <div className="bg-[var(--warm-dark)] h-28 flex items-end justify-center pb-0 relative">
-            <div className="absolute bottom-0 translate-y-1/2 w-24 h-24 rounded-full bg-[var(--gold-light)] border-4 border-white flex items-center justify-center text-4xl overflow-hidden">
+            <div className="absolute bottom-0 translate-y-1/2 w-24 h-24 rounded-full bg-[var(--accent-light)] border-4 border-white flex items-center justify-center text-4xl overflow-hidden">
               {pet.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

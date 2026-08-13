@@ -173,7 +173,7 @@ export default function AdminProductsPage() {
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 Name <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input className="form-input" required value={form.name}
@@ -182,7 +182,7 @@ export default function AdminProductsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 Price ($) <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input className="form-input" required type="number" min="0.01" step="0.01"
@@ -191,7 +191,7 @@ export default function AdminProductsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">Category</label>
+              <label className="form-label">Category</label>
               <select className="form-input" value={form.category}
                 onChange={(e) => field("category", e.target.value)}>
                 {CATEGORIES.map(({ value, label }) => (
@@ -201,7 +201,7 @@ export default function AdminProductsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 Stock <span className="text-[var(--muted)] font-normal ms-1">(blank = unlimited)</span>
               </label>
               <input className="form-input" type="number" min="0"
@@ -210,7 +210,7 @@ export default function AdminProductsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 Image URL <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
               </label>
               <input className="form-input" type="url" value={form.imageUrl}
@@ -219,7 +219,7 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 Description <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
               </label>
               <textarea className="form-input min-h-[80px] resize-y" value={form.description}

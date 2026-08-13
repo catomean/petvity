@@ -7,11 +7,12 @@ import Link from "next/link";
 import { PasswordInput } from "@/components/portal/PasswordInput";
 import { safeReturnTo } from "@/lib/auth/safe-redirect";
 import { DEMO_ACCOUNT } from "@/lib/config/demo";
+import { POST_LOGIN_PATH } from "@/lib/config/auth";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnTo = safeReturnTo(searchParams.get("returnTo"), "/portal/dashboard");
+  const returnTo = safeReturnTo(searchParams.get("returnTo"), POST_LOGIN_PATH);
   const emailRef = useRef<HTMLInputElement>(null);
 
   const [email, setEmail] = useState("");
@@ -32,7 +33,7 @@ function LoginForm() {
     if (res?.error) {
       setError("The demo is being refreshed — please try again in a minute.");
     } else {
-      router.push("/portal/dashboard");
+      router.push(POST_LOGIN_PATH);
     }
   }
 
@@ -68,9 +69,7 @@ function LoginForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Email
-          </label>
+          <label className="form-label">Email</label>
           <input
             ref={emailRef}
             type="email"
@@ -85,12 +84,10 @@ function LoginForm() {
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-sm font-medium text-[var(--ink2)]">
-              Password
-            </label>
+            <label className="text-sm font-medium text-[var(--ink2)]">Password</label>
             <Link
               href="/forgot-password"
-              className="text-sm text-[var(--muted)] hover:text-[var(--gold-dark)] no-underline transition-colors"
+              className="text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline transition-colors"
             >
               Forgot password?
             </Link>
@@ -129,7 +126,7 @@ function LoginForm() {
 
       <p className="mt-6 text-center text-sm text-[var(--muted)]">
         No account?{" "}
-        <Link href="/register" className="text-[var(--gold-dark)] hover:underline font-medium">
+        <Link href="/register" className="link-accent">
           Start for free
         </Link>
       </p>

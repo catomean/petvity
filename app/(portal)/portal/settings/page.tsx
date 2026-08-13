@@ -19,6 +19,13 @@ export default function SettingsPage() {
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileMsg, setProfileMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
+  // The session loads async — fill the field once it arrives, unless the user
+  // has already started typing.
+  const sessionName = session?.user?.name ?? "";
+  useEffect(() => {
+    setName((current) => current || sessionName);
+  }, [sessionName]);
+
   async function saveProfile(e: React.FormEvent) {
     e.preventDefault();
     setProfileMsg(null);
@@ -158,7 +165,7 @@ export default function SettingsPage() {
 
         <form onSubmit={saveProfile} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("settingsDisplayName")}
             </label>
             <input
@@ -171,7 +178,7 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("settingsEmail")}
             </label>
             <input
@@ -184,7 +191,7 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("settingsRole")}
             </label>
             <input
@@ -255,7 +262,7 @@ export default function SettingsPage() {
 
         <form onSubmit={savePassword} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("settingsCurrentPassword")}
             </label>
             <PasswordInput
@@ -268,7 +275,7 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("settingsNewPassword")}
             </label>
             <PasswordInput
@@ -282,7 +289,7 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("settingsConfirmPassword")}
             </label>
             <PasswordInput
@@ -377,7 +384,7 @@ export default function SettingsPage() {
 
             <form onSubmit={deleteAccount} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                <label className="form-label">
                   {t("settingsCurrentPassword")}
                 </label>
                 <PasswordInput
@@ -389,7 +396,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                <label className="form-label">
                   {t("settingsTypeDeleteToConfirm")}
                 </label>
                 <input

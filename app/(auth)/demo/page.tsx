@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { DEMO_ACCOUNT } from "@/lib/config/demo";
+import { POST_LOGIN_PATH } from "@/lib/config/auth";
 
 /**
  * One-click demo entry: /demo signs the visitor into the shared demo account
@@ -26,7 +27,7 @@ export default function DemoPage() {
         redirect: false,
       });
       if (res?.error) setFailed(true);
-      else router.replace("/portal/dashboard");
+      else router.replace(POST_LOGIN_PATH);
     })();
   }, [router]);
 
@@ -46,7 +47,7 @@ export default function DemoPage() {
         </>
       ) : (
         <>
-          <div className="w-8 h-8 mx-auto mb-4 rounded-full border-2 border-[var(--border)] border-t-[var(--gold)] animate-spin" aria-hidden />
+          <div className="w-8 h-8 mx-auto mb-4 rounded-full border-2 border-[var(--border)] border-t-[var(--accent)] animate-spin" aria-hidden />
           <p className="text-sm text-[var(--muted)]">Opening the live demo…</p>
         </>
       )}

@@ -92,7 +92,7 @@ function NewPetForm() {
       >
         {/* Species first — drives breed options */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("petSpeciesLabel")} *
           </label>
           <select
@@ -114,7 +114,7 @@ function NewPetForm() {
 
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("petNameLabel")} *
           </label>
           <input
@@ -130,7 +130,7 @@ function NewPetForm() {
         {/* Breed (conditional) */}
         {breedOptions.length > 0 && (
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("petBreedLabel")}
             </label>
             <select
@@ -151,7 +151,7 @@ function NewPetForm() {
         {/* Birth date + sex */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("petBirthDate")}
             </label>
             <input
@@ -162,7 +162,7 @@ function NewPetForm() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("petSex")}
             </label>
             <select
@@ -184,7 +184,7 @@ function NewPetForm() {
 
         {/* Bio */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("petBioLabel")} <span className="text-[var(--faint)] font-normal">{t("listOptional")}</span>
           </label>
           <textarea

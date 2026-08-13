@@ -316,7 +316,7 @@ export default function ListingDetailPage() {
 
             <form onSubmit={handleApply} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                <label className="form-label">
                   {t("listingHousingType")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
                 </label>
                 <select
@@ -332,7 +332,7 @@ export default function ListingDetailPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                <label className="form-label">
                   {t("listingExperienceLabel")}
                   <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
                 </label>
@@ -345,7 +345,7 @@ export default function ListingDetailPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                <label className="form-label">
                   {t("listingMessageLabel")}
                   <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
                 </label>
