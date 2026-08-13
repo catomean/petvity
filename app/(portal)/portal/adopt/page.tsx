@@ -176,7 +176,7 @@ export default function AdoptPage() {
           <input
             type="text"
             placeholder={t("adoptFilterLocation")}
-            className="form-input ps-9 text-sm"
+            className="form-input form-input-icon text-sm"
             value={locationQ}
             onChange={(e) => setLocationQ(e.target.value)}
           />
@@ -184,7 +184,7 @@ export default function AdoptPage() {
         <div className="relative">
           <Filter className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
           <select
-            className="form-input ps-9 pe-4 text-sm"
+            className="form-input form-input-icon pe-4 text-sm"
             value={species}
             onChange={(e) => setSpecies(e.target.value)}
           >

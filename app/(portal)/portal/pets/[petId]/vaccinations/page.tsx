@@ -151,7 +151,7 @@ export default function VaccinationsPage() {
                 <input
                   type="text"
                   placeholder={t("vaccSearch")}
-                  className="form-input text-sm py-1.5 ps-8 w-40"
+                  className="form-input form-input-icon text-sm py-1.5 w-40"
                   value={searchQ}
                   onChange={(e) => setSearchQ(e.target.value)}
                   aria-label={t("vaccSearch")}

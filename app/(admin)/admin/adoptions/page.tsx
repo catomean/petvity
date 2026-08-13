@@ -9,7 +9,7 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ListingStatusId } from "@/lib/config/adoptions";
-import { formatAdoptionFee } from "@/lib/utils/format";
+import { formatAdoptionFee, formatIsoDate } from "@/lib/utils/format";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -149,8 +149,8 @@ function ListingRow({
           <div className="flex flex-wrap gap-3 items-start justify-between">
             <div className="text-sm text-[var(--ink2)] space-y-1">
               <p><span className="font-medium">Listing ID:</span> <span className="font-mono text-xs">{listing.id}</span></p>
-              <p><span className="font-medium">Created:</span> {new Date(listing.createdAt).toLocaleDateString()}</p>
-              <p><span className="font-medium">Updated:</span> {new Date(listing.updatedAt).toLocaleDateString()}</p>
+              <p><span className="font-medium">Created:</span> {formatIsoDate(listing.createdAt)}</p>
+              <p><span className="font-medium">Updated:</span> {formatIsoDate(listing.updatedAt)}</p>
               <p><span className="font-medium">Species:</span> {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}</p>
             </div>
 

@@ -190,6 +190,17 @@ light teal/terracotta palette — never mix the two surfaces.
 
 Arabic only. `app/[locale]/layout.tsx` injects `dir="rtl"`. Use logical Tailwind props: `ms-*`, `me-*`, `ps-*`, `pe-*`. NEVER `ml-*`, `mr-*`, `pl-*`, `pr-*`. Use `.flip-rtl` for icons needing mirror.
 
+### Utility overrides on semantic classes DO NOT WORK
+
+The semantic classes in `globals.css` are **unlayered** CSS; Tailwind v4 puts
+utilities in `@layer utilities`, and unlayered CSS beats every layer. So a
+utility next to a semantic class (`form-input ps-9`, `btn-primary py-2`) is
+**silently dead** whenever both set the same property. Wrapping the semantic
+rules in `@layer components` does NOT help — the v4/Turbopack pipeline strips
+author `@layer` blocks. When a variant of a semantic class is needed, add a
+semantic modifier class in `globals.css` (e.g. `.form-input-icon` reserves
+space for a leading icon) instead of a utility override.
+
 ### SSOT Rule
 
 All design tokens live in `app/globals.css` only. There is no `tailwind.config.*` (Tailwind v4); if one ever existed it MUST reference CSS vars (`'var(--name)'`), never literal values. Components MUST use semantic CSS classes from `globals.css` or standard Tailwind utilities, never arbitrary values like `bg-[#hex]`.

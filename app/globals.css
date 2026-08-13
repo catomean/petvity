@@ -482,6 +482,11 @@ body {
 
 /* ── Form inputs ────────────────────────────────────────────────────────────── */
 
+/* NOTE: these rules are unlayered, so Tailwind utilities (which live in
+   @layer utilities) can NEVER override their properties — a `ps-9` next to
+   `form-input` is silently dead. Wrapping them in @layer components does not
+   help: the v4/Turbopack pipeline strips author @layer blocks. Use semantic
+   modifier classes (e.g. .form-input-icon) instead of utility overrides. */
 .form-input {
   width: 100%;
   border: 1.5px solid var(--border);
@@ -493,6 +498,11 @@ body {
   background: white;
   transition: border-color 0.15s, box-shadow 0.15s;
   outline: none;
+}
+
+/* Input with a leading (inline-start) icon overlaid — makes room for it. */
+.form-input-icon {
+  padding-inline-start: 36px;
 }
 
 .form-input:focus {
