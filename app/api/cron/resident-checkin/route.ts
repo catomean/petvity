@@ -13,8 +13,6 @@ import {
   sellerProfiles,
   products,
   adoptionListings,
-  bookings,
-  reviews,
 } from "@/lib/db/schema";
 import {
   RESIDENT_PETS,
@@ -137,11 +135,7 @@ async function ensureResidentPet(db: Db, def: ResidentPetDef, now: Date) {
 /** Idempotently seeds the vet, sitter, seller (+products), rescue (+listing),
  *  and the completed bookings + reviews. Keyed on existence checks, so a
  *  partially-seeded database heals on the next run. */
-async function ensureCommunity(
-  db: Db,
-  now: Date,
-  petIdByHandle: Map<string, string>,
-) {
+async function ensureCommunity(db: Db, now: Date) {
   const created: string[] = [];
 
   const vet = await ensureUser(db, RESIDENT_COMMUNITY.vet.account, RESIDENT_COMMUNITY.vet.role, now);
@@ -193,42 +187,6 @@ async function ensureCommunity(
     created.push("listing");
   }
 
-  for (const b of RESIDENT_COMMUNITY.bookings) {
-    const owner = await db.query.users.findFirst({ where: eq(users.email, b.ownerEmail) });
-    const professional = await db.query.users.findFirst({ where: eq(users.email, b.professionalEmail) });
-    const petId = petIdByHandle.get(b.petHandle);
-    if (!owner || !professional || !petId) continue;
-
-    const existing = await db.query.bookings.findFirst({
-      where: and(eq(bookings.ownerId, owner.id), eq(bookings.professionalId, professional.id)),
-    });
-    if (existing) continue;
-
-    const start = new Date(now.getTime() - b.daysAgo * DAY_MS);
-    const durationMs = b.professionalRole === "pet_sitter" ? 4 * DAY_MS : 60 * 60 * 1000;
-    const [booking] = await db
-      .insert(bookings)
-      .values({
-        ownerId: owner.id,
-        petId,
-        professionalId: professional.id,
-        professionalRole: b.professionalRole,
-        startDate: start,
-        endDate: new Date(start.getTime() + durationMs),
-        status: "completed",
-        notes: b.notes,
-      })
-      .returning();
-    await db.insert(reviews).values({
-      bookingId: booking.id,
-      reviewerId: owner.id,
-      professionalId: professional.id,
-      rating: b.review.rating,
-      comment: b.review.comment,
-    });
-    created.push(`booking:${b.petHandle}`);
-  }
-
   return created;
 }
 
@@ -242,7 +200,6 @@ export async function POST(req: NextRequest) {
   const now = new Date();
   const today = iso(now);
 
-  const petIdByHandle = new Map<string, string>();
   const petResults: {
     handle: string;
     petId: string;
@@ -253,7 +210,6 @@ export async function POST(req: NextRequest) {
 
   for (const def of RESIDENT_PETS) {
     const { pet, bootstrapped } = await ensureResidentPet(db, def, now);
-    petIdByHandle.set(def.pet.handle, pet.id);
 
     // Today's check-in (idempotent: one row per day, like a real owner)
     const existing = await db.query.healthMetrics.findFirst({
@@ -270,7 +226,7 @@ export async function POST(req: NextRequest) {
     petResults.push({ handle: def.pet.handle, petId: pet.id, date: today, logged, bootstrapped });
   }
 
-  const communityCreated = await ensureCommunity(db, now, petIdByHandle);
+  const communityCreated = await ensureCommunity(db, now);
 
   return NextResponse.json({
     success: true,
