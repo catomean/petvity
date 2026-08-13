@@ -2,7 +2,7 @@ import Link from "next/link";
 import {
   Activity, Syringe, Pill,
   CalendarDays, CheckCircle, TrendingUp,
-  ArrowRight, Star,
+  ArrowRight,
   Brain, Stethoscope, ShoppingBag, Heart,
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
@@ -45,30 +45,6 @@ export default async function HomePage({ params }: Params) {
     t("trustNoCreditCard"),
     t("trustUnlimitedPets"),
     t("trustCancelAnytime"),
-  ];
-
-  const TESTIMONIALS = [
-    {
-      quote: t("t1Quote"),
-      name: "Sarah M.",
-      pet: t("t1Pet"),
-      initials: "SM",
-      color: "bg-white/[0.06] text-[var(--champagne)]",
-    },
-    {
-      quote: t("t2Quote"),
-      name: "James T.",
-      pet: t("t2Pet"),
-      initials: "JT",
-      color: "bg-white/[0.06] text-[var(--champagne)]",
-    },
-    {
-      quote: t("t3Quote"),
-      name: "Amara O.",
-      pet: t("t3Pet"),
-      initials: "AO",
-      color: "bg-white/[0.06] text-[var(--champagne)]",
-    },
   ];
 
   const PRICING_FEATURES = [
@@ -575,40 +551,38 @@ export default async function HomePage({ params }: Params) {
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────────────────────────── */}
+      {/* ── Live proof — real resident pets, publicly tracked ────────────── */}
       <section className="py-24 md:py-32">
         <div className="section-inner">
           <div className="text-center mb-14">
             <p className="ed-eyebrow mb-3">
-              {t("testimonialsEyebrow")}
+              {t("liveProofEyebrow")}
             </p>
             <h2 className="ed-title">
-              {t("testimonialsTitle")}
+              {t("liveProofTitle")}
             </h2>
+            <p className="text-[var(--platinum-dim)] max-w-xl mx-auto mt-4">
+              {t("liveProofDesc")}
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {TESTIMONIALS.map(({ quote, name, pet, initials, color }) => (
-              <div key={name} className="lux-card lux-card-hover p-7 flex flex-col gap-5">
-                {/* Stars */}
-                <div className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[var(--champagne)] text-[var(--champagne)]" />
-                  ))}
-                </div>
-                <blockquote className="text-sm text-[var(--platinum-dim)] leading-relaxed flex-1">
-                  &ldquo;{quote}&rdquo;
-                </blockquote>
-                <div className="flex items-center gap-3 pt-2 border-t border-[var(--hairline-soft)]">
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${color}`}>
-                    {initials}
-                  </div>
+          <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            {[
+              { emoji: "🐈", name: "Milo", detail: t("liveProofMilo"), href: `/${locale}/pets/milo` },
+              { emoji: "🐕", name: "Rosie", detail: t("liveProofRosie"), href: `/${locale}/pets/rosie` },
+            ].map(({ emoji, name, detail, href }) => (
+              <Link key={name} href={href} className="lux-card lux-card-hover p-7 flex flex-col gap-4 no-underline">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{emoji}</span>
                   <div>
-                    <p className="text-sm font-semibold text-[var(--platinum)]">{name}</p>
-                    <p className="text-xs text-[var(--mist-dark)]">{pet}</p>
+                    <p className="text-lg font-semibold text-[var(--platinum)]">{name}</p>
+                    <p className="text-xs text-[var(--mist-dark)]">{detail}</p>
                   </div>
                 </div>
-              </div>
+                <span className="text-sm text-[var(--champagne)] inline-flex items-center gap-1.5 mt-auto">
+                  {t("liveProofCta")} <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </Link>
             ))}
           </div>
         </div>

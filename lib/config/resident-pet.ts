@@ -151,7 +151,7 @@ export const RESIDENT_COMMUNITY = {
       country: "CH",
       phone: "+41 44 555 01 23",
       isAcceptingClients: true,
-      isVerified: true,
+      isVerified: false,
     },
   },
   sitter: {
@@ -165,7 +165,7 @@ export const RESIDENT_COMMUNITY = {
       country: "CH",
       phone: "+41 76 555 04 56",
       isAcceptingClients: true,
-      isVerified: true,
+      isVerified: false,
     },
   },
   groomer: {
@@ -180,7 +180,7 @@ export const RESIDENT_COMMUNITY = {
       country: "CH",
       phone: "+41 79 555 08 21",
       isAcceptingClients: true,
-      isVerified: true,
+      isVerified: false,
     },
   },
   seller: {
@@ -225,34 +225,4 @@ export const RESIDENT_COMMUNITY = {
       goodWithCats: true,
     },
   },
-  /** Completed past bookings + reviews so ratings render on pro profiles. */
-  bookings: [
-    {
-      ownerEmail: "milo@petvity.com",
-      petHandle: "milo",
-      professionalEmail: "vet.brunner@petvity.com",
-      professionalRole: "veterinarian" as const,
-      daysAgo: 100,
-      notes: "Annual check-up and rabies shot.",
-      review: { rating: 5, comment: "Dr. Brunner was thorough and gentle — talked us through Milo's trend charts and made the whole visit calm. The dramatic thermometer moment was handled with grace." },
-    },
-    {
-      ownerEmail: "rosie@petvity.com",
-      petHandle: "rosie",
-      professionalEmail: "sitter.keller@petvity.com",
-      professionalRole: "pet_sitter" as const,
-      daysAgo: 21,
-      notes: "Midday walks, Mon–Fri while travelling.",
-      review: { rating: 5, comment: "Sam sent photos from every walk and kept perfect notes in the check-ins. Rosie now sits by the door at Sam o'clock." },
-    },
-    {
-      ownerEmail: "rosie@petvity.com",
-      petHandle: "rosie",
-      professionalEmail: "groomer.roth@petvity.com",
-      professionalRole: "groomer" as const,
-      daysAgo: 12,
-      notes: "De-shedding and nail trim before summer.",
-      review: { rating: 5, comment: "Nadia took her time with Rosie's undercoat and even filed the nails she usually fights over. Came home fluffy, calm, and smelling like a meadow." },
-    },
-  ],
 } as const;
