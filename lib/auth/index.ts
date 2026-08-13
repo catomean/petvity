@@ -85,13 +85,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
           token.role = effectiveRole;
         }
 
-        // Re-read name from DB on any update trigger so settings changes take effect immediately
+        // Re-read name + role from DB on any update trigger so settings changes
+        // and self-serve role upgrades take effect without re-login
         if (trigger === "update" && token.id) {
           const fresh = await db.query.users.findFirst({
             where: eq(users.id, token.id as string),
-            columns: { name: true },
+            columns: { name: true, role: true },
           });
-          if (fresh) token.name = fresh.name;
+          if (fresh) {
+            token.name = fresh.name;
+            token.role = fresh.role;
+          }
         }
 
         return token;

@@ -132,7 +132,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
               {t("becomeSeller")}
             </Link>
           )}
-          {isProfessional && (
+          {isProfessional ? (
             <Link
               href="/portal/professional-profile"
               className={`nav-link ${isActive(pathname, "/portal/professional-profile") ? "nav-link-active" : "nav-link-inactive"}`}
@@ -140,7 +140,15 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
               <Stethoscope className="w-4 h-4 flex-shrink-0" />
               {t("myProfile")}
             </Link>
-          )}
+          ) : userRole === "pet_owner" ? (
+            <Link
+              href="/portal/become-a-pro"
+              className={`nav-link ${isActive(pathname, "/portal/become-a-pro") ? "nav-link-active" : "nav-link-muted"}`}
+            >
+              <Stethoscope className="w-4 h-4 flex-shrink-0" />
+              {t("becomePro")}
+            </Link>
+          ) : null}
         </nav>
 
         {/* Bottom section */}

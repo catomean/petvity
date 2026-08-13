@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Stethoscope, Home, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { formatPrice } from "@/lib/utils/format";
+import { formatPrice, formatDateShort } from "@/lib/utils/format";
 import { EmptyState } from "@/components/portal/PageState";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -49,6 +49,8 @@ interface PetOption {
 interface BookingTarget {
   professionalId: string;
   name: string | null;
+  role: "veterinarian" | "pet_sitter";
+  pricePerDay: number | null;
 }
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
@@ -120,7 +122,7 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
         </div>
         {vet.isAcceptingClients && (
           <button
-            onClick={() => onBook({ professionalId: vet.userId, name: vet.name })}
+            onClick={() => onBook({ professionalId: vet.userId, name: vet.name, role: "veterinarian", pricePerDay: null })}
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
@@ -176,7 +178,7 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
         </div>
         {sitter.isAcceptingClients && (
           <button
-            onClick={() => onBook({ professionalId: sitter.userId, name: sitter.name })}
+            onClick={() => onBook({ professionalId: sitter.userId, name: sitter.name, role: "pet_sitter", pricePerDay: sitter.pricePerDay })}
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
@@ -357,6 +359,13 @@ export default function FindPage() {
   );
 }
 
+/** Inclusive date-range overlap against the professional's busy ranges. */
+function datesClash(start: string, end: string, busy: { start: string; end: string }[]): boolean {
+  return busy.some((r) => start <= r.end && end >= r.start);
+}
+
+const VET_SLOTS = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+
 function BookingModal({
   target,
   pets,
@@ -367,24 +376,49 @@ function BookingModal({
   onClose: () => void;
 }) {
   const t = useTranslations("portal");
+  const locale = useLocale();
+  const isSitter = target.role === "pet_sitter";
+  const todayStr = new Date().toISOString().slice(0, 10);
+
   const [petId, setPetId] = useState(pets[0]?.id ?? "");
+  // Sitter: date range (drop-off morning, pick-up evening). Vet: one date + slot.
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [slot, setSlot] = useState("");
   const [notes, setNotes] = useState("");
+  const [busy, setBusy] = useState<{ start: string; end: string }[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
+  useEffect(() => {
+    fetch(`/api/bookings/busy?professionalId=${target.professionalId}`)
+      .then((r) => r.json())
+      .then(({ success, data }) => { if (success) setBusy(data); })
+      .catch(() => {});
+  }, [target.professionalId]);
+
+  const effectiveEnd = isSitter ? endDate : startDate;
+  const clash = Boolean(startDate && effectiveEnd) && datesClash(startDate, effectiveEnd, busy);
+
+  const nights = isSitter && startDate && endDate
+    ? Math.max(0, Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86_400_000))
+    : 0;
+  const totalCents = nights > 0 && target.pricePerDay != null ? nights * target.pricePerDay : null;
+
+  const ready =
+    Boolean(petId) && Boolean(startDate) && !clash &&
+    (isSitter ? Boolean(endDate) && endDate > startDate : Boolean(slot));
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!petId || !startDate || !endDate) {
-      setError(t("findBookingRequired"));
-      return;
-    }
-    if (new Date(endDate) < new Date(startDate)) {
-      setError(t("findBookingEndBeforeStart"));
-      return;
-    }
+    if (!ready) return;
+    // Sitter stays span whole days (drop off 9:00, pick up 17:00); vet visits
+    // are one-hour appointments at the chosen slot. Local time, sent as ISO.
+    const start = isSitter ? new Date(`${startDate}T09:00`) : new Date(`${startDate}T${slot}`);
+    const end = isSitter
+      ? new Date(`${endDate}T17:00`)
+      : new Date(new Date(`${startDate}T${slot}`).getTime() + 60 * 60 * 1000);
     setSaving(true);
     setError("");
     const res = await fetch("/api/bookings", {
@@ -393,8 +427,8 @@ function BookingModal({
       body: JSON.stringify({
         petId,
         professionalId: target.professionalId,
-        startDate: new Date(startDate).toISOString(),
-        endDate: new Date(endDate).toISOString(),
+        startDate: start.toISOString(),
+        endDate: end.toISOString(),
         notes: notes.trim() || undefined,
       }),
     });
@@ -409,11 +443,20 @@ function BookingModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[var(--border)]">
-          <h2 className="font-semibold text-[var(--ink)]">
-            {t("findBookTitle", { name: target.name ?? t("findProfessional") })}
-          </h2>
+          <div>
+            <h2 className="font-semibold text-[var(--ink)]">
+              {t("findBookTitle", { name: target.name ?? t("findProfessional") })}
+            </h2>
+            <p className="text-xs text-[var(--muted)] mt-0.5">
+              {isSitter
+                ? target.pricePerDay != null
+                  ? `${t("petSitters")} · ${formatPrice(target.pricePerDay, locale)}${t("findPerDay")}`
+                  : t("petSitters")
+                : t("findVetVisitHint")}
+            </p>
+          </div>
           <button onClick={onClose} className="p-2 -me-2 text-[var(--muted)] hover:text-[var(--ink)] transition-colors rounded-lg">
             <X className="w-5 h-5" />
           </button>
@@ -435,51 +478,121 @@ function BookingModal({
           <form onSubmit={handleSubmit} className="px-5 py-4 space-y-4">
             {error && <p className="alert-error">{error}</p>}
 
-            <div>
-              <label className="form-label">{t("findPetLabel")} *</label>
-              {pets.length === 0 ? (
-                <p className="text-sm text-[var(--muted)]">
-                  {t("noPets")} <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">{t("noPetsAction")}</Link>
-                </p>
-              ) : (
-                <select
-                  className="form-input"
-                  value={petId}
-                  onChange={(e) => setPetId(e.target.value)}
-                  required
-                >
+            {/* Pet: silent when there is only one — no decisions the user can't get wrong */}
+            {pets.length === 0 ? (
+              <p className="text-sm text-[var(--muted)]">
+                {t("noPets")} <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">{t("noPetsAction")}</Link>
+              </p>
+            ) : pets.length === 1 ? (
+              <p className="text-sm text-[var(--ink2)]">
+                {t("findForPet", { name: pets[0].name ?? t("unnamedPet") })}
+              </p>
+            ) : (
+              <div>
+                <label className="form-label">{t("findPetLabel")} *</label>
+                <select className="form-input" value={petId} onChange={(e) => setPetId(e.target.value)} required>
                   {pets.map((p) => (
                     <option key={p.id} value={p.id}>{p.name ?? t("unnamedPet")}</option>
                   ))}
                 </select>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="form-label">{t("findStartDate")} *</label>
-                <input
-                  type="datetime-local"
-                  className="form-input"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  required
-                />
+            {isSitter ? (
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="form-label">{t("findDropOff")} *</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={startDate}
+                    min={todayStr}
+                    onChange={(e) => {
+                      setStartDate(e.target.value);
+                      if (endDate && endDate <= e.target.value) setEndDate("");
+                    }}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">{t("findPickUp")} *</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={endDate}
+                    min={startDate || todayStr}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
-              <div>
-                <label className="form-label">{t("findEndDate")} *</label>
-                <input
-                  type="datetime-local"
-                  className="form-input"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  required
-                />
+            ) : (
+              <>
+                <div>
+                  <label className="form-label">{t("findVisitDate")} *</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={startDate}
+                    min={todayStr}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    required
+                  />
+                </div>
+                {startDate && (
+                  <div>
+                    <label className="form-label">{t("findVisitTime")} *</label>
+                    <div className="flex flex-wrap gap-2">
+                      {VET_SLOTS.map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setSlot(s)}
+                          className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
+                            slot === s
+                              ? "bg-[var(--teal)] text-white border-[var(--teal)]"
+                              : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--teal)]"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Availability feedback BEFORE submitting, not after */}
+            {clash && (
+              <p className="alert-error text-sm">{t("findDatesUnavailable")}</p>
+            )}
+            {!clash && busy.length > 0 && (
+              <p className="text-xs text-[var(--muted)]">
+                {t("findBusyHint", {
+                  dates: busy
+                    .slice(0, 3)
+                    .map((r) => (r.start === r.end ? formatDateShort(r.start, locale) : `${formatDateShort(r.start, locale)} – ${formatDateShort(r.end, locale)}`))
+                    .join(", "),
+                })}
+              </p>
+            )}
+
+            {/* Price: the total, before any commitment */}
+            {isSitter && nights > 0 && (
+              <div className="flex items-center justify-between rounded-lg bg-[var(--off)] px-3 py-2 text-sm">
+                <span className="text-[var(--ink2)]">
+                  {t("findNightsCount", { count: nights })}
+                  {target.pricePerDay != null && ` × ${formatPrice(target.pricePerDay, locale)}`}
+                </span>
+                {totalCents != null && (
+                  <span className="font-semibold text-[var(--ink)]">{formatPrice(totalCents, locale)}</span>
+                )}
               </div>
-            </div>
+            )}
 
             <div>
-              <label className="form-label">{t("logNotes")}</label>
+              <label className="form-label">{t("findBookingNotesLabel")}</label>
               <textarea
                 className="form-input min-h-[72px] resize-none"
                 placeholder={t("findBookingNotesPlaceholder")}
@@ -490,10 +603,11 @@ function BookingModal({
 
             <div className="flex gap-3 pb-1">
               <button type="button" onClick={onClose} className="btn-outline flex-1">{t("cancel")}</button>
-              <button type="submit" disabled={saving || pets.length === 0} className="btn-primary flex-1 disabled:opacity-60">
+              <button type="submit" disabled={saving || !ready} className="btn-primary flex-1 disabled:opacity-60">
                 {saving ? t("findBookingInProgress") : t("findRequestBooking")}
               </button>
             </div>
+            <p className="text-xs text-[var(--muted)] text-center pb-1">{t("findRequestExplainer")}</p>
           </form>
         )}
       </div>
