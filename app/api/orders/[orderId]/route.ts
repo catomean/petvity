@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { orders, orderStatusEnum, users } from "@/lib/db/schema";
+import { orders, orderItems, products, orderStatusEnum, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { orderStatusUpdate } from "@/lib/email/templates";
 import { formatPrice } from "@/lib/utils/format";
@@ -67,6 +67,25 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     .set({ status, updatedAt: new Date() })
     .where(eq(orders.id, orderId))
     .returning();
+
+  // Cancellation releases the stock the order reserved at creation —
+  // otherwise every cancelled order permanently destroys inventory.
+  if (status === "cancelled" && order.status !== "cancelled") {
+    const cancelledItems = await db
+      .select({ productId: orderItems.productId, quantity: orderItems.quantity })
+      .from(orderItems)
+      .where(eq(orderItems.orderId, orderId));
+    await Promise.all(
+      cancelledItems
+        .filter((i) => i.productId !== null)
+        .map((i) =>
+          db
+            .update(products)
+            .set({ stock: sql`${products.stock} + ${i.quantity}`, updatedAt: new Date() })
+            .where(and(eq(products.id, i.productId!), isNotNull(products.stock))),
+        ),
+    );
+  }
 
   // Send status update email for meaningful transitions (fire-and-forget)
   const EMAIL_STATUSES = ["confirmed", "shipped", "delivered", "cancelled"] as const;

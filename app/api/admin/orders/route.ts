@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { desc, inArray, eq } from "drizzle-orm";
+import { desc, inArray, eq, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { requireAdmin } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
@@ -45,15 +45,15 @@ export async function GET() {
       productId: orderItems.productId,
       quantity: orderItems.quantity,
       priceCents: orderItems.priceCents,
-      productName: products.name,
+      productName: orderItems.productName,
       productImageUrl: products.imageUrl,
-      productCategory: products.category,
+      productCategory: sql<string>`COALESCE(${products.category}::text, 'other')`,
       sellerId: products.sellerId,
       sellerName: sellers.name,
       sellerEmail: sellers.email,
     })
     .from(orderItems)
-    .innerJoin(products, eq(products.id, orderItems.productId))
+    .leftJoin(products, eq(products.id, orderItems.productId))
     .leftJoin(sellers, eq(sellers.id, products.sellerId))
     .where(inArray(orderItems.orderId, orderIds));
 

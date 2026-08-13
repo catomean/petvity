@@ -22,7 +22,7 @@ export async function GET() {
       productId: orderItems.productId,
       quantity: orderItems.quantity,
       priceCents: orderItems.priceCents,
-      productName: products.name,
+      productName: orderItems.productName,
       productImageUrl: products.imageUrl,
       productCategory: products.category,
     })
