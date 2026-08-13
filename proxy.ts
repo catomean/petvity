@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth/edge";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { NextResponse } from "next/server";
+import { POST_LOGIN_PATH } from "@/lib/config/auth";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
@@ -42,7 +43,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
   const dest =
-    session?.user?.role === "admin" ? "/admin/users" : "/portal/dashboard";
+    session?.user?.role === "admin" ? "/admin/users" : POST_LOGIN_PATH;
 
   // ── NextAuth API routes — always public ──────────────────────────────────
   if (pathname.startsWith("/api/auth")) {
@@ -61,7 +62,7 @@ export default auth((req) => {
       return NextResponse.redirect(loginUrl);
     }
     if (pathname.startsWith("/admin") && session.user.role !== "admin") {
-      return NextResponse.redirect(new URL("/portal/dashboard", req.url));
+      return NextResponse.redirect(new URL(POST_LOGIN_PATH, req.url));
     }
     return NextResponse.next();
   }

@@ -66,9 +66,9 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
     .limit(200);
 
   return (
-    <div className="min-h-screen bg-[var(--cream-soft)]">
+    <div className="min-h-screen bg-[var(--off)]">
       {/* Nav */}
-      <nav className="bg-[var(--cream)] border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
+      <nav className="bg-[var(--card)] border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
         <Link
           href={`/${locale}`}
           className="font-bold text-[var(--warm-ink)] text-lg no-underline flex items-center gap-2"
@@ -79,7 +79,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
         <div className="flex items-center gap-3">
           <Link
             href="/login"
-            className="text-sm text-[var(--ink2)] hover:text-[var(--gold-dark)] no-underline transition-colors"
+            className="text-sm text-[var(--ink2)] hover:text-[var(--accent)] no-underline transition-colors"
           >
             {t("signIn")}
           </Link>
@@ -90,7 +90,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
       </nav>
 
       {/* Hero */}
-      <div className="section-cream border-b border-[var(--border)]">
+      <div className="bg-[var(--light)] border-b border-[var(--border)]">
         <div className="max-w-5xl mx-auto px-6 py-12 text-center">
           <div className="w-14 h-14 rounded-2xl ed-icon flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="w-7 h-7" />
@@ -115,8 +115,8 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
             href={`/${locale}/shop`}
             className={`flex-shrink-0 text-sm font-medium px-3 py-1.5 rounded-full border transition-colors no-underline ${
               !activeCategory
-                ? "bg-[var(--warm-ink)] text-[var(--cream)] border-[var(--warm-ink)]"
-                : "bg-transparent text-[var(--ink2)] border-[var(--border)] hover:border-[var(--gold)]"
+                ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
+                : "bg-transparent text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)]"
             }`}
           >
             {t("shopAll")}
@@ -127,8 +127,8 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
               href={`/${locale}/shop?category=${id}`}
               className={`flex-shrink-0 flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full border transition-colors no-underline ${
                 activeCategory === id
-                  ? "bg-[var(--warm-ink)] text-[var(--cream)] border-[var(--warm-ink)]"
-                  : "bg-transparent text-[var(--ink2)] border-[var(--border)] hover:border-[var(--gold)]"
+                  ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
+                  : "bg-transparent text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)]"
               }`}
             >
               <span>{cfg.emoji}</span>
@@ -185,7 +185,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
 
                     {/* Info */}
                     <div className="p-4 flex flex-col flex-1">
-                      <p className="font-semibold text-[var(--ink)] leading-snug group-hover:text-[var(--gold-dark)] transition-colors">
+                      <p className="font-semibold text-[var(--ink)] leading-snug group-hover:text-[var(--accent)] transition-colors">
                         {product.name}
                       </p>
                       {product.description && (
@@ -218,10 +218,10 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
       </div>
 
       {/* Seller CTA footer */}
-      <div className="section-warm-dark">
+      <div className="bg-[var(--obsidian)]">
         <div className="max-w-5xl mx-auto px-6 py-10 text-center">
           <p className="ed-title-sm ed-title-on-dark mb-2">{t("shopCtaTitle")}</p>
-          <p className="text-sm text-[var(--cream-soft)] opacity-80 mb-5">
+          <p className="text-sm text-[var(--platinum-dim)] mb-5">
             {t("shopCtaDesc", { app: APP.name })}
           </p>
           <Link href="/register" className="btn-editorial-light inline-flex items-center gap-2">

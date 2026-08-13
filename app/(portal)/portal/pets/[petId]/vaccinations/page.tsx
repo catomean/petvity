@@ -202,7 +202,7 @@ export default function VaccinationsPage() {
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {t("vaccName")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
@@ -215,7 +215,7 @@ export default function VaccinationsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {t("vaccDateAdministered")} <span className="text-[var(--danger-text)]">*</span>
               </label>
               <input
@@ -228,7 +228,7 @@ export default function VaccinationsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {t("vaccNextDue")}
                 <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
@@ -241,7 +241,7 @@ export default function VaccinationsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("listStatusLabel")}</label>
+              <label className="form-label">{t("listStatusLabel")}</label>
               <select
                 className="form-input"
                 value={form.status}
@@ -254,7 +254,7 @@ export default function VaccinationsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {t("listAdministeredByLabel")}
                 <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
@@ -267,7 +267,7 @@ export default function VaccinationsPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {t("vaccBatchNumber")}
                 <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
@@ -280,7 +280,7 @@ export default function VaccinationsPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {t("logNotes")}
                 <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>

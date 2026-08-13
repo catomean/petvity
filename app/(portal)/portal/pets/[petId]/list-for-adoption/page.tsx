@@ -182,7 +182,7 @@ export default function ListForAdoptionPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("listAdoptHeadline")} <span className="text-[var(--danger-text)]">*</span>
             </label>
             <input
@@ -196,7 +196,7 @@ export default function ListForAdoptionPage() {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("listAdoptAbout", { name: pet.name })}
               <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
             </label>
@@ -211,7 +211,7 @@ export default function ListForAdoptionPage() {
           {/* Location + fee */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {t("listAdoptLocation")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
@@ -222,7 +222,7 @@ export default function ListForAdoptionPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+              <label className="form-label">
                 {t("listAdoptFeeLabel")}
                 <span className="text-[var(--muted)] font-normal ms-1">{t("listAdoptFeeHint")}</span>
               </label>

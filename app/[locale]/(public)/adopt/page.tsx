@@ -99,8 +99,8 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
       {/* Hero */}
       <div className="bg-white border-b border-[var(--border)]">
         <div className="max-w-5xl mx-auto px-6 py-12 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-[var(--gold-light)] flex items-center justify-center mx-auto mb-4">
-            <Heart className="w-7 h-7 text-[var(--gold-dark)]" />
+          <div className="w-14 h-14 rounded-2xl bg-[var(--accent-light)] flex items-center justify-center mx-auto mb-4">
+            <Heart className="w-7 h-7 text-[var(--accent)]" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
             {t("adoptHeroTitle")}
@@ -127,8 +127,8 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                 value=""
                 className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                   !activeSpecies
-                    ? "bg-[var(--warm-ink)] text-[var(--cream)] border-[var(--warm-ink)]"
-                    : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--warm-ink)]"
+                    ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
+                    : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)] hover:text-[var(--warm-ink)]"
                 }`}
               >
                 {tPortal("adoptFilterAll")}
@@ -141,8 +141,8 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                   value={sp}
                   className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
                     activeSpecies === sp
-                      ? "bg-[var(--warm-ink)] text-[var(--cream)] border-[var(--warm-ink)]"
-                      : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--gold)] hover:text-[var(--warm-ink)]"
+                      ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
+                      : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)] hover:text-[var(--warm-ink)]"
                   }`}
                 >
                   {SPECIES_CONFIG[sp].emoji} {t(`species_${sp}` as Parameters<typeof t>[0])}
@@ -201,7 +201,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
             </p>
             <p className="text-sm text-[var(--muted)] mb-5">
               {isFiltered ? (
-                <Link href={`/${locale}/adopt`} className="text-[var(--gold-dark)] hover:underline">
+                <Link href={`/${locale}/adopt`} className="text-[var(--accent)] hover:underline">
                   {t("adoptClearFilters")}
                 </Link>
               ) : t("adoptEmptyDesc")}
@@ -230,7 +230,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                     className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden hover:shadow-md transition-shadow no-underline group"
                   >
                     {/* Photo */}
-                    <div className="aspect-[4/3] bg-[var(--cream)] flex items-center justify-center text-5xl relative overflow-hidden">
+                    <div className="aspect-[4/3] bg-[var(--light)] flex items-center justify-center text-5xl relative overflow-hidden">
                       {listing.pet.avatarUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -248,7 +248,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
 
                     {/* Info */}
                     <div className="p-4">
-                      <p className="font-semibold text-[var(--ink)] truncate group-hover:text-[var(--gold-dark)] transition-colors">
+                      <p className="font-semibold text-[var(--ink)] truncate group-hover:text-[var(--accent)] transition-colors">
                         {listing.pet.name}
                       </p>
                       <p className="text-xs text-[var(--muted)] mt-0.5">

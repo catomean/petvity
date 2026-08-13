@@ -436,7 +436,7 @@ function BookingModal({
             {error && <p className="alert-error">{error}</p>}
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("findPetLabel")} *</label>
+              <label className="form-label">{t("findPetLabel")} *</label>
               {pets.length === 0 ? (
                 <p className="text-sm text-[var(--muted)]">
                   {t("noPets")} <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">{t("noPetsAction")}</Link>
@@ -457,7 +457,7 @@ function BookingModal({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("findStartDate")} *</label>
+                <label className="form-label">{t("findStartDate")} *</label>
                 <input
                   type="datetime-local"
                   className="form-input"
@@ -467,7 +467,7 @@ function BookingModal({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("findEndDate")} *</label>
+                <label className="form-label">{t("findEndDate")} *</label>
                 <input
                   type="datetime-local"
                   className="form-input"
@@ -479,7 +479,7 @@ function BookingModal({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("logNotes")}</label>
+              <label className="form-label">{t("logNotes")}</label>
               <textarea
                 className="form-input min-h-[72px] resize-none"
                 placeholder={t("findBookingNotesPlaceholder")}

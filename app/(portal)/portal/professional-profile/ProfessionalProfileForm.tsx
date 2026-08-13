@@ -161,7 +161,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
             {t("profAbout")}
           </h2>
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("petBioLabel")}</label>
+            <label className="form-label">{t("petBioLabel")}</label>
             <textarea
               className="form-input min-h-[100px] resize-y"
               placeholder={isVet ? t("profVetBioPlaceholder") : t("profSitterBioPlaceholder")}
@@ -183,7 +183,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profSpecialty")}</label>
+                <label className="form-label">{t("profSpecialty")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profSpecialtyPlaceholder")}
@@ -192,7 +192,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profClinicName")}</label>
+                <label className="form-label">{t("profClinicName")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profClinicNamePlaceholder")}
@@ -201,7 +201,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profClinicAddress")}</label>
+                <label className="form-label">{t("profClinicAddress")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profClinicAddressPlaceholder")}
@@ -210,7 +210,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profCity")}</label>
+                <label className="form-label">{t("profCity")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profCityPlaceholder")}
@@ -219,7 +219,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profCountry")}</label>
+                <label className="form-label">{t("profCountry")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profCountryPlaceholder")}
@@ -229,7 +229,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profPhone")}</label>
+                <label className="form-label">{t("profPhone")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profPhonePlaceholder")}
@@ -273,7 +273,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+                <label className="form-label">
                   {t("profDailyRate")}
                 </label>
                 <input
@@ -287,7 +287,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profCity")}</label>
+                <label className="form-label">{t("profCity")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profCityPlaceholder")}
@@ -296,7 +296,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profCountry")}</label>
+                <label className="form-label">{t("profCountry")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profCountryPlaceholder")}
@@ -306,7 +306,7 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">{t("profPhone")}</label>
+                <label className="form-label">{t("profPhone")}</label>
                 <input
                   className="form-input"
                   placeholder={t("profPhonePlaceholder")}

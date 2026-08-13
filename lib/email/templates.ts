@@ -1,4 +1,5 @@
 import { APP, APP_URL } from "@/lib/config/app";
+import { POST_LOGIN_PATH } from "@/lib/config/auth";
 import { HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
 import { getEmailStrings, t } from "@/lib/email/i18n";
 
@@ -98,7 +99,7 @@ export function ownerWeekOne(data: WelcomePayload, locale?: string | null) {
       <h2>${t(s.h2, { name: data.name })}</h2>
       <p>${s.p1}</p>
       <ul>${bulletHtml}</ul>
-      <a class="btn" href="${APP_URL}/portal/dashboard">${s.button}</a>
+      <a class="btn" href="${APP_URL}${POST_LOGIN_PATH}">${s.button}</a>
     `, locale, data.unsubscribeUrl),
   };
 }
@@ -442,7 +443,7 @@ export function weeklyDigest(data: {
       <p>${t(s.greeting, { name: data.ownerName })}</p>
       <p>${s.intro}</p>
       ${petCards}
-      <a class="btn" href="${APP_URL}/portal/dashboard">${s.button}</a>
+      <a class="btn" href="${APP_URL}${POST_LOGIN_PATH}">${s.button}</a>
       <p style="font-size:13px;color:#888;margin-top:16px;"><a href="${data.settingsUrl}" style="color:#888;">${s.managePrefs}</a></p>
     `, locale),
   };

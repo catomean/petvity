@@ -109,7 +109,7 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
       <form onSubmit={handleSubmit} className="card p-6 flex flex-col gap-5">
         {/* Store name */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("sellerStoreNameLabel")}
           </label>
           <input
@@ -124,7 +124,7 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
 
         {/* Bio */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("sellerBioLabel")}
           </label>
           <textarea
@@ -139,7 +139,7 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
         {/* City + Country */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               <MapPin className="w-3.5 h-3.5 inline me-1" />
               {t("profCity")}
             </label>
@@ -152,7 +152,7 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("profCountry")}
             </label>
             <input
@@ -169,7 +169,7 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
         {/* Phone + Website */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               <Phone className="w-3.5 h-3.5 inline me-1" />
               {t("profPhone")}
             </label>
@@ -182,7 +182,7 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               <Globe className="w-3.5 h-3.5 inline me-1" />
               {t("sellerWebsiteLabel")}
             </label>

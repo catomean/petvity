@@ -216,7 +216,7 @@ export default function EditPetPage() {
       >
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("petNameLabel")} *
           </label>
           <input
@@ -230,7 +230,7 @@ export default function EditPetPage() {
 
         {/* Species (read-only after creation) */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("petSpeciesLabel")}
           </label>
           <div className="form-input bg-[var(--light)] text-[var(--muted)] cursor-not-allowed">
@@ -242,7 +242,7 @@ export default function EditPetPage() {
         {/* Breed */}
         {breedOptions.length > 0 && (
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("petBreedLabel")}
             </label>
             <select
@@ -263,7 +263,7 @@ export default function EditPetPage() {
         {/* Birth date + sex */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("petBirthDate")}
             </label>
             <input
@@ -274,7 +274,7 @@ export default function EditPetPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+            <label className="form-label">
               {t("petSex")}
             </label>
             <select
@@ -296,7 +296,7 @@ export default function EditPetPage() {
 
         {/* Bio */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("petBioLabel")}
           </label>
           <textarea
@@ -310,7 +310,7 @@ export default function EditPetPage() {
 
         {/* Public handle */}
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
+          <label className="form-label">
             {t("editPetHandle")}
           </label>
           <div className="flex items-center gap-2">

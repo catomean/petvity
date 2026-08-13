@@ -27,7 +27,7 @@ function ResetPasswordForm() {
         <h1 className="font-display font-medium text-3xl mb-2 text-[var(--warm-ink)]">Invalid link</h1>
         <p className="text-sm text-[var(--muted)] mb-6">
           This reset link is missing a token.{" "}
-          <Link href="/forgot-password" className="text-[var(--gold-dark)] hover:underline">
+          <Link href="/forgot-password" className="link-accent">
             Request a new one.
           </Link>
         </p>
@@ -39,7 +39,7 @@ function ResetPasswordForm() {
     return (
       <div className="text-center">
         <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
-          <CheckCircle className="w-7 h-7 text-[var(--gold-dark)]" />
+          <CheckCircle className="w-7 h-7 text-[var(--teal)]" />
         </div>
         <h1 className="font-display font-medium text-3xl mb-2 text-[var(--warm-ink)]">Password updated</h1>
         <p className="text-sm text-[var(--muted)] mb-7">
@@ -95,9 +95,7 @@ function ResetPasswordForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            New password
-          </label>
+          <label className="form-label">New password</label>
           <PasswordInput
             value={password}
             onChange={setPassword}
@@ -108,9 +106,7 @@ function ResetPasswordForm() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--ink2)] mb-1.5">
-            Confirm new password
-          </label>
+          <label className="form-label">Confirm new password</label>
           <PasswordInput
             value={confirm}
             onChange={setConfirm}

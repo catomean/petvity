@@ -504,6 +504,27 @@ body {
   color: var(--faint);
 }
 
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink2);
+  margin-bottom: 6px;
+}
+
+/* Inline text link on light surfaces (auth pages, form footers). */
+.link-accent {
+  color: var(--teal);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.link-accent:hover {
+  color: var(--teal-dark);
+  text-decoration: underline;
+}
+
 /* ── Signal badges ──────────────────────────────────────────────────────────── */
 
 .signal-healthy {
