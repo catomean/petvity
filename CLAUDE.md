@@ -66,6 +66,8 @@ Production env lives in `.env.selfhost.local` on the box (sourced by the systemd
 |----------|----------------|-------------------|
 | `GOOGLE_CLIENT_ID` | Google Cloud Console | Google OAuth login disabled |
 | `GOOGLE_CLIENT_SECRET` | Google Cloud Console | Google OAuth login disabled |
+| `STRIPE_SECRET_KEY` | Stripe dashboard → API keys | Shop checkout records orders without payment (pay-off-platform mode) |
+| `STRIPE_WEBHOOK_SECRET` | Stripe dashboard → Webhooks (endpoint `/api/payments/webhook`, event `checkout.session.completed`) | Orders never flip to Paid even if Stripe is keyed |
 | `RESEND_API_KEY` | resend.com dashboard | Welcome/alert emails silently dropped |
 | `RESEND_FROM` | Resend verified domain | Emails use fallback |
 | `ADMIN_EMAILS` | Set to owner's email | No admin access |

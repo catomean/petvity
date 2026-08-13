@@ -669,7 +669,22 @@
     "housingType_farm": "Farm / rural property",
     "housingType_other": "Other",
     "allSpecies": "All species",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "ordersPaid": "Paid",
+    "ordersAwaitingPayment": "Awaiting payment",
+    "ordersPayNow": "Pay now",
+    "ordersPayingNow": "Redirecting…",
+    "ordersPaymentSuccess": "Payment received — thank you! Your order is confirmed.",
+    "ordersPaymentCancelled": "Payment was cancelled. Your order is saved — you can pay any time below.",
+    "availabilityTitle": "Unavailable dates",
+    "availabilityDesc": "Block dates when you can't take bookings. Requests that overlap these (or an existing booking) are automatically declined.",
+    "availabilityFrom": "From",
+    "availabilityUntil": "Until",
+    "availabilityReason": "Note (optional)",
+    "availabilityReasonPlaceholder": "e.g. vacation",
+    "availabilityAdd": "Block dates",
+    "availabilityEmpty": "No blocked dates — you appear available every day.",
+    "availabilityRemove": "Remove"
   },
   "pets": {
     "name": "Name",

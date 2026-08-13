@@ -4,6 +4,7 @@ import { getInstance } from "@/lib/db";
 import { vetProfiles, sitterProfiles } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import ProfessionalProfileForm from "./ProfessionalProfileForm";
+import AvailabilityManager from "@/components/portal/AvailabilityManager";
 
 export default async function ProfessionalProfilePage() {
   const session = await auth();
@@ -20,11 +21,21 @@ export default async function ProfessionalProfilePage() {
     const profile = await db.query.vetProfiles.findFirst({
       where: eq(vetProfiles.userId, session.user.id),
     });
-    return <ProfessionalProfileForm role="veterinarian" initialData={profile ?? null} />;
+    return (
+      <>
+        <ProfessionalProfileForm role="veterinarian" initialData={profile ?? null} />
+        <AvailabilityManager />
+      </>
+    );
   }
 
   const profile = await db.query.sitterProfiles.findFirst({
     where: eq(sitterProfiles.userId, session.user.id),
   });
-  return <ProfessionalProfileForm role="pet_sitter" initialData={profile ?? null} />;
+  return (
+    <>
+      <ProfessionalProfileForm role="pet_sitter" initialData={profile ?? null} />
+      <AvailabilityManager />
+    </>
+  );
 }

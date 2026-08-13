@@ -669,7 +669,22 @@
     "housingType_farm": "Bauernhof / ländliches Grundstück",
     "housingType_other": "Sonstiges",
     "allSpecies": "Alle Tierarten",
-    "loading": "Wird geladen…"
+    "loading": "Wird geladen…",
+    "ordersPaid": "Bezahlt",
+    "ordersAwaitingPayment": "Zahlung ausstehend",
+    "ordersPayNow": "Jetzt bezahlen",
+    "ordersPayingNow": "Weiterleitung…",
+    "ordersPaymentSuccess": "Zahlung eingegangen — vielen Dank! Ihre Bestellung ist bestätigt.",
+    "ordersPaymentCancelled": "Zahlung abgebrochen. Ihre Bestellung bleibt gespeichert — Sie können jederzeit unten bezahlen.",
+    "availabilityTitle": "Nicht verfügbare Termine",
+    "availabilityDesc": "Blockieren Sie Termine, an denen Sie keine Buchungen annehmen können. Überschneidende Anfragen (oder bestehende Buchungen) werden automatisch abgelehnt.",
+    "availabilityFrom": "Von",
+    "availabilityUntil": "Bis",
+    "availabilityReason": "Notiz (optional)",
+    "availabilityReasonPlaceholder": "z. B. Urlaub",
+    "availabilityAdd": "Termine blockieren",
+    "availabilityEmpty": "Keine blockierten Termine — Sie erscheinen jeden Tag verfügbar.",
+    "availabilityRemove": "Entfernen"
   },
   "pets": {
     "name": "Name",

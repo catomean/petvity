@@ -669,7 +669,22 @@
     "housingType_farm": "Çiftlik / kırsal mülk",
     "housingType_other": "Diğer",
     "allSpecies": "Tüm türler",
-    "loading": "Yükleniyor…"
+    "loading": "Yükleniyor…",
+    "ordersPaid": "Ödendi",
+    "ordersAwaitingPayment": "Ödeme bekleniyor",
+    "ordersPayNow": "Şimdi öde",
+    "ordersPayingNow": "Yönlendiriliyor…",
+    "ordersPaymentSuccess": "Ödeme alındı — teşekkürler! Siparişiniz onaylandı.",
+    "ordersPaymentCancelled": "Ödeme iptal edildi. Siparişiniz kayıtlı — aşağıdan istediğiniz zaman ödeyebilirsiniz.",
+    "availabilityTitle": "Müsait olmayan tarihler",
+    "availabilityDesc": "Rezervasyon alamayacağınız tarihleri engelleyin. Bunlarla (veya mevcut bir rezervasyonla) çakışan talepler otomatik olarak reddedilir.",
+    "availabilityFrom": "Başlangıç",
+    "availabilityUntil": "Bitiş",
+    "availabilityReason": "Not (isteğe bağlı)",
+    "availabilityReasonPlaceholder": "örn. tatil",
+    "availabilityAdd": "Tarihleri engelle",
+    "availabilityEmpty": "Engellenen tarih yok — her gün müsait görünüyorsunuz.",
+    "availabilityRemove": "Kaldır"
   },
   "pets": {
     "name": "İsim",

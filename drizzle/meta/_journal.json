@@ -8,6 +8,13 @@
       "when": 1776881581649,
       "tag": "0000_pretty_cammi",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786625270865,
+      "tag": "0001_lethal_mongu",
+      "breakpoints": true
     }
   ]
 }

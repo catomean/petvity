@@ -669,7 +669,22 @@
     "housingType_farm": "農場・郊外の物件",
     "housingType_other": "その他",
     "allSpecies": "すべての種",
-    "loading": "読み込み中…"
+    "loading": "読み込み中…",
+    "ordersPaid": "支払い済み",
+    "ordersAwaitingPayment": "支払い待ち",
+    "ordersPayNow": "今すぐ支払う",
+    "ordersPayingNow": "リダイレクト中…",
+    "ordersPaymentSuccess": "お支払いを確認しました — ありがとうございます！ご注文が確定しました。",
+    "ordersPaymentCancelled": "お支払いがキャンセルされました。ご注文は保存されています — 下からいつでもお支払いいただけます。",
+    "availabilityTitle": "予約不可の日程",
+    "availabilityDesc": "予約を受けられない日程をブロックします。重複するリクエスト（または既存の予約）は自動的に拒否されます。",
+    "availabilityFrom": "開始日",
+    "availabilityUntil": "終了日",
+    "availabilityReason": "メモ（任意）",
+    "availabilityReasonPlaceholder": "例：休暇",
+    "availabilityAdd": "日程をブロック",
+    "availabilityEmpty": "ブロック中の日程はありません — 毎日予約可能と表示されます。",
+    "availabilityRemove": "削除"
   },
   "pets": {
     "name": "名前",

@@ -669,7 +669,22 @@
     "housingType_farm": "농장/농촌 부동산",
     "housingType_other": "기타",
     "allSpecies": "모든 종",
-    "loading": "불러오는 중…"
+    "loading": "불러오는 중…",
+    "ordersPaid": "결제 완료",
+    "ordersAwaitingPayment": "결제 대기 중",
+    "ordersPayNow": "지금 결제",
+    "ordersPayingNow": "이동 중…",
+    "ordersPaymentSuccess": "결제가 확인되었습니다 — 감사합니다! 주문이 확정되었습니다.",
+    "ordersPaymentCancelled": "결제가 취소되었습니다. 주문은 저장되어 있으며 아래에서 언제든지 결제할 수 있습니다.",
+    "availabilityTitle": "예약 불가 날짜",
+    "availabilityDesc": "예약을 받을 수 없는 날짜를 차단하세요. 겹치는 요청(또는 기존 예약)은 자동으로 거절됩니다.",
+    "availabilityFrom": "시작",
+    "availabilityUntil": "종료",
+    "availabilityReason": "메모 (선택)",
+    "availabilityReasonPlaceholder": "예: 휴가",
+    "availabilityAdd": "날짜 차단",
+    "availabilityEmpty": "차단된 날짜가 없습니다 — 매일 예약 가능으로 표시됩니다.",
+    "availabilityRemove": "삭제"
   },
   "pets": {
     "name": "이름",

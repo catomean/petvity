@@ -217,12 +217,19 @@ export default function ShopPage() {
       }),
     });
     const data = await res.json();
-    setPlacing(false);
     if (data.success) {
       setCart([]);
       setNotes("");
+      if (data.data?.checkoutUrl) {
+        // Payments enabled — hand off to Stripe Checkout (leave `placing` on
+        // so the button stays disabled during the redirect).
+        window.location.href = data.data.checkoutUrl;
+        return;
+      }
+      setPlacing(false);
       setSuccess(true);
     } else {
+      setPlacing(false);
       setError(data.error ?? t("shopOrderFailed"));
     }
   }

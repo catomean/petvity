@@ -669,7 +669,22 @@
     "housingType_farm": "Granja / propiedad rural",
     "housingType_other": "Otro",
     "allSpecies": "Todas las especies",
-    "loading": "Cargando…"
+    "loading": "Cargando…",
+    "ordersPaid": "Pagado",
+    "ordersAwaitingPayment": "Pago pendiente",
+    "ordersPayNow": "Pagar ahora",
+    "ordersPayingNow": "Redirigiendo…",
+    "ordersPaymentSuccess": "Pago recibido — ¡gracias! Tu pedido está confirmado.",
+    "ordersPaymentCancelled": "Pago cancelado. Tu pedido queda guardado — puedes pagar en cualquier momento abajo.",
+    "availabilityTitle": "Fechas no disponibles",
+    "availabilityDesc": "Bloquea las fechas en las que no puedas aceptar reservas. Las solicitudes que se solapen (o una reserva existente) se rechazan automáticamente.",
+    "availabilityFrom": "Desde",
+    "availabilityUntil": "Hasta",
+    "availabilityReason": "Nota (opcional)",
+    "availabilityReasonPlaceholder": "p. ej. vacaciones",
+    "availabilityAdd": "Bloquear fechas",
+    "availabilityEmpty": "Sin fechas bloqueadas — apareces disponible todos los días.",
+    "availabilityRemove": "Eliminar"
   },
   "pets": {
     "name": "Nombre",

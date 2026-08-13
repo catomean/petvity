@@ -669,7 +669,22 @@
     "housingType_farm": "مزرعة / ملكية ريفية",
     "housingType_other": "أخرى",
     "allSpecies": "جميع الأنواع",
-    "loading": "جارٍ التحميل…"
+    "loading": "جارٍ التحميل…",
+    "ordersPaid": "مدفوع",
+    "ordersAwaitingPayment": "في انتظار الدفع",
+    "ordersPayNow": "ادفع الآن",
+    "ordersPayingNow": "جارٍ التحويل…",
+    "ordersPaymentSuccess": "تم استلام الدفعة — شكرًا لك! تم تأكيد طلبك.",
+    "ordersPaymentCancelled": "تم إلغاء الدفع. طلبك محفوظ — يمكنك الدفع في أي وقت أدناه.",
+    "availabilityTitle": "تواريخ غير متاحة",
+    "availabilityDesc": "احجب التواريخ التي لا يمكنك قبول الحجوزات فيها. الطلبات المتداخلة معها (أو مع حجز قائم) تُرفض تلقائيًا.",
+    "availabilityFrom": "من",
+    "availabilityUntil": "إلى",
+    "availabilityReason": "ملاحظة (اختياري)",
+    "availabilityReasonPlaceholder": "مثال: إجازة",
+    "availabilityAdd": "حجب التواريخ",
+    "availabilityEmpty": "لا توجد تواريخ محجوبة — تظهر متاحًا كل يوم.",
+    "availabilityRemove": "إزالة"
   },
   "pets": {
     "name": "الاسم",
