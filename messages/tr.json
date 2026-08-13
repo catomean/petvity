@@ -10,19 +10,27 @@
     "logIn": "Giriş yap",
     "getStartedFree": "Ücretsiz başla",
     "goToDashboard": "Panele git",
-    "megamenuTitle": "Neler yapabilirsiniz",
     "speciesGuides": "Tür rehberleri",
     "register": "Başla",
     "login": "Giriş yap",
-    "tryDemo": "Canlı demoyu deneyin"
+    "tryDemo": "Canlı demoyu deneyin",
+    "platform": "Platform",
+    "pillarHealth": "Sağlık & Dijital İkiz",
+    "pillarHealthDesc": "Günlük kontroller, yaşamsal değerler ve canlı bir duygu portresi.",
+    "pillarPros": "Veteriner, Bakıcı & Kuaför",
+    "pillarProsDesc": "Güvenilir profesyonelleri bulun, rezervasyon yapın, değerlendirin.",
+    "pillarShop": "Pazar yeri",
+    "pillarShopDesc": "Gerçek satıcılardan mama, oyuncak ve bakım ürünleri.",
+    "pillarAdopt": "Sahiplendirme",
+    "pillarAdoptDesc": "Bir hayvan ilan edin veya yeni dostunuzu bulun."
   },
   "footer": {
     "sections": {
       "product": "Ürün",
       "guides": "Rehberler",
       "professionals": "Profesyoneller",
-      "support": "Destek",
-      "legal": "Yasal"
+      "legal": "Yasal",
+      "company": "Şirket"
     },
     "links": {
       "features": "Özellikler",
@@ -36,12 +44,13 @@
       "joinAsVet": "Veteriner olarak katıl",
       "joinAsSitter": "Evcil hayvan bakıcısı olarak katıl",
       "contactUs": "Bize ulaşın",
-      "helpCentre": "Yardım merkezi",
-      "status": "Durum",
-      "community": "Topluluk",
       "privacyPolicy": "Gizlilik Politikası",
       "termsOfService": "Kullanım Koşulları",
-      "cookiePolicy": "Çerez Politikası"
+      "cookiePolicy": "Çerez Politikası",
+      "shop": "Mağaza",
+      "about": "Hakkımızda",
+      "liveDemo": "Canlı demoyu dene",
+      "joinAsGroomer": "Kuaför olarak katıl"
     },
     "bottom": {
       "rights": "Tüm hakları saklıdır.",
@@ -729,7 +738,11 @@
     "service_haircut": "Tıraş & Şekillendirme",
     "service_deshedding": "Ölü tüy alımı",
     "service_nail_trim": "Tırnak kesimi",
-    "service_teeth_cleaning": "Diş temizliği"
+    "service_teeth_cleaning": "Diş temizliği",
+    "navSectionCare": "Bakım ekibi",
+    "navSectionShop": "Pazar",
+    "navSectionAdoption": "Sahiplendirme",
+    "navSectionBusiness": "İşiniz"
   },
   "pets": {
     "name": "İsim",
@@ -1038,7 +1051,7 @@
     "heroBadge": "10 tür · Dijital İkiz · Sonsuza kadar ücretsiz",
     "heroTitle1": "Evcil hayvanınız bir sinyal gönderiyor.",
     "heroTitle2": "Artık okuyabilirsiniz.",
-    "heroSubtitle": "Günlük bir check-in, canlı bir Dijital İkiz oluşturur — fiziksel yaşam belirtileri artı duygusal durum, türe özgü normlarla karşılaştırılır. Bir şey değiştiğinde, {app} ne olduğunu söyler ve bunu ele alabilecek bir veterinerle bağlantı kurar.",
+    "heroSubtitle": "Günde bir kontrol, evcil hayvanınızın canlı dijital ikizini oluşturur. Bir şey değiştiğinde {app} ne olduğunu söyler — ve sonrası için gereken her şeyi tek yerde toplar: güvenilir veterinerler, bakıcılar ve kuaförler, bir pazar yeri ve insancıl bir sahiplendirme ağı.",
     "trustNoCreditCard": "Kredi kartı gerekmez",
     "trustUnlimitedPets": "Sınırsız evcil hayvan",
     "trustCancelAnytime": "İstediğinizde iptal edin",
@@ -1078,8 +1091,8 @@
     "ecosystemEyebrow": "Tam platform",
     "ecosystemTitle": "Evcil hayvan bakımının ihtiyacı olan her şey",
     "ecosystemDesc": "Sağlık takibi sadece başlangıç. Petvity, günlük check-in'lerden veteriner bulmaya ve evcil hayvana yuva bulmaya kadar tam bakım yolculuğunu kapsayan tek platformdur.",
-    "vetTitle": "Veteriner veya Bakıcı Bulun",
-    "vetDesc": "Yakınızda doğrulanmış veterinerleri ve evcil hayvan bakıcılarını arayın. Yorumları okuyun, uygunluğu kontrol edin ve uygulamadan çıkmadan doğrudan rezervasyon yapın.",
+    "vetTitle": "Veteriner, bakıcı veya kuaför bul",
+    "vetDesc": "Yakınınızdaki güvenilir veterinerleri, bakıcıları ve kuaförleri arayın. Gerçek yorumları ve müsaitliği görün, platformdan ayrılmadan doğrudan rezervasyon yapın.",
     "vetBullet1": "Uzmanlık veya konuma göre ara",
     "vetBullet2": "Gerçek rezervasyonlardan doğrulanmış yorumlar",
     "vetBullet3": "Randevu rezervasyonu ve yönetimi",

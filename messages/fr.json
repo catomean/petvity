@@ -10,19 +10,27 @@
     "logIn": "Se connecter",
     "getStartedFree": "Commencer gratuitement",
     "goToDashboard": "Aller au tableau de bord",
-    "megamenuTitle": "Ce que vous pouvez faire",
     "speciesGuides": "Guides par espèce",
     "register": "Commencer",
     "login": "Se connecter",
-    "tryDemo": "Essayer la démo"
+    "tryDemo": "Essayer la démo",
+    "platform": "Plateforme",
+    "pillarHealth": "Santé & Jumeau numérique",
+    "pillarHealthDesc": "Bilans quotidiens, constantes et portrait émotionnel vivant.",
+    "pillarPros": "Vétos, sitters & toiletteurs",
+    "pillarProsDesc": "Trouvez, réservez et évaluez des pros de confiance.",
+    "pillarShop": "Marketplace",
+    "pillarShopDesc": "Nourriture, jouets et soins par de vrais vendeurs.",
+    "pillarAdopt": "Adoption",
+    "pillarAdoptDesc": "Proposez un animal ou trouvez votre prochain compagnon."
   },
   "footer": {
     "sections": {
       "product": "Produit",
       "guides": "Guides",
       "professionals": "Professionnels",
-      "support": "Assistance",
-      "legal": "Mentions légales"
+      "legal": "Mentions légales",
+      "company": "Entreprise"
     },
     "links": {
       "features": "Fonctionnalités",
@@ -36,12 +44,13 @@
       "joinAsVet": "Rejoindre en tant que vétérinaire",
       "joinAsSitter": "Rejoindre en tant que gardien",
       "contactUs": "Nous contacter",
-      "helpCentre": "Centre d'aide",
-      "status": "Statut",
-      "community": "Communauté",
       "privacyPolicy": "Politique de confidentialité",
       "termsOfService": "Conditions d'utilisation",
-      "cookiePolicy": "Politique de cookies"
+      "cookiePolicy": "Politique de cookies",
+      "shop": "Boutique",
+      "about": "À propos",
+      "liveDemo": "Essayer la démo",
+      "joinAsGroomer": "Devenir toiletteur"
     },
     "bottom": {
       "rights": "Tous droits réservés.",
@@ -729,7 +738,11 @@
     "service_haircut": "Coupe & stylisme",
     "service_deshedding": "Épilation du sous-poil",
     "service_nail_trim": "Coupe des griffes",
-    "service_teeth_cleaning": "Nettoyage des dents"
+    "service_teeth_cleaning": "Nettoyage des dents",
+    "navSectionCare": "Équipe de soin",
+    "navSectionShop": "Marketplace",
+    "navSectionAdoption": "Adoption",
+    "navSectionBusiness": "Votre activité"
   },
   "pets": {
     "name": "Nom",
@@ -1038,7 +1051,7 @@
     "heroBadge": "10 espèces · Jumeau numérique · Gratuit pour toujours",
     "heroTitle1": "Votre animal envoie un signal.",
     "heroTitle2": "Vous pouvez maintenant le lire.",
-    "heroSubtitle": "Un bilan quotidien construit un jumeau numérique vivant — signes vitaux physiques plus état émotionnel, comparés aux normes spécifiques à l'espèce. Quand quelque chose change, {app} vous dit quoi — et vous connecte à un vétérinaire.",
+    "heroSubtitle": "Un bilan quotidien construit un jumeau numérique vivant de votre animal. Quand quelque chose change, {app} vous dit quoi — et réunit la suite au même endroit : vétérinaires, sitters et toiletteurs de confiance, une marketplace et un réseau d'adoption humain.",
     "trustNoCreditCard": "Sans carte bancaire",
     "trustUnlimitedPets": "Animaux illimités",
     "trustCancelAnytime": "Annulation à tout moment",
@@ -1078,8 +1091,8 @@
     "ecosystemEyebrow": "La plateforme complète",
     "ecosystemTitle": "Tout ce dont les soins aux animaux ont besoin",
     "ecosystemDesc": "Le suivi de la santé n'est que le début. Petvity est la seule plateforme qui couvre l'ensemble du parcours de soins.",
-    "vetTitle": "Trouver un vétérinaire ou soignant",
-    "vetDesc": "Recherchez des vétérinaires et soignants vérifiés près de chez vous. Lisez les avis, vérifiez les disponibilités et réservez directement.",
+    "vetTitle": "Trouver un véto, sitter ou toiletteur",
+    "vetDesc": "Cherchez des vétérinaires, sitters et toiletteurs de confiance près de chez vous. Avis réels, disponibilités et réservation directe — sans quitter la plateforme.",
     "vetBullet1": "Recherche par spécialité ou lieu",
     "vetBullet2": "Avis vérifiés de vraies réservations",
     "vetBullet3": "Réserver et gérer des rendez-vous",

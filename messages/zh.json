@@ -10,19 +10,27 @@
     "logIn": "登录",
     "getStartedFree": "免费开始",
     "goToDashboard": "前往仪表板",
-    "megamenuTitle": "您可以做什么",
     "speciesGuides": "物种指南",
     "register": "开始使用",
     "login": "登录",
-    "tryDemo": "试用在线演示"
+    "tryDemo": "试用在线演示",
+    "platform": "平台",
+    "pillarHealth": "健康与数字孪生",
+    "pillarHealthDesc": "每日签到、生命体征和鲜活的情绪画像。",
+    "pillarPros": "兽医、寄养与美容",
+    "pillarProsDesc": "查找、预约并评价值得信赖的专业人士。",
+    "pillarShop": "商城",
+    "pillarShopDesc": "来自真实卖家的食品、玩具和护理用品。",
+    "pillarAdopt": "领养",
+    "pillarAdoptDesc": "发布宠物或找到你的下一位伙伴。"
   },
   "footer": {
     "sections": {
       "product": "产品",
       "guides": "指南",
       "professionals": "专业人士",
-      "support": "支持",
-      "legal": "法律"
+      "legal": "法律",
+      "company": "公司"
     },
     "links": {
       "features": "功能",
@@ -36,12 +44,13 @@
       "joinAsVet": "注册为兽医",
       "joinAsSitter": "注册为宠物保姆",
       "contactUs": "联系我们",
-      "helpCentre": "帮助中心",
-      "status": "状态",
-      "community": "社区",
       "privacyPolicy": "隐私政策",
       "termsOfService": "服务条款",
-      "cookiePolicy": "Cookie政策"
+      "cookiePolicy": "Cookie政策",
+      "shop": "商城",
+      "about": "关于我们",
+      "liveDemo": "试用在线演示",
+      "joinAsGroomer": "成为美容师"
     },
     "bottom": {
       "rights": "版权所有。",
@@ -729,7 +738,11 @@
     "service_haircut": "剪毛造型",
     "service_deshedding": "去死毛",
     "service_nail_trim": "剪指甲",
-    "service_teeth_cleaning": "洁牙"
+    "service_teeth_cleaning": "洁牙",
+    "navSectionCare": "护理团队",
+    "navSectionShop": "商城",
+    "navSectionAdoption": "领养",
+    "navSectionBusiness": "您的业务"
   },
   "pets": {
     "name": "名字",
@@ -1038,7 +1051,7 @@
     "heroBadge": "10个物种 · 数字孪生 · 永久免费",
     "heroTitle1": "您的宠物发出了信号。",
     "heroTitle2": "现在您可以读懂它。",
-    "heroSubtitle": "每日签到构建一个活跃的数字孪生 — 身体生命体征加上情感状态，与物种特定标准进行比较。当发生变化时，{app} 告诉您是什么 — 并为您连接能够采取行动的兽医。",
+    "heroSubtitle": "每日一次签到，构建宠物的鲜活数字孪生。当情况变化时，{app}告诉您是什么 — 并把接下来需要的一切放在一处：可信赖的兽医、寄养员和美容师、一个商城，以及有温度的领养网络。",
     "trustNoCreditCard": "无需信用卡",
     "trustUnlimitedPets": "无限宠物",
     "trustCancelAnytime": "随时取消",
@@ -1078,8 +1091,8 @@
     "ecosystemEyebrow": "完整平台",
     "ecosystemTitle": "宠物护理需要的一切",
     "ecosystemDesc": "健康追踪只是开始。Petvity是唯一涵盖完整护理旅程的平台。",
-    "vetTitle": "寻找兽医或看护者",
-    "vetDesc": "在附近搜索经过验证的兽医和宠物看护者。阅读评价，查看可用性，直接预订 — 无需离开应用。",
+    "vetTitle": "查找兽医、寄养员或美容师",
+    "vetDesc": "搜索您附近值得信赖的兽医、寄养员和美容师。查看真实评价和可预约时间，直接在平台内预约。",
     "vetBullet1": "按专业或地点搜索",
     "vetBullet2": "来自真实预订的已验证评价",
     "vetBullet3": "预订和管理预约",

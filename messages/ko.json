@@ -10,19 +10,27 @@
     "logIn": "로그인",
     "getStartedFree": "무료로 시작",
     "goToDashboard": "대시보드로 이동",
-    "megamenuTitle": "할 수 있는 것",
     "speciesGuides": "종별 가이드",
     "register": "시작하기",
     "login": "로그인",
-    "tryDemo": "라이브 데모 체험"
+    "tryDemo": "라이브 데모 체험",
+    "platform": "플랫폼",
+    "pillarHealth": "건강 & 디지털 트윈",
+    "pillarHealthDesc": "매일의 체크인, 바이탈, 살아있는 감정 초상.",
+    "pillarPros": "수의사·시터·미용사",
+    "pillarProsDesc": "신뢰할 수 있는 전문가를 찾고 예약하고 리뷰하세요.",
+    "pillarShop": "마켓플레이스",
+    "pillarShopDesc": "실제 판매자의 사료, 장난감, 케어 용품.",
+    "pillarAdopt": "입양",
+    "pillarAdoptDesc": "반려동물을 등록하거나 다음 가족을 찾아보세요."
   },
   "footer": {
     "sections": {
       "product": "제품",
       "guides": "가이드",
       "professionals": "전문가",
-      "support": "지원",
-      "legal": "법적 정보"
+      "legal": "법적 정보",
+      "company": "회사"
     },
     "links": {
       "features": "기능",
@@ -36,12 +44,13 @@
       "joinAsVet": "수의사로 가입",
       "joinAsSitter": "펫시터로 가입",
       "contactUs": "문의하기",
-      "helpCentre": "도움말 센터",
-      "status": "상태",
-      "community": "커뮤니티",
       "privacyPolicy": "개인정보 처리방침",
       "termsOfService": "이용약관",
-      "cookiePolicy": "쿠키 정책"
+      "cookiePolicy": "쿠키 정책",
+      "shop": "샵",
+      "about": "소개",
+      "liveDemo": "라이브 데모 체험",
+      "joinAsGroomer": "미용사로 참여"
     },
     "bottom": {
       "rights": "All rights reserved.",
@@ -729,7 +738,11 @@
     "service_haircut": "컷 & 스타일링",
     "service_deshedding": "죽은 털 제거",
     "service_nail_trim": "발톱 손질",
-    "service_teeth_cleaning": "치아 관리"
+    "service_teeth_cleaning": "치아 관리",
+    "navSectionCare": "케어 팀",
+    "navSectionShop": "마켓",
+    "navSectionAdoption": "입양",
+    "navSectionBusiness": "내 비즈니스"
   },
   "pets": {
     "name": "이름",
@@ -1038,7 +1051,7 @@
     "heroBadge": "10종 · 디지털 트윈 · 영원히 무료",
     "heroTitle1": "반려동물이 신호를 보내고 있습니다.",
     "heroTitle2": "이제 읽을 수 있습니다.",
-    "heroSubtitle": "매일 체크인으로 살아있는 디지털 트윈을 구축하세요 — 신체 활력징후와 감정 상태를 종별 기준과 비교합니다. 무언가 변화하면, {app}이 무엇인지 알려주고 대응할 수 있는 수의사와 연결해줍니다.",
+    "heroSubtitle": "매일 한 번의 체크인이 반려동물의 살아있는 디지털 트윈을 만듭니다. 변화가 생기면 {app}가 무엇인지 알려주고, 다음에 필요한 모든 것을 한곳에: 신뢰할 수 있는 수의사·시터·미용사, 마켓플레이스, 따뜻한 입양 네트워크.",
     "trustNoCreditCard": "신용카드 불필요",
     "trustUnlimitedPets": "무제한 반려동물",
     "trustCancelAnytime": "언제든지 취소",
@@ -1078,8 +1091,8 @@
     "ecosystemEyebrow": "전체 플랫폼",
     "ecosystemTitle": "반려동물 케어에 필요한 모든 것",
     "ecosystemDesc": "건강 추적은 시작에 불과합니다. Petvity는 매일 체크인부터 수의사 찾기, 반려동물 입양까지 전체 케어 여정을 커버하는 유일한 플랫폼입니다.",
-    "vetTitle": "수의사 또는 돌봄이 찾기",
-    "vetDesc": "근처의 인증된 수의사와 반려동물 돌봄이를 검색하세요. 리뷰 읽기, 가용성 확인, 직접 예약 — 앱을 떠나지 않고.",
+    "vetTitle": "수의사·시터·미용사 찾기",
+    "vetDesc": "가까운 곳의 신뢰할 수 있는 수의사, 시터, 미용사를 검색하세요. 실제 리뷰와 예약 가능 시간을 확인하고 플랫폼 안에서 바로 예약하세요.",
     "vetBullet1": "전문 분야 또는 위치로 검색",
     "vetBullet2": "실제 예약의 인증된 리뷰",
     "vetBullet3": "예약 및 관리",

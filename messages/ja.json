@@ -10,19 +10,27 @@
     "logIn": "ログイン",
     "getStartedFree": "無料で始める",
     "goToDashboard": "ダッシュボードへ",
-    "megamenuTitle": "できること",
     "speciesGuides": "動物種別ガイド",
     "register": "始める",
     "login": "ログイン",
-    "tryDemo": "ライブデモを試す"
+    "tryDemo": "ライブデモを試す",
+    "platform": "プラットフォーム",
+    "pillarHealth": "健康 & デジタルツイン",
+    "pillarHealthDesc": "毎日のチェックイン、バイタル、生きた感情ポートレート。",
+    "pillarPros": "獣医・シッター・トリマー",
+    "pillarProsDesc": "信頼できるプロを探して予約、レビューまで。",
+    "pillarShop": "マーケットプレイス",
+    "pillarShopDesc": "フード、おもちゃ、ケア用品を実際の販売者から。",
+    "pillarAdopt": "里親募集",
+    "pillarAdoptDesc": "ペットを掲載、または次の家族を見つける。"
   },
   "footer": {
     "sections": {
       "product": "製品",
       "guides": "ガイド",
       "professionals": "専門家向け",
-      "support": "サポート",
-      "legal": "法的情報"
+      "legal": "法的情報",
+      "company": "会社情報"
     },
     "links": {
       "features": "機能",
@@ -36,12 +44,13 @@
       "joinAsVet": "獣医師として登録",
       "joinAsSitter": "ペットシッターとして登録",
       "contactUs": "お問い合わせ",
-      "helpCentre": "ヘルプセンター",
-      "status": "ステータス",
-      "community": "コミュニティ",
       "privacyPolicy": "プライバシーポリシー",
       "termsOfService": "利用規約",
-      "cookiePolicy": "Cookieポリシー"
+      "cookiePolicy": "Cookieポリシー",
+      "shop": "ショップ",
+      "about": "私たちについて",
+      "liveDemo": "ライブデモを試す",
+      "joinAsGroomer": "トリマーとして参加"
     },
     "bottom": {
       "rights": "All rights reserved.",
@@ -729,7 +738,11 @@
     "service_haircut": "カット＆スタイリング",
     "service_deshedding": "拜毛ケア",
     "service_nail_trim": "爪切り",
-    "service_teeth_cleaning": "歯のクリーニング"
+    "service_teeth_cleaning": "歯のクリーニング",
+    "navSectionCare": "ケアチーム",
+    "navSectionShop": "マーケット",
+    "navSectionAdoption": "里親募集",
+    "navSectionBusiness": "ビジネス"
   },
   "pets": {
     "name": "名前",
@@ -1038,7 +1051,7 @@
     "heroBadge": "10種 · デジタルツイン · 永久無料",
     "heroTitle1": "あなたのペットはシグナルを送っています。",
     "heroTitle2": "今、それを読めます。",
-    "heroSubtitle": "毎日のチェックインで、生きたデジタルツインを構築 — 身体のバイタルと感情状態を、種特有の基準と比較します。何かが変化したとき、{app} が何であるかを教え、対応できる獣医に接続します。",
+    "heroSubtitle": "毎日のチェックインが、ペットの生きたデジタルツインを育てます。変化があれば{app}が何かを伝え、次に必要なものを一か所に：信頼できる獣医・シッター・トリマー、マーケットプレイス、そして思いやりのある里親ネットワーク。",
     "trustNoCreditCard": "クレジットカード不要",
     "trustUnlimitedPets": "ペット無制限",
     "trustCancelAnytime": "いつでもキャンセル可",
@@ -1078,8 +1091,8 @@
     "ecosystemEyebrow": "フルプラットフォーム",
     "ecosystemTitle": "ペットケアに必要なすべて",
     "ecosystemDesc": "健康追跡は始まりに過ぎません。Petvityは、毎日のチェックインから獣医の検索、ペットの里親探しまで、完全なケアの旅をカバーする唯一のプラットフォームです。",
-    "vetTitle": "獣医またはシッターを探す",
-    "vetDesc": "近くの認定獣医やペットシッターを検索。レビューを読み、空き状況を確認し、アプリを離れずに直接予約。",
+    "vetTitle": "獣医・シッター・トリマーを探す",
+    "vetDesc": "近くの信頼できる獣医、シッター、トリマーを検索。実際のレビューと空き状況を確認して、プラットフォーム内で直接予約。",
     "vetBullet1": "専門分野や場所で検索",
     "vetBullet2": "実際の予約からの認定レビュー",
     "vetBullet3": "予約と管理",

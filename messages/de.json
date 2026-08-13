@@ -10,19 +10,27 @@
     "logIn": "Anmelden",
     "getStartedFree": "Kostenlos starten",
     "goToDashboard": "Zum Dashboard",
-    "megamenuTitle": "Was du tun kannst",
     "speciesGuides": "Tier-Ratgeber",
     "register": "Loslegen",
     "login": "Anmelden",
-    "tryDemo": "Live-Demo testen"
+    "tryDemo": "Live-Demo testen",
+    "platform": "Plattform",
+    "pillarHealth": "Gesundheit & Digital Twin",
+    "pillarHealthDesc": "Tägliche Check-ins, Vitalwerte und ein lebendiges Stimmungsbild.",
+    "pillarPros": "Tierärzte, Sitter & Groomer",
+    "pillarProsDesc": "Vertrauenswürdige Profis finden, buchen und bewerten.",
+    "pillarShop": "Marktplatz",
+    "pillarShopDesc": "Futter, Spielzeug und Pflege von echten Anbietern.",
+    "pillarAdopt": "Vermittlung",
+    "pillarAdoptDesc": "Ein Tier vermitteln oder den nächsten Gefährten finden."
   },
   "footer": {
     "sections": {
       "product": "Produkt",
       "guides": "Ratgeber",
       "professionals": "Fachleute",
-      "support": "Support",
-      "legal": "Rechtliches"
+      "legal": "Rechtliches",
+      "company": "Unternehmen"
     },
     "links": {
       "features": "Funktionen",
@@ -36,12 +44,13 @@
       "joinAsVet": "Als Tierarzt registrieren",
       "joinAsSitter": "Als Tiersitter registrieren",
       "contactUs": "Kontakt",
-      "helpCentre": "Hilfe-Center",
-      "status": "Status",
-      "community": "Community",
       "privacyPolicy": "Datenschutzrichtlinie",
       "termsOfService": "Nutzungsbedingungen",
-      "cookiePolicy": "Cookie-Richtlinie"
+      "cookiePolicy": "Cookie-Richtlinie",
+      "shop": "Shop",
+      "about": "Über uns",
+      "liveDemo": "Live-Demo testen",
+      "joinAsGroomer": "Als Groomer beitreten"
     },
     "bottom": {
       "rights": "Alle Rechte vorbehalten.",
@@ -729,7 +738,11 @@
     "service_haircut": "Haarschnitt & Styling",
     "service_deshedding": "Unterwolle entfernen",
     "service_nail_trim": "Krallen schneiden",
-    "service_teeth_cleaning": "Zahnreinigung"
+    "service_teeth_cleaning": "Zahnreinigung",
+    "navSectionCare": "Betreuung",
+    "navSectionShop": "Marktplatz",
+    "navSectionAdoption": "Vermittlung",
+    "navSectionBusiness": "Ihr Geschäft"
   },
   "pets": {
     "name": "Name",
@@ -1038,7 +1051,7 @@
     "heroBadge": "10 Tierarten · Digitaler Zwilling · Kostenlos für immer",
     "heroTitle1": "Dein Tier sendet ein Signal.",
     "heroTitle2": "Jetzt kannst du es lesen.",
-    "heroSubtitle": "Ein täglicher Check-in baut einen lebendigen Digitalen Zwilling auf — körperliche Vitalwerte plus emotionaler Zustand, verglichen mit artspezifischen Normen. Wenn sich etwas verändert, erklärt dir {app} was — und verbindet dich mit einem Tierarzt.",
+    "heroSubtitle": "Ein täglicher Check-in erzeugt einen lebendigen Digital Twin Ihres Tieres. Wenn sich etwas verändert, sagt {app} Ihnen was — und bündelt alles Weitere an einem Ort: vertrauenswürdige Tierärzte, Sitter und Groomer, einen Marktplatz und ein faires Vermittlungsnetzwerk.",
     "trustNoCreditCard": "Keine Kreditkarte",
     "trustUnlimitedPets": "Unbegrenzte Tiere",
     "trustCancelAnytime": "Jederzeit kündbar",
@@ -1078,8 +1091,8 @@
     "ecosystemEyebrow": "Die vollständige Plattform",
     "ecosystemTitle": "Alles was Tierpflege braucht",
     "ecosystemDesc": "Gesundheitsverfolgung ist nur der Anfang. Petvity ist die einzige Plattform, die die gesamte Pflege abdeckt.",
-    "vetTitle": "Tierarzt oder Betreuer finden",
-    "vetDesc": "Suche nach verifizierten Tierärzten und Tierbetreuern in deiner Nähe. Bewertungen lesen, Verfügbarkeit prüfen und direkt buchen — ohne die App zu verlassen.",
+    "vetTitle": "Tierarzt, Sitter oder Groomer finden",
+    "vetDesc": "Finden Sie vertrauenswürdige Tierärzte, Sitter und Groomer in Ihrer Nähe. Echte Bewertungen, Verfügbarkeit und Direktbuchung — ohne die Plattform zu verlassen.",
     "vetBullet1": "Suche nach Fachgebiet oder Ort",
     "vetBullet2": "Verifizierte Bewertungen aus echten Buchungen",
     "vetBullet3": "Termine buchen und verwalten",
