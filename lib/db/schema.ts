@@ -485,9 +485,12 @@ export const orderItems = pgTable("order_items", {
   orderId: uuid("order_id")
     .notNull()
     .references(() => orders.id, { onDelete: "cascade" }),
+  /** Nullable: the product row may be deleted (e.g. the seller erased their
+   *  account) — the buyer's order history survives via the snapshots below. */
   productId: uuid("product_id")
-    .notNull()
-    .references(() => products.id, { onDelete: "restrict" }),
+    .references(() => products.id, { onDelete: "set null" }),
+  /** Name snapshot at order time — order history is an immutable record */
+  productName: varchar("product_name", { length: 200 }).notNull(),
   quantity: integer("quantity").notNull(),
   /** Price snapshot at order time */
   priceCents: integer("price_cents").notNull(),

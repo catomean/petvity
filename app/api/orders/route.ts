@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, desc, inArray, sql, gte, and } from "drizzle-orm";
+import { eq, desc, inArray, sql, gte, and, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
@@ -43,12 +43,12 @@ export async function GET() {
       productId: orderItems.productId,
       quantity: orderItems.quantity,
       priceCents: orderItems.priceCents,
-      productName: products.name,
+      productName: orderItems.productName,
       productImageUrl: products.imageUrl,
-      productCategory: products.category,
+      productCategory: sql<string>`COALESCE(${products.category}::text, 'other')`,
     })
     .from(orderItems)
-    .innerJoin(products, eq(products.id, orderItems.productId))
+    .leftJoin(products, eq(products.id, orderItems.productId))
     .where(inArray(orderItems.orderId, orderIds));
 
   // Group items by orderId
@@ -171,6 +171,7 @@ export async function POST(req: NextRequest) {
   const itemValues = items.map((item) => ({
     orderId: order.id,
     productId: item.productId,
+    productName: productMap.get(item.productId)!.name,
     quantity: item.quantity,
     priceCents: productMap.get(item.productId)!.priceCents,
   }));
@@ -189,7 +190,7 @@ export async function POST(req: NextRequest) {
   try {
     if (buyer?.email) {
       const emailItems = insertedItems.map((i) => ({
-        name: productMap.get(i.productId)?.name ?? "Item",
+        name: i.productName,
         quantity: i.quantity,
         lineTotal: formatPrice(i.priceCents * i.quantity),
       }));
@@ -209,7 +210,7 @@ export async function POST(req: NextRequest) {
   try {
     const itemsBySeller = new Map<string, typeof insertedItems>();
     for (const item of insertedItems) {
-      const sellerId = productMap.get(item.productId)?.sellerId ?? null;
+      const sellerId = (item.productId ? productMap.get(item.productId)?.sellerId : null) ?? null;
       if (!sellerId) continue;
       const arr = itemsBySeller.get(sellerId) ?? [];
       arr.push(item);
@@ -231,7 +232,7 @@ export async function POST(req: NextRequest) {
             sellerName: seller.name ?? seller.email,
             buyerName: buyerLabel,
             items: sellerItems.map((i) => ({
-              name: productMap.get(i.productId)?.name ?? "Item",
+              name: i.productName,
               quantity: i.quantity,
               lineTotal: formatPrice(i.priceCents * i.quantity),
             })),
@@ -255,7 +256,7 @@ export async function POST(req: NextRequest) {
         orderId: order.id,
         customerEmail: buyer?.email ?? null,
         items: insertedItems.map((i) => ({
-          name: productMap.get(i.productId)?.name ?? "Item",
+          name: i.productName,
           unitAmountCents: i.priceCents,
           quantity: i.quantity,
         })),

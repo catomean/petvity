@@ -38,10 +38,10 @@ export async function POST(
     .select({
       quantity: orderItems.quantity,
       priceCents: orderItems.priceCents,
-      productName: products.name,
+      productName: orderItems.productName,
     })
     .from(orderItems)
-    .innerJoin(products, eq(products.id, orderItems.productId))
+    .leftJoin(products, eq(products.id, orderItems.productId))
     .where(eq(orderItems.orderId, orderId));
 
   const checkout = await createOrderCheckoutSession({
