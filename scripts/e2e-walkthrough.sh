@@ -219,7 +219,25 @@ req "adopter becomes sitter" 200 POST /api/account/role adopter '{"role":"pet_si
 login adopter "$E_ADOPTER"
 [ "$SESSION_ROLE" = "pet_sitter" ] && ok "role upgrade reflected at login" || bad "role upgrade reflected at login" "role=$SESSION_ROLE"
 
-echo "══ 8. Cleanup (self-serve account deletion) ══"
+echo "══ 8. Portal pages render (not just 200) ══"
+# A portal page can answer 200 and still paint nothing — /portal/settings did,
+# because it returned null for the whole page until the client session arrived.
+# Status codes cannot see that, so assert the header vocabulary is really there.
+renders() { # renders <path> <needle> <description> [jar]
+  local path=$1 needle=$2 desc=$3 jar=${4:-owner}
+  local body; body=$(curl -s -b "$JARS/$jar" "$BASE$path")
+  printf '%s' "$body" | grep -qF "$needle" \
+    && ok "$desc" || bad "$desc" "missing '$needle' in $path"
+}
+for p in /portal/dashboard /portal/pets /portal/settings /portal/adopt \
+         /portal/adoptions /portal/find /portal/shop /portal/orders \
+         /portal/bookings /portal/become-a-pro /portal/seller-profile; do
+  renders "$p" 'page-title' "renders header: $p"
+done
+renders /portal/pets 'page-sub' "pets page states what it is for"
+renders /portal/settings 'page-sub' "settings states what it is for before the session lands"
+
+echo "══ 9. Cleanup (self-serve account deletion) ══"
 req "delete record" 200 DELETE "/api/health/records/$REC" owner
 req "delete vaccination" 200 DELETE "/api/vaccinations/$VACC" owner
 req "delete medication" 200 DELETE "/api/medications/$MED" owner
