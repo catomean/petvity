@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Plus, Package, Pencil, X, Eye, EyeOff } from "lucide-react";
 import { PRODUCT_CATEGORY_OPTIONS, productCategoryLabel } from "@/lib/config/products";
 import { formatPrice } from "@/lib/utils/format";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -139,18 +140,18 @@ export default function AdminProductsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="page-title">Products</h1>
-          <p className="page-sub">Manage the shop catalogue</p>
-        </div>
-        {!showForm && (
-          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add product
-          </button>
-        )}
-      </div>
+      <PageHeader
+        title="Products"
+        purpose="Every product in the shop, from any seller. Edit price and stock, or take a listing off sale."
+        action={
+          !showForm ? (
+            <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+              <Plus className="w-4 h-4" />
+              Add product
+            </button>
+          ) : undefined
+        }
+      />
 
       {/* Form */}
       {showForm && (

@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ChevronLeft, Heart, MapPin, DollarSign } from "lucide-react";
+import { Heart, MapPin, DollarSign } from "lucide-react";
 import { APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ApplicationStatusId } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { formatDateShort, formatAdoptionFee } from "@/lib/utils/format";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 interface MyApplication {
   applicationId: string;
@@ -48,17 +49,11 @@ export default function MyApplicationsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <Link
-          href="/portal/adopt"
-          className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-1 transition-colors"
-        >
-          <ChevronLeft className="w-3.5 h-3.5" />
-          {t("myAppsBack")}
-        </Link>
-        <h1 className="page-title">{t("myAppsTitle")}</h1>
-        <p className="page-sub">{t("myAppsSubtitle")}</p>
-      </div>
+      <PageHeader
+        back={{ href: "/portal/adopt", label: t("myAppsBack") }}
+        title={t("myAppsTitle")}
+        purpose={t("myAppsSubtitle")}
+      />
 
       {loading ? (
         <div className="animate-pulse space-y-3">

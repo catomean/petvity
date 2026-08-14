@@ -10,6 +10,7 @@ import type { OrderStatusId } from "@/lib/config/orders";
 import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice, formatIsoDate, formatIsoDateTime } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -272,32 +273,29 @@ export default function AdminOrdersPage() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="page-title">Orders</h1>
-          <p className="page-sub">Manage and fulfil customer orders</p>
-        </div>
-      </div>
+      <PageHeader
+        title="Orders"
+        purpose="Every order placed on the platform. Move one along its status as it is packed, shipped, and delivered."
+      />
 
       {/* Summary strip */}
       {!loading && orders.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           <div className="card p-4">
-            <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">Total orders</p>
-            <p className="page-title">{orders.length}</p>
+            <p className="stat-caption">Total orders</p>
+            <p className="stat-value">{orders.length}</p>
           </div>
           <div className="card p-4">
-            <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">Revenue</p>
-            <p className="text-2xl font-bold text-[var(--teal)]">{formatPrice(revenue)}</p>
+            <p className="stat-caption">Revenue</p>
+            <p className="stat-value stat-value-brand">{formatPrice(revenue)}</p>
           </div>
           <div className="card p-4">
-            <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">Pending</p>
-            <p className="text-2xl font-bold text-[var(--warn-text)]">{counts.pending ?? 0}</p>
+            <p className="stat-caption">Pending</p>
+            <p className="stat-value stat-value-warn">{counts.pending ?? 0}</p>
           </div>
           <div className="card p-4">
-            <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wide mb-1">In transit</p>
-            <p className="text-2xl font-bold text-[var(--ink2)]">{(counts.confirmed ?? 0) + (counts.shipped ?? 0)}</p>
+            <p className="stat-caption">In transit</p>
+            <p className="stat-value stat-value-muted">{(counts.confirmed ?? 0) + (counts.shipped ?? 0)}</p>
           </div>
         </div>
       )}

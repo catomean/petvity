@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "Dashboard",
     "myPets": "Meine Tiere",
+    "petsPurpose": "Jedes Tier in deiner Obhut. Öffne eines, um Gesundheit zu protokollieren, Befunde zu ergänzen und Impfungen zu verfolgen.",
     "checkin": "Check-in",
     "findAPro": "Profi finden",
     "bookings": "Buchungen",
@@ -141,7 +142,6 @@
     "updateVaccinations": "Impfungen aktualisieren",
     "findAVet": "Tierarzt finden",
     "logToday": "Heute eintragen",
-    "petsCount": "{count} Haustiere",
     "petsEmptyDesc": "Erstelle Profile für jedes deiner Haustiere, um ihre Gesundheit zu verfolgen.",
     "addYourFirstPet": "Dein erstes Haustier hinzufügen",
     "lastCheckin": "Letzter Check-in {date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "Im Marktplatz anzeigen",
     "myProductsSaveFailed": "Speichern fehlgeschlagen.",
     "sellerSetupSubtitle": "Richte deinen Shop ein, um Produkte auf Petvity anzubieten",
+    "sellerProfilePurpose": "Dein Ladenauftritt: Name, Beschreibung und Ort, die Käufer neben allem sehen, was du verkaufst.",
     "sellerInfoTitle": "Jetzt auf Petvity verkaufen",
     "sellerInfoBody": "Sobald du dein Verkäuferkonto aktivierst, kannst du Tierprodukte einstellen und dein Inventar auf der Seite Meine Produkte verwalten.",
     "sellerStoreNameLabel": "Shopname",

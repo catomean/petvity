@@ -7,6 +7,7 @@ import { PRODUCT_CATEGORY_OPTIONS } from "@/lib/config/products";
 import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice } from "@/lib/utils/format";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -148,21 +149,21 @@ export default function MyProductsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="page-title">{t("myProductsTitle")}</h1>
-          <p className="page-sub">{t("myProductsSubtitle")}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href="/portal/my-products/orders" className="btn-outline flex items-center gap-2">
-            <ShoppingBag className="w-4 h-4" /> {t("orders")}
-          </Link>
-          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-            <Plus className="w-4 h-4" /> {t("myProductsAdd")}
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        flush
+        title={t("myProductsTitle")}
+        purpose={t("myProductsSubtitle")}
+        action={
+          <div className="flex items-center gap-2">
+            <Link href="/portal/my-products/orders" className="btn-outline flex items-center gap-2">
+              <ShoppingBag className="w-4 h-4" /> {t("orders")}
+            </Link>
+            <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+              <Plus className="w-4 h-4" /> {t("myProductsAdd")}
+            </button>
+          </div>
+        }
+      />
 
       {mutationError && <p className="alert-error">{mutationError}</p>}
 

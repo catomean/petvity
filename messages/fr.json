@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "Tableau de bord",
     "myPets": "Mes animaux",
+    "petsPurpose": "Chaque animal dont vous prenez soin. Ouvrez-en un pour noter sa santé, ajouter des documents et suivre ses vaccins.",
     "checkin": "Check-in",
     "findAPro": "Trouver un pro",
     "bookings": "Réservations",
@@ -141,7 +142,6 @@
     "updateVaccinations": "Mettre à jour les vaccins",
     "findAVet": "Trouver un vétérinaire",
     "logToday": "Enregistrer aujourd'hui",
-    "petsCount": "{count} animaux",
     "petsEmptyDesc": "Créez des profils pour chacun de vos animaux pour commencer à suivre leur santé.",
     "addYourFirstPet": "Ajouter votre premier animal",
     "lastCheckin": "Dernier check-in {date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "Afficher sur le marché",
     "myProductsSaveFailed": "Enregistrement échoué.",
     "sellerSetupSubtitle": "Configurez votre boutique pour lister des produits sur Petvity",
+    "sellerProfilePurpose": "Votre boutique : le nom, la description et le lieu que les acheteurs voient à côté de vos articles.",
     "sellerInfoTitle": "Commencez à vendre sur Petvity",
     "sellerInfoBody": "Une fois votre compte vendeur activé, vous pouvez lister des produits pour animaux et gérer votre inventaire depuis la page Mes Produits.",
     "sellerStoreNameLabel": "Nom de la boutique",

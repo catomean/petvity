@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "لوحة التحكم",
     "myPets": "حيواناتي الأليفة",
+    "petsPurpose": "كل حيوان في رعايتك. افتح أحدها لتسجيل صحته وإضافة السجلات ومتابعة التطعيمات.",
     "checkin": "تسجيل",
     "findAPro": "البحث عن متخصص",
     "bookings": "الحجوزات",
@@ -141,7 +142,6 @@
     "updateVaccinations": "تحديث التطعيمات",
     "findAVet": "إيجاد بيطري",
     "logToday": "سجّل اليوم",
-    "petsCount": "{count} حيوانات أليفة",
     "petsEmptyDesc": "أنشئ ملفات لكل حيوان أليف لبدء تتبع صحتها.",
     "addYourFirstPet": "أضف أول حيوان أليف",
     "lastCheckin": "آخر تسجيل: {date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "عرض في السوق",
     "myProductsSaveFailed": "فشل الحفظ.",
     "sellerSetupSubtitle": "أعدّ متجرك لإدراج المنتجات على Petvity",
+    "sellerProfilePurpose": "واجهة متجرك: الاسم والوصف والموقع التي يراها المشترون بجانب كل ما تبيعه.",
     "sellerInfoTitle": "ابدأ البيع على Petvity",
     "sellerInfoBody": "بمجرد تفعيل حساب البائع، يمكنك إدراج منتجات الحيوانات الأليفة وإدارة مخزونك من صفحة منتجاتي.",
     "sellerStoreNameLabel": "اسم المتجر",

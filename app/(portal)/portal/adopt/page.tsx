@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Heart, PawPrint, MapPin, Users,
+  PawPrint, MapPin, Users,
   Search, Filter, ChevronRight, Sparkles,
 } from "lucide-react";
 import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
@@ -13,6 +13,7 @@ import { formatPetAgeShort, formatAdoptionFee } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
 import HubTabs from "@/components/portal/HubTabs";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -147,16 +148,11 @@ export default function AdoptPage() {
   return (
     <div>
       <HubTabs tabs={[{ href: "/portal/adopt", label: t("adopt") }, { href: "/portal/adoptions", label: t("myAdoptions") }]} />
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-[var(--ink)] flex items-center gap-2">
-            <Heart className="w-6 h-6 text-[var(--danger-text)]" />
-            {t("adoptTitle")}
-          </h1>
-          <p className="page-sub">{t("adoptSubtitle")}</p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
+      <PageHeader
+        title={t("adoptTitle")}
+        purpose={t("adoptSubtitle")}
+        action={
+          <div className="flex items-center gap-2 flex-wrap">
           <Link href="/portal/adopt/applications" className="btn-ghost text-sm flex items-center gap-2">
             {t("adoptMyApplications")}
           </Link>
@@ -168,8 +164,9 @@ export default function AdoptPage() {
             <PawPrint className="w-4 h-4" />
             {t("adoptListAPet")}
           </Link>
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       {/* Filters */}
       <div className="card p-4 mb-6 flex flex-wrap gap-3">

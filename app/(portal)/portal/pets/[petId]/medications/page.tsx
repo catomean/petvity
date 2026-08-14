@@ -1,9 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import {
-  Plus, Pill, ChevronLeft, X,
+  Plus, Pill, X,
   Check, Clock, Ban,
   Pencil, Trash2, Search,
 } from "lucide-react";
@@ -12,6 +11,7 @@ import { MEDICATION_STATUS_CONFIG } from "@/lib/config/medications";
 import type { MedicationStatusId } from "@/lib/config/medications";
 import { useHealthList } from "@/hooks/useHealthList";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Record<MedicationStatusId, React.ElementType> = {
@@ -129,20 +129,12 @@ export default function MedicationsPage() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <Link
-            href={`/portal/pets/${petId}`}
-            className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-1 transition-colors"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" />
-            {petName || t("petFallback")}
-          </Link>
-          <h1 className="page-title">{t("medsTitle")}</h1>
-          <p className="page-sub">{t("medsSubtitle")}</p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
+      <PageHeader
+        back={{ href: `/portal/pets/${petId}`, label: petName || t("petFallback") }}
+        title={t("medsTitle")}
+        purpose={t("medsSubtitle")}
+        action={
+          <div className="flex items-center gap-2 flex-wrap">
           {rows.length > 0 && !showForm && (
             <>
               <div className="relative">
@@ -175,8 +167,9 @@ export default function MedicationsPage() {
               {t("medsAdd")}
             </button>
           )}
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       {deleteError && <p className="alert-error mb-4">{deleteError}</p>}
 

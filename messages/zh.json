@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "仪表板",
     "myPets": "我的宠物",
+    "petsPurpose": "你照护的每一只动物。打开任意一只即可记录健康、添加病历并跟踪疫苗。",
     "checkin": "签到",
     "findAPro": "找专业人士",
     "bookings": "预订",
@@ -141,7 +142,6 @@
     "updateVaccinations": "更新疫苗",
     "findAVet": "寻找兽医",
     "logToday": "今日记录",
-    "petsCount": "{count} 只宠物",
     "petsEmptyDesc": "为每只宠物创建档案，开始追踪它们的健康状况。",
     "addYourFirstPet": "添加您的第一只宠物",
     "lastCheckin": "最近签到：{date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "在市场显示",
     "myProductsSaveFailed": "保存失败。",
     "sellerSetupSubtitle": "设置您的店铺以在Petvity上发布产品",
+    "sellerProfilePurpose": "你的店铺信息：买家在你出售的每件商品旁看到的名称、简介和所在地。",
     "sellerInfoTitle": "开始在Petvity上销售",
     "sellerInfoBody": "激活您的卖家账户后，您可以发布宠物产品并从「我的产品」页面管理库存。",
     "sellerStoreNameLabel": "店铺名称",

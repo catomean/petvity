@@ -6,6 +6,7 @@ import { count, eq, ne, sum } from "drizzle-orm";
 import Link from "next/link";
 import { Users, PawPrint, ShoppingBag, Heart, Package, TrendingUp } from "lucide-react";
 import { formatPrice } from "@/lib/utils/format";
+import PageHeader from "@/components/portal/PageHeader";
 
 export default async function AdminOverviewPage() {
   const session = await auth();
@@ -42,10 +43,10 @@ export default async function AdminOverviewPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="page-title">Overview</h1>
-        <p className="page-sub">Platform at a glance</p>
-      </div>
+      <PageHeader
+        title="Overview"
+        purpose="Live counts across the platform. Each tile opens the area it measures."
+      />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {stats.map(({ label, value, icon: Icon, href, color, bg, urgent }) => (

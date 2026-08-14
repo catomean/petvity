@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Heart, ChevronLeft } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 interface Pet {
   id: string;
@@ -158,23 +159,11 @@ export default function ListForAdoptionPage() {
 
   return (
     <div className="max-w-2xl">
-      <Link
-        href={`/portal/pets/${petId}`}
-        className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
-      >
-        <ChevronLeft className="w-3.5 h-3.5" />
-        {pet.name}
-      </Link>
-
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] flex items-center justify-center">
-          <Heart className="w-5 h-5 text-[var(--teal)]" />
-        </div>
-        <div>
-          <h1 className="page-title">{t("listAdoptTitle", { name: pet.name })}</h1>
-          <p className="page-sub">{t("listAdoptSubtitle", { name: pet.name })}</p>
-        </div>
-      </div>
+      <PageHeader
+        back={{ href: `/portal/pets/${petId}`, label: pet.name }}
+        title={t("listAdoptTitle", { name: pet.name })}
+        purpose={t("listAdoptSubtitle", { name: pet.name })}
+      />
 
       <div className="card p-6">
         {error && <p className="alert-error mb-5">{error}</p>}
