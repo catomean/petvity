@@ -116,19 +116,26 @@ page 200 /portal/become-a-pro owner
 echo "══ 3. Professionals (vet / sitter / groomer) ══"
 register vet "$E_VET" "E2E Vet" veterinarian
 login vet "$E_VET"
+# A profile is listed publicly only once it can actually serve a customer
+# (lib/domain/profile-readiness.ts). The create call below is deliberately
+# incomplete — no phone, no bio, not accepting — so the gate can be proven.
+BIO="A complete end-to-end test biography, long enough to satisfy the forty character minimum."
 req "vet profile create" 201 POST /api/vets/me vet '{"specialty":"E2E medicine","clinicName":"E2E Clinic","city":"Zurich","country":"CH"}'
 req "vet profile GET" 200 GET /api/vets/me vet
-req "vet profile PATCH" 200 PATCH /api/vets/me vet '{"bio":"e2e vet bio"}'
+req "browse vets before completion" 200 GET "/api/vets?city=Zurich" vet
+echo "$LAST_BODY" | grep -q "E2E Clinic" && bad "incomplete vet stays unlisted" "listed anyway" || ok "incomplete vet stays unlisted"
+req "vet profile PATCH" 200 PATCH /api/vets/me vet '{"bio":"'"$BIO"'","phone":"+41 44 000 00 01","isAcceptingClients":true}'
 register sitter "$E_SITTER" "E2E Sitter" pet_sitter
 login sitter "$E_SITTER"
 req "sitter profile create" 201 POST /api/sitters/me sitter '{"pricePerDay":3000,"services":"walking,daycare","city":"Zurich","country":"CH"}'
+req "sitter profile complete" 200 PATCH /api/sitters/me sitter '{"bio":"'"$BIO"'","phone":"+41 44 000 00 02","isAcceptingClients":true}'
 req "sitter availability block" 201 POST /api/availability sitter '{"startDate":"2027-09-01","endDate":"2027-09-03","reason":"e2e"}'
 BLOCK=$(echo "$LAST_BODY" | jq_ data.id)
 req "sitter availability list" 200 GET /api/availability sitter
 register groomer "$E_GROOMER" "E2E Groomer" groomer
 login groomer "$E_GROOMER"
 req "groomer profile create" 201 POST /api/groomers/me groomer '{"salonName":"E2E Salon","priceFrom":4000,"services":"bath_brush","city":"Zurich","country":"CH"}'
-req "groomer profile PATCH" 200 PATCH /api/groomers/me groomer '{"bio":"e2e groomer bio"}'
+req "groomer profile PATCH" 200 PATCH /api/groomers/me groomer '{"bio":"'"$BIO"'","phone":"+41 44 000 00 03","isAcceptingClients":true}'
 login owner "$E_OWNER"
 req "browse vets" 200 GET "/api/vets?city=Zurich" owner
 echo "$LAST_BODY" | grep -q "E2E Clinic" && ok "vet visible in browse" || bad "vet visible in browse" "not found"

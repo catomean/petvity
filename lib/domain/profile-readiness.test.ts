@@ -30,12 +30,17 @@ describe("profileSteps", () => {
     expect(steps.find((s) => s.key === "price")!.done).toBe(false);
   });
 
-  it("not accepting clients keeps the profile off the directory", () => {
+  // The directory lists a temporarily-full professional and badges them as not
+  // accepting, so readiness must not claim they are invisible. This mirrors the
+  // listing conditions in app/api/{vets,sitters,groomers}/route.ts, where
+  // isAcceptingClients is an optional filter rather than a requirement.
+  it("a complete profile is live even while not accepting clients", () => {
     const steps = profileSteps("veterinarian", {
       clinicName: "C", specialty: "S", city: "Zurich", country: "CH",
       bio: LONG_BIO, phone: "+41", isAcceptingClients: false,
     });
-    expect(isProfileLive(steps)).toBe(false);
+    expect(isProfileLive(steps)).toBe(true);
+    expect(steps.some((s) => s.key === "accepting")).toBe(false);
   });
 
   it("a seller needs at least one product", () => {
