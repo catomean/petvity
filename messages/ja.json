@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "ダッシュボード",
     "myPets": "マイペット",
+    "petsPurpose": "あなたが世話をするすべての動物。開いて健康を記録し、診療記録を追加し、ワクチンを管理できます。",
     "checkin": "チェックイン",
     "findAPro": "専門家を探す",
     "bookings": "予約",
@@ -141,7 +142,6 @@
     "updateVaccinations": "ワクチンを更新",
     "findAVet": "獣医を探す",
     "logToday": "今日記録する",
-    "petsCount": "{count}頭のペット",
     "petsEmptyDesc": "各ペットのプロフィールを作成して、健康管理を始めましょう。",
     "addYourFirstPet": "最初のペットを追加",
     "lastCheckin": "最終チェックイン：{date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "マーケットプレイスに表示",
     "myProductsSaveFailed": "保存に失敗しました。",
     "sellerSetupSubtitle": "Petvityで商品を出品するためにストアを設定してください",
+    "sellerProfilePurpose": "あなたの店舗情報。出品するすべての商品の横に表示される名前・説明・所在地です。",
     "sellerInfoTitle": "Petvityで販売を始めよう",
     "sellerInfoBody": "販売者アカウントを有効化すると、ペット用品を出品し、「マイ商品」ページからインベントリを管理できます。",
     "sellerStoreNameLabel": "ストア名",

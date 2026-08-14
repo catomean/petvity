@@ -10,7 +10,6 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
-  ArrowLeft,
   User,
 } from "lucide-react";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
@@ -19,6 +18,7 @@ import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice, formatIsoDate } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -166,26 +166,19 @@ export default function SellerOrdersPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-4 flex-wrap mb-6">
-        <div>
-          <Link
-            href="/portal/my-products"
-            className="inline-flex items-center gap-1 text-xs text-[var(--muted)] hover:text-[var(--teal)] transition-colors mb-1"
-          >
-            <ArrowLeft className="w-3 h-3" /> {t("sellerOrdersBack")}
-          </Link>
-          <h1 className="page-title">{t("sellerOrdersTitle")}</h1>
-          <p className="page-sub">
-            {t("sellerOrdersSubtitle")}
-          </p>
-        </div>
-        {pendingCount > 0 && (
-          <span className="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full bg-[var(--warn-bg)] text-[var(--warn)]">
-            <Clock className="w-4 h-4" />
-            {t("sellerOrdersAwaitingFulfillment", { count: pendingCount })}
-          </span>
-        )}
-      </div>
+      <PageHeader
+        back={{ href: "/portal/my-products", label: t("sellerOrdersBack") }}
+        title={t("sellerOrdersTitle")}
+        purpose={t("sellerOrdersSubtitle")}
+        action={
+          pendingCount > 0 ? (
+            <span className="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full bg-[var(--warn-bg)] text-[var(--warn)]">
+              <Clock className="w-4 h-4" />
+              {t("sellerOrdersAwaitingFulfillment", { count: pendingCount })}
+            </span>
+          ) : undefined
+        }
+      />
 
       {loading ? (
         <div className="space-y-3">

@@ -1,9 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import {
-  Plus, ChevronLeft, X, FileText,
+  Plus, X, FileText,
   Stethoscope, Syringe, Pill, Scissors, FlaskConical,
   Smile, Sparkles, MoreHorizontal,
   Pencil, Trash2, Search,
@@ -13,6 +12,7 @@ import { HEALTH_RECORD_TYPE_CONFIG, HEALTH_RECORD_TYPE_OPTIONS } from "@/lib/con
 import type { HealthRecordTypeId } from "@/lib/config/health-records";
 import { useHealthList } from "@/hooks/useHealthList";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const RECORD_TYPE_ICONS: Record<HealthRecordTypeId, React.ElementType> = {
@@ -126,20 +126,12 @@ export default function HealthRecordsPage() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <Link
-            href={`/portal/pets/${petId}`}
-            className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-1 transition-colors"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" />
-            {petName || t("petFallback")}
-          </Link>
-          <h1 className="page-title">{t("recordsTitle")}</h1>
-          <p className="page-sub">{t("recordsSubtitle")}</p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
+      <PageHeader
+        back={{ href: `/portal/pets/${petId}`, label: petName || t("petFallback") }}
+        title={t("recordsTitle")}
+        purpose={t("recordsSubtitle")}
+        action={
+          <div className="flex items-center gap-2 flex-wrap">
           {records.length > 0 && !showForm && (
             <>
               <div className="relative">
@@ -172,8 +164,9 @@ export default function HealthRecordsPage() {
               {t("recordsAdd")}
             </button>
           )}
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       {deleteError && <p className="alert-error mb-4">{deleteError}</p>}
 

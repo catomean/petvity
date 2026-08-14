@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Stethoscope, Home, Scissors, CheckCircle, Save } from "lucide-react";
+import { CheckCircle, Save } from "lucide-react";
+import PageHeader from "@/components/portal/PageHeader";
 import { SITTER_SERVICES, GROOMER_SERVICES } from "@/lib/config/professionals";
 import { useTranslations } from "next-intl";
 
@@ -143,23 +144,14 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
     });
   }
 
-  const Icon = isVet ? Stethoscope : isGroomer ? Scissors : Home;
   const title = isVet ? t("profVetTitle") : isGroomer ? t("profGroomerTitle") : t("profSitterTitle");
 
   return (
     <div className="max-w-2xl">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-1">
-          <div className="w-9 h-9 rounded-xl bg-[var(--teal-light)] flex items-center justify-center">
-            <Icon className="w-5 h-5 text-[var(--teal)]" />
-          </div>
-          <h1 className="page-title">{title}</h1>
-        </div>
-        <p className="text-sm text-[var(--muted)] ms-12">
-          {hasProfile ? t("profSubtitleUpdate") : t("profSubtitleSetup")}
-        </p>
-      </div>
+      <PageHeader
+        title={title}
+        purpose={hasProfile ? t("profSubtitleUpdate") : t("profSubtitleSetup")}
+      />
 
       {success && (
         <div className="alert-success mb-5 flex items-center gap-2">

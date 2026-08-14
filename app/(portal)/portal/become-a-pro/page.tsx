@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Stethoscope, Home, Scissors, ArrowRight, BadgeCheck, Store } from "lucide-react";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 /**
  * Self-serve upgrade from pet owner to professional. Mirrors registration's
@@ -68,8 +69,7 @@ export default function BecomeAProPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="page-title">{t("becomeProTitle")}</h1>
-      <p className="text-sm text-[var(--muted)] mt-0.5 mb-6">{t("becomeProSubtitle")}</p>
+      <PageHeader title={t("becomeProTitle")} purpose={t("becomeProSubtitle")} />
 
       {error && <p className="alert-error mb-4">{error}</p>}
 

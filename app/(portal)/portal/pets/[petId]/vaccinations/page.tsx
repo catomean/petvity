@@ -1,9 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import {
-  Plus, Syringe, ChevronLeft, X,
+  Plus, Syringe, X,
   Check, AlertTriangle, Clock,
   Pencil, Trash2, Search,
 } from "lucide-react";
@@ -13,6 +12,7 @@ import type { VaccinationStatusId } from "@/lib/config/vaccinations";
 import { VACCINATION_DUE_SOON_DAYS } from "@/lib/config/pet-signal";
 import { useHealthList } from "@/hooks/useHealthList";
 import { useTranslations, useLocale } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Partial<Record<VaccinationStatusId, React.ElementType>> = {
@@ -130,20 +130,12 @@ export default function VaccinationsPage() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <Link
-            href={`/portal/pets/${petId}`}
-            className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-1 transition-colors"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" />
-            {petName || t("petFallback")}
-          </Link>
-          <h1 className="page-title">{t("vaccTitle")}</h1>
-          <p className="page-sub">{t("vaccSubtitle")}</p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
+      <PageHeader
+        back={{ href: `/portal/pets/${petId}`, label: petName || t("petFallback") }}
+        title={t("vaccTitle")}
+        purpose={t("vaccSubtitle")}
+        action={
+          <div className="flex items-center gap-2 flex-wrap">
           {rows.length > 0 && !showForm && (
             <>
               <div className="relative">
@@ -176,8 +168,9 @@ export default function VaccinationsPage() {
               {t("vaccAdd")}
             </button>
           )}
-        </div>
-      </div>
+          </div>
+        }
+      />
 
       {deleteError && <p className="alert-error mb-4">{deleteError}</p>}
 

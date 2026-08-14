@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "Panel",
     "myPets": "Mis mascotas",
+    "petsPurpose": "Cada animal a tu cuidado. Abre uno para registrar su salud, añadir historiales y seguir sus vacunas.",
     "checkin": "Check-in",
     "findAPro": "Buscar profesional",
     "bookings": "Reservas",
@@ -141,7 +142,6 @@
     "updateVaccinations": "Actualizar vacunas",
     "findAVet": "Encontrar un veterinario",
     "logToday": "Registrar hoy",
-    "petsCount": "{count} mascotas",
     "petsEmptyDesc": "Crea perfiles para cada una de tus mascotas para empezar a rastrear su salud.",
     "addYourFirstPet": "Añade tu primera mascota",
     "lastCheckin": "Último check-in {date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "Mostrar en el mercado",
     "myProductsSaveFailed": "Error al guardar.",
     "sellerSetupSubtitle": "Configura tu tienda para listar productos en Petvity",
+    "sellerProfilePurpose": "Tu tienda: el nombre, la descripción y la ubicación que los compradores ven junto a lo que vendes.",
     "sellerInfoTitle": "Empieza a vender en Petvity",
     "sellerInfoBody": "Una vez que actives tu cuenta de vendedor, podrás listar productos para mascotas y gestionar tu inventario desde la página Mis Productos.",
     "sellerStoreNameLabel": "Nombre de la tienda",

@@ -12,6 +12,7 @@ import { formatAdoptionFee } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
 import HubTabs from "@/components/portal/HubTabs";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -341,16 +342,16 @@ export default function AdoptionsPage() {
   return (
     <div>
       <HubTabs tabs={[{ href: "/portal/adopt", label: t("adopt") }, { href: "/portal/adoptions", label: t("myAdoptions") }]} />
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="page-title">{t("adoptionsTitle")}</h1>
-          <p className="page-sub">{t("adoptionsSubtitle")}</p>
-        </div>
-        <Link href="/portal/adopt" className="btn-outline flex items-center gap-2 text-sm">
-          <Heart className="w-4 h-4" />
-          {t("adoptionsBrowse")}
-        </Link>
-      </div>
+      <PageHeader
+        title={t("adoptionsTitle")}
+        purpose={t("adoptionsSubtitle")}
+        action={
+          <Link href="/portal/adopt" className="btn-outline flex items-center gap-2 text-sm">
+            <Heart className="w-4 h-4" />
+            {t("adoptionsBrowse")}
+          </Link>
+        }
+      />
 
       {loading ? (
         <div className="space-y-3">

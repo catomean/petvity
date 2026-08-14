@@ -15,6 +15,7 @@ import { computePetSignal } from "@/lib/domain/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { formatRelativeDate } from "@/lib/utils/format";
 import { EmptyState } from "@/components/portal/PageState";
+import PageHeader from "@/components/portal/PageHeader";
 import { Plus, ChevronRight, PawPrint } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
@@ -91,20 +92,16 @@ export default async function PetsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="page-title">{t("myPets")}</h1>
-          <p className="page-sub">
-            {userPets.length === 0
-              ? t("noPetsAction")
-              : t("petsCount", { count: userPets.length })}
-          </p>
-        </div>
-        <Link href="/portal/pets/new" className="btn-primary">
-          <Plus className="w-4 h-4" />
-          {t("addPet")}
-        </Link>
-      </div>
+      <PageHeader
+        title={t("myPets")}
+        purpose={t("petsPurpose")}
+        action={
+          <Link href="/portal/pets/new" className="btn-primary">
+            <Plus className="w-4 h-4" />
+            {t("addPet")}
+          </Link>
+        }
+      />
 
       {userPets.length === 0 ? (
         <EmptyState

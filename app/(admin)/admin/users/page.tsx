@@ -5,6 +5,7 @@ import { Users, PawPrint, Shield, BadgeCheck } from "lucide-react";
 import { USER_ROLE_CONFIG, USER_ROLE_OPTIONS } from "@/lib/config/users";
 import { formatDateShort } from "@/lib/utils/format";
 import type { UserRole } from "@/lib/auth/types";
+import PageHeader from "@/components/portal/PageHeader";
 
 interface UserRow {
   id: string;
@@ -85,12 +86,10 @@ export default function AdminUsersPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="page-title">Users</h1>
-          <p className="page-sub">Manage accounts, roles, and professional verification</p>
-        </div>
-      </div>
+      <PageHeader
+        title="Users"
+        purpose="Every account on the platform. Change a role here, or verify a professional so they appear in the directory."
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -105,8 +104,8 @@ export default function AdminUsersPage() {
               <Icon className="w-5 h-5 text-[var(--teal)]" />
             </div>
             <div>
-              <p className="page-title">{loading ? "—" : value}</p>
-              <p className="text-xs text-[var(--muted)]">{label}</p>
+              <p className="stat-value">{loading ? "—" : value}</p>
+              <p className="stat-label">{label}</p>
             </div>
           </div>
         ))}

@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "대시보드",
     "myPets": "내 반려동물",
+    "petsPurpose": "당신이 돌보는 모든 반려동물. 하나를 열어 건강을 기록하고 진료 기록을 추가하며 예방접종을 관리하세요.",
     "checkin": "체크인",
     "findAPro": "전문가 찾기",
     "bookings": "예약",
@@ -141,7 +142,6 @@
     "updateVaccinations": "예방접종 업데이트",
     "findAVet": "수의사 찾기",
     "logToday": "오늘 기록",
-    "petsCount": "반려동물 {count}마리",
     "petsEmptyDesc": "각 반려동물의 프로필을 만들어 건강을 추적하세요.",
     "addYourFirstPet": "첫 번째 반려동물 추가",
     "lastCheckin": "마지막 체크인: {date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "마켓플레이스에 표시",
     "myProductsSaveFailed": "저장에 실패했습니다.",
     "sellerSetupSubtitle": "Petvity에서 상품을 등록할 스토어를 설정하세요",
+    "sellerProfilePurpose": "당신의 상점 정보. 판매하는 모든 상품 옆에 구매자가 보게 될 이름, 소개, 위치입니다.",
     "sellerInfoTitle": "Petvity에서 판매 시작하기",
     "sellerInfoBody": "판매자 계정을 활성화하면 반려동물 제품을 등록하고 내 상품 페이지에서 재고를 관리할 수 있습니다.",
     "sellerStoreNameLabel": "스토어명",

@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "Kontrol Paneli",
     "myPets": "Evcil Hayvanlarım",
+    "petsPurpose": "Baktığın her hayvan. Birini aç; sağlığını kaydet, kayıt ekle ve aşılarını takip et.",
     "checkin": "Kontrol",
     "findAPro": "Uzman Bul",
     "bookings": "Rezervasyonlar",
@@ -141,7 +142,6 @@
     "updateVaccinations": "Aşıları güncelle",
     "findAVet": "Veteriner bul",
     "logToday": "Bugün kaydet",
-    "petsCount": "{count} evcil hayvan",
     "petsEmptyDesc": "Sağlıklarını takip etmeye başlamak için her evcil hayvanın profilini oluşturun.",
     "addYourFirstPet": "İlk evcil hayvanını ekle",
     "lastCheckin": "Son kontrol: {date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "Pazarda göster",
     "myProductsSaveFailed": "Kaydetme başarısız.",
     "sellerSetupSubtitle": "Petvity'de ürün listelemek için mağazanızı kurun",
+    "sellerProfilePurpose": "Mağazan: alıcıların sattığın her ürünün yanında gördüğü ad, açıklama ve konum.",
     "sellerInfoTitle": "Petvity'de satışa başlayın",
     "sellerInfoBody": "Satıcı hesabınızı etkinleştirdikten sonra, evcil hayvan ürünleri listeleyebilir ve Ürünlerim sayfasından envanterinizi yönetebilirsiniz.",
     "sellerStoreNameLabel": "Mağaza Adı",

@@ -552,6 +552,49 @@ body {
   margin-top: 2px;
 }
 
+/* Back link: the "← somewhere" above a page title. One class because the
+   hand-rolled copies had drifted into five variants (gap-1 vs gap-1.5,
+   mb-1 vs mb-5 vs none) that all meant the same thing. */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 6px;
+  transition: color 0.15s ease;
+}
+.back-link:hover { color: var(--teal); }
+
+/* Stat: a single measured number and what it measures. Separate from
+   .page-title because a count is not a heading — reusing the title class for
+   numbers meant restyling page headings silently restyled every stat card. */
+.stat-value {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+/* Tints are modifiers, not utilities: .stat-value is unlayered, so a
+   text-[var(--teal)] utility beside it would be silently dead. */
+.stat-value-brand  { color: var(--teal); }
+.stat-value-warn   { color: var(--warn-text); }
+.stat-value-muted  { color: var(--ink2); }
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+/* Uppercase caption above a stat, used where the label reads before the number. */
+.stat-caption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  margin-bottom: 4px;
+}
+
 /* Badge: small status pill. Tone via modifier; content via children. */
 .badge {
   display: inline-flex;

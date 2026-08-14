@@ -10,6 +10,7 @@ import type { SpeciesId } from "@/lib/config/species";
 import { LISTING_STATUS_CONFIG } from "@/lib/config/adoptions";
 import type { ListingStatusId } from "@/lib/config/adoptions";
 import { formatAdoptionFee, formatIsoDate } from "@/lib/utils/format";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -232,15 +233,10 @@ export default function AdminAdoptionsPage() {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-9 h-9 rounded-xl bg-[var(--teal-light)] flex items-center justify-center">
-          <Heart className="w-4.5 h-4.5 text-[var(--teal)]" />
-        </div>
-        <div>
-          <h1 className="text-xl font-bold text-[var(--ink)]">Adoption listings</h1>
-          <p className="text-sm text-[var(--muted)]">Moderate listings and track applications</p>
-        </div>
-      </div>
+      <PageHeader
+        title="Adoption listings"
+        purpose="Every pet listed for adoption. Withdraw a listing that should not be public, or follow how its applications are going."
+      />
 
       {/* Summary strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

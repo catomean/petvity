@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Store, Globe, Phone, MapPin, Package, ToggleRight } from "lucide-react";
+import { Globe, Phone, MapPin, Package, ToggleRight } from "lucide-react";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 interface SellerProfile {
   id: string;
@@ -73,21 +74,10 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
 
   return (
     <div className="max-w-lg">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-[var(--teal-light)] flex items-center justify-center">
-          <Store className="w-5 h-5 text-[var(--teal)]" />
-        </div>
-        <div>
-          <h1 className="page-title">
-            {isNew ? t("becomeSeller") : t("sellerProfile")}
-          </h1>
-          {isNew && (
-            <p className="page-sub">
-              {t("sellerSetupSubtitle")}
-            </p>
-          )}
-        </div>
-      </div>
+      <PageHeader
+        title={isNew ? t("becomeSeller") : t("sellerProfile")}
+        purpose={isNew ? t("sellerSetupSubtitle") : t("sellerProfilePurpose")}
+      />
 
       {isNew && (
         <div className="card p-4 mb-5 border-[var(--teal)] bg-[var(--teal-light)]">

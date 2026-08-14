@@ -76,6 +76,7 @@
   "portal": {
     "dashboard": "Dashboard",
     "myPets": "My Pets",
+    "petsPurpose": "Every animal in your care. Open one to log health, add records, and track vaccinations.",
     "checkin": "Check-in",
     "findAPro": "Find a Pro",
     "bookings": "Bookings",
@@ -141,7 +142,6 @@
     "updateVaccinations": "Update vaccinations",
     "findAVet": "Find a vet",
     "logToday": "Log today",
-    "petsCount": "{count} pets",
     "petsEmptyDesc": "Create profiles for each of your pets to start tracking their health.",
     "addYourFirstPet": "Add your first pet",
     "lastCheckin": "Last check-in {date}",
@@ -549,6 +549,7 @@
     "myProductsShowTitle": "Show in marketplace",
     "myProductsSaveFailed": "Failed to save.",
     "sellerSetupSubtitle": "Set up your store to list products on Petvity",
+    "sellerProfilePurpose": "Your storefront: the name, description, and location buyers see next to everything you sell.",
     "sellerInfoTitle": "Start selling on Petvity",
     "sellerInfoBody": "Once you activate your seller account, you can list pet products and manage your inventory from the My Products page.",
     "sellerStoreNameLabel": "Store Name",
