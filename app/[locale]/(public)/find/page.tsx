@@ -1,6 +1,6 @@
 import { getInstance } from "@/lib/db";
 import { vetProfiles, sitterProfiles, groomerProfiles, users, reviews } from "@/lib/db/schema";
-import { eq, and, ilike, avg, count, inArray } from "drizzle-orm";
+import { eq, and, ilike, avg, count, inArray, isNotNull, sql } from "drizzle-orm";
 import Link from "next/link";
 import { APP, APP_URL } from "@/lib/config/app";
 import { PawPrint, Search, Stethoscope, Home, Scissors, MapPin, Star, BadgeCheck } from "lucide-react";
@@ -59,7 +59,12 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
   }[] = [];
 
   if (activeType === "vets") {
-    const conditions = [eq(users.role, "veterinarian"), eq(vetProfiles.isAcceptingClients, true)];
+    const conditions = [
+      eq(users.role, "veterinarian"), eq(vetProfiles.isAcceptingClients, true),
+      isNotNull(vetProfiles.clinicName), isNotNull(vetProfiles.specialty),
+      isNotNull(vetProfiles.city), isNotNull(vetProfiles.phone),
+      sql`length(coalesce(${vetProfiles.bio}, '')) >= 40`,
+    ];
     if (city) conditions.push(ilike(vetProfiles.city, `%${city}%`));
     const r = await db
       .select({
@@ -74,7 +79,12 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
       priceLabel: null, city: v.city, country: v.country, bio: v.bio, isVerified: v.isVerified,
     }));
   } else if (activeType === "sitters") {
-    const conditions = [eq(users.role, "pet_sitter"), eq(sitterProfiles.isAcceptingClients, true)];
+    const conditions = [
+      eq(users.role, "pet_sitter"), eq(sitterProfiles.isAcceptingClients, true),
+      isNotNull(sitterProfiles.services), isNotNull(sitterProfiles.pricePerDay),
+      isNotNull(sitterProfiles.city), isNotNull(sitterProfiles.phone),
+      sql`length(coalesce(${sitterProfiles.bio}, '')) >= 40`,
+    ];
     if (city) conditions.push(ilike(sitterProfiles.city, `%${city}%`));
     const r = await db
       .select({
@@ -90,7 +100,13 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
       city: s.city, country: s.country, bio: s.bio, isVerified: s.isVerified,
     }));
   } else {
-    const conditions = [eq(users.role, "groomer"), eq(groomerProfiles.isAcceptingClients, true)];
+    const conditions = [
+      eq(users.role, "groomer"), eq(groomerProfiles.isAcceptingClients, true),
+      isNotNull(groomerProfiles.salonName), isNotNull(groomerProfiles.services),
+      isNotNull(groomerProfiles.priceFrom), isNotNull(groomerProfiles.city),
+      isNotNull(groomerProfiles.phone),
+      sql`length(coalesce(${groomerProfiles.bio}, '')) >= 40`,
+    ];
     if (city) conditions.push(ilike(groomerProfiles.city, `%${city}%`));
     const r = await db
       .select({

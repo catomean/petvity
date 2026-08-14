@@ -14,7 +14,7 @@ import { formatDateShort, formatPetAge } from "@/lib/utils/format";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { getTranslations } from "next-intl/server";
 import { translateSignalReason } from "@/lib/i18n/signal-reason";
-import { Activity, Syringe, FileText, Pill, Pencil, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
+import { Activity, Syringe, FileText, Pill, Pencil, Trash2, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 import { SignalHistoryTimeline } from "@/components/portal/SignalHistoryTimeline";
 
@@ -166,14 +166,25 @@ export default async function PetProfilePage({ params }: Params) {
               </div>
             </div>
 
-            {/* Edit button */}
-            <Link
-              href={`/portal/pets/${pet.id}/edit`}
-              className="btn-outline text-sm flex-shrink-0"
-            >
-              <Pencil className="w-3.5 h-3.5" />
-              {t("editButton")}
-            </Link>
+            {/* Edit / delete — delete lives with edit so it is findable
+                without hunting through a settings page. */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Link
+                href={`/portal/pets/${pet.id}/edit`}
+                className="btn-outline text-sm"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+                {t("editButton")}
+              </Link>
+              <Link
+                href={`/portal/pets/${pet.id}/edit#danger`}
+                className="btn-ghost text-sm text-[var(--muted)] hover:text-[var(--danger-text)]"
+                aria-label={t("petDeleteAria", { name: pet.name ?? "" })}
+                title={t("editPetDelete")}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
 
           {/* Signal reason + CTAs */}

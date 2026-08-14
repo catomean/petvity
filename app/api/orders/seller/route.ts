@@ -45,6 +45,12 @@ export async function GET() {
       createdAt: orders.createdAt,
       buyerName: users.name,
       buyerEmail: users.email,
+      shippingName: orders.shippingName,
+      shippingLine1: orders.shippingLine1,
+      shippingPostalCode: orders.shippingPostalCode,
+      shippingCity: orders.shippingCity,
+      shippingCountry: orders.shippingCountry,
+      shippingPhone: orders.shippingPhone,
     })
     .from(orders)
     .innerJoin(users, eq(users.id, orders.userId))

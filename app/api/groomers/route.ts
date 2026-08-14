@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and, avg, count, inArray, ilike } from "drizzle-orm";
+import { eq, and, avg, count, inArray, ilike, isNotNull, sql } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { groomerProfiles, users, reviews } from "@/lib/db/schema";
@@ -14,7 +14,15 @@ export async function GET(req: NextRequest) {
 
   const db = getInstance();
 
-  const conditions = [eq(users.role, "groomer")];
+  const conditions = [
+    eq(users.role, "groomer"),
+    isNotNull(groomerProfiles.salonName),
+    isNotNull(groomerProfiles.services),
+    isNotNull(groomerProfiles.priceFrom),
+    isNotNull(groomerProfiles.city),
+    isNotNull(groomerProfiles.phone),
+    sql`length(coalesce(${groomerProfiles.bio}, '')) >= 40`,
+  ];
   if (accepting === "true") conditions.push(eq(groomerProfiles.isAcceptingClients, true));
   if (city) conditions.push(ilike(groomerProfiles.city, `%${city}%`));
 

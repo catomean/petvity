@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and, avg, count, inArray, ilike } from "drizzle-orm";
+import { eq, and, avg, count, inArray, ilike, isNotNull, sql } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { vetProfiles, users, reviews } from "@/lib/db/schema";
@@ -13,7 +13,16 @@ export async function GET(req: NextRequest) {
 
   const db = getInstance();
 
-  const conditions = [eq(users.role, "veterinarian")];
+  // Only complete profiles are listed — same rule as the public directory
+  // (lib/domain/profile-readiness): a customer must be able to act on it.
+  const conditions = [
+    eq(users.role, "veterinarian"),
+    isNotNull(vetProfiles.clinicName),
+    isNotNull(vetProfiles.specialty),
+    isNotNull(vetProfiles.city),
+    isNotNull(vetProfiles.phone),
+    sql`length(coalesce(${vetProfiles.bio}, '')) >= 40`,
+  ];
   if (accepting === "true") conditions.push(eq(vetProfiles.isAcceptingClients, true));
   if (city) conditions.push(ilike(vetProfiles.city, `%${city}%`));
 

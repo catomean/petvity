@@ -367,7 +367,7 @@ export default function EditPetPage() {
       </form>
 
       {/* Danger zone */}
-      <div className="mt-8 card p-5 border-[var(--danger-bg)]">
+      <div id="danger" className="mt-8 card p-5 border-[var(--danger-bg)] scroll-mt-20">
         <h3 className="text-sm font-semibold text-[var(--danger-text)] mb-1">
           {t("editPetDangerZone")}
         </h3>

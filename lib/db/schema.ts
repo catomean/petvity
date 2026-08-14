@@ -474,6 +474,14 @@ export const orders = pgTable("orders", {
   paidAt: timestamp("paid_at", { mode: "date" }),
   /** Latest Stripe Checkout Session for this order (retry-safe: re-pay replaces it) */
   checkoutSessionId: varchar("checkout_session_id", { length: 255 }),
+  /** Delivery details, captured at checkout. Snapshot — never re-read from the
+   *  user's profile, so an address change can't rewrite a shipped order. */
+  shippingName: varchar("shipping_name", { length: 200 }),
+  shippingLine1: varchar("shipping_line1", { length: 200 }),
+  shippingPostalCode: varchar("shipping_postal_code", { length: 20 }),
+  shippingCity: varchar("shipping_city", { length: 100 }),
+  shippingCountry: varchar("shipping_country", { length: 2 }),
+  shippingPhone: varchar("shipping_phone", { length: 50 }),
   notes: text("notes"),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),

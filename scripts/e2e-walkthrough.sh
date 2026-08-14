@@ -171,12 +171,15 @@ PROD=$(echo "$LAST_BODY" | jq_ data.id)
 req "seller product patch" 200 PATCH "/api/products/$PROD" seller '{"priceCents":1090}'
 req "product visible publicly" 200 GET /api/products
 echo "$LAST_BODY" | grep -q "E2E Chew Toy" && ok "product in catalog" || bad "product in catalog" "missing"
-req "owner places order" 201 POST /api/orders owner '{"items":[{"productId":"'"$PROD"'","quantity":2}]}'
+SHIP='"shippingName":"E2E Buyer","shippingLine1":"Bahnhofstrasse 1","shippingPostalCode":"8001","shippingCity":"Zurich","shippingCountry":"CH"'
+req "order without an address is rejected" 400 POST /api/orders owner '{"items":[{"productId":"'"$PROD"'","quantity":1}]}'
+req "owner places order" 201 POST /api/orders owner '{"items":[{"productId":"'"$PROD"'","quantity":2}],'"$SHIP"'}'
 ORDER=$(echo "$LAST_BODY" | jq_ data.id)
 req "stock decremented" 200 GET /api/products
 echo "$LAST_BODY" | python3 -c "import sys,json;d=json.load(sys.stdin)['data'];print([p['stock'] for p in d if p['id']=='$PROD'])" | grep -q "\[3\]" && ok "stock 5->3" || bad "stock 5->3" "wrong stock"
 req "seller sees order" 200 GET /api/orders/seller seller
 echo "$LAST_BODY" | grep -q "$ORDER" && ok "order in seller list" || bad "order in seller list" "missing"
+echo "$LAST_BODY" | grep -q "Bahnhofstrasse 1" && ok "seller can see where to ship" || bad "seller can see where to ship" "no address"
 req "owner cancels order" 200 PATCH "/api/orders/$ORDER" owner '{"status":"cancelled"}'
 req "stock restored" 200 GET /api/products
 echo "$LAST_BODY" | python3 -c "import sys,json;d=json.load(sys.stdin)['data'];print([p['stock'] for p in d if p['id']=='$PROD'])" | grep -q "\[5\]" && ok "stock restored to 5" || bad "stock restored to 5" "wrong stock"
