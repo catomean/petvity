@@ -257,8 +257,20 @@ renders /portal/settings 'page-sub' "settings states what it is for before the s
 # with drifted classes (font-bold vs font-semibold, mb-1/mb-2/mb-6). Covering
 # them by path is what makes "every page opens the same way" a checked claim
 # rather than an assumption.
+#
+# These are also the pages that fetch client-side. A client page server-renders
+# with its data still empty, so a header placed inside the loaded branch is
+# absent from the first paint entirely — /portal/settings shipped blank that way
+# and /portal/pets/[id]/edit shipped a bare "Loading…". A static heading must
+# paint before the fetch; only the data below it may wait.
+#
+# Not listed on purpose: /portal/adopt/[id] and /portal/pets/[id]/
+# list-for-adoption title themselves with the fetched pet's name, so there is no
+# honest heading to show early and a skeleton is the right answer there.
 for p in /portal/checkin /portal/pets/new "/portal/pets/$PET/edit" \
-         "/portal/pets/$PET/health" "/portal/pets/$PET/health/log"; do
+         "/portal/pets/$PET/health" "/portal/pets/$PET/health/log" \
+         "/portal/pets/$PET/vaccinations" "/portal/pets/$PET/medications" \
+         "/portal/pets/$PET/records"; do
   renders "$p" 'page-title' "renders header: $p"
   renders "$p" 'page-sub' "states what it is for: $p"
 done

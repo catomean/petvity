@@ -117,12 +117,17 @@ export default function MedicationsPage() {
     messages: { saveFailed: t("saveFailed"), deleteFailed: t("deleteFailed") },
   });
 
+  // See the note in the vaccinations page: the heading is static, so it paints
+  // before the fetch rather than being stood in for by a grey block.
   if (loading) {
     return (
-      <div className="animate-pulse space-y-3">
-        <div className="h-8 bg-[var(--off)] rounded w-40" />
-        <div className="h-5 bg-[var(--off)] rounded w-28" />
-        <div className="card h-64 mt-6" />
+      <div>
+        <PageHeader
+          back={{ href: `/portal/pets/${petId}`, label: petName || t("petFallback") }}
+          title={t("medsTitle")}
+          purpose={t("medsSubtitle")}
+        />
+        <div className="card h-64 animate-pulse bg-[var(--off)]" aria-busy="true" />
       </div>
     );
   }

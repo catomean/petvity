@@ -118,12 +118,19 @@ export default function VaccinationsPage() {
     messages: { saveFailed: t("saveFailed"), deleteFailed: t("deleteFailed") },
   });
 
+  // Title, purpose and the way back do not depend on the fetch, so they paint
+  // immediately; only the action (which needs the rows) and the list wait.
+  // Skeletons standing in for the heading left the first paint with no way to
+  // tell which page you were on or how to leave it.
   if (loading) {
     return (
-      <div className="animate-pulse">
-        <div className="h-8 bg-[var(--off)] rounded w-40 mb-2" />
-        <div className="h-6 bg-[var(--off)] rounded w-28 mb-8" />
-        <div className="card h-64" />
+      <div>
+        <PageHeader
+          back={{ href: `/portal/pets/${petId}`, label: petName || t("petFallback") }}
+          title={t("vaccTitle")}
+          purpose={t("vaccSubtitle")}
+        />
+        <div className="card h-64 animate-pulse bg-[var(--off)]" aria-busy="true" />
       </div>
     );
   }
