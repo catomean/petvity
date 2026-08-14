@@ -147,7 +147,22 @@ export default function SettingsPage() {
     await signOut({ callbackUrl: "/en" });
   }
 
-  if (!session) return null;
+  // The session arrives client-side, so this page server-renders before it
+  // exists. Returning null for the whole page meant the first paint was blank
+  // with nothing to explain it — the header is static, so it renders straight
+  // away and only the account cards wait.
+  if (!session) {
+    return (
+      <div className="max-w-lg">
+        <PageHeader title={t("settingsTitle")} purpose={t("settingsSubtitle")} />
+        <div className="space-y-6" aria-busy="true">
+          {[0, 1].map((i) => (
+            <div key={i} className="card h-40 animate-pulse bg-[var(--off)]" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-lg">
