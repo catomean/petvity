@@ -237,7 +237,31 @@ done
 renders /portal/pets 'page-sub' "pets page states what it is for"
 renders /portal/settings 'page-sub' "settings states what it is for before the session lands"
 
-echo "══ 9. Cleanup (self-serve account deletion) ══"
+echo "══ 9. Shared demo account ══"
+# The demo is the no-account way in, and it had no coverage at all — which is
+# how it went unnoticed that the 2-hourly reset deleted the user row and
+# reinserted it under a NEW id. Sessions last 30 days, so a returning visitor
+# was signed in as a user that no longer existed: every owner-scoped query came
+# back empty and the demo showed an empty product. Assert the identity is
+# pinned (the mechanism) AND that the demo actually has content (the symptom),
+# so either regression is caught on its own.
+DEMO_ID=$(grep -oE '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' \
+  "$(dirname "$0")/../lib/config/demo.ts" | head -1)
+login demo "demo@petvity.com" "explore-petvity"
+demo_uid=$(curl -s -b "$JARS/demo" "$BASE/api/auth/session" | jq_ user.id)
+if [ -n "$DEMO_ID" ] && [ "$demo_uid" = "$DEMO_ID" ]; then
+  ok "demo user id is pinned (survives the reset)"
+else
+  bad "demo user id is pinned (survives the reset)" "expected $DEMO_ID got $demo_uid"
+fi
+demo_pets=$(curl -s -b "$JARS/demo" "$BASE/api/pets" | jq_ data.0.name)
+[ -n "$demo_pets" ] && ok "demo account has a seeded pet ($demo_pets)" \
+  || bad "demo account has a seeded pet" "/api/pets returned no pet — demo reads as an empty product"
+renders /portal/dashboard 'Luna' "demo dashboard shows the seeded pet" demo
+renders /portal/pets 'Luna' "demo pet list shows the seeded pet" demo
+page 200 /en/pets/luna
+
+echo "══ 10. Cleanup (self-serve account deletion) ══"
 req "delete record" 200 DELETE "/api/health/records/$REC" owner
 req "delete vaccination" 200 DELETE "/api/vaccinations/$VACC" owner
 req "delete medication" 200 DELETE "/api/medications/$MED" owner

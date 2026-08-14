@@ -41,6 +41,9 @@ export async function POST(req: NextRequest) {
   const [demoUser] = await db
     .insert(users)
     .values({
+      // Pinned, not generated: sessions outlive the reset by design, so the
+      // identity they point at has to survive it. See DEMO_ACCOUNT.id.
+      id: DEMO_ACCOUNT.id,
       name: DEMO_ACCOUNT.name,
       email: DEMO_ACCOUNT.email,
       password: hashed,
