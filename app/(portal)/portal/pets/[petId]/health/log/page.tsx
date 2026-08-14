@@ -3,8 +3,7 @@ import { getInstance } from "@/lib/db";
 import { pets, healthMetrics } from "@/lib/db/schema";
 import { and, eq, lt, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import PageHeader from "@/components/portal/PageHeader";
 import { HEALTH_METRIC_CONFIG, getNormalRange } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
 import { HealthLogForm } from "@/components/portal/HealthLogForm";
@@ -95,24 +94,17 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
 
   return (
     <div className="max-w-lg">
-      <Link
-        href={`/portal/pets/${petId}/health`}
-        className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
-      >
-        <ChevronLeft className="w-4 h-4" />
-        {t("healthBack")}
-      </Link>
-
-      <h1 className="text-2xl font-bold text-[var(--ink)] mb-1">
-        {isEditing ? t("editPastEntry") : existing ? t("updateTodaysCheckin") : t("logHealthCheck")}
-      </h1>
-      <p className="text-sm text-[var(--muted)] mb-4">
-        {isEditing
-          ? t("editingEntryFor", { date: formatRelativeDate(targetDate, locale) })
-          : existing
-            ? t("alreadyLoggedToday")
-            : t("logAsManyMetrics")}
-      </p>
+      <PageHeader
+        title={isEditing ? t("editPastEntry") : existing ? t("updateTodaysCheckin") : t("logHealthCheck")}
+        purpose={
+          isEditing
+            ? t("editingEntryFor", { date: formatRelativeDate(targetDate, locale) })
+            : existing
+              ? t("alreadyLoggedToday")
+              : t("logAsManyMetrics")
+        }
+        back={{ href: `/portal/pets/${petId}/health`, label: t("healthBack") }}
+      />
 
       {/* Previous log context — helps owners notice trends */}
       {prevLog && (() => {

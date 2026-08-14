@@ -253,6 +253,16 @@ done
 renders /portal/pets 'page-sub' "pets page states what it is for"
 renders /portal/settings 'page-sub' "settings states what it is for before the session lands"
 
+# Nested pages were missed by the first header sweep and kept hand-rolled <h1>s
+# with drifted classes (font-bold vs font-semibold, mb-1/mb-2/mb-6). Covering
+# them by path is what makes "every page opens the same way" a checked claim
+# rather than an assumption.
+for p in /portal/checkin /portal/pets/new "/portal/pets/$PET/edit" \
+         "/portal/pets/$PET/health" "/portal/pets/$PET/health/log"; do
+  renders "$p" 'page-title' "renders header: $p"
+  renders "$p" 'page-sub' "states what it is for: $p"
+done
+
 echo "══ 9. Shared demo account ══"
 # The demo is the no-account way in, and it had no coverage at all — which is
 # how it went unnoticed that the 2-hourly reset deleted the user row and

@@ -4,9 +4,9 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SPECIES_OPTIONS, SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
-import Link from "next/link";
-import { ChevronLeft, PawPrint } from "lucide-react";
+import { PawPrint } from "lucide-react";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 function NewPetForm() {
   const t = useTranslations("portal");
@@ -71,18 +71,15 @@ function NewPetForm() {
             <p className="text-xs text-[var(--ink2)] mt-0.5">{t("newPetWelcomeSubtitle")}</p>
           </div>
         </div>
-      ) : (
-        <Link
-          href="/portal/pets"
-          className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          {t("myPets")}
-        </Link>
-      )}
+      ) : null}
 
-      <h1 className="text-2xl font-bold text-[var(--ink)] mb-2">{t("addPet")}</h1>
-      <p className="text-sm text-[var(--muted)] mb-6">{t("newPetSubtitle")}</p>
+      {/* Coming from registration there is nowhere to go "back" to yet — the
+          welcome card above stands in for it. */}
+      <PageHeader
+        title={t("addPet")}
+        purpose={t("newPetSubtitle")}
+        back={fromRegistration ? undefined : { href: "/portal/pets", label: t("myPets") }}
+      />
 
       {error && <p className="alert-error mb-4">{error}</p>}
 

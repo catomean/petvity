@@ -11,6 +11,7 @@ import { computePetSignal } from "@/lib/domain/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { getTranslations } from "next-intl/server";
+import PageHeader from "@/components/portal/PageHeader";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { translateSignalReason } from "@/lib/i18n/signal-reason";
 
@@ -89,13 +90,15 @@ export default async function CheckinPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-[var(--ink)] mb-1">{t("checkinTitle")}</h1>
-      <p className="text-[var(--muted)] mb-6 text-sm">
+      <PageHeader title={t("checkinTitle")} purpose={t("checkinPurpose")} flush />
+
+      {/* Today's progress — a status line, not the page's purpose */}
+      <p className="text-[var(--muted)] mt-2 mb-6 text-sm">
         {userPets.length === 0
           ? t("checkinNoPets")
           : pendingCount === 0
-            ? t("checkinAllDone", { total: userPets.length })
-            : t("checkinProgress", { done: userPets.length - pendingCount, total: userPets.length })}
+            ? t("allCheckedIn", { total: userPets.length })
+            : t("partialCheckedIn", { done: userPets.length - pendingCount, total: userPets.length })}
       </p>
 
       {userPets.length === 0 ? (
