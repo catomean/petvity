@@ -47,6 +47,14 @@ build-time DB) and gated, so a broken build can't reach `main`.
 
 **After every deployment:** `deploy.sh` health-checks the service; confirm `petvity.orangecat.ch` returns 2xx.
 
+**The liveness probe is `/api/healthz`, not `/api/health`.** `/api/health` is the
+private prefix for health *metrics/records* — it is auth-guarded and always
+redirects to `/login`, so it can never report healthy. Verify a deploy with:
+
+```bash
+curl -fsS https://petvity.orangecat.ch/api/healthz && echo "  ✓ live"
+```
+
 ---
 
 ## Environment Variables

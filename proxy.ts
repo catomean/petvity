@@ -16,6 +16,8 @@ const PORTAL_PREFIXES = ["/portal", "/admin"];
 // /api/account (registration) and /api/public/* are intentionally public
 const PRIVATE_API_PREFIXES = [
   "/api/pets",
+  // Health *data*. The liveness probe is /api/healthz, deliberately outside
+  // this prefix so it stays reachable without a session.
   "/api/health",
   "/api/vaccinations",
   "/api/medications",

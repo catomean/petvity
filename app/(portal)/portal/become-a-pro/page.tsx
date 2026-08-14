@@ -121,7 +121,7 @@ function SellOnPetvity() {
   return (
     <div className="card p-5 mt-8">
       <div className="flex items-start gap-3">
-        <div className="icon-tile">
+        <div className="icon-tile bg-[var(--teal-light)]">
           <Store className="w-5 h-5 text-[var(--teal)]" />
         </div>
         <div className="min-w-0">

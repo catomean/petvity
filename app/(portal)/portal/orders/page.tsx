@@ -10,6 +10,7 @@ import { formatPrice, formatIsoDate } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
 import HubTabs from "@/components/portal/HubTabs";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -112,7 +113,7 @@ function OrderCard({ order, paymentsEnabled, onCancel }: {
               {t("ordersAwaitingPayment")}
             </span>
           )}
-          <span className={`badge ${cfg.className}`}>
+          <span className={`badge ${cfg.badge}`}>
             <Icon className="w-3 h-3" />
             {t(`orderStatus_${order.status}` as Parameters<typeof t>[0])}
           </span>
@@ -232,16 +233,16 @@ export default function OrdersPage() {
   return (
     <div>
       <HubTabs tabs={[{ href: "/portal/shop", label: t("shop") }, { href: "/portal/orders", label: t("orders") }]} />
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="page-title">{t("orders")}</h1>
-          <p className="page-sub">{t("ordersSubtitle")}</p>
-        </div>
-        <Link href="/portal/shop" className="btn-outline flex items-center gap-2">
-          <ShoppingBag className="w-4 h-4" />
-          {t("shop")}
-        </Link>
-      </div>
+      <PageHeader
+        title={t("orders")}
+        purpose={t("ordersSubtitle")}
+        action={
+          <Link href="/portal/shop" className="btn-outline flex items-center gap-2">
+            <ShoppingBag className="w-4 h-4" />
+            {t("shop")}
+          </Link>
+        }
+      />
 
       {paymentReturn === "success" && (
         <p className="alert-success mb-4">{t("ordersPaymentSuccess")}</p>

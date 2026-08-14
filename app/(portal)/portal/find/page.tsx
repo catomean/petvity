@@ -7,6 +7,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { formatPrice, formatDateShort } from "@/lib/utils/format";
 import { EmptyState } from "@/components/portal/PageState";
 import HubTabs from "@/components/portal/HubTabs";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -294,11 +295,7 @@ export default function FindPage() {
   return (
     <div>
       <HubTabs tabs={[{ href: "/portal/find", label: t("findAPro") }, { href: "/portal/bookings", label: t("bookings") }]} />
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="page-title">{t("findTitle")}</h1>
-        <p className="page-sub">{t("findSubtitle")}</p>
-      </div>
+      <PageHeader title={t("findTitle")} purpose={t("findSubtitle")} />
 
       {/* Tabs + search */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
