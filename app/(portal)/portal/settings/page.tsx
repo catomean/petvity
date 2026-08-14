@@ -8,6 +8,7 @@ import { User, Lock, CheckCircle, Mail, AlertTriangle, X, Download, Store, Steth
 import Link from "next/link";
 import { PASSWORD_MIN_LENGTH } from "@/lib/config/auth";
 import { PasswordInput } from "@/components/portal/PasswordInput";
+import PageHeader from "@/components/portal/PageHeader";
 
 export default function SettingsPage() {
   const t = useTranslations("portal");
@@ -149,11 +150,9 @@ export default function SettingsPage() {
   if (!session) return null;
 
   return (
-    <div className="max-w-lg space-y-6">
-      <div>
-        <h1 className="page-title">{t("settingsTitle")}</h1>
-        <p className="page-sub">{t("settingsSubtitle")}</p>
-      </div>
+    <div className="max-w-lg">
+      <PageHeader title={t("settingsTitle")} purpose={t("settingsSubtitle")} />
+      <div className="space-y-6">
 
       {/* ── Profile ───────────────────────────────────────────────────── */}
       <div className="card p-6">
@@ -456,6 +455,7 @@ export default function SettingsPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

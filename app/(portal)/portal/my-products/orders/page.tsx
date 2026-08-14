@@ -81,7 +81,7 @@ function SellerOrderCard({ order }: { order: SellerOrder }) {
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className={`badge ${cfg.className}`}>
+          <span className={`badge ${cfg.badge}`}>
             <Icon className="w-3 h-3" />
             {t(`orderStatus_${order.status}` as Parameters<typeof t>[0])}
           </span>

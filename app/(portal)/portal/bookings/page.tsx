@@ -9,6 +9,7 @@ import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
 import HubTabs from "@/components/portal/HubTabs";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -43,7 +44,7 @@ function StatusBadge({ status }: { status: BookingRow["status"] }) {
   const cfg = BOOKING_STATUS_CONFIG[status];
   const Icon = STATUS_ICONS[status];
   return (
-    <span className={`badge ${cfg.className}`}>
+    <span className={`badge ${cfg.badge}`}>
       <Icon className="w-3 h-3" />
       {t(`bookingStatus_${status}` as Parameters<typeof t>[0])}
     </span>
@@ -106,10 +107,7 @@ export default function BookingsPage() {
   return (
     <div>
       <HubTabs tabs={[{ href: "/portal/find", label: t("findAPro") }, { href: "/portal/bookings", label: t("bookings") }]} />
-      <div className="mb-6">
-        <h1 className="page-title">{t("bookings")}</h1>
-        <p className="page-sub">{t("bookingsSubtitle")}</p>
-      </div>
+      <PageHeader title={t("bookings")} purpose={t("bookingsSubtitle")} />
 
       {mutationError && (
         <div className="alert-error mb-4">{mutationError}</div>

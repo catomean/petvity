@@ -9,6 +9,7 @@ import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { ProductArt } from "@/components/shop/ProductArt";
 import { useTranslations } from "next-intl";
 import HubTabs from "@/components/portal/HubTabs";
+import PageHeader from "@/components/portal/PageHeader";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
@@ -317,25 +318,24 @@ export default function ShopPage() {
   return (
     <div>
       <HubTabs tabs={[{ href: "/portal/shop", label: t("shop") }, { href: "/portal/orders", label: t("orders") }]} />
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="page-title">{t("shop")}</h1>
-          <p className="page-sub">{t("shopSubtitle")}</p>
-        </div>
-        <button
-          onClick={() => { setSuccess(false); setCartOpen(true); }}
-          className="relative btn-outline flex items-center gap-2"
-        >
-          <ShoppingCart className="w-4 h-4" />
-          {t("shopCartLabel")}
-          {cartCount > 0 && (
-            <span className="absolute -top-1.5 -end-1.5 w-5 h-5 rounded-full bg-[var(--accent)] text-white text-xs flex items-center justify-center font-bold">
-              {cartCount}
-            </span>
-          )}
-        </button>
-      </div>
+      <PageHeader
+        title={t("shop")}
+        purpose={t("shopSubtitle")}
+        action={
+          <button
+            onClick={() => { setSuccess(false); setCartOpen(true); }}
+            className="relative btn-outline flex items-center gap-2"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            {t("shopCartLabel")}
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -end-1.5 w-5 h-5 rounded-full bg-[var(--accent)] text-white text-xs flex items-center justify-center font-bold">
+                {cartCount}
+              </span>
+            )}
+          </button>
+        }
+      />
 
       {/* Category filter */}
       {!loading && products.length > 0 && (

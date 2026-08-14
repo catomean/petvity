@@ -12,10 +12,16 @@ import { SPECIES_CONFIG } from "@/lib/config/species";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId } from "@/lib/config/species";
 import type { TwinTrend } from "@/lib/domain/digital-twin";
-import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe, Heart, CalendarCheck, Store } from "lucide-react";
+import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe, Heart, CalendarCheck, Store, Package } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { translateSignalReason } from "@/lib/i18n/signal-reason";
+import { users } from "@/lib/db/schema";
+import PageHeader from "@/components/portal/PageHeader";
+import QuickActions from "@/components/portal/QuickActions";
+import { formatPrice, formatIsoDate } from "@/lib/utils/format";
+import { BOOKING_STATUS_CONFIG, ORDER_STATUS_CONFIG } from "@/lib/config/orders";
+import type { BookingStatusId, OrderStatusId } from "@/lib/config/orders";
 
 // Icon mapping stays component-side (React components are UI, not config)
 const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
@@ -98,6 +104,38 @@ export default async function DashboardPage() {
   const proBookingsCount = proBookingsRow?.total ?? 0;
   const sellerOrdersCount = sellerOrdersRow?.total ?? 0;
 
+  // The dashboard is the whole platform, not only health: what is booked next
+  // and what was ordered recently belong here as much as the pet cards do.
+  const [upcomingBookings, recentOrders, [sellerRow]] = await Promise.all([
+    db
+      .select({
+        id: bookings.id,
+        startDate: bookings.startDate,
+        status: bookings.status,
+        petName: pets.name,
+        proName: users.name,
+      })
+      .from(bookings)
+      .innerJoin(pets, eq(pets.id, bookings.petId))
+      .innerJoin(users, eq(users.id, bookings.professionalId))
+      .where(and(
+        eq(bookings.ownerId, session.user.id),
+        inArray(bookings.status, ["pending", "confirmed"]),
+        gte(bookings.startDate, new Date(todayStr + "T00:00:00Z")),
+      ))
+      .orderBy(bookings.startDate)
+      .limit(3),
+    db
+      .select({ id: orders.id, status: orders.status, totalCents: orders.totalCents, createdAt: orders.createdAt })
+      .from(orders)
+      .where(eq(orders.userId, session.user.id))
+      .orderBy(desc(orders.createdAt))
+      .limit(3),
+    db.select({ total: count() }).from(products).where(eq(products.sellerId, session.user.id)),
+  ]);
+
+  const isSeller = (sellerRow?.total ?? 0) > 0;
+
   // Group in memory by petId
   const metricsByPet = new Map<string, typeof allMetrics>();
   for (const m of allMetrics) {
@@ -155,39 +193,35 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="page-title">
-            {t(new Date().getHours() < 12 ? "greetingMorning" : new Date().getHours() < 18 ? "greetingAfternoon" : "greetingEvening", { name: session.user.name?.split(" ")[0] ?? "" })}
-          </h1>
-          <p className="page-sub">
-            {userPets.length === 0
-              ? t("checkinNoPets")
-              : loggedToday === userPets.length
-                ? t("allCheckedIn", { total: userPets.length })
-                : loggedToday > 0
-                  ? (
-                    <>
-                      {t("partialCheckedIn", { done: loggedToday, total: userPets.length })}
-                      {" · "}
-                      <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">{t("logRemaining")}</Link>
-                    </>
-                  )
-                  : (
-                    <>
-                      {t("partialCheckedIn", { done: 0, total: userPets.length })}
-                      {" · "}
-                      <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">{t("logTodayCheckin")}</Link>
-                    </>
-                  )}
-          </p>
-        </div>
-        <Link href="/portal/pets/new" className="btn-primary">
-          <Plus className="w-4 h-4" />
-          {t("addPetButton")}
-        </Link>
-      </div>
+      {/* Header — the greeting used to be derived from the server's clock, which
+          is the box's UTC, not the reader's. A name-only greeting is honest. */}
+      <PageHeader
+        title={t("dashGreeting", { name: session.user.name?.split(" ")[0] ?? "" })}
+        purpose={t("dashPurpose")}
+        action={
+          <Link href="/portal/pets/new" className="btn-primary">
+            <Plus className="w-4 h-4" />
+            {t("addPetButton")}
+          </Link>
+        }
+      />
+
+      {/* Today's check-in status — an action line, not decoration */}
+      <p className="text-sm text-[var(--muted)] -mt-2 mb-6">
+        {userPets.length === 0
+          ? t("checkinNoPets")
+          : loggedToday === userPets.length
+            ? t("allCheckedIn", { total: userPets.length })
+            : (
+              <>
+                {t("partialCheckedIn", { done: loggedToday, total: userPets.length })}
+                {" · "}
+                <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">
+                  {loggedToday > 0 ? t("logRemaining") : t("logTodayCheckin")}
+                </Link>
+              </>
+            )}
+      </p>
 
       {/* Needs-attention strip — everything across the user's roles that wants a reply */}
       {(pendingAppsCount > 0 || vaccDueSoonCount > 0 || proBookingsCount > 0 || sellerOrdersCount > 0) && (
@@ -405,6 +439,67 @@ export default async function DashboardPage() {
           </Link>
         </div>
       )}
+
+      {/* What is already in motion: appointments booked, orders placed */}
+      {(upcomingBookings.length > 0 || recentOrders.length > 0) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-10">
+          {upcomingBookings.length > 0 && (
+            <section className="card p-5">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-semibold text-[var(--ink)]">{t("dashUpcomingTitle")}</h2>
+                <Link href="/portal/bookings" className="text-xs font-medium text-[var(--teal)] hover:underline">
+                  {t("dashSeeAll")}
+                </Link>
+              </div>
+              <ul className="space-y-2">
+                {upcomingBookings.map((b) => (
+                  <li key={b.id} className="flex items-center gap-3 text-sm">
+                    <CalendarCheck className="w-4 h-4 text-[var(--teal)] flex-shrink-0" />
+                    <span className="text-[var(--ink)] flex-1 min-w-0 truncate">
+                      {t("dashBookingLine", { pet: b.petName, pro: b.proName ?? "" })}
+                    </span>
+                    <span className="text-xs text-[var(--muted)] tabular-nums flex-shrink-0">
+                      {formatIsoDate(b.startDate.toISOString(), locale)}
+                    </span>
+                    <span className={`badge ${BOOKING_STATUS_CONFIG[b.status as BookingStatusId]?.badge ?? "badge-neutral"}`}>
+                      {t(`bookingStatus_${b.status}` as Parameters<typeof t>[0])}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {recentOrders.length > 0 && (
+            <section className="card p-5">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-semibold text-[var(--ink)]">{t("dashRecentOrdersTitle")}</h2>
+                <Link href="/portal/orders" className="text-xs font-medium text-[var(--teal)] hover:underline">
+                  {t("dashSeeAll")}
+                </Link>
+              </div>
+              <ul className="space-y-2">
+                {recentOrders.map((o) => (
+                  <li key={o.id} className="flex items-center gap-3 text-sm">
+                    <Package className="w-4 h-4 text-[var(--teal)] flex-shrink-0" />
+                    <span className="text-[var(--ink)] flex-1 min-w-0 truncate">
+                      {formatPrice(o.totalCents, locale)}
+                    </span>
+                    <span className="text-xs text-[var(--muted)] tabular-nums flex-shrink-0">
+                      {formatIsoDate(o.createdAt.toISOString(), locale)}
+                    </span>
+                    <span className={`badge ${ORDER_STATUS_CONFIG[o.status as OrderStatusId]?.badge ?? "badge-neutral"}`}>
+                      {t(`orderStatus_${o.status}` as Parameters<typeof t>[0])}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
+      )}
+
+      <QuickActions locale={locale} isProfessional={isProfessional} isSeller={isSeller} />
     </div>
   );
 }
