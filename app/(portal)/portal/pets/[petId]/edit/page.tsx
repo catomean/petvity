@@ -148,21 +148,33 @@ export default function EditPetPage() {
     }
   }
 
+  // The header says nothing that depends on the pet being loaded, so it paints
+  // straight away and only the form waits. Replacing the whole page with a
+  // loading line meant the first thing a person saw had no title, no way back,
+  // and nothing to say which pet they were about to edit.
+  const header = (
+    <PageHeader
+      title={t("editPetTitle")}
+      purpose={t("editPetPurpose")}
+      back={{ href: `/portal/pets/${petId}`, label: t("editPetBack") }}
+    />
+  );
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-[var(--muted)] text-sm">
-        {t("editPetLoading")}
+      <div className="max-w-lg">
+        {header}
+        <div className="space-y-5" aria-busy="true" aria-label={t("editPetLoading")}>
+          <div className="card h-24 animate-pulse bg-[var(--off)]" />
+          <div className="card h-80 animate-pulse bg-[var(--off)]" />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="max-w-lg">
-      <PageHeader
-        title={t("editPetTitle")}
-        purpose={t("editPetPurpose")}
-        back={{ href: `/portal/pets/${petId}`, label: t("editPetBack") }}
-      />
+      {header}
 
       {error && <p className="alert-error mb-4">{error}</p>}
 
