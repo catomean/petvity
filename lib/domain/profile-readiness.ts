@@ -23,7 +23,11 @@ function filled(v: unknown): boolean {
 
 /**
  * Steps required before a profile goes live, per kind. The first three are
- * what a customer needs to decide; `accepting` is the pro's own switch.
+ * what a customer needs to decide.
+ *
+ * `isAcceptingClients` is deliberately NOT a step: the directory lists a pro
+ * who is temporarily full and shows a "not accepting" badge, so calling it
+ * required would tell a listed pro they were invisible.
  */
 export function profileSteps(kind: ProfileKind, p: Fields): ProfileStep[] {
   const common = [
@@ -37,7 +41,6 @@ export function profileSteps(kind: ProfileKind, p: Fields): ProfileStep[] {
       { key: "specialty", done: filled(p.specialty) },
       ...common,
       { key: "contact", done: filled(p.phone) },
-      { key: "accepting", done: p.isAcceptingClients === true },
     ];
   }
   if (kind === "pet_sitter") {
@@ -46,7 +49,6 @@ export function profileSteps(kind: ProfileKind, p: Fields): ProfileStep[] {
       { key: "price", done: typeof p.pricePerDay === "number" && p.pricePerDay > 0 },
       ...common,
       { key: "contact", done: filled(p.phone) },
-      { key: "accepting", done: p.isAcceptingClients === true },
     ];
   }
   if (kind === "groomer") {
@@ -56,7 +58,6 @@ export function profileSteps(kind: ProfileKind, p: Fields): ProfileStep[] {
       { key: "price", done: typeof p.priceFrom === "number" && p.priceFrom > 0 },
       ...common,
       { key: "contact", done: filled(p.phone) },
-      { key: "accepting", done: p.isAcceptingClients === true },
     ];
   }
   // seller
