@@ -20,6 +20,12 @@ export async function GET() {
       status: orders.status,
       totalCents: orders.totalCents,
       notes: orders.notes,
+      shippingName: orders.shippingName,
+      shippingLine1: orders.shippingLine1,
+      shippingPostalCode: orders.shippingPostalCode,
+      shippingCity: orders.shippingCity,
+      shippingCountry: orders.shippingCountry,
+      shippingPhone: orders.shippingPhone,
       createdAt: orders.createdAt,
       updatedAt: orders.updatedAt,
       customer: {

@@ -7,6 +7,7 @@ import type { BookingStatusId } from "@/lib/config/orders";
 import { formatIsoDate } from "@/lib/utils/format";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
 import HubTabs from "@/components/portal/HubTabs";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
@@ -18,7 +19,7 @@ interface BookingRow {
   ownerId: string;
   ownerName: string | null;
   professionalId: string;
-  professionalRole: "veterinarian" | "pet_sitter";
+  professionalRole: "veterinarian" | "pet_sitter" | "groomer";
   startDate: string;
   endDate: string;
   notes: string | null;
@@ -52,6 +53,7 @@ function StatusBadge({ status }: { status: BookingRow["status"] }) {
 /* ─── Component ──────────────────────────────────────────────────────────── */
 
 export default function BookingsPage() {
+  const { data: session } = useSession();
   const t = useTranslations("portal");
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -138,6 +140,7 @@ export default function BookingsPage() {
               <div className="space-y-3">
                 {upcoming.map((b) => (
                   <BookingCard
+                    viewerId={session?.user?.id}
                     key={b.id}
                     booking={b}
                     onUpdateStatus={updateStatus}
@@ -156,6 +159,7 @@ export default function BookingsPage() {
               <div className="space-y-3">
                 {past.map((b) => (
                   <BookingCard
+                    viewerId={session?.user?.id}
                     key={b.id}
                     booking={b}
                     onUpdateStatus={updateStatus}
@@ -185,14 +189,17 @@ function BookingCard({
   onUpdateStatus,
   onDelete,
   onReview,
+  viewerId,
 }: {
   booking: BookingRow;
   onUpdateStatus: (id: string, status: BookingRow["status"]) => void;
   onDelete: (id: string) => void;
   onReview: (b: BookingRow) => void;
+  viewerId?: string;
 }) {
   const t = useTranslations("portal");
   const [actionsOpen, setActionsOpen] = useState(false);
+  const isProfessionalView = viewerId != null && b.professionalId === viewerId;
   const roleLabel = t(`role_${b.professionalRole}` as Parameters<typeof t>[0]);
   const canReview = b.status === "completed" && !b.reviewId;
 
@@ -225,6 +232,17 @@ function BookingCard({
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* A pro's most common action is accepting a request — a button,
+              not an item hidden inside a dropdown. */}
+          {isProfessionalView && b.status === "pending" && (
+            <button
+              onClick={() => onUpdateStatus(b.id, "confirmed")}
+              className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5"
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              {t("bookingsAccept")}
+            </button>
+          )}
           {canReview && (
             <button
               onClick={() => onReview(b)}

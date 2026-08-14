@@ -29,11 +29,23 @@ const MOCK_SESSION = {
   expires: "2099-01-01",
 };
 
-function makeRequest(body: unknown) {
+/** Delivery details every real checkout sends (see the cart drawer). */
+const SHIPPING = {
+  shippingName: "Test Buyer",
+  shippingLine1: "Teststrasse 1",
+  shippingPostalCode: "8000",
+  shippingCity: "Zurich",
+  shippingCountry: "CH",
+};
+
+function makeRequest(body: Record<string, unknown>) {
+  // Tests post what the client posts: items + address. A body without an
+  // address is itself invalid now, so only the explicit validation tests omit it.
+  const payload = "items" in body && !("shippingName" in body) ? { ...SHIPPING, ...body } : body;
   return new NextRequest("http://localhost/api/orders", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify(payload),
   });
 }
 
@@ -72,6 +84,11 @@ describe("POST /api/orders", () => {
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.success).toBe(false);
+  });
+
+  it("returns 400 when the delivery address is missing (an order must be shippable)", async () => {
+    const res = await POST(makeRequest({ items: [{ productId: PROD_ID_1, quantity: 1 }], shippingName: "" }));
+    expect(res.status).toBe(400);
   });
 
   it("returns 400 for empty items array", async () => {

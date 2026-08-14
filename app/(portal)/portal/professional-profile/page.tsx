@@ -5,6 +5,7 @@ import { vetProfiles, sitterProfiles, groomerProfiles } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import ProfessionalProfileForm from "./ProfessionalProfileForm";
 import AvailabilityManager from "@/components/portal/AvailabilityManager";
+import ProfileReadiness from "@/components/portal/ProfileReadiness";
 
 export default async function ProfessionalProfilePage() {
   const session = await auth();
@@ -23,6 +24,7 @@ export default async function ProfessionalProfilePage() {
     });
     return (
       <>
+        <ProfileReadiness kind="veterinarian" profile={(profile ?? {}) as Record<string, unknown>} />
         <ProfessionalProfileForm role="veterinarian" initialData={profile ?? null} />
         <AvailabilityManager />
       </>
@@ -35,6 +37,7 @@ export default async function ProfessionalProfilePage() {
     });
     return (
       <>
+        <ProfileReadiness kind="groomer" profile={(profile ?? {}) as Record<string, unknown>} />
         <ProfessionalProfileForm role="groomer" initialData={profile ?? null} />
         <AvailabilityManager />
       </>
@@ -46,7 +49,8 @@ export default async function ProfessionalProfilePage() {
   });
   return (
     <>
-      <ProfessionalProfileForm role="pet_sitter" initialData={profile ?? null} />
+      <ProfileReadiness kind="pet_sitter" profile={(profile ?? {}) as Record<string, unknown>} />
+        <ProfessionalProfileForm role="pet_sitter" initialData={profile ?? null} />
       <AvailabilityManager />
     </>
   );

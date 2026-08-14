@@ -29,6 +29,20 @@ interface CartItem {
   quantity: number;
 }
 
+interface Shipping {
+  shippingName: string;
+  shippingLine1: string;
+  shippingPostalCode: string;
+  shippingCity: string;
+  shippingCountry: string;
+  shippingPhone: string;
+}
+
+const EMPTY_SHIPPING: Shipping = {
+  shippingName: "", shippingLine1: "", shippingPostalCode: "",
+  shippingCity: "", shippingCountry: "", shippingPhone: "",
+};
+
 /* ─── Cart ───────────────────────────────────────────────────────────────── */
 
 function CartDrawer({
@@ -40,6 +54,8 @@ function CartDrawer({
   placing,
   notes,
   onNotes,
+  ship,
+  onShip,
   success,
   error,
 }: {
@@ -51,11 +67,17 @@ function CartDrawer({
   placing: boolean;
   notes: string;
   onNotes: (v: string) => void;
+  ship: Shipping;
+  onShip: (patch: Partial<Shipping>) => void;
   success: boolean;
   error: string;
 }) {
   const t = useTranslations("portal");
   const total = cart.reduce((s, i) => s + i.product.priceCents * i.quantity, 0);
+  const shipReady =
+    ship.shippingName.trim() && ship.shippingLine1.trim() &&
+    ship.shippingPostalCode.trim() && ship.shippingCity.trim() &&
+    ship.shippingCountry.trim().length === 2;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -127,6 +149,54 @@ function CartDrawer({
             </div>
 
             <div className="px-5 py-4 border-t border-[var(--border)] space-y-3">
+              <p className="text-sm font-semibold text-[var(--ink)]">{t("shopDeliveryTitle")}</p>
+              <input
+                className="form-input text-sm"
+                placeholder={t("shopShipName")}
+                autoComplete="name"
+                value={ship.shippingName}
+                onChange={(e) => onShip({ shippingName: e.target.value })}
+              />
+              <input
+                className="form-input text-sm"
+                placeholder={t("shopShipAddress")}
+                autoComplete="street-address"
+                value={ship.shippingLine1}
+                onChange={(e) => onShip({ shippingLine1: e.target.value })}
+              />
+              <div className="grid grid-cols-3 gap-2">
+                <input
+                  className="form-input text-sm"
+                  placeholder={t("shopShipPostal")}
+                  autoComplete="postal-code"
+                  value={ship.shippingPostalCode}
+                  onChange={(e) => onShip({ shippingPostalCode: e.target.value })}
+                />
+                <input
+                  className="form-input text-sm col-span-2"
+                  placeholder={t("shopShipCity")}
+                  autoComplete="address-level2"
+                  value={ship.shippingCity}
+                  onChange={(e) => onShip({ shippingCity: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                <input
+                  className="form-input text-sm uppercase"
+                  placeholder={t("shopShipCountry")}
+                  autoComplete="country"
+                  maxLength={2}
+                  value={ship.shippingCountry}
+                  onChange={(e) => onShip({ shippingCountry: e.target.value })}
+                />
+                <input
+                  className="form-input text-sm col-span-2"
+                  placeholder={t("shopShipPhone")}
+                  autoComplete="tel"
+                  value={ship.shippingPhone}
+                  onChange={(e) => onShip({ shippingPhone: e.target.value })}
+                />
+              </div>
               <textarea
                 className="form-input min-h-[60px] resize-none text-sm"
                 placeholder={t("shopOrderNotes")}
@@ -140,7 +210,7 @@ function CartDrawer({
               {error && <p className="alert-error text-sm">{error}</p>}
               <button
                 onClick={onPlace}
-                disabled={placing}
+                disabled={placing || !shipReady}
                 className="btn-primary w-full disabled:opacity-60"
               >
                 {placing ? t("shopPlacingOrder") : t("shopPlaceOrder")}
@@ -166,6 +236,7 @@ export default function ShopPage() {
   const [cartOpen, setCartOpen] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [notes, setNotes] = useState("");
+  const [ship, setShip] = useState<Shipping>(EMPTY_SHIPPING);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
@@ -215,6 +286,12 @@ export default function ShopPage() {
       body: JSON.stringify({
         items: cart.map((i) => ({ productId: i.product.id, quantity: i.quantity })),
         notes: notes.trim() || undefined,
+        shippingName: ship.shippingName.trim(),
+        shippingLine1: ship.shippingLine1.trim(),
+        shippingPostalCode: ship.shippingPostalCode.trim(),
+        shippingCity: ship.shippingCity.trim(),
+        shippingCountry: ship.shippingCountry.trim().toUpperCase(),
+        shippingPhone: ship.shippingPhone.trim() || null,
       }),
     });
     const data = await res.json();
@@ -383,6 +460,8 @@ export default function ShopPage() {
           onPlace={placeOrder}
           placing={placing}
           notes={notes}
+          ship={ship}
+          onShip={(patch) => setShip((s) => ({ ...s, ...patch }))}
           onNotes={setNotes}
           success={success}
           error={error}

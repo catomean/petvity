@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, desc, inArray, sql, gte, and, isNotNull } from "drizzle-orm";
+import { eq, desc, inArray, sql, gte, and } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
@@ -17,6 +17,13 @@ const createSchema = z.object({
     }),
   ).min(1),
   notes: z.string().max(500).optional(),
+  // Delivery details — required so an order can actually be fulfilled.
+  shippingName: z.string().min(1).max(200),
+  shippingLine1: z.string().min(1).max(200),
+  shippingPostalCode: z.string().min(1).max(20),
+  shippingCity: z.string().min(1).max(100),
+  shippingCountry: z.string().length(2),
+  shippingPhone: z.string().max(50).nullish(),
 });
 
 /** GET /api/orders — list current user's orders with items */
@@ -81,7 +88,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { items, notes } = parsed.data;
+  const { items, notes, ...shipping } = parsed.data;
   const productIds = items.map((i) => i.productId);
 
   const db = getInstance();
@@ -165,7 +172,17 @@ export async function POST(req: NextRequest) {
   // Stock reserved — now safe to record the order
   const [order] = await db
     .insert(orders)
-    .values({ userId: session.user.id, totalCents, notes: notes ?? null })
+    .values({
+      userId: session.user.id,
+      totalCents,
+      notes: notes ?? null,
+      shippingName: shipping.shippingName,
+      shippingLine1: shipping.shippingLine1,
+      shippingPostalCode: shipping.shippingPostalCode,
+      shippingCity: shipping.shippingCity,
+      shippingCountry: shipping.shippingCountry.toUpperCase(),
+      shippingPhone: shipping.shippingPhone ?? null,
+    })
     .returning();
 
   const itemValues = items.map((item) => ({

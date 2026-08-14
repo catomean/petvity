@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Stethoscope, Home, Scissors, ArrowRight, BadgeCheck } from "lucide-react";
+import { Stethoscope, Home, Scissors, ArrowRight, BadgeCheck, Store } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 /**
@@ -55,6 +55,7 @@ export default function BecomeAProPage() {
           {t("becomeProGoToProfile")}
           <ArrowRight className="w-4 h-4" />
         </Link>
+        <SellOnPetvity />
       </div>
     );
   }
@@ -104,6 +105,34 @@ export default function BecomeAProPage() {
         {saving ? t("findBookingInProgress") : t("becomeProConfirm")}
         <ArrowRight className="w-4 h-4" />
       </button>
+
+      <SellOnPetvity />
+    </div>
+  );
+}
+
+/**
+ * Selling is not a role — any account can list products (`sellerId = userId`).
+ * Surfacing it here is the only place an owner learns that, so it lives beside
+ * the role choices rather than being hidden behind a sidebar link.
+ */
+function SellOnPetvity() {
+  const t = useTranslations("portal");
+  return (
+    <div className="card p-5 mt-8">
+      <div className="flex items-start gap-3">
+        <div className="icon-tile">
+          <Store className="w-5 h-5 text-[var(--teal)]" />
+        </div>
+        <div className="min-w-0">
+          <p className="font-semibold text-[var(--ink)]">{t("becomeSellerTitle")}</p>
+          <p className="text-sm text-[var(--muted)] mt-0.5 mb-3">{t("becomeSellerDesc")}</p>
+          <Link href="/portal/seller-profile" className="btn-outline inline-flex items-center gap-2">
+            {t("becomeSellerCta")}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
