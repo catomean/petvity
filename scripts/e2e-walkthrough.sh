@@ -219,6 +219,22 @@ req "adopter becomes sitter" 200 POST /api/account/role adopter '{"role":"pet_si
 login adopter "$E_ADOPTER"
 [ "$SESSION_ROLE" = "pet_sitter" ] && ok "role upgrade reflected at login" || bad "role upgrade reflected at login" "role=$SESSION_ROLE"
 
+# Sign-out sent every user to https://localhost:4013/login — a dead URL.
+# Auth.js rewrites the request origin only when AUTH_URL is set; without it the
+# origin stays req.nextUrl.origin, which in a standalone server behind Caddy is
+# localhost:$PORT. AUTH_TRUST_HOST does not cover this path. The env var lives
+# on the box, so this check is what stops a rebuild silently reintroducing it.
+so_csrf=$(curl -s -b "$JARS/adopter" -c "$JARS/adopter" "$BASE/api/auth/csrf" | jq_ csrfToken)
+so_url=$(curl -s -b "$JARS/adopter" -X POST "$BASE/api/auth/signout" \
+  -H "X-Auth-Return-Redirect: 1" -H "Content-Type: application/x-www-form-urlencoded" \
+  --data-urlencode "csrfToken=$so_csrf" --data-urlencode "callbackUrl=/login" | jq_ url)
+case "$so_url" in
+  "$BASE"/*) ok "sign-out returns to the site ($so_url)" ;;
+  *) bad "sign-out returns to the site" "expected $BASE/... got '$so_url'" ;;
+esac
+# That signed the adopter out; cleanup still needs the jar.
+login adopter "$E_ADOPTER"
+
 echo "══ 8. Portal pages render (not just 200) ══"
 # A portal page can answer 200 and still paint nothing — /portal/settings did,
 # because it returned null for the whole page until the client session arrived.

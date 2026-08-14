@@ -68,6 +68,8 @@ Production env lives in `.env.selfhost.local` on the box (sourced by the systemd
 | `NEXTAUTH_SECRET` | Set |
 | `CRON_SECRET` | Set |
 | `NEXT_PUBLIC_APP_URL` | https://petvity.orangecat.ch |
+| `AUTH_URL` | https://petvity.orangecat.ch — **required**, see gotcha 9 |
+| `AUTH_TRUST_HOST` | true |
 
 ### NOT YET configured (needed for full functionality)
 | Variable | Where to get it | Impact if missing |
@@ -418,6 +420,10 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 7. **Pet signal test must be updated** — Any change to `computePetSignal()` logic must be reflected in `lib/domain/pet-signal.test.ts`. Run `pnpm test` to verify.
 
 8. **CRON_SECRET must not have trailing whitespace** — the cron caller compares it exactly. Use `printf` not `echo` when writing it into `.env.selfhost.local`.
+
+9. **`AUTH_URL` must be set in prod, and `AUTH_TRUST_HOST` does not replace it.** Auth.js's Next adapter rewrites the request origin via `reqWithEnvURL()`, which is a no-op unless `AUTH_URL`/`NEXTAUTH_URL` is set. Without it every relative redirect resolves against `req.nextUrl.origin` — in a standalone server behind Caddy that is `localhost:$PORT`, so **`signOut({ callbackUrl: "/login" })` sent every user to `https://localhost:4013/login`**, a dead page. Env lives in `/opt/petvity/shared/.env` (`app/.env` is a symlink to it, so edits survive deploys). Guarded by the "sign-out returns to the site" check in `scripts/e2e-walkthrough.sh`.
+
+10. **The demo account's id is pinned, deliberately.** `/api/cron/reset-demo` deletes the user row so the FK graph cascades the wipe; letting the id regenerate re-minted the identity every 2 hours while 30-day sessions still pointed at the old one, so the demo silently read as an empty product. See `DEMO_ACCOUNT.id` in `lib/config/demo.ts`.
 
 ---
 
