@@ -4,7 +4,8 @@ import { pets, healthMetrics, vaccinations, petSignalHistory } from "@/lib/db/sc
 import { and, eq, gte, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { AlertTriangle, BarChart3, ChevronLeft, Pencil, Syringe } from "lucide-react";
+import { AlertTriangle, BarChart3, Pencil, Syringe } from "lucide-react";
+import PageHeader from "@/components/portal/PageHeader";
 import {
   HEALTH_METRIC_CONFIG,
   HEALTH_CHART_WINDOW_DAYS,
@@ -132,26 +133,19 @@ export default async function PetHealthPage({ params }: Params) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <div>
+      <PageHeader
+        title={t("healthBack")}
+        purpose={t("healthPurpose")}
+        back={{ href: `/portal/pets/${petId}`, label: pet.name }}
+        action={
           <Link
-            href={`/portal/pets/${petId}`}
-            className="inline-flex items-center gap-1 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline"
+            href={`/portal/pets/${petId}/health/log`}
+            className="btn-primary text-sm"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
-            {pet.name}
+            {t("logToday")}
           </Link>
-          <h1 className="text-2xl font-semibold text-[var(--ink)] mt-1">
-            {t("healthBack")}
-          </h1>
-        </div>
-        <Link
-          href={`/portal/pets/${petId}/health/log`}
-          className="btn-primary text-sm"
-        >
-          {t("logToday")}
-        </Link>
-      </div>
+        }
+      />
 
       {!latest ? (
         <div className="card p-10 text-center">

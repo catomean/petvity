@@ -5,8 +5,9 @@ import { useRouter, useParams } from "next/navigation";
 import { SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
-import { ChevronLeft, Trash2, Camera, Loader2 } from "lucide-react";
+import { Trash2, Camera, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import PageHeader from "@/components/portal/PageHeader";
 
 interface PetData {
   id: string;
@@ -157,16 +158,11 @@ export default function EditPetPage() {
 
   return (
     <div className="max-w-lg">
-      {/* Back */}
-      <Link
-        href={`/portal/pets/${petId}`}
-        className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--teal)] no-underline mb-5 transition-colors"
-      >
-        <ChevronLeft className="w-4 h-4" />
-        {t("editPetBack")}
-      </Link>
-
-      <h1 className="text-2xl font-bold text-[var(--ink)] mb-6">{t("editPetTitle")}</h1>
+      <PageHeader
+        title={t("editPetTitle")}
+        purpose={t("editPetPurpose")}
+        back={{ href: `/portal/pets/${petId}`, label: t("editPetBack") }}
+      />
 
       {error && <p className="alert-error mb-4">{error}</p>}
 
