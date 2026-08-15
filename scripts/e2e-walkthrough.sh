@@ -120,10 +120,16 @@ login vet "$E_VET"
 # (lib/domain/profile-readiness.ts). The create call below is deliberately
 # incomplete — no phone, no bio, not accepting — so the gate can be proven.
 BIO="A complete end-to-end test biography, long enough to satisfy the forty character minimum."
-req "vet profile create" 201 POST /api/vets/me vet '{"specialty":"E2E medicine","clinicName":"E2E Clinic","city":"Zurich","country":"CH"}'
+# The clinic name carries the run stamp so the two browse assertions below can
+# only ever see THIS run's row. With a shared literal they read each other's
+# leftovers: an interrupted run whose vet was already complete made the
+# "stays unlisted" check red, and — worse — the "visible in browse" check would
+# have gone green on a stranger's row even if this run's vet were missing.
+CLINIC="E2E Clinic $STAMP"
+req "vet profile create" 201 POST /api/vets/me vet '{"specialty":"E2E medicine","clinicName":"'"$CLINIC"'","city":"Zurich","country":"CH"}'
 req "vet profile GET" 200 GET /api/vets/me vet
 req "browse vets before completion" 200 GET "/api/vets?city=Zurich" vet
-echo "$LAST_BODY" | grep -q "E2E Clinic" && bad "incomplete vet stays unlisted" "listed anyway" || ok "incomplete vet stays unlisted"
+echo "$LAST_BODY" | grep -q "$CLINIC" && bad "incomplete vet stays unlisted" "listed anyway" || ok "incomplete vet stays unlisted"
 req "vet profile PATCH" 200 PATCH /api/vets/me vet '{"bio":"'"$BIO"'","phone":"+41 44 000 00 01","isAcceptingClients":true}'
 register sitter "$E_SITTER" "E2E Sitter" pet_sitter
 login sitter "$E_SITTER"
@@ -138,7 +144,7 @@ req "groomer profile create" 201 POST /api/groomers/me groomer '{"salonName":"E2
 req "groomer profile PATCH" 200 PATCH /api/groomers/me groomer '{"bio":"'"$BIO"'","phone":"+41 44 000 00 03","isAcceptingClients":true}'
 login owner "$E_OWNER"
 req "browse vets" 200 GET "/api/vets?city=Zurich" owner
-echo "$LAST_BODY" | grep -q "E2E Clinic" && ok "vet visible in browse" || bad "vet visible in browse" "not found"
+echo "$LAST_BODY" | grep -q "$CLINIC" && ok "vet visible in browse" || bad "vet visible in browse" "not found"
 req "browse sitters" 200 GET "/api/sitters?city=Zurich" owner
 echo "$LAST_BODY" | grep -q "E2E Sitter" && ok "sitter visible in browse" || bad "sitter visible in browse" "not found"
 req "browse groomers" 200 GET "/api/groomers?city=Zurich" owner
