@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
+import { IMAGE_ACCEPT_ATTR } from "@/lib/config/uploads";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import Link from "next/link";
 import { Trash2, Camera, Loader2 } from "lucide-react";
@@ -202,7 +203,7 @@ export default function EditPetPage() {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept={IMAGE_ACCEPT_ATTR}
             className="sr-only"
             onChange={handleAvatarChange}
           />

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Store, Plus, Pencil, X, Eye, EyeOff, ShoppingBag } from "lucide-react";
 import { PRODUCT_CATEGORY_OPTIONS } from "@/lib/config/products";
 import { ProductArt } from "@/components/shop/ProductArt";
+import { ProductImageField } from "@/components/shop/ProductImageField";
+import { IMAGE_MAX_MB } from "@/lib/config/uploads";
 import { formatPrice } from "@/lib/utils/format";
 import { useTranslations } from "next-intl";
 import PageHeader from "@/components/portal/PageHeader";
@@ -260,16 +262,21 @@ export default function MyProductsPage() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsImageUrl")}</label>
-                <input
-                  className="form-input"
-                  type="url"
-                  value={form.imageUrl}
-                  onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
-                  placeholder="https://…"
-                />
-              </div>
+              <ProductImageField
+                value={form.imageUrl}
+                onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+                category={form.category}
+                name={form.name}
+                labels={{
+                  title: t("myProductsPhoto"),
+                  hint: t("myProductsPhotoHint", { mb: IMAGE_MAX_MB }),
+                  upload: t("myProductsPhotoUpload"),
+                  change: t("myProductsPhotoChange"),
+                  remove: t("myProductsPhotoRemove"),
+                  tooLarge: t("myProductsPhotoTooLarge", { mb: IMAGE_MAX_MB }),
+                  failed: t("myProductsPhotoFailed"),
+                }}
+              />
 
               {error && <p className="alert-error">{error}</p>}
 
