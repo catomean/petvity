@@ -182,9 +182,18 @@ light teal/terracotta palette — never mix the two surfaces.
 
 ### Typography
 
-- `--font-sans`: Plus Jakarta Sans (next/font) — body everywhere.
-- `--font-display`: Jost 200/300/400 (next/font) — marketing headlines (`.display-title`, `.ed-title*`).
-- `--font-mono`: IBM Plex Mono 400/500 (next/font) — marketing eyebrows and instrument-style labels.
+Declared once in `lib/fonts.ts` via `next/font/local`, from `.woff2` files vendored
+in `lib/font-files/` (latin subset only — non-latin locales use system fallbacks, as
+before). They are **not** fetched from Google at build time: that made every CI run
+and deploy depend on `fonts.gstatic.com` being reachable, which failed twice in one
+week and blocked a merge each time.
+
+To add or refresh a weight: edit `scripts/fetch-fonts.mjs`, run `node scripts/fetch-fonts.mjs`,
+commit the `.woff2`. Never wire it into the build — that reintroduces the network dependency.
+
+- `--font-sans`: Plus Jakarta Sans, variable 400–800 — body everywhere.
+- `--font-display`: Jost, variable 200–400 — marketing headlines (`.display-title`, `.ed-title*`).
+- `--font-mono`: IBM Plex Mono 400/500 (static) — marketing eyebrows and instrument-style labels.
 
 ### RTL Support
 
