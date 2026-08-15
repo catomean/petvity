@@ -10,6 +10,7 @@ import {
   IMAGE_ALLOWED_TYPES,
   IMAGE_MAX_BYTES,
   IMAGE_MAX_MB,
+  imageExtension,
 } from "@/lib/config/uploads";
 
 type Params = { params: Promise<{ petId: string }> };
@@ -55,7 +56,10 @@ export async function POST(req: NextRequest, { params }: Params) {
   let blob;
   try {
     // Random suffix keeps old avatar URLs valid until the row is updated.
-    blob = await putLocal(`pets/${petId}/avatar-${randomUUID()}`, file);
+    blob = await putLocal(
+      `pets/${petId}/avatar-${randomUUID()}${imageExtension(file.type)}`,
+      file,
+    );
   } catch (err) {
     console.error("[avatar] upload failed", err);
     return NextResponse.json(

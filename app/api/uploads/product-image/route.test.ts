@@ -60,6 +60,19 @@ describe("POST /api/uploads/product-image", () => {
     expect(vi.mocked(putLocal).mock.calls[0][0]).toMatch(/^products\/seller-1\//);
   });
 
+  // Caddy's file_server derives Content-Type from the extension. Stored without
+  // one, prod served the image with an empty Content-Type — Chrome sniffs it,
+  // but that is a courtesy, not a guarantee.
+  it.each([
+    ["image/jpeg", ".jpg"],
+    ["image/png", ".png"],
+    ["image/webp", ".webp"],
+    ["image/gif", ".gif"],
+  ])("stores %s under a %s extension so it is served with a Content-Type", async (type, ext) => {
+    await POST(request(fileOfSize(1024, type)));
+    expect(vi.mocked(putLocal).mock.calls[0][0]).toMatch(new RegExp(`\\${ext}$`));
+  });
+
   it("refuses an anonymous upload", async () => {
     // Writing files to disk without a session is how an open endpoint becomes
     // someone else's free storage.
