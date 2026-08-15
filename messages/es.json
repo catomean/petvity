@@ -985,7 +985,17 @@
     "dirEmptyDesc": "Este directorio está creciendo. ¿Eres profesional? Tu perfil estaría en línea hoy.",
     "dirJoinCta": "Únete como profesional",
     "dirProviderCtaTitle": "Tú cuidas mascotas. Nosotros te traemos clientes.",
-    "dirProviderCtaDesc": "Un escaparate público, un calendario sin dobles reservas y reseñas ganadas con trabajo real. Gratis."
+    "dirProviderCtaDesc": "Un escaparate público, un calendario sin dobles reservas y reseñas ganadas con trabajo real. Gratis.",
+    "shopSearchPlaceholder": "Buscar productos",
+    "shopSortLabel": "Ordenar",
+    "shopSortNewest": "Más recientes",
+    "shopSortPriceAsc": "Precio más bajo",
+    "shopSortPriceDesc": "Precio más alto",
+    "shopSortName": "Nombre",
+    "shopResultCount": "{count, plural, one {# resultado para «{query}»} other {# resultados para «{query}»}}",
+    "shopClearSearch": "Borrar",
+    "shopEmptySearch": "No hay resultados para «{query}».",
+    "shopSeeEverything": "Ver todo"
   },
   "twin": {
     "thriving": "Floreciente",

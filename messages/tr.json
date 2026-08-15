@@ -985,7 +985,17 @@
     "dirEmptyDesc": "Bu dizin büyüyor. Profesyonel misiniz? Profiliniz bugün yayında olurdu.",
     "dirJoinCta": "Profesyonel olarak katıl",
     "dirProviderCtaTitle": "Siz hayvanlara bakın. Müşterileri biz getirelim.",
-    "dirProviderCtaDesc": "Herkese açık bir vitrin, çift rezervasyona kapalı bir takvim ve gerçek işten kazanılan yorumlar. Katılım ücretsiz."
+    "dirProviderCtaDesc": "Herkese açık bir vitrin, çift rezervasyona kapalı bir takvim ve gerçek işten kazanılan yorumlar. Katılım ücretsiz.",
+    "shopSearchPlaceholder": "Ürün ara",
+    "shopSortLabel": "Sırala",
+    "shopSortNewest": "En yeni",
+    "shopSortPriceAsc": "En düşük fiyat",
+    "shopSortPriceDesc": "En yüksek fiyat",
+    "shopSortName": "Ad",
+    "shopResultCount": "{count, plural, one {“{query}” için # sonuç} other {“{query}” için # sonuç}}",
+    "shopClearSearch": "Temizle",
+    "shopEmptySearch": "“{query}” ile eşleşen ürün yok.",
+    "shopSeeEverything": "Tümünü gör"
   },
   "twin": {
     "thriving": "Gelişiyor",

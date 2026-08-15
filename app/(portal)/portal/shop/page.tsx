@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X, Store, BadgeCheck } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X, Store, BadgeCheck, Search } from "lucide-react";
 import { formatPrice } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { ProductArt } from "@/components/shop/ProductArt";
+import { PRODUCT_SORT_OPTIONS, DEFAULT_PRODUCT_SORT, type ProductSortId } from "@/lib/config/products";
 import { useTranslations } from "next-intl";
 import HubTabs from "@/components/portal/HubTabs";
 import PageHeader from "@/components/portal/PageHeader";
@@ -233,6 +234,8 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<ProductSortId>(DEFAULT_PRODUCT_SORT);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [placing, setPlacing] = useState(false);
@@ -254,9 +257,27 @@ export default function ShopPage() {
   useEffect(() => { loadProducts(); }, []);
 
   const categories = ["all", ...Array.from(new Set(products.map((p) => p.category)))];
-  const filtered = activeCategory === "all"
-    ? products
-    : products.filter((p) => p.category === activeCategory);
+
+  // The full catalogue is already in memory, so search and sort are applied
+  // here rather than round-tripping to the API — results appear as you type.
+  const needle = query.trim().toLowerCase();
+  const filtered = products
+    .filter((p) => activeCategory === "all" || p.category === activeCategory)
+    .filter(
+      (p) =>
+        !needle ||
+        p.name.toLowerCase().includes(needle) ||
+        (p.description ?? "").toLowerCase().includes(needle),
+    )
+    .sort((a, b) => {
+      switch (sort) {
+        case "price_asc": return a.priceCents - b.priceCents;
+        case "price_desc": return b.priceCents - a.priceCents;
+        case "name": return a.name.localeCompare(b.name);
+        // The API already returns newest first; keep that order.
+        default: return 0;
+      }
+    });
 
   function addToCart(product: Product) {
     setCart((prev) => {
@@ -336,6 +357,39 @@ export default function ShopPage() {
           </button>
         }
       />
+
+      {/* Search + sort */}
+      {!loading && products.length > 0 && (
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-[var(--muted)] absolute start-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={tPub("shopSearchPlaceholder")}
+              aria-label={tPub("shopSearchPlaceholder")}
+              className="form-input form-input-icon"
+            />
+          </div>
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <span className="text-xs text-[var(--muted)] flex-shrink-0">{tPub("shopSortLabel")}</span>
+            {PRODUCT_SORT_OPTIONS.map((o) => (
+              <button
+                key={o.id}
+                onClick={() => setSort(o.id)}
+                className={`flex-shrink-0 text-sm px-2.5 py-1 rounded-lg transition-colors ${
+                  sort === o.id
+                    ? "bg-[var(--teal-light)] text-[var(--teal)] font-medium"
+                    : "text-[var(--ink2)] hover:bg-[var(--light)]"
+                }`}
+              >
+                {tPub(o.labelKey as Parameters<typeof tPub>[0])}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Category filter */}
       {!loading && products.length > 0 && (

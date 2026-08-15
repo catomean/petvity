@@ -985,7 +985,17 @@
     "dirEmptyDesc": "This directory is growing. Are you a professional? Your profile would be live today.",
     "dirJoinCta": "Join as a professional",
     "dirProviderCtaTitle": "You take care of pets. We bring you clients.",
-    "dirProviderCtaDesc": "A public storefront, a calendar nobody can double-book, and reviews earned from real work. Free to join."
+    "dirProviderCtaDesc": "A public storefront, a calendar nobody can double-book, and reviews earned from real work. Free to join.",
+    "shopSearchPlaceholder": "Search products",
+    "shopSortLabel": "Sort",
+    "shopSortNewest": "Newest",
+    "shopSortPriceAsc": "Lowest price",
+    "shopSortPriceDesc": "Highest price",
+    "shopSortName": "Name",
+    "shopResultCount": "{count, plural, one {# result for “{query}”} other {# results for “{query}”}}",
+    "shopClearSearch": "Clear",
+    "shopEmptySearch": "Nothing matched “{query}”.",
+    "shopSeeEverything": "See everything"
   },
   "twin": {
     "thriving": "Thriving",

@@ -985,7 +985,17 @@
     "dirEmptyDesc": "目录正在增长。您是专业人士吗？您的档案今天就能上线。",
     "dirJoinCta": "以专业人士身份加入",
     "dirProviderCtaTitle": "您照顾宠物，我们带来客户。",
-    "dirProviderCtaDesc": "公开的店面、不会被重复预订的日历、来自真实工作的评价。免费加入。"
+    "dirProviderCtaDesc": "公开的店面、不会被重复预订的日历、来自真实工作的评价。免费加入。",
+    "shopSearchPlaceholder": "搜索商品",
+    "shopSortLabel": "排序",
+    "shopSortNewest": "最新",
+    "shopSortPriceAsc": "价格从低到高",
+    "shopSortPriceDesc": "价格从高到低",
+    "shopSortName": "名称",
+    "shopResultCount": "“{query}”的搜索结果 {count} 个",
+    "shopClearSearch": "清除",
+    "shopEmptySearch": "没有找到与“{query}”匹配的商品。",
+    "shopSeeEverything": "查看全部"
   },
   "twin": {
     "thriving": "蓬勃发展",
