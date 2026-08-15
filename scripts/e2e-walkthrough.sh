@@ -67,9 +67,22 @@ E_SELLER="e2e-seller-$STAMP@petvity.orangecat.ch"
 E_ADOPTER="e2e-adopter-$STAMP@petvity.orangecat.ch"
 
 echo "══ 1. Public pages (en/de/ar) ══"
-for p in "" /features /pricing /about /species/dog /adopt /shop /pets/milo /pets/rosie; do
+for p in "" /features /pricing /about /species/dog /adopt /shop /blog /pets/milo /pets/rosie; do
   page 200 "/en$p"
 done
+# The blog is served from the database now, so a post reaching readers proves
+# the table, the migration that carried the content over, and the markup
+# renderer — not just that a route exists.
+page 200 /en/blog/a-platform-for-both-sides-of-pet-care
+# Fetched directly: page() sends the body to /dev/null, so asserting on
+# $LAST_BODY here would silently grep whatever the previous request left behind.
+post_html=$(curl -s "$BASE/en/blog/a-platform-for-both-sides-of-pet-care")
+echo "$post_html" | grep -q "one daily check-in builds a living picture" \
+  && ok "blog post renders body from the database" \
+  || bad "blog post renders body from the database" "post prose not found"
+# Search and sort must not 500 on an untrusted value.
+page 200 "/en/shop?q=test&sort=price_asc"
+page 200 "/en/shop?sort=__proto__"
 page 200 /de
 page 200 /ar
 page 200 /de/shop

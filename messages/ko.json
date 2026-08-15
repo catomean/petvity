@@ -1599,6 +1599,7 @@
     "readPost": "글 읽기",
     "backToBlog": "전체 글",
     "ctaJoin": "무료로 시작",
-    "ctaFind": "전문가 찾기"
+    "ctaFind": "전문가 찾기",
+    "empty": "아직 게시글이 없습니다 — 첫 글을 준비 중입니다."
   }
 }

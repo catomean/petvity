@@ -1599,6 +1599,7 @@
     "readPost": "Lire l'article",
     "backToBlog": "Tous les articles",
     "ctaJoin": "Commencer gratuitement",
-    "ctaFind": "Trouver un professionnel"
+    "ctaFind": "Trouver un professionnel",
+    "empty": "Pas encore d'articles — le premier arrive bientôt."
   }
 }

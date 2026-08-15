@@ -1599,6 +1599,7 @@
     "readPost": "Beitrag lesen",
     "backToBlog": "Alle Beiträge",
     "ctaJoin": "Kostenlos starten",
-    "ctaFind": "Profi finden"
+    "ctaFind": "Profi finden",
+    "empty": "Noch keine Beiträge — der erste ist unterwegs."
   }
 }

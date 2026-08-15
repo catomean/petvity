@@ -1599,6 +1599,7 @@
     "readPost": "Read the post",
     "backToBlog": "All posts",
     "ctaJoin": "Get started free",
-    "ctaFind": "Find a professional"
+    "ctaFind": "Find a professional",
+    "empty": "No posts yet — the first one is on its way."
   }
 }
