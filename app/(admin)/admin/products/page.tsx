@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Plus, Package, Pencil, X, Eye, EyeOff } from "lucide-react";
 import { PRODUCT_CATEGORY_OPTIONS, productCategoryLabel } from "@/lib/config/products";
+import { ProductImageField } from "@/components/shop/ProductImageField";
 import { formatPrice } from "@/lib/utils/format";
 import PageHeader from "@/components/portal/PageHeader";
 
@@ -211,12 +212,12 @@ export default function AdminProductsPage() {
             </div>
 
             <div>
-              <label className="form-label">
-                Image URL <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
-              </label>
-              <input className="form-input" type="url" value={form.imageUrl}
-                onChange={(e) => field("imageUrl", e.target.value)}
-                placeholder="https://…" />
+              <ProductImageField
+                value={form.imageUrl}
+                onChange={(url) => field("imageUrl", url)}
+                category={form.category}
+                name={form.name}
+              />
             </div>
 
             <div className="sm:col-span-2">
