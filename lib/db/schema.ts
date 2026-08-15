@@ -75,6 +75,11 @@ export const bookingStatusEnum = pgEnum("booking_status", [
   "completed",
 ]);
 
+export const blogPostStatusEnum = pgEnum("blog_post_status", [
+  "draft",
+  "published",
+]);
+
 export const petWellnessSignalEnum = pgEnum("pet_wellness_signal", [
   "healthy",
   "watch",
@@ -619,3 +624,27 @@ export const reviews = pgTable("reviews", {
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 },
 (t) => [index("reviews_professional_id_idx").on(t.professionalId)]);
+
+/* ─── Blog ───────────────────────────────────────────────────────────────── */
+
+export const blogPosts = pgTable("blog_posts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  /** Appears in the public URL (/[locale]/blog/<slug>), so once published it is
+   *  a permanent address — changing it breaks every inbound link. */
+  slug: varchar("slug", { length: 200 }).notNull().unique(),
+  title: varchar("title", { length: 200 }).notNull(),
+  /** Shown on the index and used as the meta description. */
+  excerpt: text("excerpt").notNull(),
+  /** The author's own text in the lightweight markup parsed by
+   *  lib/domain/blog-markup.ts. Stored as written rather than as parsed blocks:
+   *  the source is the single truth, so the renderer can improve without a
+   *  data migration. */
+  body: text("body").notNull(),
+  status: blogPostStatusEnum("status").notNull().default("draft"),
+  /** Set the first time a post is published, and the date readers see. Null
+   *  while it has never been published. */
+  publishedAt: timestamp("published_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+},
+(t) => [index("blog_posts_status_published_at_idx").on(t.status, t.publishedAt)]);

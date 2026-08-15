@@ -163,6 +163,8 @@ app/
     admin/products/    → Full product CRUD + stock
     admin/orders/      → All orders with customer + items
     admin/adoptions/   → All listings with pet, owner, application counts
+    admin/blog/        → GET list (drafts included), POST create
+    admin/blog/[postId] → PATCH edit/publish/unpublish, DELETE
     admin/professionals/[userId] → PATCH verify/unverify
     cron/emails        → Process welcome email queue (Bearer CRON_SECRET)
     cron/health-alerts → Flag out-of-range metrics (Bearer CRON_SECRET)
@@ -240,7 +242,7 @@ lib/
 
 ## Database Schema
 
-**Enums:** `user_role` (pet_owner|veterinarian|pet_sitter|admin), `species` (dog|cat|horse|bird|rabbit|guinea_pig|hamster|reptile|fish|other), `sex`, `health_record_type`, `vaccination_status`, `medication_status`, `email_queue_status`, `order_status`, `product_category`, `booking_status`, `adoption_listing_status`, `adoption_application_status`
+**Enums:** `blog_post_status` (draft|published), `user_role` (pet_owner|veterinarian|pet_sitter|admin), `species` (dog|cat|horse|bird|rabbit|guinea_pig|hamster|reptile|fish|other), `sex`, `health_record_type`, `vaccination_status`, `medication_status`, `email_queue_status`, `order_status`, `product_category`, `booking_status`, `adoption_listing_status`, `adoption_application_status`
 
 **Tables:**
 | Table | Key columns | Notes |
@@ -265,6 +267,7 @@ lib/
 | `orders` | id, userId, totalCents, status, notes | |
 | `adoptionListings` | id, petId, ownerId (denorm), status, title, description, feeCents (null=free), location, requiresExperience, goodWithKids/Dogs/Cats | |
 | `adoptionApplications` | id, listingId, applicantId, status, message, experience, housingType | |
+| `blogPosts` | id, slug (unique), title, excerpt, body, status, publishedAt | body is authoring markup, parsed at render |
 
 **Numeric storage conventions (NEVER violate):**
 - Weight: integer grams (3500 = 3.5 kg). Display: ÷ 1000. `toDisplay()` / `toStorage()` in health-metrics.ts.
@@ -330,6 +333,9 @@ Algorithm:
 | Signal computation logic | `lib/domain/pet-signal.ts` | API route, cron |
 | Email templates | `lib/email/templates.ts` | API route (inline) |
 | Undeliverable recipient domains | `lib/config/email.ts` | Send call site |
+| Blog authoring markup rules | `lib/domain/blog-markup.ts` | Post page (inline parsing) |
+| Image upload limits + types | `lib/config/uploads.ts` | Upload route (inline consts) |
+| Product sort ids | `lib/config/products.ts` | Shop page |
 
 ---
 

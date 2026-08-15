@@ -1599,6 +1599,7 @@
     "readPost": "Yazıyı oku",
     "backToBlog": "Tüm yazılar",
     "ctaJoin": "Ücretsiz başla",
-    "ctaFind": "Profesyonel bul"
+    "ctaFind": "Profesyonel bul",
+    "empty": "Henüz yazı yok — ilki çok yakında."
   }
 }

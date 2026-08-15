@@ -1599,6 +1599,7 @@
     "readPost": "阅读文章",
     "backToBlog": "全部文章",
     "ctaJoin": "免费开始",
-    "ctaFind": "查找专业人士"
+    "ctaFind": "查找专业人士",
+    "empty": "还没有文章 — 第一篇即将发布。"
   }
 }
