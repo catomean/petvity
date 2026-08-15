@@ -985,7 +985,17 @@
     "dirEmptyDesc": "Dieses Verzeichnis wächst. Sind Sie Profi? Ihr Profil wäre heute live.",
     "dirJoinCta": "Als Profi beitreten",
     "dirProviderCtaTitle": "Sie kümmern sich um Tiere. Wir bringen Ihnen Kundschaft.",
-    "dirProviderCtaDesc": "Ein öffentlicher Auftritt, ein Kalender ohne Doppelbuchungen und Bewertungen aus echter Arbeit. Kostenlos."
+    "dirProviderCtaDesc": "Ein öffentlicher Auftritt, ein Kalender ohne Doppelbuchungen und Bewertungen aus echter Arbeit. Kostenlos.",
+    "shopSearchPlaceholder": "Produkte suchen",
+    "shopSortLabel": "Sortieren",
+    "shopSortNewest": "Neueste",
+    "shopSortPriceAsc": "Niedrigster Preis",
+    "shopSortPriceDesc": "Höchster Preis",
+    "shopSortName": "Name",
+    "shopResultCount": "{count, plural, one {# Ergebnis für „{query}“} other {# Ergebnisse für „{query}“}}",
+    "shopClearSearch": "Zurücksetzen",
+    "shopEmptySearch": "Nichts gefunden für „{query}“.",
+    "shopSeeEverything": "Alles ansehen"
   },
   "twin": {
     "thriving": "Florierend",

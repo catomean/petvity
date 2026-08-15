@@ -985,7 +985,17 @@
     "dirEmptyDesc": "디렉터리는 성장 중입니다. 전문가라면 오늘 바로 프로필을 공개할 수 있습니다.",
     "dirJoinCta": "전문가로 참여",
     "dirProviderCtaTitle": "당신은 반려동물을 돌봅니다. 우리는 고객을 데려옵니다.",
-    "dirProviderCtaDesc": "공개 스토어프런트, 중복 예약이 불가능한 캘린더, 실제 작업으로 쌓인 리뷰. 무료 가입."
+    "dirProviderCtaDesc": "공개 스토어프런트, 중복 예약이 불가능한 캘린더, 실제 작업으로 쌓인 리뷰. 무료 가입.",
+    "shopSearchPlaceholder": "상품 검색",
+    "shopSortLabel": "정렬",
+    "shopSortNewest": "최신순",
+    "shopSortPriceAsc": "낮은 가격순",
+    "shopSortPriceDesc": "높은 가격순",
+    "shopSortName": "이름순",
+    "shopResultCount": "'{query}' 검색 결과 {count}개",
+    "shopClearSearch": "지우기",
+    "shopEmptySearch": "'{query}'와(과) 일치하는 상품이 없습니다.",
+    "shopSeeEverything": "전체 보기"
   },
   "twin": {
     "thriving": "번성 중",

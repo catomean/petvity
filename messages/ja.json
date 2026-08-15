@@ -985,7 +985,17 @@
     "dirEmptyDesc": "このディレクトリは成長中です。プロの方なら、今日からプロフィールを公開できます。",
     "dirJoinCta": "プロとして参加",
     "dirProviderCtaTitle": "あなたはペットをケアする。私たちは顧客を届ける。",
-    "dirProviderCtaDesc": "公開ストアフロント、ダブルブッキングのないカレンダー、実際の仕事で得たレビュー。参加無料。"
+    "dirProviderCtaDesc": "公開ストアフロント、ダブルブッキングのないカレンダー、実際の仕事で得たレビュー。参加無料。",
+    "shopSearchPlaceholder": "商品を検索",
+    "shopSortLabel": "並び替え",
+    "shopSortNewest": "新着順",
+    "shopSortPriceAsc": "価格が安い順",
+    "shopSortPriceDesc": "価格が高い順",
+    "shopSortName": "名前順",
+    "shopResultCount": "「{query}」の検索結果 {count} 件",
+    "shopClearSearch": "クリア",
+    "shopEmptySearch": "「{query}」に一致する商品はありません。",
+    "shopSeeEverything": "すべて表示"
   },
   "twin": {
     "thriving": "絶好調",

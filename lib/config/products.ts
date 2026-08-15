@@ -23,3 +23,28 @@ export const PRODUCT_CATEGORY_OPTIONS = (
 export function productCategoryLabel(category: string): string {
   return PRODUCT_CATEGORY_CONFIG[category as ProductCategoryId]?.label ?? category;
 }
+
+/**
+ * SSOT for how a shopper can order the catalogue.
+ *
+ * The id is what appears in the URL (`?sort=price_asc`), so it is part of the
+ * page's public contract — shared links and search engines keep it. Add
+ * entries; do not rename them.
+ */
+export const PRODUCT_SORT_OPTIONS = [
+  { id: "newest", labelKey: "shopSortNewest" },
+  { id: "price_asc", labelKey: "shopSortPriceAsc" },
+  { id: "price_desc", labelKey: "shopSortPriceDesc" },
+  { id: "name", labelKey: "shopSortName" },
+] as const;
+
+export type ProductSortId = (typeof PRODUCT_SORT_OPTIONS)[number]["id"];
+
+export const DEFAULT_PRODUCT_SORT: ProductSortId = "newest";
+
+/** Narrow an untrusted `?sort=` value to a supported one. */
+export function toProductSort(value: string | undefined): ProductSortId {
+  return PRODUCT_SORT_OPTIONS.some((o) => o.id === value)
+    ? (value as ProductSortId)
+    : DEFAULT_PRODUCT_SORT;
+}

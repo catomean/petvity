@@ -985,7 +985,17 @@
     "dirEmptyDesc": "Cet annuaire grandit. Vous êtes professionnel ? Votre profil serait en ligne aujourd'hui.",
     "dirJoinCta": "Rejoindre comme professionnel",
     "dirProviderCtaTitle": "Vous prenez soin des animaux. Nous vous amenons des clients.",
-    "dirProviderCtaDesc": "Une vitrine publique, un calendrier sans double réservation, des avis gagnés par un vrai travail. Gratuit."
+    "dirProviderCtaDesc": "Une vitrine publique, un calendrier sans double réservation, des avis gagnés par un vrai travail. Gratuit.",
+    "shopSearchPlaceholder": "Rechercher des produits",
+    "shopSortLabel": "Trier",
+    "shopSortNewest": "Plus récents",
+    "shopSortPriceAsc": "Prix croissant",
+    "shopSortPriceDesc": "Prix décroissant",
+    "shopSortName": "Nom",
+    "shopResultCount": "{count, plural, one {# résultat pour « {query} »} other {# résultats pour « {query} »}}",
+    "shopClearSearch": "Effacer",
+    "shopEmptySearch": "Aucun résultat pour « {query} ».",
+    "shopSeeEverything": "Voir tout"
   },
   "twin": {
     "thriving": "Épanouissant",

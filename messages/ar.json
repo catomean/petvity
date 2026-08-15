@@ -985,7 +985,17 @@
     "dirEmptyDesc": "هذا الدليل ينمو. هل أنت محترف؟ سيكون ملفك منشورًا اليوم.",
     "dirJoinCta": "انضم كمحترف",
     "dirProviderCtaTitle": "أنت تعتني بالحيوانات، ونحن نجلب لك العملاء.",
-    "dirProviderCtaDesc": "واجهة عامة، وتقويم لا يقبل الحجز المزدوج، وتقييمات مكتسبة من عمل حقيقي. الانضمام مجاني."
+    "dirProviderCtaDesc": "واجهة عامة، وتقويم لا يقبل الحجز المزدوج، وتقييمات مكتسبة من عمل حقيقي. الانضمام مجاني.",
+    "shopSearchPlaceholder": "ابحث عن المنتجات",
+    "shopSortLabel": "ترتيب",
+    "shopSortNewest": "الأحدث",
+    "shopSortPriceAsc": "الأقل سعرًا",
+    "shopSortPriceDesc": "الأعلى سعرًا",
+    "shopSortName": "الاسم",
+    "shopResultCount": "{count, plural, zero {لا نتائج لـ ”{query}“} one {نتيجة واحدة لـ ”{query}“} two {نتيجتان لـ ”{query}“} few {# نتائج لـ ”{query}“} many {# نتيجة لـ ”{query}“} other {# نتيجة لـ ”{query}“}}",
+    "shopClearSearch": "مسح",
+    "shopEmptySearch": "لا توجد نتائج لـ ”{query}“.",
+    "shopSeeEverything": "عرض الكل"
   },
   "twin": {
     "thriving": "يزدهر",

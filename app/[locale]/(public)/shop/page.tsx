@@ -1,11 +1,15 @@
 import { getInstance } from "@/lib/db";
 import { products, users } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, or, ilike, asc, desc, type SQL } from "drizzle-orm";
 import Link from "next/link";
 import { APP } from "@/lib/config/app";
-import { PRODUCT_CATEGORY_CONFIG } from "@/lib/config/products";
+import {
+  PRODUCT_CATEGORY_CONFIG,
+  PRODUCT_SORT_OPTIONS,
+  toProductSort,
+} from "@/lib/config/products";
 import type { ProductCategoryId } from "@/lib/config/products";
-import { ShoppingBag, PawPrint, Package } from "lucide-react";
+import { ShoppingBag, PawPrint, Package, Search } from "lucide-react";
 import { ProductArt } from "@/components/shop/ProductArt";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
@@ -22,7 +26,15 @@ const CATEGORIES = Object.entries(PRODUCT_CATEGORY_CONFIG) as [
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ category?: string; q?: string; sort?: string }>;
+};
+
+/** Order clause per sort id. Kept beside the config it switches on. */
+const ORDER_BY: Record<string, SQL> = {
+  newest: desc(products.createdAt),
+  price_asc: asc(products.priceCents),
+  price_desc: desc(products.priceCents),
+  name: asc(products.name),
 };
 
 export async function generateMetadata({ params }: Pick<Props, "params">): Promise<Metadata> {
@@ -35,13 +47,41 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
 
 export default async function PublicShopPage({ params, searchParams }: Props) {
   const { locale } = await params;
-  const { category } = await searchParams;
+  const { category, q, sort } = await searchParams;
   const t = await getTranslations({ locale, namespace: "public" });
 
   const activeCategory =
     category && Object.keys(PRODUCT_CATEGORY_CONFIG).includes(category)
       ? (category as ProductCategoryId)
       : null;
+
+  const query = (q ?? "").trim().slice(0, 100);
+  const activeSort = toProductSort(sort);
+
+  /** Preserve the other filters when changing one — a shopper who searched and
+   *  then picks a category should not silently lose the search. */
+  const hrefWith = (next: { category?: string | null; q?: string; sort?: string }) => {
+    const sp = new URLSearchParams();
+    const cat = next.category === undefined ? activeCategory : next.category;
+    const qq = next.q === undefined ? query : next.q;
+    const st = next.sort === undefined ? activeSort : next.sort;
+    if (cat) sp.set("category", cat);
+    if (qq) sp.set("q", qq);
+    if (st !== "newest") sp.set("sort", st);
+    const s = sp.toString();
+    return `/${locale}/shop${s ? `?${s}` : ""}`;
+  };
+
+  const conditions = [eq(products.isActive, true)];
+  if (activeCategory) conditions.push(eq(products.category, activeCategory));
+  if (query) {
+    // Name or description — a shopper searching "harness" should find one
+    // whose name is a brand they don't know.
+    const like = `%${query}%`;
+    conditions.push(
+      or(ilike(products.name, like), ilike(products.description, like)) as SQL,
+    );
+  }
 
   const db = getInstance();
 
@@ -58,12 +98,8 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
     })
     .from(products)
     .leftJoin(users, eq(users.id, products.sellerId))
-    .where(
-      activeCategory
-        ? and(eq(products.isActive, true), eq(products.category, activeCategory))
-        : eq(products.isActive, true),
-    )
-    .orderBy(products.name)
+    .where(and(...conditions))
+    .orderBy(ORDER_BY[activeSort])
     .limit(200);
 
   return (
@@ -113,7 +149,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
       <div className="bg-white border-b border-[var(--border)] sticky top-14 z-10">
         <div className="max-w-5xl mx-auto px-6 py-3 flex gap-2 overflow-x-auto">
           <Link
-            href={`/${locale}/shop`}
+            href={hrefWith({ category: null })}
             className={`flex-shrink-0 text-sm font-medium px-3 py-1.5 rounded-full border transition-colors no-underline ${
               !activeCategory
                 ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
@@ -125,7 +161,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
           {CATEGORIES.map(([id, cfg]) => (
             <Link
               key={id}
-              href={`/${locale}/shop?category=${id}`}
+              href={hrefWith({ category: id })}
               className={`flex-shrink-0 flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full border transition-colors no-underline ${
                 activeCategory === id
                   ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
@@ -139,6 +175,52 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
         </div>
       </div>
 
+      {/* Search + sort. A plain GET form, so results are a shareable URL and
+          work with JavaScript disabled — the same reason sort is links. */}
+      <div className="max-w-5xl mx-auto px-6 pt-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <form action={`/${locale}/shop`} method="get" className="relative flex-1">
+            {activeCategory && <input type="hidden" name="category" value={activeCategory} />}
+            {activeSort !== "newest" && <input type="hidden" name="sort" value={activeSort} />}
+            <Search className="w-4 h-4 text-[var(--muted)] absolute start-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="search"
+              name="q"
+              defaultValue={query}
+              placeholder={t("shopSearchPlaceholder")}
+              aria-label={t("shopSearchPlaceholder")}
+              className="form-input form-input-icon"
+            />
+          </form>
+
+          <div className="flex items-center gap-2 overflow-x-auto">
+            <span className="text-xs text-[var(--muted)] flex-shrink-0">{t("shopSortLabel")}</span>
+            {PRODUCT_SORT_OPTIONS.map((o) => (
+              <Link
+                key={o.id}
+                href={hrefWith({ sort: o.id })}
+                className={`flex-shrink-0 text-sm px-2.5 py-1 rounded-lg no-underline transition-colors ${
+                  activeSort === o.id
+                    ? "bg-[var(--teal-light)] text-[var(--teal)] font-medium"
+                    : "text-[var(--ink2)] hover:bg-[var(--light)]"
+                }`}
+              >
+                {t(o.labelKey as Parameters<typeof t>[0])}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {query && (
+          <p className="text-sm text-[var(--muted)] mt-3">
+            {t("shopResultCount", { count: rows.length, query })}{" "}
+            <Link href={hrefWith({ q: "" })} className="text-[var(--teal)] no-underline">
+              {t("shopClearSearch")}
+            </Link>
+          </p>
+        )}
+      </div>
+
       {/* Product grid */}
       <div className="max-w-5xl mx-auto px-6 py-10">
         {rows.length === 0 ? (
@@ -146,13 +228,23 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
             <p className="text-2xl mb-3">🛍️</p>
             <p className="font-medium text-[var(--ink)] mb-1">{t("shopEmptyTitle")}</p>
             <p className="text-sm text-[var(--muted)] mb-5">
-              {activeCategory
-                ? t("shopEmptyCategory", { category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]).toLowerCase() })
-                : t("shopEmptyAny")}
+              {query
+                ? t("shopEmptySearch", { query })
+                : activeCategory
+                  ? t("shopEmptyCategory", { category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]).toLowerCase() })
+                  : t("shopEmptyAny")}
             </p>
-            <Link href="/register" className="btn-editorial">
-              {t("shopEmptyAction")}
-            </Link>
+            {/* A search that found nothing needs a way back to everything,
+                not a sign-up prompt. */}
+            {query ? (
+              <Link href={hrefWith({ q: "", category: null })} className="btn-editorial">
+                {t("shopSeeEverything")}
+              </Link>
+            ) : (
+              <Link href="/register" className="btn-editorial">
+                {t("shopEmptyAction")}
+              </Link>
+            )}
           </div>
         ) : (
           <>
