@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { APP } from "@/lib/config/app";
+import { isUndeliverableRecipient } from "@/lib/config/email";
 
 let _resend: Resend | undefined;
 
@@ -22,7 +23,8 @@ export type SendEmailOptions = {
 /**
  * Send a transactional email via Resend.
  * Returns { sent: true } on success, { sent: false } when RESEND_API_KEY is
- * not configured (dev/staging) — never throws for missing key.
+ * not configured (dev/staging) or the recipient cannot receive mail — never
+ * throws for either.
  * Throws for Resend API errors so callers can decide to retry or log.
  */
 export async function sendEmail({
@@ -30,6 +32,15 @@ export async function sendEmail({
   subject,
   html,
 }: SendEmailOptions): Promise<{ sent: boolean }> {
+  // Test fixtures are real users in a real database, so they get real mail —
+  // at domains with no mailbox. Every such send is a hard bounce charged
+  // against the reputation that carries real owners' password resets.
+  // See lib/config/email.ts.
+  if (isUndeliverableRecipient(to)) {
+    process.stderr.write(`[email] undeliverable recipient — not sending "${subject}"\n`);
+    return { sent: false };
+  }
+
   const resend = getResend();
   if (!resend) {
     if (process.env.NODE_ENV !== "production") {

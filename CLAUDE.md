@@ -70,20 +70,21 @@ Production env lives in `.env.selfhost.local` on the box (sourced by the systemd
 | `NEXT_PUBLIC_APP_URL` | https://petvity.orangecat.ch |
 | `AUTH_URL` | https://petvity.orangecat.ch — **required**, see gotcha 9 |
 | `AUTH_TRUST_HOST` | true |
+| `RESEND_API_KEY` | Set — verified 2026-08-15, sending domain `fleetcrown.orangecat.ch` |
+| `RESEND_FROM` | `Petvity <noreply@fleetcrown.orangecat.ch>` |
+| `ADMIN_EMAILS` | Set |
 
 ### NOT YET configured (needed for full functionality)
 | Variable | Where to get it | Impact if missing |
 |----------|----------------|-------------------|
-| `GOOGLE_CLIENT_ID` | Google Cloud Console | Google OAuth login disabled |
+| `GOOGLE_CLIENT_ID` | Google Cloud Console | Google OAuth login disabled (no button is rendered, so no broken path is exposed) |
 | `GOOGLE_CLIENT_SECRET` | Google Cloud Console | Google OAuth login disabled |
-| `STRIPE_SECRET_KEY` | Stripe dashboard → API keys | Shop checkout records orders without payment (pay-off-platform mode) |
+| `STRIPE_SECRET_KEY` | Stripe dashboard → API keys | Shop checkout records orders without payment (pay-off-platform mode; the UI says "Place order", never "Pay") |
 | `STRIPE_WEBHOOK_SECRET` | Stripe dashboard → Webhooks (endpoint `/api/payments/webhook`, event `checkout.session.completed`) | Orders never flip to Paid even if Stripe is keyed |
-| `RESEND_API_KEY` | resend.com dashboard | Welcome/alert emails silently dropped |
-| `RESEND_FROM` | Resend verified domain | Emails use fallback |
-| `ADMIN_EMAILS` | Set to owner's email | No admin access |
 
-Set missing vars: edit `.env.selfhost.local` on the box, then redeploy with
-`scripts/hetzner/deploy.sh petvity --env` to push the updated env file.
+Production env lives in `/opt/petvity/shared/.env` (`/opt/petvity/app/.env` is a
+symlink to it, so edits survive deploys). Edit it on the box and restart with
+`systemctl restart petvity-app`.
 
 ---
 
@@ -328,6 +329,7 @@ Algorithm:
 | Auth guards | `lib/auth/guards.ts` | Page component |
 | Signal computation logic | `lib/domain/pet-signal.ts` | API route, cron |
 | Email templates | `lib/email/templates.ts` | API route (inline) |
+| Undeliverable recipient domains | `lib/config/email.ts` | Send call site |
 
 ---
 
@@ -336,19 +338,24 @@ Algorithm:
 All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 
 > **Scheduling:** the app is self-hosted on the Hetzner box (behind Caddy), so
-> there is no Vercel Cron. Each schedule below must be driven by a host cron /
-> systemd timer that curls the route with the `CRON_SECRET` bearer token. The
-> table below is the source of truth for the schedules. Until the timers are
-> wired, the cron routes only run when invoked manually. (Tracked — see PR notes.)
+> there is no Vercel Cron. Every route below **is wired** to a systemd timer on
+> the box (verified 2026-08-15, all returning HTTP 200) — the shared runner is
+> `/opt/_appcron/run.sh <app> <port> <path> <method>`, which reads `CRON_SECRET`
+> from the app's `.env` and curls with `-f` so a non-2xx fails the unit.
+>
+> Inspect: `systemctl list-timers --all | grep petvity`
+> Logs: `sudo journalctl -u appcron-petvity-<name> --since -24h`
 
-| Route | Schedule | Purpose |
-|-------|----------|---------|
-| `/api/cron/emails` | `0 7 * * *` | Process welcome email queue |
-| `/api/cron/health-alerts` | `0 8 * * *` | Flag out-of-range metrics, email owners |
-| `/api/cron/vaccination-reminders` | `0 9 * * *` | Remind about vaccines due in 30 days |
-| `/api/cron/medication-reminders` | `0 10 * * *` | Remind about medication courses ending tomorrow |
-| `/api/cron/booking-reminders` | `0 11 * * *` | Remind about bookings starting tomorrow |
-| `/api/cron/weekly-digest` | `0 9 * * 0` | Weekly wellness digest for all opted-in owners |
+| Route | Schedule | Timer unit | Purpose |
+|-------|----------|-----------|---------|
+| `/api/cron/emails` | `0 7 * * *` | `appcron-petvity-emails` | Process welcome email queue |
+| `/api/cron/health-alerts` | `0 8 * * *` | `appcron-petvity-health-alerts` | Flag out-of-range metrics, email owners |
+| `/api/cron/vaccination-reminders` | `0 9 * * *` | `appcron-petvity-vaccination-reminders` | Remind about vaccines due in 30 days |
+| `/api/cron/medication-reminders` | `0 10 * * *` | `appcron-petvity-medication-reminders` | Remind about medication courses ending tomorrow |
+| `/api/cron/booking-reminders` | `0 11 * * *` | `appcron-petvity-booking-reminders` | Remind about bookings starting tomorrow |
+| `/api/cron/weekly-digest` | `0 9 * * 0` | `appcron-petvity-weekly-digest` | Weekly wellness digest for all opted-in owners |
+| `/api/cron/reset-demo` | every 2h | `petvity-cron-reset-demo` | Wipe + reseed the shared demo account (see gotcha 10) |
+| `/api/cron/resident-checkin` | `30 6 * * *` | `petvity-cron-resident-checkin` | Daily metrics for the seeded demo residents |
 
 ---
 
@@ -375,9 +382,8 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - Sidebar nav + mobile bottom nav + admin panel
 
 ### Env vars still needed (user action — no code change required)
-- [ ] `ADMIN_EMAILS` → owner's email → enables admin panel access
 - [ ] `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` → Google Cloud Console → enables Google OAuth
-- [ ] `RESEND_API_KEY` + `RESEND_FROM` → resend.com → enables all transactional email
+      (nothing is broken without them — the login page renders no Google button)
 
 ### Phase 2 — Complete ✓
 - Vet profiles (create/edit at `/portal/professional-profile`, public at `/[locale]/pros/[userId]`)
@@ -425,6 +431,17 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 
 10. **The demo account's id is pinned, deliberately.** `/api/cron/reset-demo` deletes the user row so the FK graph cascades the wipe; letting the id regenerate re-minted the identity every 2 hours while 30-day sessions still pointed at the old one, so the demo silently read as an empty product. See `DEMO_ACCOUNT.id` in `lib/config/demo.ts`.
 
+11. **Test accounts are real users, so they get real email — suppress it.** The
+    e2e walkthrough and the smoke timer create ~20 accounts per run at
+    `petvity.orangecat.ch`, which serves HTTP and has no MX. Every welcome /
+    booking / order / reset mail to them hard-bounced: 79 of the last 100 sends
+    (80%) on 2026-08-15, against an SES suspension threshold near 5%, on an API
+    key shared with the rest of the fleet — and a real tester mailbox had
+    already been pushed onto the suppression list. `sendEmail()` now drops
+    recipients at structurally undeliverable domains; the list is SSOT in
+    `lib/config/email.ts`. **Any new fixture must use one of those domains or an
+    RFC 2606 TLD (`.invalid`, `.test`), never a live mailbox.**
+
 ---
 
 ## Red Flags
@@ -440,3 +457,4 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - `computePetSignal` changed without updating tests
 - Importing `lib/auth/index.ts` in middleware → use `lib/auth/edge.ts`
 - Any `/api/auth/*` route behind auth guard → NextAuth breaks entirely
+- A test fixture using a live mailbox → bounces burn the shared sending reputation; use a domain from `lib/config/email.ts`
