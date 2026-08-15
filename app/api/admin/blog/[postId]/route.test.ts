@@ -105,7 +105,13 @@ describe("PATCH /api/admin/blog/[postId]", () => {
 
   it("reports a taken slug as a conflict, not a server error", async () => {
     db._queryFindFirst.mockResolvedValueOnce({ id: POST_ID, status: "draft", publishedAt: null });
-    db._updateReturning.mockRejectedValueOnce(Object.assign(new Error("dup"), { code: "23505" }));
+    // Wrapped, as Drizzle actually throws it — a bare { code } passed this test
+    // while production still answered 500.
+    db._updateReturning.mockRejectedValueOnce(
+      Object.assign(new Error("Failed query"), {
+        cause: Object.assign(new Error("duplicate key"), { code: "23505" }),
+      }),
+    );
     const res = await PATCH(req({ slug: "taken" }), CONTEXT);
     expect(res.status).toBe(409);
   });
