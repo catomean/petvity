@@ -6,6 +6,7 @@ import {
   IMAGE_ALLOWED_TYPES,
   IMAGE_MAX_BYTES,
   IMAGE_MAX_MB,
+  imageExtension,
 } from "@/lib/config/uploads";
 
 /**
@@ -49,8 +50,12 @@ export async function POST(req: NextRequest) {
 
   let blob;
   try {
-    // Keyed by uploader so an abandoned upload is traceable to an account.
-    blob = await putLocal(`products/${session.user.id}/${randomUUID()}`, file);
+    // Keyed by uploader so an abandoned upload is traceable to an account. The
+    // extension is what tells Caddy's file_server the Content-Type to serve.
+    blob = await putLocal(
+      `products/${session.user.id}/${randomUUID()}${imageExtension(file.type)}`,
+      file,
+    );
   } catch (err) {
     console.error("[product-image] upload failed", err);
     return NextResponse.json(
