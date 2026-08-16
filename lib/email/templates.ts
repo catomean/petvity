@@ -64,7 +64,9 @@ const base = (content: string, locale?: string | null, unsubscribeUrl?: string) 
 
 /** Welcome-series payload — unsubscribeUrl is injected at send time
  *  (cron looks up user; immediate POST /api/account builds it from user.id). */
-type WelcomePayload = { name: string; unsubscribeUrl?: string };
+/** What the welcome series is queued with. Exported so the cron that reads the
+ *  jsonb column can narrow to it instead of casting to a bare `object`. */
+export type WelcomePayload = { name: string; unsubscribeUrl?: string };
 
 export function ownerWelcome(data: WelcomePayload, locale?: string | null) {
   const s = getEmailStrings(locale).ownerWelcome;
@@ -476,8 +478,17 @@ export type TemplateKey =
   | "owner_health_tracking"
   | "owner_week_one";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const TEMPLATE_MAP: Record<TemplateKey, (data: any, locale?: string | null) => { subject: string; html: string }> = {
+/**
+ * Every queued template takes the same payload, so this map does not need to
+ * erase its type. It used to be `data: any`, which meant the cron that
+ * dispatches these could hand a template the wrong shape and the compiler would
+ * agree — on emails that go to real users, built from a jsonb column that
+ * nothing else validates.
+ */
+export const TEMPLATE_MAP: Record<
+  TemplateKey,
+  (data: WelcomePayload, locale?: string | null) => { subject: string; html: string }
+> = {
   owner_welcome: ownerWelcome,
   owner_add_pet: ownerAddPet,
   owner_health_tracking: ownerHealthTracking,

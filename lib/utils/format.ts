@@ -1,4 +1,5 @@
 import { APP_CURRENCY } from "@/lib/config/app";
+import { money, format } from "@/packages/commercekit/src/money";
 
 /**
  * Format a YYYY-MM-DD date string for display.
@@ -63,28 +64,33 @@ export function formatPetAge(birthDate: string | null, t: AgeT): string {
 }
 
 /**
- * Format an integer cent amount as a locale-aware price string.
+ * Format an integer minor-unit amount as a locale-aware price string.
  * Currency determined by APP_CURRENCY (NEXT_PUBLIC_APP_CURRENCY env, default "USD").
- * e.g. 2999, "en" → "$29.99" · 2999, "de" → "29,99 $"
+ * e.g. 2999, "en" → "$29.99" · 2999, "de" → "29,99 $" · 2999 JPY → "¥2,999"
+ *
+ * Delegates to commercekit rather than dividing by 100, because dividing by 100
+ * assumes every currency has two decimals. It does not: JPY, KRW, VND and ISK
+ * have none, so `NEXT_PUBLIC_APP_CURRENCY=JPY` rendered a ¥2,999 product as
+ * ¥30 — a hundredfold price error, silently. KWD has three and errs the other
+ * way. The exponent belongs to the currency, which is what `money()` knows.
  */
 export function formatPrice(cents: number, locale?: string): string {
   // Default to "en", never the runtime's own locale: the server box and the
   // visitor's browser disagree, which would hydrate "8,90 $" into "$8.90".
-  return new Intl.NumberFormat(locale ?? "en", { style: "currency", currency: APP_CURRENCY }).format(cents / 100);
+  return format(money(cents, APP_CURRENCY), locale ?? "en");
 }
 
 /**
- * Format an adoption fee. Returns "Free" for null/0, whole dollars otherwise.
+ * Format an adoption fee. Returns "Free" for null/0, whole units otherwise.
  * Currency determined by APP_CURRENCY (NEXT_PUBLIC_APP_CURRENCY env, default "USD").
  * e.g. null → "Free"; 2500, "en" → "$25"
  */
 export function formatAdoptionFee(feeCents: number | null, locale?: string): string {
   if (feeCents === null || feeCents === 0) return "Free";
-  return new Intl.NumberFormat(locale ?? "en", {
-    style: "currency",
-    currency: APP_CURRENCY,
+  // A fee is shown without minor units — it is a headline number, not an invoice.
+  return format(money(feeCents, APP_CURRENCY), locale ?? "en", {
     maximumFractionDigits: 0,
-  }).format(Math.round(feeCents / 100));
+  });
 }
 
 /**
