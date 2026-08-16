@@ -76,3 +76,40 @@ describe("i18n literal keys resolve in messages/en.json", () => {
     expect(missing, `Missing message keys:\n${missing.join("\n")}`).toEqual([]);
   });
 });
+
+/**
+ * Every locale carries every key.
+ *
+ * The test above only proves en.json is complete. A key added to en and
+ * forgotten in de renders the raw "public.cartAdd" to a German shopper — the
+ * same production-visible failure, one file over. The nine files were in exact
+ * parity when this was written; this keeps them there.
+ */
+describe("all locales mirror en.json", () => {
+  function flatten(obj: unknown, prefix = ""): string[] {
+    if (typeof obj !== "object" || obj === null) return [prefix];
+    return Object.entries(obj).flatMap(([k, v]) => flatten(v, prefix ? `${prefix}.${k}` : k));
+  }
+
+  const enKeys = flatten(messages).sort();
+  const locales = readdirSync(join(ROOT, "messages"))
+    .filter((f) => f.endsWith(".json") && f !== "en.json")
+    .map((f) => f.replace(/\.json$/, ""));
+
+  it("finds locale files to check", () => {
+    expect(locales.length).toBeGreaterThan(0);
+  });
+
+  for (const locale of locales) {
+    it(`${locale} has exactly the keys en has`, () => {
+      const other = JSON.parse(
+        readFileSync(join(ROOT, "messages", `${locale}.json`), "utf8"),
+      );
+      const otherKeys = flatten(other).sort();
+      const missingHere = enKeys.filter((k) => !otherKeys.includes(k));
+      const extraHere = otherKeys.filter((k) => !enKeys.includes(k));
+      expect(missingHere, `${locale} is missing keys present in en`).toEqual([]);
+      expect(extraHere, `${locale} has keys en does not`).toEqual([]);
+    });
+  }
+});

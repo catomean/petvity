@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and, sql, isNotNull } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
-import { orders, orderItems, products, orderStatusEnum, users } from "@/lib/db/schema";
-import { sendEmail } from "@/lib/email";
-import { orderStatusUpdate } from "@/lib/email/templates";
-import { formatPrice } from "@/lib/utils/format";
+import { orders, orderStatusEnum } from "@/lib/db/schema";
+import { setOrderStatus } from "@/lib/domain/orders";
 
 const patchSchema = z.object({
   status: z.enum(orderStatusEnum.enumValues),
@@ -14,7 +12,9 @@ const patchSchema = z.object({
 
 type Params = { params: Promise<{ orderId: string }> };
 
-/** PATCH /api/orders/[orderId] — update order status (admin confirms/ships/delivers; user cancels pending) */
+/** PATCH /api/orders/[orderId] — update order status (admin confirms/ships/delivers; user cancels pending).
+ *  This route decides WHO may make the transition; lib/domain/orders.ts decides
+ *  what the transition does. */
 export async function PATCH(req: NextRequest, { params }: Params) {
   const { session, error } = await requireSession();
   if (error) return error;
@@ -34,6 +34,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   const db = getInstance();
 
+  // A guest order's null userId can never equal a session id, so this filter
+  // also stops a signed-in user from touching an order they merely know of.
   const [order] = await db
     .select()
     .from(orders)
@@ -62,54 +64,6 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     );
   }
 
-  const [updated] = await db
-    .update(orders)
-    .set({ status, updatedAt: new Date() })
-    .where(eq(orders.id, orderId))
-    .returning();
-
-  // Cancellation releases the stock the order reserved at creation —
-  // otherwise every cancelled order permanently destroys inventory.
-  if (status === "cancelled" && order.status !== "cancelled") {
-    const cancelledItems = await db
-      .select({ productId: orderItems.productId, quantity: orderItems.quantity })
-      .from(orderItems)
-      .where(eq(orderItems.orderId, orderId));
-    await Promise.all(
-      cancelledItems
-        .filter((i) => i.productId !== null)
-        .map((i) =>
-          db
-            .update(products)
-            .set({ stock: sql`${products.stock} + ${i.quantity}`, updatedAt: new Date() })
-            .where(and(eq(products.id, i.productId!), isNotNull(products.stock))),
-        ),
-    );
-  }
-
-  // Send status update email for meaningful transitions (fire-and-forget)
-  const EMAIL_STATUSES = ["confirmed", "shipped", "delivered", "cancelled"] as const;
-  type EmailStatus = typeof EMAIL_STATUSES[number];
-  if ((EMAIL_STATUSES as readonly string[]).includes(status)) {
-    try {
-      const [customer] = await db
-        .select({ name: users.name, email: users.email, locale: users.locale })
-        .from(users)
-        .where(eq(users.id, order.userId))
-        .limit(1);
-
-      if (customer?.email) {
-        const tpl = orderStatusUpdate({
-          customerName: customer.name ?? customer.email,
-          status: status as EmailStatus,
-          orderTotal: formatPrice(order.totalCents),
-        }, customer.locale);
-        await sendEmail({ to: customer.email, ...tpl });
-      }
-    } catch {
-      // Never fail the order response due to email error
-    }
-  }
-
+  const updated = await setOrderStatus(order, status);
   return NextResponse.json({ success: true, data: updated });
 }

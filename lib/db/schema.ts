@@ -11,7 +11,9 @@ import {
   jsonb,
   index,
   uniqueIndex,
+  check,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
@@ -468,9 +470,16 @@ export const products = pgTable("products", {
 
 export const orders = pgTable("orders", {
   id: uuid("id").primaryKey().defaultRandom(),
+  /** Null for a guest order. Exactly one of userId / guestEmail is set — the
+   *  CHECK constraint below is the enforcement, so no code path can create an
+   *  order nobody can be identified by. */
   userId: uuid("user_id")
-    .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  /** The buyer's email when they checked out without an account. */
+  guestEmail: varchar("guest_email", { length: 255 }),
+  /** Unguessable receipt key. A guest has no session, so this is the only way
+   *  they can reach their own order — it is emailed to them and never listed. */
+  publicToken: uuid("public_token").notNull().defaultRandom(),
   status: orderStatusEnum("status").notNull().default("pending"),
   /** Snapshot of total at order time (sum of line items) */
   totalCents: integer("total_cents").notNull(),
@@ -491,7 +500,17 @@ export const orders = pgTable("orders", {
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 },
-(t) => [index("orders_user_id_idx").on(t.userId)]);
+(t) => [
+  index("orders_user_id_idx").on(t.userId),
+  uniqueIndex("orders_public_token_idx").on(t.publicToken),
+  // An order belongs to an account or to an email address, never both and never
+  // neither. Enforced here because it is the one invariant that, if broken,
+  // produces an order with no reachable buyer — unfixable after the fact.
+  check(
+    "orders_buyer_identity",
+    sql`(${t.userId} IS NOT NULL) <> (${t.guestEmail} IS NOT NULL)`,
+  ),
+]);
 
 export const orderItems = pgTable("order_items", {
   id: uuid("id").primaryKey().defaultRandom(),

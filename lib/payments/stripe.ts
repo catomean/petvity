@@ -41,8 +41,12 @@ export async function createOrderCheckoutSession(opts: {
   orderId: string;
   customerEmail: string | null;
   items: CheckoutLineItem[];
+  /** Where Stripe sends the buyer back. A guest has no portal, so the caller
+   *  decides: the receipt page for them, /portal/orders for an account. */
+  returnPath?: string;
 }): Promise<{ sessionId: string; url: string }> {
   const stripe = getStripe();
+  const returnPath = opts.returnPath ?? "/portal/orders";
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     customer_email: opts.customerEmail ?? undefined,
@@ -55,8 +59,8 @@ export async function createOrderCheckoutSession(opts: {
       },
     })),
     metadata: { orderId: opts.orderId },
-    success_url: `${APP_URL}/portal/orders?payment=success`,
-    cancel_url: `${APP_URL}/portal/orders?payment=cancelled`,
+    success_url: `${APP_URL}${returnPath}?payment=success`,
+    cancel_url: `${APP_URL}${returnPath}?payment=cancelled`,
   });
   if (!session.url) throw new Error("Stripe did not return a checkout URL");
   return { sessionId: session.id, url: session.url };

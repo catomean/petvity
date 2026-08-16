@@ -48,3 +48,13 @@ export function toProductSort(value: string | undefined): ProductSortId {
     ? (value as ProductSortId)
     : DEFAULT_PRODUCT_SORT;
 }
+
+/**
+ * Most units of one product a single order may contain.
+ *
+ * SSOT because it is enforced in three places that must agree: the cart's `+`
+ * button stops here, the checkout request is validated against it, and the
+ * order schema rejects anything above it. If they disagreed, a shopper could
+ * build a cart the server then refuses at the last step.
+ */
+export const MAX_ITEM_QUANTITY = 99;

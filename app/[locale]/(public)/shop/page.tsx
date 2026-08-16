@@ -9,8 +9,10 @@ import {
   toProductSort,
 } from "@/lib/config/products";
 import type { ProductCategoryId } from "@/lib/config/products";
-import { ShoppingBag, PawPrint, Package, Search } from "lucide-react";
+import { ShoppingBag, Package, Search } from "lucide-react";
 import { ProductArt } from "@/components/shop/ProductArt";
+import ShopNav from "@/components/shop/ShopNav";
+import AddToCartButton from "@/components/shop/AddToCartButton";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -104,27 +106,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
-      {/* Nav */}
-      <nav className="bg-[var(--card)] border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
-        <Link
-          href={`/${locale}`}
-          className="font-bold text-[var(--warm-ink)] text-lg no-underline flex items-center gap-2"
-        >
-          <PawPrint className="w-5 h-5" />
-          {APP.name}
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-sm text-[var(--ink2)] hover:text-[var(--accent)] no-underline transition-colors"
-          >
-            {t("signIn")}
-          </Link>
-          <Link href="/register" className="btn-editorial-sm">
-            {t("joinFree")}
-          </Link>
-        </div>
-      </nav>
+      <ShopNav locale={locale} />
 
       {/* Hero */}
       <div className="bg-[var(--light)] border-b border-[var(--border)]">
@@ -135,13 +117,11 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
             {t("shopHeroTitle")}
           </h1>
-          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-6">
+          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-3">
             {t("shopHeroDesc")}
           </p>
-          <Link href="/register" className="btn-editorial inline-flex items-center gap-2">
-            <ShoppingBag className="w-4 h-4" />
-            {t("shopHeroButton")}
-          </Link>
+          {/* No sign-up CTA: the products below are the call to action now. */}
+          <p className="text-sm text-[var(--teal)] font-medium">{t("shopNoAccountNeeded")}</p>
         </div>
       </div>
 
@@ -257,48 +237,56 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                 const catCfg =
                   PRODUCT_CATEGORY_CONFIG[product.category as ProductCategoryId];
                 return (
-                  <Link
+                  /* A card, not a link: the buy button lives inside it, and a
+                     button nested in an anchor is neither valid nor clickable
+                     the way a shopper expects. */
+                  <div
                     key={product.id}
-                    href={`/${locale}/shop/${product.id}`}
-                    className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden hover:shadow-md transition-shadow group flex flex-col no-underline"
+                    className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden hover:shadow-md transition-shadow group flex flex-col"
                   >
-                    {/* Image */}
-                    <div className="aspect-square bg-[var(--off)] flex items-center justify-center overflow-hidden">
-                      <ProductArt
-                        imageUrl={product.imageUrl}
-                        alt={product.name}
-                        category={product.category}
-                        className="w-full h-full object-cover"
+                    <Link
+                      href={`/${locale}/shop/${product.id}`}
+                      className="no-underline flex flex-col flex-1"
+                    >
+                      {/* Image */}
+                      <div className="aspect-square bg-[var(--off)] flex items-center justify-center overflow-hidden">
+                        <ProductArt
+                          imageUrl={product.imageUrl}
+                          alt={product.name}
+                          category={product.category}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* Info */}
+                      <div className="p-4 pb-0 flex flex-col flex-1">
+                        <p className="font-semibold text-[var(--ink)] leading-snug group-hover:text-[var(--accent)] transition-colors">
+                          {product.name}
+                        </p>
+                        {product.description && (
+                          <p className="text-xs text-[var(--muted)] mt-1 line-clamp-2">
+                            {product.description}
+                          </p>
+                        )}
+                        <p className="text-xs text-[var(--muted)] mt-1.5">
+                          {catCfg ? t(`cat_${product.category}` as Parameters<typeof t>[0]) : product.category}
+                          {product.sellerName ? ` · ${t("shopSoldBy", { seller: product.sellerName })}` : ""}
+                        </p>
+                      </div>
+                    </Link>
+
+                    <div className="p-4 pt-3 mt-auto flex items-center justify-between gap-2">
+                      <span className="text-lg font-bold text-[var(--ink)]">
+                        {formatPrice(product.priceCents)}
+                      </span>
+                      <AddToCartButton
+                        productId={product.id}
+                        outOfStock={product.stock === 0}
+                        stock={product.stock}
+                        size="sm"
                       />
                     </div>
-
-                    {/* Info */}
-                    <div className="p-4 flex flex-col flex-1">
-                      <p className="font-semibold text-[var(--ink)] leading-snug group-hover:text-[var(--accent)] transition-colors">
-                        {product.name}
-                      </p>
-                      {product.description && (
-                        <p className="text-xs text-[var(--muted)] mt-1 line-clamp-2">
-                          {product.description}
-                        </p>
-                      )}
-                      <p className="text-xs text-[var(--muted)] mt-1.5">
-                        {catCfg ? t(`cat_${product.category}` as Parameters<typeof t>[0]) : product.category}
-                        {product.sellerName ? ` · ${t("shopSoldBy", { seller: product.sellerName })}` : ""}
-                      </p>
-                      {product.stock === 0 && (
-                        <p className="text-xs text-[var(--danger)] mt-1">{t("shopOutOfStock")}</p>
-                      )}
-                      <div className="flex items-center justify-between mt-auto pt-3">
-                        <span className="text-lg font-bold text-[var(--ink)]">
-                          {formatPrice(product.priceCents)}
-                        </span>
-                        <span className="btn-editorial-sm">
-                          {t("shopView")}
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
