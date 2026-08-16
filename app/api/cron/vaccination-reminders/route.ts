@@ -7,12 +7,11 @@ import { vaccinationReminder } from "@/lib/email/templates";
 import { APP_URL } from "@/lib/config/app";
 import { VACCINATION_DUE_SOON_DAYS, VACCINATION_REMINDER_DAYS } from "@/lib/config/pet-signal";
 import { formatDateShort } from "@/lib/utils/format";
+import { requireCronAuth } from "@/lib/auth/cron";
 
 export async function POST(req: NextRequest) {
-  const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = requireCronAuth(req);
+  if (!auth.ok) return auth.response;
 
   const db = getInstance();
   const now = new Date();

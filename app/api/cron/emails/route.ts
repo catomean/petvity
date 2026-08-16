@@ -5,12 +5,11 @@ import { emailQueue, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
 import { TEMPLATE_MAP, type TemplateKey } from "@/lib/email/templates";
 import { makeUnsubscribeUrl } from "@/lib/auth/unsubscribe-token";
+import { requireCronAuth } from "@/lib/auth/cron";
 
 export async function POST(req: NextRequest) {
-  const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = requireCronAuth(req);
+  if (!auth.ok) return auth.response;
 
   const db = getInstance();
   const pending = await db

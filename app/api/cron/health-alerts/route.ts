@@ -9,12 +9,11 @@ import { sendEmail } from "@/lib/email";
 import { petHealthAlert } from "@/lib/email/templates";
 import { APP_URL } from "@/lib/config/app";
 import type { SpeciesId } from "@/lib/config/species";
+import { requireCronAuth } from "@/lib/auth/cron";
 
 export async function POST(req: NextRequest) {
-  const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = requireCronAuth(req);
+  if (!auth.ok) return auth.response;
 
   const db = getInstance();
   const now = new Date();
