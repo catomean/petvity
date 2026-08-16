@@ -6,8 +6,10 @@ import Link from "next/link";
 import { APP, APP_URL } from "@/lib/config/app";
 import { PRODUCT_CATEGORY_CONFIG } from "@/lib/config/products";
 import type { ProductCategoryId } from "@/lib/config/products";
-import { ShoppingBag, PawPrint, ChevronLeft, ShoppingCart } from "lucide-react";
+import { ShoppingBag, ChevronLeft } from "lucide-react";
 import { ProductArt } from "@/components/shop/ProductArt";
+import ShopNav from "@/components/shop/ShopNav";
+import AddToCartButton from "@/components/shop/AddToCartButton";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -82,27 +84,7 @@ export default async function PublicProductDetailPage({ params }: Params) {
   return (
     <div className="min-h-screen bg-[var(--off)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
-      {/* Nav */}
-      <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
-        <Link
-          href={`/${locale}`}
-          className="font-bold text-[var(--teal)] text-lg no-underline flex items-center gap-2"
-        >
-          <PawPrint className="w-5 h-5" />
-          {APP.name}
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors"
-          >
-            {t("signIn")}
-          </Link>
-          <Link href="/register" className="btn-primary text-sm py-2 px-4">
-            {t("joinFree")}
-          </Link>
-        </div>
-      </nav>
+      <ShopNav locale={locale} />
 
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Back */}
@@ -168,29 +150,36 @@ export default async function PublicProductDetailPage({ params }: Params) {
           </div>
         </div>
 
-        {/* Buy CTA */}
+        {/* Buy */}
         <div className="bg-white rounded-2xl border border-[var(--border)] p-6 text-center shadow-sm">
-          <ShoppingBag className="w-8 h-8 text-[var(--accent)] mx-auto mb-3" />
-          <p className="font-semibold text-[var(--ink)] mb-1">
-            {outOfStock ? t("shopGetNotified") : t("shopReadyToBuy", { name: row.name })}
-          </p>
-          <p className="text-sm text-[var(--muted)] mb-5">
-            {outOfStock
-              ? t("shopNotifyDesc", { app: APP.name })
-              : t("shopBuyDesc", { app: APP.name })}
-          </p>
-          <div className="flex gap-3 justify-center">
-            <Link
-              href={`/register?returnTo=/portal/shop`}
-              className="btn-primary flex items-center gap-2"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              {outOfStock ? t("shopSignUpAlerts") : t("shopSignUpBuy")}
-            </Link>
-            <Link href="/login" className="btn-outline">
-              {t("signIn")}
-            </Link>
-          </div>
+          {outOfStock ? (
+            <>
+              <ShoppingBag className="w-8 h-8 text-[var(--muted)] mx-auto mb-3" />
+              <p className="font-semibold text-[var(--ink)] mb-1">{t("shopGetNotified")}</p>
+              <p className="text-sm text-[var(--muted)] mb-5">
+                {t("shopNotifyDesc", { app: APP.name })}
+              </p>
+              <Link href="/register" className="btn-outline">
+                {t("shopSignUpAlerts")}
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="text-3xl font-bold text-[var(--ink)] mb-1">
+                {formatPrice(row.priceCents)}
+              </p>
+              <p className="text-sm text-[var(--muted)] mb-5">{t("shopNoAccountNeeded")}</p>
+              <div className="flex flex-col items-center gap-3">
+                <AddToCartButton productId={row.id} stock={row.stock} />
+                <Link
+                  href={`/${locale}/shop/checkout`}
+                  className="text-sm text-[var(--teal)] no-underline hover:underline"
+                >
+                  {t("cartView")}
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

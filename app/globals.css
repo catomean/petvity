@@ -197,6 +197,15 @@ body {
   box-shadow: none;
 }
 
+/* Compact primary, for product cards where a full-size button crowds the price.
+   A semantic modifier rather than `btn-primary px-3 py-1.5`, because utilities
+   lose to unlayered CSS and would be silently dead. */
+.btn-primary-sm {
+  padding: 7px 14px;
+  font-size: 13px;
+  gap: 6px;
+}
+
 /* ── Obsidian luxury classes (petvity.com brand language) ───────────────────── */
 
 /* Display face — ultra-light geometric, the luxury-futurist headline voice. */

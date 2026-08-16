@@ -129,6 +129,10 @@ app/
     (public)/adopt/    → Public adoption browse (SSR, no auth)
       [listingId]/     → Listing detail + sign-up CTA
     (public)/pros/[userId]/ → Public vet/sitter profile
+    (public)/shop/     → Public catalogue — add to cart without an account
+      [productId]/     → Product detail + Add to cart
+      checkout/        → Guest checkout: cart + email + address, one page
+      order/[token]/   → Guest receipt, reached only by the emailed token
   api/
     auth/[...nextauth] → NextAuth (ALWAYS public — never auth-guard this)
     account/           → POST: registration, PATCH: update name/password (no auth on POST)
@@ -149,10 +153,15 @@ app/
     bookings/          → GET list, POST create
     bookings/[bookingId] → PATCH status, DELETE
     reviews/           → POST (linked to completed booking)
-    products/          → GET public list (active only)
+    products/          → GET public list (active only); ?ids=a,b,c prices a guest cart
     products/[productId] → GET single product
-    orders/            → GET user's orders, POST place order
+    orders/            → GET user's orders, POST place order (account)
     orders/[orderId]   → PATCH status (user cancel pending; admin any transition)
+    orders/[orderId]/pay → POST re-open Stripe Checkout (account orders)
+    shop/checkout      → POST place order with NO account (public, rate limited)
+    shop/order/[token] → PATCH cancel own pending guest order
+    shop/order/[token]/pay → POST re-open Stripe Checkout for a guest order
+                             (the unguessable token is the authorisation)
     adoptions/         → GET public available listings, POST create (auth)
     adoptions/[listingId] → GET public, PATCH/DELETE (owner or admin)
     adoptions/[listingId]/apply → POST (auth, one per user)
@@ -228,9 +237,15 @@ lib/
    Public routes (NOT in PRIVATE_API_PREFIXES — self-guard via requireSession()):
      /api/account (registration), /api/public/* (public profiles),
      /api/products (public browse), /api/adoptions (public browse + self-guarded writes),
+     /api/shop/* (guest checkout — MUST stay public, see below),
      /api/auth/forgot-password, /api/auth/reset-password
 5. Everything else      → next-intl locale routing (marketing site)
 ```
+
+**CRITICAL:** `/api/shop/*` must never be added to `PRIVATE_API_PREFIXES`. It exists
+precisely so a visitor can buy without an account; a session guard there silently
+deletes guest checkout. It is not unguarded — it is rate limited per client, and
+`/api/shop/order/[token]/pay` requires the order's unguessable `publicToken`.
 
 **CRITICAL:** All portal routes MUST be under `/portal/`. Do NOT add individual paths to PORTAL_PREFIXES.
 
@@ -264,7 +279,7 @@ lib/
 | `reviews` | id, bookingId (unique), reviewerId, professionalId, rating (1–5), comment | |
 | `products` | id, name, description, priceCents, stock, imageUrl, category, isActive | |
 | `orderItems` | id, orderId, productId, quantity, priceCents | |
-| `orders` | id, userId, totalCents, status, notes | |
+| `orders` | id, userId (nullable), guestEmail, publicToken (unique), totalCents, status, paidAt, checkoutSessionId, shipping*, notes | CHECK `orders_buyer_identity`: exactly one of userId / guestEmail. `publicToken` is the guest's only handle on their order |
 | `adoptionListings` | id, petId, ownerId (denorm), status, title, description, feeCents (null=free), location, requiresExperience, goodWithKids/Dogs/Cats | |
 | `adoptionApplications` | id, listingId, applicantId, status, message, experience, housingType | |
 | `blogPosts` | id, slug (unique), title, excerpt, body, status, publishedAt | body is authoring markup, parsed at render |
@@ -320,8 +335,11 @@ Algorithm:
 | Species, breeds, icons, lifespan | `lib/config/species.ts` | DB table, component |
 | Health KPI defs, units, ranges | `lib/config/health-metrics.ts` | Component |
 | Signal thresholds, labels, colors | `lib/config/pet-signal.ts` | Cron route, component |
-| Product category labels, options | `lib/config/products.ts` | Component |
+| Product category labels, options, max qty per line | `lib/config/products.ts` | Component, zod schema |
 | Order/booking status labels, colors | `lib/config/orders.ts` | Component |
+| Country codes (names come from `Intl`) | `lib/config/countries.ts` | Component, messages/*.json |
+| Order placement + order input schemas | `lib/domain/orders.ts` | API route (inline) |
+| Guest cart contents | `lib/shop/cart.ts` (localStorage) | Component state |
 | Adoption listing/application status labels, colors | `lib/config/adoptions.ts` | Component |
 | User role labels, badge colors | `lib/config/users.ts` | Component |
 | Health record type labels, colors | `lib/config/health-records.ts` | Component |
@@ -405,6 +423,11 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - Admin products panel (`/admin/products`) — CRUD + stock management
 - Admin orders panel (`/admin/orders`) — fulfillment workflow + revenue stats
 - Transactional emails: order confirmation + status updates (via Resend)
+- **Guest checkout** — buy from the public storefront with no account:
+  add to cart on `/[locale]/shop` and the product page, one-page checkout at
+  `/[locale]/shop/checkout`, receipt at `/[locale]/shop/order/[token]`.
+  `placeOrder()` in `lib/domain/orders.ts` is the single implementation both
+  the authed cart and the guest checkout call.
 
 ### Phase 4 — Complete ✓
 - Adoption listings: owner creates at `/portal/pets/[petId]/list-for-adoption`, manages at `/portal/adoptions`
@@ -448,6 +471,24 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
     `lib/config/email.ts`. **Any new fixture must use one of those domains or an
     RFC 2606 TLD (`.invalid`, `.test`), never a live mailbox.**
 
+12. **`orders.userId` is nullable — never `innerJoin` it to `users`.** A guest
+    order has no `users` row, so an inner join drops it from the result set
+    entirely: the seller and admin order views would silently stop showing the
+    orders that actually need shipping, and nothing would look broken. Use
+    `leftJoin` plus `COALESCE(users.name, orders.shippingName)` /
+    `COALESCE(users.email, orders.guestEmail)` — the address the buyer typed at
+    checkout is the fallback identity. Both `app/api/orders/seller/route.ts` and
+    `app/api/admin/orders/route.ts` do this; copy that shape for any new query
+    that reads an order's buyer. The same applies to code: `order.userId` is
+    `string | null`, and a null one means "email them at `guestEmail`".
+
+13. **A guest's only handle on their order is `orders.publicToken`.** They have
+    no session and appear in no list, so if that uuid is lost the order is
+    unreachable — it is emailed on the receipt and used as the authorisation for
+    `/api/shop/order/[token]/pay`. Hence the receipt page is `noindex`,
+    `no-referrer`, and answers 404 for an unknown token rather than
+    distinguishing "wrong token" from "no such order".
+
 ---
 
 ## Red Flags
@@ -464,3 +505,7 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - Importing `lib/auth/index.ts` in middleware → use `lib/auth/edge.ts`
 - Any `/api/auth/*` route behind auth guard → NextAuth breaks entirely
 - A test fixture using a live mailbox → bounces burn the shared sending reputation; use a domain from `lib/config/email.ts`
+- `innerJoin(users, eq(users.id, orders.userId))` → hides every guest order; use `leftJoin` + `COALESCE`
+- Order placement logic written in an API route → `placeOrder()` in `lib/domain/orders.ts`
+- A message key added to `messages/en.json` only → all 9 locales must carry it (enforced by `lib/i18n/message-keys.test.ts`)
+- A "Sign up to buy" CTA on a public product → the storefront sells without an account now

@@ -212,6 +212,36 @@ echo "$LAST_BODY" | python3 -c "import sys,json;d=json.load(sys.stdin)['data'];p
 page 200 /portal/my-products seller
 page 200 /portal/my-products/orders seller
 
+# ── Guest checkout ────────────────────────────────────────────────────────────
+# The public storefront sells without an account. Every check below is a path a
+# real buyer with no session takes, so none of them may need a jar.
+#
+# The seller-visibility assertion is the important one: orders.userId is
+# nullable now, and an innerJoin to users would drop guest orders from the
+# seller and admin views entirely — real revenue, invisible, with nothing
+# looking broken. Only a guest order actually placed against prod can prove it.
+E_GUEST="e2e-guest-$STAMP@petvity.orangecat.ch"
+page 200 /en/shop/checkout
+req "guest checkout rejects a fake country" 400 POST /api/shop/checkout "" \
+  '{"email":"'"$E_GUEST"'","items":[{"productId":"'"$PROD"'","quantity":1}],"shippingName":"E2E Guest","shippingLine1":"Bahnhofstrasse 2","shippingPostalCode":"8001","shippingCity":"Zurich","shippingCountry":"XX"}'
+req "guest checkout rejects an empty cart" 400 POST /api/shop/checkout "" \
+  '{"email":"'"$E_GUEST"'","items":[],"shippingName":"E2E Guest","shippingLine1":"Bahnhofstrasse 2","shippingPostalCode":"8001","shippingCity":"Zurich","shippingCountry":"CH"}'
+req "guest buys with no account" 201 POST /api/shop/checkout "" \
+  '{"email":"'"$E_GUEST"'","items":[{"productId":"'"$PROD"'","quantity":1}],"shippingName":"E2E Guest","shippingLine1":"Bahnhofstrasse 2","shippingPostalCode":"8001","shippingCity":"Zurich","shippingCountry":"CH"}'
+GTOKEN=$(echo "$LAST_BODY" | jq_ data.orderToken)
+[ -n "$GTOKEN" ] && ok "guest gets a receipt token" || bad "guest gets a receipt token" "none returned"
+req "guest stock decremented" 200 GET /api/products
+echo "$LAST_BODY" | python3 -c "import sys,json;d=json.load(sys.stdin)['data'];print([p['stock'] for p in d if p['id']=='$PROD'])" | grep -q "\[4\]" && ok "stock 5->4 for guest order" || bad "stock 5->4 for guest order" "wrong stock"
+page 200 "/en/shop/order/$GTOKEN"
+page 404 "/en/shop/order/00000000-0000-0000-0000-000000000000"
+req "seller sees the guest order" 200 GET /api/orders/seller seller
+echo "$LAST_BODY" | grep -q "$E_GUEST" && ok "guest email reaches the seller" || bad "guest email reaches the seller" "leftJoin regression: guest order hidden"
+echo "$LAST_BODY" | grep -q "Bahnhofstrasse 2" && ok "seller can ship the guest order" || bad "seller can ship the guest order" "no address"
+req "guest cancels their own order" 200 PATCH "/api/shop/order/$GTOKEN" "" '{"status":"cancelled"}'
+req "guest stock restored" 200 GET /api/products
+echo "$LAST_BODY" | python3 -c "import sys,json;d=json.load(sys.stdin)['data'];print([p['stock'] for p in d if p['id']=='$PROD'])" | grep -q "\[5\]" && ok "stock restored to 5 after guest cancel" || bad "stock restored to 5 after guest cancel" "wrong stock"
+req "a cancelled guest order cannot be cancelled again" 400 PATCH "/api/shop/order/$GTOKEN" "" '{"status":"cancelled"}'
+
 echo "══ 6. Adoption lifecycle ══"
 login owner "$E_OWNER"
 req "create listing" 201 POST /api/adoptions owner '{"petId":"'"$PET"'","title":"E2E adoption","description":"e2e listing","location":"Zurich","feeCents":null,"requiresExperience":false}'

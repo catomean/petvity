@@ -3,6 +3,21 @@ import { POST_LOGIN_PATH } from "@/lib/config/auth";
 import { HOUSING_TYPE_LABELS } from "@/lib/config/adoptions";
 import { getEmailStrings, t } from "@/lib/email/i18n";
 
+/**
+ * Escape a value before interpolating it into email HTML.
+ *
+ * Guest checkout accepts a buyer name and notes from someone with no account,
+ * and those land in the *seller's* inbox — so unescaped markup would be
+ * injected into a stranger's email by anyone who can load the shop.
+ */
+export const esc = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
 /** When unsubscribeUrl is provided, an "Unsubscribe" link is rendered in the footer.
  *  Only welcome-series emails should pass it; transactional emails (vaccination
  *  reminders, health alerts, order confirmations) intentionally have no opt-out
@@ -259,20 +274,22 @@ export function orderConfirmation(data: {
   orderTotal: string;
   items: { name: string; quantity: number; lineTotal: string }[];
   notes?: string | null;
+  /** Guest receipt link. Null for account orders, which use /portal/orders. */
+  orderUrl?: string | null;
 }, locale?: string | null) {
   const s = getEmailStrings(locale).orderConfirmation;
   const itemRows = data.items
-    .map((i) => `<tr><td style="padding:6px 0;border-bottom:1px solid #f0ede8;">${i.name}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;">×${i.quantity}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;font-weight:500;">${i.lineTotal}</td></tr>`)
+    .map((i) => `<tr><td style="padding:6px 0;border-bottom:1px solid #f0ede8;">${esc(i.name)}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;">×${i.quantity}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;font-weight:500;">${i.lineTotal}</td></tr>`)
     .join("");
   return {
     subject: s.subject,
     html: base(`
       <h2>${s.h2}</h2>
-      <p>${t(s.p1, { name: data.customerName })}</p>
+      <p>${t(s.p1, { name: esc(data.customerName) })}</p>
       <table style="width:100%;border-collapse:collapse;margin:16px 0;">${itemRows}</table>
       <p style="text-align:right;font-size:16px;font-weight:600;">${s.totalLabel}: ${data.orderTotal}</p>
-      ${data.notes ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;font-size:14px;"><strong>${s.noteLabel}:</strong> ${data.notes}</p>` : ""}
-      <a class="btn" href="${APP_URL}/portal/orders">${s.button}</a>
+      ${data.notes ? `<p style="background:#f8f7f4;padding:12px 16px;border-radius:6px;font-size:14px;"><strong>${s.noteLabel}:</strong> ${esc(data.notes)}</p>` : ""}
+      <a class="btn" href="${data.orderUrl ?? `${APP_URL}/portal/orders`}">${s.button}</a>
     `, locale),
   };
 }
@@ -281,6 +298,8 @@ export function orderStatusUpdate(data: {
   customerName: string;
   status: "confirmed" | "shipped" | "delivered" | "cancelled";
   orderTotal: string;
+  /** Guest receipt link. Null for account orders, which use /portal/orders. */
+  orderUrl?: string | null;
 }, locale?: string | null) {
   const s = getEmailStrings(locale).orderStatusUpdate;
   const variant = s[data.status];
@@ -288,10 +307,10 @@ export function orderStatusUpdate(data: {
     subject: variant.subject,
     html: base(`
       <h2>${variant.h2}</h2>
-      <p>${t(s.greeting, { name: data.customerName })}</p>
+      <p>${t(s.greeting, { name: esc(data.customerName) })}</p>
       <p>${variant.body}</p>
       <p style="color:#888;font-size:14px;">${s.totalLabel}: ${data.orderTotal}</p>
-      <a class="btn" href="${APP_URL}/portal/orders">${s.button}</a>
+      <a class="btn" href="${data.orderUrl ?? `${APP_URL}/portal/orders`}">${s.button}</a>
     `, locale),
   };
 }
@@ -306,13 +325,13 @@ export function sellerOrderNotification(data: {
   const count = data.items.length;
   const itemWord = count === 1 ? s.itemWord_one : s.itemWord_other;
   const itemRows = data.items
-    .map((i) => `<tr><td style="padding:6px 0;border-bottom:1px solid #f0ede8;">${i.name}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;">×${i.quantity}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;font-weight:500;">${i.lineTotal}</td></tr>`)
+    .map((i) => `<tr><td style="padding:6px 0;border-bottom:1px solid #f0ede8;">${esc(i.name)}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;">×${i.quantity}</td><td style="padding:6px 0;border-bottom:1px solid #f0ede8;text-align:right;font-weight:500;">${i.lineTotal}</td></tr>`)
     .join("");
   return {
     subject: t(s.subject, { app: APP.name, count, itemWord }),
     html: base(`
       <h2>${s.h2}</h2>
-      <p>${t(s.p1, { sellerName: data.sellerName, buyerName: data.buyerName })}</p>
+      <p>${t(s.p1, { sellerName: esc(data.sellerName), buyerName: esc(data.buyerName) })}</p>
       <table style="width:100%;border-collapse:collapse;margin:16px 0;">${itemRows}</table>
       <p style="text-align:right;font-size:16px;font-weight:600;">${s.subtotalLabel}: ${data.subtotal}</p>
       <a class="btn" href="${APP_URL}/portal/my-products/orders">${s.button}</a>

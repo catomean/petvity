@@ -29,13 +29,15 @@ export async function GET() {
       createdAt: orders.createdAt,
       updatedAt: orders.updatedAt,
       customer: {
+        // Null id marks a guest — they have no account to link to.
         id: users.id,
-        name: users.name,
-        email: users.email,
+        name: sql<string>`COALESCE(${users.name}, ${orders.shippingName})`,
+        email: sql<string>`COALESCE(${users.email}, ${orders.guestEmail})`,
       },
     })
     .from(orders)
-    .innerJoin(users, eq(users.id, orders.userId))
+    // Left, not inner: a guest order has no users row and must still appear.
+    .leftJoin(users, eq(users.id, orders.userId))
     .orderBy(desc(orders.createdAt))
     .limit(500);
 

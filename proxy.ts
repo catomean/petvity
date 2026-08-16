@@ -30,6 +30,10 @@ const PRIVATE_API_PREFIXES = [
   // Writes files to disk — never reachable without a session.
   "/api/uploads",
   "/api/reviews",
+  // Account orders. /api/shop/* is the guest counterpart and is deliberately
+  // NOT listed: requiring a session there would delete guest checkout, which
+  // is the whole point of it. It self-guards with a rate limit and, for
+  // payment, an unguessable order token.
   "/api/orders",
   // /api/cron/* is intentionally NOT gated — cron routes self-authenticate via
   // the CRON_SECRET bearer (box systemd timers; fleetcrown install-app-crons.sh).

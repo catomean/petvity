@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { products, productCategoryEnum, users } from "@/lib/db/schema";
+
+/** Filter `?ids=` to well-formed uuids before they reach the query — a bad id
+ *  is a client bug, not a reason to 500. */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** A cart bigger than this is a script; no shopper picks 50 distinct products. */
+const MAX_IDS = 50;
 
 const createSchema = z.object({
   name: z.string().min(1).max(200),
@@ -15,13 +22,15 @@ const createSchema = z.object({
 });
 
 /** GET /api/products — list active products (public)
- *  ?mine=true  → authenticated user's own listings (all statuses)
- *  ?category=X → filter by category (public, active only)
+ *  ?mine=true   → authenticated user's own listings (all statuses)
+ *  ?category=X  → filter by category (public, active only)
+ *  ?ids=a,b,c   → exactly these products (public, active only)
  */
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const mine = searchParams.get("mine") === "true";
   const category = searchParams.get("category");
+  const idsParam = searchParams.get("ids");
 
   const db = getInstance();
 
@@ -33,6 +42,40 @@ export async function GET(req: NextRequest) {
       .from(products)
       .where(eq(products.sellerId, session.user.id))
       .orderBy(products.createdAt);
+    return NextResponse.json({ success: true, data: rows });
+  }
+
+  // The guest cart holds product ids only, so the checkout page prices it here
+  // rather than trusting whatever localStorage remembered. Unknown or
+  // deactivated ids simply come back missing — the cart page shows them as
+  // unavailable instead of silently charging for them.
+  if (idsParam !== null) {
+    const ids = idsParam
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => UUID_RE.test(s))
+      .slice(0, MAX_IDS);
+
+    if (ids.length === 0) {
+      return NextResponse.json({ success: true, data: [] });
+    }
+
+    const rows = await db
+      .select({
+        id: products.id,
+        name: products.name,
+        description: products.description,
+        priceCents: products.priceCents,
+        imageUrl: products.imageUrl,
+        category: products.category,
+        stock: products.stock,
+        sellerId: products.sellerId,
+        sellerName: users.name,
+      })
+      .from(products)
+      .leftJoin(users, eq(users.id, products.sellerId))
+      .where(and(eq(products.isActive, true), inArray(products.id, ids)));
+
     return NextResponse.json({ success: true, data: rows });
   }
 

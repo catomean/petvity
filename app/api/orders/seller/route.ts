@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { eq, desc, inArray } from "drizzle-orm";
+import { eq, desc, inArray, sql } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 import { orders, orderItems, products, users } from "@/lib/db/schema";
@@ -43,8 +43,11 @@ export async function GET() {
       totalCents: orders.totalCents,
       notes: orders.notes,
       createdAt: orders.createdAt,
-      buyerName: users.name,
-      buyerEmail: users.email,
+      // A guest order has no users row — fall back to what they typed at
+      // checkout. An inner join here would hide guest orders from the seller
+      // who has to ship them.
+      buyerName: sql<string>`COALESCE(${users.name}, ${orders.shippingName})`,
+      buyerEmail: sql<string>`COALESCE(${users.email}, ${orders.guestEmail})`,
       shippingName: orders.shippingName,
       shippingLine1: orders.shippingLine1,
       shippingPostalCode: orders.shippingPostalCode,
@@ -53,7 +56,7 @@ export async function GET() {
       shippingPhone: orders.shippingPhone,
     })
     .from(orders)
-    .innerJoin(users, eq(users.id, orders.userId))
+    .leftJoin(users, eq(users.id, orders.userId))
     .where(inArray(orders.id, orderIds))
     .orderBy(desc(orders.createdAt));
 
