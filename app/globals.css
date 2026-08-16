@@ -206,6 +206,74 @@ body {
   gap: 6px;
 }
 
+/* ── Auth screens ───────────────────────────────────────────────────────────── */
+
+/* The form column of the split auth layout.
+   `min-width: 0` is the load-bearing declaration: a flex child defaults to
+   `min-width: auto`, which refuses to shrink below its content's minimum — here
+   the 380px card plus 48px of column padding. At 375px of viewport that is a
+   48px sideways scroll on every auth page, which is the first screen a new user
+   ever sees. */
+.auth-panel {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+}
+
+/* ── Filter pills ───────────────────────────────────────────────────────────── */
+
+/* The one control the public browse pages use to narrow a list: shop
+   categories, professional types, adoption species.
+   It had grown three variants — text-xs/text-sm, px-3/px-4, py-1.5/py-2 — and
+   two different idle fills (transparent vs white) for what a visitor reads as
+   the same button. This is the single definition. The 44px floor is the touch
+   target minimum; the old pills were 30px, which is a miss on a phone. */
+.browse-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--ink2);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.browse-chip:hover {
+  border-color: var(--border-hover);
+  color: var(--warm-ink);
+}
+
+.browse-chip-active,
+.browse-chip-active:hover {
+  background: var(--warm-ink);
+  border-color: var(--warm-ink);
+  color: #fff;
+}
+
+/* Horizontally scrollable row of pills. min-width:0 is what lets it actually
+   scroll instead of pushing the page sideways when it is itself a flex child. */
+.browse-chip-row {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+}
+
 /* ── Obsidian luxury classes (petvity.com brand language) ───────────────────── */
 
 /* Display face — ultra-light geometric, the luxury-futurist headline voice. */
@@ -892,3 +960,4 @@ body {
   border-radius: 4px;
   font-size: 0.9em;
 }
+

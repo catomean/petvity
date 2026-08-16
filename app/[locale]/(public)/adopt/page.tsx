@@ -120,16 +120,12 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
         <div className="max-w-5xl mx-auto px-6 py-4">
           <form method="GET" action={`/${locale}/adopt`} className="space-y-3">
             {/* Species pills */}
-            <div className="flex flex-wrap gap-2">
+            <div className="browse-chip-row flex-wrap">
               <button
                 type="submit"
                 name="species"
                 value=""
-                className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
-                  !activeSpecies
-                    ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
-                    : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)] hover:text-[var(--warm-ink)]"
-                }`}
+                className={`browse-chip ${!activeSpecies ? "browse-chip-active" : ""}`}
               >
                 {tPortal("adoptFilterAll")}
               </button>
@@ -139,11 +135,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                   type="submit"
                   name="species"
                   value={sp}
-                  className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
-                    activeSpecies === sp
-                      ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
-                      : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)] hover:text-[var(--warm-ink)]"
-                  }`}
+                  className={`browse-chip ${activeSpecies === sp ? "browse-chip-active" : ""}`}
                 >
                   {SPECIES_CONFIG[sp].emoji} {t(`species_${sp}` as Parameters<typeof t>[0])}
                 </button>
