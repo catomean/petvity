@@ -14,6 +14,7 @@ import {
 } from "@/lib/config/resident-pet";
 import { generateResidentCheckin } from "@/lib/domain/resident-checkin";
 import { refreshSignalCache } from "@/lib/api/signal-cache";
+import { requireCronAuth } from "@/lib/auth/cron";
 
 /**
  * Logs today's check-in for every resident pet — one real row per day each,
@@ -124,10 +125,8 @@ async function ensureResidentPet(db: Db, def: ResidentPetDef, now: Date) {
 }
 
 export async function POST(req: NextRequest) {
-  const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = requireCronAuth(req);
+  if (!auth.ok) return auth.response;
 
   const db = getInstance();
   const now = new Date();

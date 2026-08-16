@@ -13,6 +13,7 @@ import {
 import { DEMO_ACCOUNT } from "@/lib/config/demo";
 import { BCRYPT_SALT_ROUNDS } from "@/lib/config/auth";
 import { refreshSignalCache } from "@/lib/api/signal-cache";
+import { requireCronAuth } from "@/lib/auth/cron";
 
 /**
  * Wipe and reseed the shared demo account (also creates it on first run).
@@ -27,10 +28,8 @@ function iso(d: Date): string {
 }
 
 export async function POST(req: NextRequest) {
-  const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = requireCronAuth(req);
+  if (!auth.ok) return auth.response;
 
   const db = getInstance();
 
