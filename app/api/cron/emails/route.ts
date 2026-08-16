@@ -3,7 +3,7 @@ import { and, eq, inArray, lte } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
 import { emailQueue, users } from "@/lib/db/schema";
 import { sendEmail } from "@/lib/email";
-import { TEMPLATE_MAP, type TemplateKey } from "@/lib/email/templates";
+import { TEMPLATE_MAP, type TemplateKey, type WelcomePayload } from "@/lib/email/templates";
 import { makeUnsubscribeUrl } from "@/lib/auth/unsubscribe-token";
 import { requireCronAuth } from "@/lib/auth/cron";
 
@@ -58,7 +58,14 @@ export async function POST(req: NextRequest) {
       // Welcome-series templates accept an unsubscribeUrl; injecting it here
       // (rather than at enqueue time) lets us add it to existing queued items
       // without a backfill, and keeps the token rotation point in one place.
-      const payload = { ...(item.payload as object), unsubscribeUrl: makeUnsubscribeUrl(user.id) };
+      // Narrowed to WelcomePayload rather than `object`: enqueueWelcomeSequence
+      // writes { name, email }, and casting to a bare object hid that from the
+      // compiler — so a template requiring `name` typechecked against a payload
+      // that, as far as the types knew, had none.
+      const payload: WelcomePayload = {
+        ...(item.payload as WelcomePayload),
+        unsubscribeUrl: makeUnsubscribeUrl(user.id),
+      };
       const { subject, html } = templateFn(payload, user.locale);
       await sendEmail({ to: user.email, subject, html });
 
