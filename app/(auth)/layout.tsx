@@ -70,7 +70,7 @@ export default function AuthLayout({
       </div>
 
       {/* ── Form panel — light product surface ── */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-[var(--off)] min-h-screen">
+      <div className="auth-panel flex flex-col items-center justify-center px-6 py-12 bg-[var(--off)] min-h-screen">
         {/* Mobile logo */}
         <Link
           href="/en"
@@ -82,7 +82,7 @@ export default function AuthLayout({
           <span className="text-lg">{APP.name}</span>
         </Link>
 
-        <div className="w-full max-w-[380px]">
+        <div className="auth-card">
           <div className="card p-8 shadow-md">
             {children}
           </div>

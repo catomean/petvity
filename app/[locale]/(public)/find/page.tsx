@@ -186,7 +186,8 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
       {/* Type tabs + city filter */}
       <div className="bg-white border-b border-[var(--border)]">
         <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-3">
-          <div className="flex gap-2">
+          {/* Scrolls rather than overflows: three pills do not fit a 375px phone. */}
+          <div className="browse-chip-row">
             {TYPES.map((tp) => {
               const { icon: Icon, label } = TYPE_META[tp];
               const href = `/${locale}/find?type=${tp}${city ? `&city=${encodeURIComponent(city)}` : ""}`;
@@ -194,11 +195,7 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
                 <Link
                   key={tp}
                   href={href}
-                  className={`inline-flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-full border no-underline transition-colors ${
-                    activeType === tp
-                      ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
-                      : "bg-white text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)]"
-                  }`}
+                  className={`browse-chip ${activeType === tp ? "browse-chip-active" : ""}`}
                 >
                   <Icon className="w-4 h-4" />
                   {label}

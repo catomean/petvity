@@ -127,14 +127,10 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
 
       {/* Category filter bar */}
       <div className="bg-white border-b border-[var(--border)] sticky top-14 z-10">
-        <div className="max-w-5xl mx-auto px-6 py-3 flex gap-2 overflow-x-auto">
+        <div className="max-w-5xl mx-auto px-6 py-3 browse-chip-row">
           <Link
             href={hrefWith({ category: null })}
-            className={`flex-shrink-0 text-sm font-medium px-3 py-1.5 rounded-full border transition-colors no-underline ${
-              !activeCategory
-                ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
-                : "bg-transparent text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)]"
-            }`}
+            className={`browse-chip ${!activeCategory ? "browse-chip-active" : ""}`}
           >
             {t("shopAll")}
           </Link>
@@ -142,11 +138,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
             <Link
               key={id}
               href={hrefWith({ category: id })}
-              className={`flex-shrink-0 flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full border transition-colors no-underline ${
-                activeCategory === id
-                  ? "bg-[var(--warm-ink)] text-white border-[var(--warm-ink)]"
-                  : "bg-transparent text-[var(--ink2)] border-[var(--border)] hover:border-[var(--border-hover)]"
-              }`}
+              className={`browse-chip ${activeCategory === id ? "browse-chip-active" : ""}`}
             >
               <span>{cfg.emoji}</span>
               {t(`cat_${id}` as Parameters<typeof t>[0])}
