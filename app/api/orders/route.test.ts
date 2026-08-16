@@ -141,6 +141,11 @@ describe("POST /api/orders", () => {
     const prod1 = makeProduct({ id: PROD_ID_1, priceCents: 1000 });
     const prod2 = makeProduct({ id: PROD_ID_2, priceCents: 2500 });
     db._queueSelectResult([prod1, prod2]); // products lookup
+    // Stock is now reserved through commercekit's conditional UPDATE, which
+    // runs for unlimited-stock products too (`stock IS NULL OR stock >= n`,
+    // where NULL - n stays NULL). A matching UPDATE returns its row, so the
+    // mock has to say so — returning [] would mean "sold out".
+    db._updateReturning.mockResolvedValue([{ id: PROD_ID_1 }]);
     db._queueSelectResult([{ name: "Test", email: "t@t.com" }]); // user email lookup
 
     let capturedTotalCents: number | undefined;
@@ -171,6 +176,11 @@ describe("POST /api/orders", () => {
   it("returns 201 with order data on success", async () => {
     const prod = makeProduct({ id: PROD_ID_1 });
     db._queueSelectResult([prod]);                                       // products
+    // Stock is now reserved through commercekit's conditional UPDATE, which
+    // runs for unlimited-stock products too (`stock IS NULL OR stock >= n`,
+    // where NULL - n stays NULL). A matching UPDATE returns its row, so the
+    // mock has to say so — returning [] would mean "sold out".
+    db._updateReturning.mockResolvedValue([{ id: PROD_ID_1 }]);
     db._queueSelectResult([{ name: "Test", email: "t@t.com" }]);        // user email
 
     const mockOrder = { id: "order-1", totalCents: 1000, userId: "user-1", status: "pending", notes: null };

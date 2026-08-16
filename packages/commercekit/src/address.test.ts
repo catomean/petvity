@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { COUNTRY_CODES, countryName, countryOptions, isCountryCode } from "./countries";
+import { COUNTRY_CODES, countryName, countryOptions, isCountryCode } from "./address";
 
 describe("COUNTRY_CODES", () => {
   it("has no duplicates", () => {

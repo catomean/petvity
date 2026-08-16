@@ -1,4 +1,4 @@
-import { and, eq, gte, inArray, isNotNull, sql } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { getInstance } from "@/lib/db";
 import { orders, orderItems, products, users, orderStatusEnum } from "@/lib/db/schema";
@@ -14,6 +14,8 @@ import { APP_URL } from "@/lib/config/app";
 import { MAX_ITEM_QUANTITY } from "@/lib/config/products";
 import { isCountryCode } from "@/lib/config/countries";
 import { DEFAULT_LOCALE, LOCALE_CONFIG } from "@/lib/config/locales";
+import { reserveAll, releaseAll } from "@/packages/commercekit/src/inventory";
+import { drizzleInventory } from "@/lib/domain/inventory";
 
 /* ─── Input shapes (SSOT — both the authed and the guest route validate with these) ── */
 
@@ -124,23 +126,25 @@ export async function setOrderStatus(
     .returning();
 
   // Only on the transition INTO cancelled — cancelling an already-cancelled
-  // order twice would hand back the stock twice.
+  // order twice would hand back the stock twice, inventing units from nothing.
   if (status === "cancelled" && order.status !== "cancelled") {
     const cancelledItems = await db
       .select({ productId: orderItems.productId, quantity: orderItems.quantity })
       .from(orderItems)
       .where(eq(orderItems.orderId, order.id));
 
-    await Promise.all(
+    const result = await releaseAll(
+      drizzleInventory(db),
       cancelledItems
         .filter((i) => i.productId !== null)
-        .map((i) =>
-          db
-            .update(products)
-            .set({ stock: sql`${products.stock} + ${i.quantity}`, updatedAt: new Date() })
-            .where(and(eq(products.id, i.productId!), isNotNull(products.stock))),
-        ),
+        .map((i) => ({ sku: i.productId!, quantity: i.quantity })),
     );
+    if (result.failed.length > 0) {
+      console.error(
+        `Order ${order.id} cancelled but stock was not restored for:`,
+        result.failed.map((f) => `${f.sku} x${f.quantity}`).join(", "),
+      );
+    }
   }
 
   if ((STATUS_EMAIL_STATUSES as readonly string[]).includes(status)) {
@@ -288,47 +292,31 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
     0,
   );
 
-  // Atomically decrement finite-stock items BEFORE creating the order.
-  // WHERE stock >= quantity ensures only one concurrent request can win per product —
-  // if two requests race on the last unit, only one UPDATE row count > 0.
-  const stockDecrements = items
-    .filter((item) => productMap.get(item.productId)!.stock !== null)
-    .map((item) => ({ productId: item.productId, quantity: item.quantity }));
+  // Reserve stock BEFORE creating the order, all-or-nothing. The algorithm —
+  // conditional decrement, compensation on partial failure, sorted lock order,
+  // merged duplicate lines — lives in commercekit because every shop in the
+  // fleet needs exactly this and it is the easiest thing here to get subtly
+  // wrong. What stays Petvity's is the adapter: how a product's stock is read
+  // and written.
+  const reservation = await reserveAll(
+    drizzleInventory(db),
+    items.map((i) => ({ sku: i.productId, quantity: i.quantity })),
+  );
 
-  if (stockDecrements.length > 0) {
-    const decrementResults = await Promise.all(
-      stockDecrements.map(({ productId, quantity }) =>
-        db
-          .update(products)
-          .set({ stock: sql`${products.stock} - ${quantity}`, updatedAt: new Date() })
-          .where(and(eq(products.id, productId), gte(products.stock, quantity)))
-          .returning({ id: products.id }),
-      ),
-    );
-
-    const failedIdx = decrementResults.findIndex((r) => r.length === 0);
-    if (failedIdx !== -1) {
-      // Compensate: restore stock for any products already decremented in this batch
-      const toRestore = stockDecrements.filter(
-        (_, i) => i !== failedIdx && decrementResults[i].length > 0,
+  if (!reservation.ok) {
+    if (!reservation.compensated) {
+      // Stock exists but nobody can buy it. Never swallow this.
+      console.error(
+        "Stock stranded after a failed reservation:",
+        reservation.stranded.map((s) => `${s.sku} x${s.quantity}`).join(", "),
       );
-      if (toRestore.length > 0) {
-        await Promise.all(
-          toRestore.map(({ productId, quantity }) =>
-            db
-              .update(products)
-              .set({ stock: sql`${products.stock} + ${quantity}`, updatedAt: new Date() })
-              .where(eq(products.id, productId)),
-          ),
-        );
-      }
-      const failedProduct = productMap.get(stockDecrements[failedIdx].productId);
-      return {
-        ok: false,
-        status: 409,
-        error: `"${failedProduct?.name ?? "A product"}" just sold out. Please refresh your cart.`,
-      };
     }
+    const failedProduct = productMap.get(reservation.failed.sku);
+    return {
+      ok: false,
+      status: 409,
+      error: `"${failedProduct?.name ?? "A product"}" just sold out. Please refresh your cart.`,
+    };
   }
 
   // Stock reserved — now safe to record the order

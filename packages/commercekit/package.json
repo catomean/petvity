@@ -1,0 +1,46 @@
+{
+  "name": "commercekit",
+  "version": "0.1.0",
+  "description": "The correctness layer under a shop. Integer money that cannot drift, a cart that never caches a price, ISO addresses in every language, stock reservation that does not oversell, and buy-without-an-account done properly.",
+  "keywords": [
+    "ecommerce",
+    "cart",
+    "money",
+    "checkout",
+    "inventory",
+    "guest-checkout",
+    "headless"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist", "README.md", "LICENSE"],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
