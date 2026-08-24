@@ -13,7 +13,7 @@ Petvity gives pet owners a single place to monitor their pet's daily wellness, c
 - Production: https://petvity.orangecat.ch
 - GitHub: https://github.com/g-but/petvity
 - Host: self-hosted Hetzner box `bitbaum` (service `petvity-app`, port 4013, behind Caddy auto-TLS)
-- Database: self-hosted PostgreSQL 17 on the box (database `petvity`)
+- Database: self-hosted PostgreSQL 17 on the box (database `petvity`). Neon is gone. A laptop `.env.local` naming `neon.tech` is leftover garbage.
 
 **Stack:** Next.js 16 (App Router, standalone output) · TypeScript strict · Tailwind v4 ·
 self-hosted PostgreSQL 17 · Drizzle ORM (`node-postgres` driver) · NextAuth 5 · Resend email ·
