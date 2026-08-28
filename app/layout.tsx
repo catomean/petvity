@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { SessionProvider } from "next-auth/react";
 import { APP, APP_URL } from "@/lib/config/app";
 import { fontVariables } from "@/lib/fonts";
@@ -37,6 +38,15 @@ export default function RootLayout({
     <html lang="en" dir="ltr" className={fontVariables}>
       <body>
         <SessionProvider>{children}</SessionProvider>
+
+        {/* FleetCrown feedback widget — env-gated, see docs/architecture/feedback-widget.md */}
+        {process.env.NEXT_PUBLIC_FC_WIDGET_TOKEN && (
+          <Script
+            src="https://fleetcrown.orangecat.ch/widget.js"
+            strategy="afterInteractive"
+            data-fc-project={process.env.NEXT_PUBLIC_FC_WIDGET_TOKEN}
+          />
+        )}
       </body>
     </html>
   );
