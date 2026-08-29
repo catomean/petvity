@@ -17,7 +17,7 @@ import { getInstance } from "@/lib/db";
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
 const LISTING_ID = "00000000-0000-4000-8000-000000000099";
-const APP_ID     = "00000000-0000-4000-8000-000000000077";
+const APP_ID = "00000000-0000-4000-8000-000000000077";
 
 const OWNER_SESSION = {
   user: { id: "owner-1", role: "pet_owner", email: "owner@example.com", name: "Owner" },
@@ -37,15 +37,22 @@ const ADMIN_SESSION = {
 const MOCK_LISTING = { ownerId: "owner-1", petId: "pet-1" };
 
 const MOCK_APPLICATION = {
-  id: APP_ID, listingId: LISTING_ID, applicantId: "applicant-1",
-  status: "pending", message: "I love dogs", experience: "5 years",
-  housingType: "house", createdAt: new Date("2026-04-01"),
+  id: APP_ID,
+  listingId: LISTING_ID,
+  applicantId: "applicant-1",
+  status: "pending",
+  message: "I love dogs",
+  experience: "5 years",
+  housingType: "house",
+  createdAt: new Date("2026-04-01"),
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ listingId: LISTING_ID }) };
 
 function makeGetRequest() {
-  return new NextRequest(`http://localhost/api/adoptions/${LISTING_ID}/applications`, { method: "GET" });
+  return new NextRequest(`http://localhost/api/adoptions/${LISTING_ID}/applications`, {
+    method: "GET",
+  });
 }
 
 function makePatchRequest(body: unknown) {
@@ -84,8 +91,11 @@ describe("GET /api/adoptions/[listingId]/applications", () => {
   });
 
   it("returns 200 with all applications for the listing owner", async () => {
-    db._queueSelectResult([MOCK_LISTING]);  // listing found (owner-1)
-    const appWithApplicant = { ...MOCK_APPLICATION, applicant: { id: "applicant-1", name: "Alice", email: "applicant@example.com" } };
+    db._queueSelectResult([MOCK_LISTING]); // listing found (owner-1)
+    const appWithApplicant = {
+      ...MOCK_APPLICATION,
+      applicant: { id: "applicant-1", name: "Alice", email: "applicant@example.com" },
+    };
     db._queueSelectResult([appWithApplicant]); // all applications
     const res = await GET(makeGetRequest(), ROUTE_CONTEXT);
     expect(res.status).toBe(200);
@@ -96,7 +106,10 @@ describe("GET /api/adoptions/[listingId]/applications", () => {
   it("returns 200 with only own application for a non-owner applicant", async () => {
     vi.mocked(requireSession).mockResolvedValue({ session: APPLICANT_SESSION as any, error: null });
     db._queueSelectResult([MOCK_LISTING]); // listing found (owner-1, not applicant-1)
-    const appWithApplicant = { ...MOCK_APPLICATION, applicant: { id: "applicant-1", name: "Alice", email: "applicant@example.com" } };
+    const appWithApplicant = {
+      ...MOCK_APPLICATION,
+      applicant: { id: "applicant-1", name: "Alice", email: "applicant@example.com" },
+    };
     db._queueSelectResult([appWithApplicant]); // only their own application
     const res = await GET(makeGetRequest(), ROUTE_CONTEXT);
     expect(res.status).toBe(200);
@@ -122,20 +135,29 @@ describe("PATCH /api/adoptions/[listingId]/applications", () => {
       session: null as any,
       error: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
     });
-    const res = await PATCH(makePatchRequest({ applicationId: APP_ID, status: "approved" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ applicationId: APP_ID, status: "approved" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(401);
   });
 
   it("returns 404 when listing does not exist", async () => {
     db._queueSelectResult([]); // listing not found
-    const res = await PATCH(makePatchRequest({ applicationId: APP_ID, status: "approved" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ applicationId: APP_ID, status: "approved" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(404);
   });
 
   it("returns 403 when non-owner tries to update an application", async () => {
     vi.mocked(requireSession).mockResolvedValue({ session: APPLICANT_SESSION as any, error: null });
     db._queueSelectResult([MOCK_LISTING]); // listing belongs to owner-1, not applicant-1
-    const res = await PATCH(makePatchRequest({ applicationId: APP_ID, status: "approved" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ applicationId: APP_ID, status: "approved" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(403);
     const body = await res.json();
     expect(body.error).toBe("Forbidden");
@@ -143,13 +165,19 @@ describe("PATCH /api/adoptions/[listingId]/applications", () => {
 
   it("returns 400 for invalid status value", async () => {
     db._queueSelectResult([MOCK_LISTING]);
-    const res = await PATCH(makePatchRequest({ applicationId: APP_ID, status: "cancelled" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ applicationId: APP_ID, status: "cancelled" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(400);
   });
 
   it("returns 400 when applicationId is not a valid UUID", async () => {
     db._queueSelectResult([MOCK_LISTING]);
-    const res = await PATCH(makePatchRequest({ applicationId: "not-a-uuid", status: "approved" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ applicationId: "not-a-uuid", status: "approved" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(400);
   });
 
@@ -159,9 +187,12 @@ describe("PATCH /api/adoptions/[listingId]/applications", () => {
     db._updateReturning.mockResolvedValueOnce([updatedApp]);
     // fire-and-forget email lookups
     db._queueSelectResult([{ name: "Alice", email: "applicant@example.com" }]); // applicant
-    db._queueSelectResult([{ name: "Buddy" }]);                                  // pet
+    db._queueSelectResult([{ name: "Buddy" }]); // pet
 
-    const res = await PATCH(makePatchRequest({ applicationId: APP_ID, status: "approved" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ applicationId: APP_ID, status: "approved" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
@@ -176,7 +207,10 @@ describe("PATCH /api/adoptions/[listingId]/applications", () => {
     db._queueSelectResult([{ name: "Alice", email: "applicant@example.com" }]);
     db._queueSelectResult([{ name: "Buddy" }]);
 
-    const res = await PATCH(makePatchRequest({ applicationId: APP_ID, status: "approved" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ applicationId: APP_ID, status: "approved" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.data.status).toBe("approved");
@@ -185,7 +219,10 @@ describe("PATCH /api/adoptions/[listingId]/applications", () => {
   it("returns 404 when application does not exist for this listing", async () => {
     db._queueSelectResult([MOCK_LISTING]);
     db._updateReturning.mockResolvedValueOnce([]); // no matching application
-    const res = await PATCH(makePatchRequest({ applicationId: APP_ID, status: "rejected" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ applicationId: APP_ID, status: "rejected" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(404);
     const body = await res.json();
     expect(body.error).toContain("Application not found");

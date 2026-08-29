@@ -23,13 +23,13 @@ describe("computeWellnessScore", () => {
   it("gives a high score when all metrics are in the normal range", () => {
     const score = computeWellnessScore(
       {
-        weight: 5000,        // 5 kg — well within default 50–200000 g
-        temperature: 3850,   // 38.5°C — midpoint of dog range 3800–3900
-        heart_rate: 80,      // in 40–400 bpm
-        energy: 4,           // in 3–5 range
-        mood: 4,             // in 3–5 range
-        anxiety: 1,          // in 1–2 (inverted: 1 = calm)
-        socialization: 4,    // in 3–5 range
+        weight: 5000, // 5 kg — well within default 50–200000 g
+        temperature: 3850, // 38.5°C — midpoint of dog range 3800–3900
+        heart_rate: 80, // in 40–400 bpm
+        energy: 4, // in 3–5 range
+        mood: 4, // in 3–5 range
+        anxiety: 1, // in 1–2 (inverted: 1 = calm)
+        socialization: 4, // in 3–5 range
       },
       "dog",
     );
@@ -38,7 +38,7 @@ describe("computeWellnessScore", () => {
   });
 
   it("inverted metric: low anxiety (calm) scores higher than high anxiety (stressed)", () => {
-    const calmScore = computeWellnessScore({ anxiety: 1 }, "dog");  // calm
+    const calmScore = computeWellnessScore({ anxiety: 1 }, "dog"); // calm
     const stressedScore = computeWellnessScore({ anxiety: 5 }, "dog"); // stressed
     expect(calmScore).not.toBeNull();
     expect(stressedScore).not.toBeNull();

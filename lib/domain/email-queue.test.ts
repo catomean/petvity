@@ -48,7 +48,7 @@ describe("enqueueWelcomeSequence", () => {
 
     // Each delay must be at least the configured value (clock advanced between calls,
     // so allow up to a few ms slack on the upper bound).
-    const SLACK = (after - before) + 5;
+    const SLACK = after - before + 5;
     expect(delaysMs[0]).toBeGreaterThanOrEqual(WELCOME_SEQUENCE.welcome);
     expect(delaysMs[0]).toBeLessThanOrEqual(WELCOME_SEQUENCE.welcome + SLACK);
     expect(delaysMs[1]).toBeGreaterThanOrEqual(WELCOME_SEQUENCE.addPet);

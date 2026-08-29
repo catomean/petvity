@@ -113,9 +113,7 @@ export type ObservationDef = {
   redFlags?: RedFlag[];
 };
 
-const MAMMALS: SpeciesId[] = [
-  "dog", "cat", "horse", "rabbit", "guinea_pig", "hamster",
-];
+const MAMMALS: SpeciesId[] = ["dog", "cat", "horse", "rabbit", "guinea_pig", "hamster"];
 const ALL_BUT_FISH: SpeciesId[] = [...MAMMALS, "bird", "reptile", "other"];
 
 /* ─── The catalogue ───────────────────────────────────────────────────────── */
@@ -540,7 +538,11 @@ export const OBSERVATIONS: ObservationDef[] = [
     species: ["fish"],
     why: "The second stage of the nitrogen cycle and also acutely toxic; it should also read zero.",
     redFlags: [
-      { when: "Anything above 0", urgency: "same_day", because: "It stops the blood carrying oxygen." },
+      {
+        when: "Anything above 0",
+        urgency: "same_day",
+        because: "It stops the blood carrying oxygen.",
+      },
     ],
   },
   {
@@ -603,7 +605,8 @@ export const OBSERVATIONS: ObservationDef[] = [
       {
         when: "Tail-bobbing at rest, or sitting fluffed at the cage floor",
         urgency: "emergency",
-        because: "A bird showing obvious illness is usually near the end of its ability to compensate.",
+        because:
+          "A bird showing obvious illness is usually near the end of its ability to compensate.",
       },
     ],
   },

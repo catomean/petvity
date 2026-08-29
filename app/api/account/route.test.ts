@@ -7,11 +7,13 @@ import { makeMockDb } from "@/lib/test-helpers/db-mock";
 vi.mock("@/lib/auth/guards", () => ({ requireSession: vi.fn() }));
 vi.mock("@/lib/db", () => ({ getInstance: vi.fn() }));
 vi.mock("@/lib/email", () => ({ sendEmail: vi.fn().mockResolvedValue(undefined) }));
-vi.mock("@/lib/domain/email-queue", () => ({ enqueueWelcomeSequence: vi.fn().mockResolvedValue(undefined) }));
+vi.mock("@/lib/domain/email-queue", () => ({
+  enqueueWelcomeSequence: vi.fn().mockResolvedValue(undefined),
+}));
 // bcryptjs is slow — speed up tests with a lightweight mock
 vi.mock("bcryptjs", () => ({
   default: {
-    hash:    vi.fn().mockResolvedValue("hashed-password"),
+    hash: vi.fn().mockResolvedValue("hashed-password"),
     compare: vi.fn().mockResolvedValue(true),
   },
 }));
@@ -31,13 +33,19 @@ const OWNER_SESSION = {
 };
 
 const MOCK_USER_WITH_PASSWORD = {
-  id: "owner-1", email: "owner@example.com", name: "Owner",
-  password: "hashed-password", role: "pet_owner",
+  id: "owner-1",
+  email: "owner@example.com",
+  name: "Owner",
+  password: "hashed-password",
+  role: "pet_owner",
 };
 
 const MOCK_USER_OAUTH = {
-  id: "oauth-user", email: "oauth@example.com", name: "OAuth User",
-  password: null, role: "pet_owner", // OAuth — no password
+  id: "oauth-user",
+  email: "oauth@example.com",
+  name: "OAuth User",
+  password: null,
+  role: "pet_owner", // OAuth — no password
 };
 
 function makePostRequest(body: unknown) {
@@ -116,7 +124,9 @@ describe("POST /api/account (registration)", () => {
     db._insertReturning.mockResolvedValueOnce([{ id: "new-user-id" }]);
 
     // The insert mock captures the args via the vi.fn() — we just verify it succeeds
-    const res = await POST(makePostRequest({ email: "john.doe@example.com", password: "securepass123" }));
+    const res = await POST(
+      makePostRequest({ email: "john.doe@example.com", password: "securepass123" }),
+    );
     expect(res.status).toBe(201);
   });
 
@@ -185,7 +195,9 @@ describe("PATCH /api/account", () => {
 
   it("returns 400 when OAuth user tries to change password", async () => {
     db._queryFindFirst.mockResolvedValueOnce(MOCK_USER_OAUTH);
-    const res = await PATCH(makePatchRequest({ currentPassword: "old", newPassword: "newpass123" }));
+    const res = await PATCH(
+      makePatchRequest({ currentPassword: "old", newPassword: "newpass123" }),
+    );
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.error).toContain("OAuth accounts");
@@ -194,7 +206,9 @@ describe("PATCH /api/account", () => {
   it("returns 400 when current password is incorrect", async () => {
     vi.mocked(bcrypt.compare).mockResolvedValueOnce(false as never);
     db._queryFindFirst.mockResolvedValueOnce(MOCK_USER_WITH_PASSWORD);
-    const res = await PATCH(makePatchRequest({ currentPassword: "wrongpass", newPassword: "newpass123" }));
+    const res = await PATCH(
+      makePatchRequest({ currentPassword: "wrongpass", newPassword: "newpass123" }),
+    );
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.error).toContain("incorrect");
@@ -212,7 +226,9 @@ describe("PATCH /api/account", () => {
   it("returns 200 when password is changed with correct current password", async () => {
     vi.mocked(bcrypt.compare).mockResolvedValueOnce(true as never);
     db._queryFindFirst.mockResolvedValueOnce(MOCK_USER_WITH_PASSWORD);
-    const res = await PATCH(makePatchRequest({ currentPassword: "securepass123", newPassword: "newpass456" }));
+    const res = await PATCH(
+      makePatchRequest({ currentPassword: "securepass123", newPassword: "newpass456" }),
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
@@ -274,7 +290,9 @@ describe("DELETE /api/account", () => {
   it("deletes the user when password is correct and confirm matches", async () => {
     vi.mocked(bcrypt.compare).mockResolvedValueOnce(true as never);
     db._queryFindFirst.mockResolvedValueOnce(MOCK_USER_WITH_PASSWORD);
-    const res = await DELETE(makeDeleteRequest({ confirm: "DELETE", currentPassword: "securepass123" }));
+    const res = await DELETE(
+      makeDeleteRequest({ confirm: "DELETE", currentPassword: "securepass123" }),
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);

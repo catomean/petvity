@@ -21,7 +21,11 @@ const CATEGORY_ART: Record<ProductCategoryId, React.ReactNode> = {
   food: (
     <>
       {/* bowl */}
-      <path d="M22 52h52c0 14-11 24-26 24S22 66 22 52Z" fill="var(--teal-light)" stroke="var(--teal)" />
+      <path
+        d="M22 52h52c0 14-11 24-26 24S22 66 22 52Z"
+        fill="var(--teal-light)"
+        stroke="var(--teal)"
+      />
       <path d="M18 52h60" stroke="var(--teal)" />
       {/* kibble */}
       <circle cx="38" cy="40" r="5" fill="var(--accent-light)" stroke="var(--accent)" />
@@ -40,7 +44,16 @@ const CATEGORY_ART: Record<ProductCategoryId, React.ReactNode> = {
   health: (
     <>
       {/* capsule */}
-      <rect x="24" y="40" width="48" height="20" rx="10" fill="var(--teal-light)" stroke="var(--teal)" transform="rotate(-20 48 50)" />
+      <rect
+        x="24"
+        y="40"
+        width="48"
+        height="20"
+        rx="10"
+        fill="var(--teal-light)"
+        stroke="var(--teal)"
+        transform="rotate(-20 48 50)"
+      />
       <path d="M44 43.5 51 62" stroke="var(--teal)" />
       {/* cross */}
       <path d="M67 26v12M61 32h12" stroke="var(--accent)" />
@@ -52,7 +65,15 @@ const CATEGORY_ART: Record<ProductCategoryId, React.ReactNode> = {
       <path d="M26 42c0-10 10-16 22-16s22 6 22 16-4 18-10 20" fill="none" stroke="var(--teal)" />
       <path d="M26 42c0 10 4 18 10 20" fill="none" stroke="var(--teal)" />
       {/* buckle + tag */}
-      <rect x="42" y="60" width="12" height="8" rx="2" fill="var(--teal-light)" stroke="var(--teal)" />
+      <rect
+        x="42"
+        y="60"
+        width="12"
+        height="8"
+        rx="2"
+        fill="var(--teal-light)"
+        stroke="var(--teal)"
+      />
       <circle cx="48" cy="76" r="6" fill="var(--accent-light)" stroke="var(--accent)" />
     </>
   ),
@@ -67,7 +88,15 @@ const CATEGORY_ART: Record<ProductCategoryId, React.ReactNode> = {
   other: (
     <>
       {/* parcel */}
-      <rect x="26" y="34" width="44" height="36" rx="4" fill="var(--teal-light)" stroke="var(--teal)" />
+      <rect
+        x="26"
+        y="34"
+        width="44"
+        height="36"
+        rx="4"
+        fill="var(--teal-light)"
+        stroke="var(--teal)"
+      />
       <path d="M26 46h44M48 34v12" stroke="var(--teal)" />
       <path d="M40 58h16" stroke="var(--accent)" />
     </>

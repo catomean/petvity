@@ -70,7 +70,10 @@ export default function GuestCheckout({ locale }: { locale: string }) {
 
   // Re-price whenever the set of products in the cart changes. Quantity changes
   // alone don't need a round trip.
-  const idKey = cart.map((l) => l.productId).sort().join(",");
+  const idKey = cart
+    .map((l) => l.productId)
+    .sort()
+    .join(",");
   useEffect(() => {
     let cancelled = false;
     if (!idKey) {
@@ -232,7 +235,9 @@ export default function GuestCheckout({ locale }: { locale: string }) {
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="w-7 text-center text-sm font-semibold">{line.quantity}</span>
+                        <span className="w-7 text-center text-sm font-semibold">
+                          {line.quantity}
+                        </span>
                         <button
                           type="button"
                           aria-label={t("cartIncrease")}
@@ -366,7 +371,11 @@ export default function GuestCheckout({ locale }: { locale: string }) {
 
         {error && <p className="alert-error text-sm">{error}</p>}
 
-        <button type="submit" disabled={!ready || placing} className="btn-primary w-full justify-center disabled:opacity-60">
+        <button
+          type="submit"
+          disabled={!ready || placing}
+          className="btn-primary w-full justify-center disabled:opacity-60"
+        >
           {placing ? t("checkoutPlacing") : t("checkoutPlace", { total: formatPrice(total) })}
         </button>
 

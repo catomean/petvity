@@ -1,18 +1,48 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, vaccinations, adoptionListings, adoptionApplications, bookings, orders, orderItems, products } from "@/lib/db/schema";
+import {
+  pets,
+  healthMetrics,
+  vaccinations,
+  adoptionListings,
+  adoptionApplications,
+  bookings,
+  orders,
+  orderItems,
+  products,
+} from "@/lib/db/schema";
 import { and, count, countDistinct, desc, eq, gte, inArray } from "drizzle-orm";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
-import { SIGNAL_BG_CLASSES, SIGNAL_STRIP_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS, SIGNAL_TEXT_CLASSES } from "@/lib/config/pet-signal";
+import {
+  SIGNAL_BG_CLASSES,
+  SIGNAL_STRIP_CLASSES,
+  SIGNAL_SORT_ORDER,
+  SIGNAL_METRIC_WINDOW_DAYS,
+  SIGNAL_TEXT_CLASSES,
+} from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId } from "@/lib/config/species";
 import type { TwinTrend } from "@/lib/domain/digital-twin";
-import { Plus, PawPrint, TrendingUp, TrendingDown, Minus, CalendarDays, AlertTriangle, Stethoscope, Syringe, Heart, CalendarCheck, Store, Package } from "lucide-react";
+import {
+  Plus,
+  PawPrint,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  CalendarDays,
+  AlertTriangle,
+  Stethoscope,
+  Syringe,
+  Heart,
+  CalendarCheck,
+  Store,
+  Package,
+} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { translateSignalReason } from "@/lib/i18n/signal-reason";
@@ -25,9 +55,9 @@ import type { BookingStatusId, OrderStatusId } from "@/lib/config/orders";
 
 // Icon mapping stays component-side (React components are UI, not config)
 const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
-  improving:         TrendingUp,
-  stable:            Minus,
-  declining:         TrendingDown,
+  improving: TrendingUp,
+  stable: Minus,
+  declining: TrendingDown,
   insufficient_data: Minus,
 };
 
@@ -51,54 +81,62 @@ export default async function DashboardPage() {
     .orderBy(desc(pets.createdAt));
 
   const now = new Date();
-  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
   const petIds = userPets.map((p) => p.id);
 
   const isProfessional =
-    session.user.role === "veterinarian" || session.user.role === "pet_sitter" || session.user.role === "groomer";
+    session.user.role === "veterinarian" ||
+    session.user.role === "pet_sitter" ||
+    session.user.role === "groomer";
 
   // Batch-fetch metrics + vaccinations + pending adoption applications
   // + role-specific attention counts (pro booking requests, seller open orders)
-  const [allMetrics, allVacc, [pendingAppsRow], [proBookingsRow], [sellerOrdersRow]] = await Promise.all([
-    petIds.length > 0
-      ? db
-          .select()
-          .from(healthMetrics)
-          .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr)))
-          .orderBy(desc(healthMetrics.date))
-      : Promise.resolve([]),
-    petIds.length > 0
-      ? db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds))
-      : Promise.resolve([]),
-    db
-      .select({ total: count() })
-      .from(adoptionApplications)
-      .innerJoin(adoptionListings, eq(adoptionListings.id, adoptionApplications.listingId))
-      .where(and(
-        eq(adoptionListings.ownerId, session.user.id),
-        eq(adoptionApplications.status, "pending"),
-      )),
-    isProfessional
-      ? db
-          .select({ total: count() })
-          .from(bookings)
-          .where(and(
-            eq(bookings.professionalId, session.user.id),
-            eq(bookings.status, "pending"),
-          ))
-      : Promise.resolve([{ total: 0 }]),
-    db
-      .select({ total: countDistinct(orders.id) })
-      .from(orders)
-      .innerJoin(orderItems, eq(orderItems.orderId, orders.id))
-      .innerJoin(products, eq(products.id, orderItems.productId))
-      .where(and(
-        eq(products.sellerId, session.user.id),
-        inArray(orders.status, ["pending", "confirmed"]),
-      )),
-  ]);
+  const [allMetrics, allVacc, [pendingAppsRow], [proBookingsRow], [sellerOrdersRow]] =
+    await Promise.all([
+      petIds.length > 0
+        ? db
+            .select()
+            .from(healthMetrics)
+            .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr)))
+            .orderBy(desc(healthMetrics.date))
+        : Promise.resolve([]),
+      petIds.length > 0
+        ? db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds))
+        : Promise.resolve([]),
+      db
+        .select({ total: count() })
+        .from(adoptionApplications)
+        .innerJoin(adoptionListings, eq(adoptionListings.id, adoptionApplications.listingId))
+        .where(
+          and(
+            eq(adoptionListings.ownerId, session.user.id),
+            eq(adoptionApplications.status, "pending"),
+          ),
+        ),
+      isProfessional
+        ? db
+            .select({ total: count() })
+            .from(bookings)
+            .where(
+              and(eq(bookings.professionalId, session.user.id), eq(bookings.status, "pending")),
+            )
+        : Promise.resolve([{ total: 0 }]),
+      db
+        .select({ total: countDistinct(orders.id) })
+        .from(orders)
+        .innerJoin(orderItems, eq(orderItems.orderId, orders.id))
+        .innerJoin(products, eq(products.id, orderItems.productId))
+        .where(
+          and(
+            eq(products.sellerId, session.user.id),
+            inArray(orders.status, ["pending", "confirmed"]),
+          ),
+        ),
+    ]);
 
   const pendingAppsCount = pendingAppsRow?.total ?? 0;
   const proBookingsCount = proBookingsRow?.total ?? 0;
@@ -118,15 +156,22 @@ export default async function DashboardPage() {
       .from(bookings)
       .innerJoin(pets, eq(pets.id, bookings.petId))
       .innerJoin(users, eq(users.id, bookings.professionalId))
-      .where(and(
-        eq(bookings.ownerId, session.user.id),
-        inArray(bookings.status, ["pending", "confirmed"]),
-        gte(bookings.startDate, new Date(todayStr + "T00:00:00Z")),
-      ))
+      .where(
+        and(
+          eq(bookings.ownerId, session.user.id),
+          inArray(bookings.status, ["pending", "confirmed"]),
+          gte(bookings.startDate, new Date(todayStr + "T00:00:00Z")),
+        ),
+      )
       .orderBy(bookings.startDate)
       .limit(3),
     db
-      .select({ id: orders.id, status: orders.status, totalCents: orders.totalCents, createdAt: orders.createdAt })
+      .select({
+        id: orders.id,
+        status: orders.status,
+        totalCents: orders.totalCents,
+        createdAt: orders.createdAt,
+      })
       .from(orders)
       .where(eq(orders.userId, session.user.id))
       .orderBy(desc(orders.createdAt))
@@ -156,8 +201,14 @@ export default async function DashboardPage() {
     const petVacc = vaccByPet.get(pet.id) ?? [];
     const overdueCount = countOverdueVaccinations(petVacc, todayStr);
 
-    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, petCreatedAt: pet.createdAt, now });
-    const twin   = computeDigitalTwin(recentMetrics, now);
+    const signal = computePetSignal({
+      species: pet.species as SpeciesId,
+      recentMetrics,
+      overdueVaccinations: overdueCount,
+      petCreatedAt: pet.createdAt,
+      now,
+    });
+    const twin = computeDigitalTwin(recentMetrics, now);
 
     return { ...pet, signal, twin, overdueCount };
   });
@@ -174,7 +225,10 @@ export default async function DashboardPage() {
   // Vaccinations due within 14 days (from already-fetched data — no extra query)
   const vaccDueSoonCount = allVacc.filter((v) => {
     if (!v.nextDueDate || v.status === "not_applicable") return false;
-    const daysUntil = (new Date(v.nextDueDate + "T00:00:00Z").getTime() - new Date(todayStr + "T00:00:00Z").getTime()) / 86_400_000;
+    const daysUntil =
+      (new Date(v.nextDueDate + "T00:00:00Z").getTime() -
+        new Date(todayStr + "T00:00:00Z").getTime()) /
+      86_400_000;
     return daysUntil >= 0 && daysUntil <= 14;
   }).length;
 
@@ -183,13 +237,17 @@ export default async function DashboardPage() {
     const petVacc = vaccByPet.get(pet.id) ?? [];
     return petVacc.some((v) => {
       if (!v.nextDueDate || v.status === "not_applicable") return false;
-      const daysUntil = (new Date(v.nextDueDate + "T00:00:00Z").getTime() - new Date(todayStr + "T00:00:00Z").getTime()) / 86_400_000;
+      const daysUntil =
+        (new Date(v.nextDueDate + "T00:00:00Z").getTime() -
+          new Date(todayStr + "T00:00:00Z").getTime()) /
+        86_400_000;
       return daysUntil >= 0 && daysUntil <= 14;
     });
   });
-  const vaccHref = petsWithDueVacc.length === 1
-    ? `/portal/pets/${petsWithDueVacc[0].id}/vaccinations`
-    : "/portal/pets";
+  const vaccHref =
+    petsWithDueVacc.length === 1
+      ? `/portal/pets/${petsWithDueVacc[0].id}/vaccinations`
+      : "/portal/pets";
 
   return (
     <div>
@@ -208,23 +266,26 @@ export default async function DashboardPage() {
 
       {/* Today's check-in status — an action line, not decoration */}
       <p className="text-sm text-[var(--muted)] -mt-2 mb-6">
-        {userPets.length === 0
-          ? t("checkinNoPets")
-          : loggedToday === userPets.length
-            ? t("allCheckedIn", { total: userPets.length })
-            : (
-              <>
-                {t("partialCheckedIn", { done: loggedToday, total: userPets.length })}
-                {" · "}
-                <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">
-                  {loggedToday > 0 ? t("logRemaining") : t("logTodayCheckin")}
-                </Link>
-              </>
-            )}
+        {userPets.length === 0 ? (
+          t("checkinNoPets")
+        ) : loggedToday === userPets.length ? (
+          t("allCheckedIn", { total: userPets.length })
+        ) : (
+          <>
+            {t("partialCheckedIn", { done: loggedToday, total: userPets.length })}
+            {" · "}
+            <Link href="/portal/checkin" className="text-[var(--teal)] hover:underline">
+              {loggedToday > 0 ? t("logRemaining") : t("logTodayCheckin")}
+            </Link>
+          </>
+        )}
       </p>
 
       {/* Needs-attention strip — everything across the user's roles that wants a reply */}
-      {(pendingAppsCount > 0 || vaccDueSoonCount > 0 || proBookingsCount > 0 || sellerOrdersCount > 0) && (
+      {(pendingAppsCount > 0 ||
+        vaccDueSoonCount > 0 ||
+        proBookingsCount > 0 ||
+        sellerOrdersCount > 0) && (
         <div className="mb-6 flex flex-col sm:flex-row gap-3">
           {proBookingsCount > 0 && (
             <Link
@@ -271,7 +332,9 @@ export default async function DashboardPage() {
               <span className="text-sm font-medium text-[var(--ink)] flex-1">
                 {t("dashVaccDueSoon", { count: vaccDueSoonCount })}
               </span>
-              <span className="text-xs font-medium text-[var(--warn-text)]">{t("dashReview")} →</span>
+              <span className="text-xs font-medium text-[var(--warn-text)]">
+                {t("dashReview")} →
+              </span>
             </Link>
           )}
         </div>
@@ -320,7 +383,9 @@ export default async function DashboardPage() {
                 />
 
                 {/* Signal strip */}
-                <div className={`h-1 ${SIGNAL_STRIP_CLASSES[sig as keyof typeof SIGNAL_STRIP_CLASSES] ?? "bg-[var(--border)]"}`} />
+                <div
+                  className={`h-1 ${SIGNAL_STRIP_CLASSES[sig as keyof typeof SIGNAL_STRIP_CLASSES] ?? "bg-[var(--border)]"}`}
+                />
 
                 <div className="p-5">
                   {/* Row 1: avatar + signal badge */}
@@ -328,9 +393,13 @@ export default async function DashboardPage() {
                     <div className="w-14 h-14 rounded-2xl bg-[var(--light)] flex items-center justify-center text-3xl overflow-hidden flex-shrink-0">
                       {pet.avatarUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={pet.avatarUrl} alt={pet.name} className="w-full h-full object-cover" />
+                        <img
+                          src={pet.avatarUrl}
+                          alt={pet.name}
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
-                        speciesDef?.emoji ?? "🐾"
+                        (speciesDef?.emoji ?? "🐾")
                       )}
                     </div>
                     <span className={SIGNAL_BG_CLASSES[sig as keyof typeof SIGNAL_BG_CLASSES]}>
@@ -389,9 +458,13 @@ export default async function DashboardPage() {
 
                   {/* Signal reason + action links — shown when watch/concern */}
                   {sig !== "healthy" && (
-                    <div className={`flex items-start gap-1.5 mt-2 text-xs ${SIGNAL_TEXT_CLASSES[sig as PetWellnessSignal]}`}>
+                    <div
+                      className={`flex items-start gap-1.5 mt-2 text-xs ${SIGNAL_TEXT_CLASSES[sig as PetWellnessSignal]}`}
+                    >
                       <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                      <span className="leading-snug">{translateSignalReason(pet.signal.reasonData, tSignal)}</span>
+                      <span className="leading-snug">
+                        {translateSignalReason(pet.signal.reasonData, tSignal)}
+                      </span>
                     </div>
                   )}
                   {sig !== "healthy" && (
@@ -446,8 +519,13 @@ export default async function DashboardPage() {
           {upcomingBookings.length > 0 && (
             <section className="card p-5">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-[var(--ink)]">{t("dashUpcomingTitle")}</h2>
-                <Link href="/portal/bookings" className="text-xs font-medium text-[var(--teal)] hover:underline">
+                <h2 className="text-sm font-semibold text-[var(--ink)]">
+                  {t("dashUpcomingTitle")}
+                </h2>
+                <Link
+                  href="/portal/bookings"
+                  className="text-xs font-medium text-[var(--teal)] hover:underline"
+                >
                   {t("dashSeeAll")}
                 </Link>
               </div>
@@ -461,7 +539,9 @@ export default async function DashboardPage() {
                     <span className="text-xs text-[var(--muted)] tabular-nums flex-shrink-0">
                       {formatIsoDate(b.startDate.toISOString(), locale)}
                     </span>
-                    <span className={`badge ${BOOKING_STATUS_CONFIG[b.status as BookingStatusId]?.badge ?? "badge-neutral"}`}>
+                    <span
+                      className={`badge ${BOOKING_STATUS_CONFIG[b.status as BookingStatusId]?.badge ?? "badge-neutral"}`}
+                    >
                       {t(`bookingStatus_${b.status}` as Parameters<typeof t>[0])}
                     </span>
                   </li>
@@ -473,8 +553,13 @@ export default async function DashboardPage() {
           {recentOrders.length > 0 && (
             <section className="card p-5">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-sm font-semibold text-[var(--ink)]">{t("dashRecentOrdersTitle")}</h2>
-                <Link href="/portal/orders" className="text-xs font-medium text-[var(--teal)] hover:underline">
+                <h2 className="text-sm font-semibold text-[var(--ink)]">
+                  {t("dashRecentOrdersTitle")}
+                </h2>
+                <Link
+                  href="/portal/orders"
+                  className="text-xs font-medium text-[var(--teal)] hover:underline"
+                >
                   {t("dashSeeAll")}
                 </Link>
               </div>
@@ -488,7 +573,9 @@ export default async function DashboardPage() {
                     <span className="text-xs text-[var(--muted)] tabular-nums flex-shrink-0">
                       {formatIsoDate(o.createdAt.toISOString(), locale)}
                     </span>
-                    <span className={`badge ${ORDER_STATUS_CONFIG[o.status as OrderStatusId]?.badge ?? "badge-neutral"}`}>
+                    <span
+                      className={`badge ${ORDER_STATUS_CONFIG[o.status as OrderStatusId]?.badge ?? "badge-neutral"}`}
+                    >
                       {t(`orderStatus_${o.status}` as Parameters<typeof t>[0])}
                     </span>
                   </li>

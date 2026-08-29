@@ -30,7 +30,6 @@ export const SIGNAL_SORT_ORDER: Record<PetWellnessSignal, number> = {
   healthy: 2,
 };
 
-
 export const SIGNAL_COLORS: Record<PetWellnessSignal, string> = {
   concern: "var(--danger)",
   watch: "var(--warn)",

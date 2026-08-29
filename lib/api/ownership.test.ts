@@ -33,8 +33,8 @@ beforeEach(() => {
  */
 const HELPERS = [
   { name: "getHealthRecordForOwner", fn: getHealthRecordForOwner },
-  { name: "getVaccinationForOwner",  fn: getVaccinationForOwner  },
-  { name: "getMedicationForOwner",   fn: getMedicationForOwner   },
+  { name: "getVaccinationForOwner", fn: getVaccinationForOwner },
+  { name: "getMedicationForOwner", fn: getMedicationForOwner },
 ];
 
 describe("ownership helpers", () => {

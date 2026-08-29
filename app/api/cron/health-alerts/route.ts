@@ -17,7 +17,9 @@ export async function POST(req: NextRequest) {
 
   const db = getInstance();
   const now = new Date();
-  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
   const todayStr = now.toISOString().slice(0, 10);
 
   const allPets = await db.select().from(pets);
@@ -95,8 +97,7 @@ export async function POST(req: NextRequest) {
 
     if (
       result.signal === "concern" &&
-      (!pet.signalAlertSentAt ||
-        pet.signalAlertSentAt.toISOString().slice(0, 10) !== todayStr)
+      (!pet.signalAlertSentAt || pet.signalAlertSentAt.toISOString().slice(0, 10) !== todayStr)
     ) {
       alertPetIds.push(pet.id);
     }
@@ -146,12 +147,15 @@ export async function POST(req: NextRequest) {
     if (!owner?.email) continue;
 
     const result = signalResultMap.get(pet.id)!;
-    const { subject, html } = petHealthAlert({
-      ownerName: owner.name ?? "there",
-      petName: pet.name,
-      reason: result.reason,
-      petUrl: `${APP_URL}/portal/pets/${pet.id}/health`,
-    }, owner.locale);
+    const { subject, html } = petHealthAlert(
+      {
+        ownerName: owner.name ?? "there",
+        petName: pet.name,
+        reason: result.reason,
+        petUrl: `${APP_URL}/portal/pets/${pet.id}/health`,
+      },
+      owner.locale,
+    );
 
     try {
       await sendEmail({ to: owner.email, subject, html });
@@ -166,5 +170,8 @@ export async function POST(req: NextRequest) {
     await db.update(pets).set({ signalAlertSentAt: now }).where(inArray(pets.id, alertedIds));
   }
 
-  return NextResponse.json({ success: true, data: { processed: allPets.length, alerted: alertedIds.length } });
+  return NextResponse.json({
+    success: true,
+    data: { processed: allPets.length, alerted: alertedIds.length },
+  });
 }

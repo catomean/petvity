@@ -9,7 +9,10 @@ import { getHealthRecordForOwner } from "@/lib/api/ownership";
 const patchSchema = z.object({
   type: z.enum(healthRecordTypeEnum.enumValues).optional(),
   title: z.string().min(1).max(200).optional(),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
   vetName: z.string().max(150).nullable().optional(),
   clinic: z.string().max(150).nullable().optional(),
   notes: z.string().max(1000).nullable().optional(),

@@ -50,7 +50,10 @@ describe("PATCH /api/products/[productId]", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(requireSession).mockResolvedValue({ session: { user: { id: "admin-1", role: "admin" } } as any, error: null });
+    vi.mocked(requireSession).mockResolvedValue({
+      session: { user: { id: "admin-1", role: "admin" } } as any,
+      error: null,
+    });
   });
 
   it("returns 401 when not authenticated", async () => {
@@ -75,7 +78,10 @@ describe("PATCH /api/products/[productId]", () => {
 
   it("returns 200 with updated product", async () => {
     db._updateReturning.mockResolvedValueOnce([MOCK_PRODUCT]);
-    const res = await PATCH(makePatchRequest({ name: "Updated Dog Food", priceCents: 3499 }), makeParams());
+    const res = await PATCH(
+      makePatchRequest({ name: "Updated Dog Food", priceCents: 3499 }),
+      makeParams(),
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.success).toBe(true);
@@ -90,7 +96,10 @@ describe("DELETE /api/products/[productId]", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(requireSession).mockResolvedValue({ session: { user: { id: "admin-1", role: "admin" } } as any, error: null });
+    vi.mocked(requireSession).mockResolvedValue({
+      session: { user: { id: "admin-1", role: "admin" } } as any,
+      error: null,
+    });
   });
 
   it("returns 401 when not authenticated", async () => {

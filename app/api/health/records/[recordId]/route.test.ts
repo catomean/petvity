@@ -23,8 +23,14 @@ const OWNER_SESSION = {
 };
 
 const MOCK_RECORD = {
-  id: RECORD_ID, petId: "pet-1", type: "vet_visit", title: "Annual checkup",
-  date: "2026-01-15", vetName: "Dr Jones", clinic: "City Vet", notes: null,
+  id: RECORD_ID,
+  petId: "pet-1",
+  type: "vet_visit",
+  title: "Annual checkup",
+  date: "2026-01-15",
+  vetName: "Dr Jones",
+  clinic: "City Vet",
+  notes: null,
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ recordId: RECORD_ID }) };

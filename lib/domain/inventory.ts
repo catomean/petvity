@@ -28,12 +28,7 @@ export function drizzleInventory(db: Db): ReservationAdapter {
       const rows = await db
         .update(products)
         .set({ stock: sql`${products.stock} - ${quantity}`, updatedAt: new Date() })
-        .where(
-          and(
-            eq(products.id, sku),
-            or(isNull(products.stock), gte(products.stock, quantity)),
-          ),
-        )
+        .where(and(eq(products.id, sku), or(isNull(products.stock), gte(products.stock, quantity))))
         .returning({ id: products.id });
       return rows.length > 0;
     },

@@ -44,12 +44,7 @@ export async function GET() {
     .innerJoin(pets, eq(pets.id, bookings.petId))
     .innerJoin(users, eq(users.id, bookings.ownerId))
     .leftJoin(reviews, eq(reviews.bookingId, bookings.id))
-    .where(
-      or(
-        eq(bookings.ownerId, userId),
-        eq(bookings.professionalId, userId),
-      )
-    )
+    .where(or(eq(bookings.ownerId, userId), eq(bookings.professionalId, userId)))
     .orderBy(bookings.startDate);
 
   return NextResponse.json({ success: true, data: rows });
@@ -89,10 +84,7 @@ export async function POST(req: NextRequest) {
     .where(and(eq(pets.id, petId), eq(pets.ownerId, userId)))
     .limit(1);
   if (!pet) {
-    return NextResponse.json(
-      { success: false, error: "Pet not found." },
-      { status: 404 },
-    );
+    return NextResponse.json({ success: false, error: "Pet not found." }, { status: 404 });
   }
 
   // Resolve the professional's role + contact info for notification
@@ -101,11 +93,13 @@ export async function POST(req: NextRequest) {
     .from(users)
     .where(eq(users.id, professionalId))
     .limit(1);
-  if (!professional || (professional.role !== "veterinarian" && professional.role !== "pet_sitter" && professional.role !== "groomer")) {
-    return NextResponse.json(
-      { success: false, error: "Professional not found." },
-      { status: 404 },
-    );
+  if (
+    !professional ||
+    (professional.role !== "veterinarian" &&
+      professional.role !== "pet_sitter" &&
+      professional.role !== "groomer")
+  ) {
+    return NextResponse.json({ success: false, error: "Professional not found." }, { status: 404 });
   }
 
   // Conflict guard: the professional's time must be free. Half-open interval
@@ -126,7 +120,10 @@ export async function POST(req: NextRequest) {
     .limit(1);
   if (clash) {
     return NextResponse.json(
-      { success: false, error: "This professional is already booked during that time. Please pick different dates." },
+      {
+        success: false,
+        error: "This professional is already booked during that time. Please pick different dates.",
+      },
       { status: 409 },
     );
   }
@@ -145,7 +142,10 @@ export async function POST(req: NextRequest) {
     .limit(1);
   if (blocked) {
     return NextResponse.json(
-      { success: false, error: "This professional is unavailable during that period. Please pick different dates." },
+      {
+        success: false,
+        error: "This professional is unavailable during that period. Please pick different dates.",
+      },
       { status: 409 },
     );
   }
@@ -169,15 +169,20 @@ export async function POST(req: NextRequest) {
 
   sendEmail({
     to: professional.email,
-    ...bookingRequestReceived({
-      professionalName: professional.name ?? "there",
-      ownerName: session.user.name ?? session.user.email ?? "A pet owner",
-      petName: pet.name ?? "a pet",
-      startDate: formatDate(startDate),
-      endDate: formatDate(endDate),
-      notes,
-    }, professional.locale),
-  }).catch(() => {/* email failure must not break booking creation */});
+    ...bookingRequestReceived(
+      {
+        professionalName: professional.name ?? "there",
+        ownerName: session.user.name ?? session.user.email ?? "A pet owner",
+        petName: pet.name ?? "a pet",
+        startDate: formatDate(startDate),
+        endDate: formatDate(endDate),
+        notes,
+      },
+      professional.locale,
+    ),
+  }).catch(() => {
+    /* email failure must not break booking creation */
+  });
 
   return NextResponse.json({ success: true, data: booking }, { status: 201 });
 }

@@ -1,9 +1,29 @@
 import { describe, it, expect } from "vitest";
 import {
-  money, zero, fromDecimal, toDecimal, currency, isKnownCurrency,
-  add, subtract, sum, negate, times, percent, allocate, split,
-  compare, equals, greaterThan, lessThan, isZero, isNegative, isPositive,
-  format, toText, MoneyError,
+  money,
+  zero,
+  fromDecimal,
+  toDecimal,
+  currency,
+  isKnownCurrency,
+  add,
+  subtract,
+  sum,
+  negate,
+  times,
+  percent,
+  allocate,
+  split,
+  compare,
+  equals,
+  greaterThan,
+  lessThan,
+  isZero,
+  isNegative,
+  isPositive,
+  format,
+  toText,
+  MoneyError,
 } from "./money";
 
 describe("construction", () => {

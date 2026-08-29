@@ -125,9 +125,7 @@ export async function GET(req: NextRequest) {
 
   // Optional client-side location filter (case-insensitive substring)
   const filtered = location
-    ? rows.filter((r) =>
-        r.location?.toLowerCase().includes(location.toLowerCase()),
-      )
+    ? rows.filter((r) => r.location?.toLowerCase().includes(location.toLowerCase()))
     : rows;
 
   return NextResponse.json({ success: true, data: filtered });
@@ -157,10 +155,7 @@ export async function POST(req: NextRequest) {
     .limit(1);
 
   if (!pet) {
-    return NextResponse.json(
-      { success: false, error: "Pet not found" },
-      { status: 404 },
-    );
+    return NextResponse.json({ success: false, error: "Pet not found" }, { status: 404 });
   }
 
   // Only one active listing per pet at a time

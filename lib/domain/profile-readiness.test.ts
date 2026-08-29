@@ -13,8 +13,14 @@ describe("profileSteps", () => {
 
   it("a complete groomer profile is live", () => {
     const steps = profileSteps("groomer", {
-      salonName: "Salon X", services: "bath_brush", priceFrom: 5000,
-      city: "Zurich", country: "CH", bio: LONG_BIO, phone: "+41 1", isAcceptingClients: true,
+      salonName: "Salon X",
+      services: "bath_brush",
+      priceFrom: 5000,
+      city: "Zurich",
+      country: "CH",
+      bio: LONG_BIO,
+      phone: "+41 1",
+      isAcceptingClients: true,
     });
     expect(isProfileLive(steps)).toBe(true);
     expect(profileProgress(steps)).toBe(1);
@@ -36,8 +42,13 @@ describe("profileSteps", () => {
   // isAcceptingClients is an optional filter rather than a requirement.
   it("a complete profile is live even while not accepting clients", () => {
     const steps = profileSteps("veterinarian", {
-      clinicName: "C", specialty: "S", city: "Zurich", country: "CH",
-      bio: LONG_BIO, phone: "+41", isAcceptingClients: false,
+      clinicName: "C",
+      specialty: "S",
+      city: "Zurich",
+      country: "CH",
+      bio: LONG_BIO,
+      phone: "+41",
+      isAcceptingClients: false,
     });
     expect(isProfileLive(steps)).toBe(true);
     expect(steps.some((s) => s.key === "accepting")).toBe(false);

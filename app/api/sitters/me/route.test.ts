@@ -21,9 +21,15 @@ const SITTER_SESSION = {
 };
 
 const MOCK_PROFILE = {
-  userId: "sitter-1", bio: "Loving pet sitter", services: "walking,boarding",
-  pricePerDay: 5000, city: "Munich", country: "DE",
-  phone: "+49987654321", isVerified: false, isAcceptingClients: true,
+  userId: "sitter-1",
+  bio: "Loving pet sitter",
+  services: "walking,boarding",
+  pricePerDay: 5000,
+  city: "Munich",
+  country: "DE",
+  phone: "+49987654321",
+  isVerified: false,
+  isAcceptingClients: true,
 };
 
 function makePostRequest(body: unknown) {

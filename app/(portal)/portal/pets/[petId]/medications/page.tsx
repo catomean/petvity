@@ -1,11 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import {
-  Plus, Pill, X,
-  Check, Clock, Ban,
-  Pencil, Trash2, Search,
-} from "lucide-react";
+import { Plus, Pill, X, Check, Clock, Ban, Pencil, Trash2, Search } from "lucide-react";
 import { formatDateShort } from "@/lib/utils/format";
 import { MEDICATION_STATUS_CONFIG } from "@/lib/config/medications";
 import type { MedicationStatusId } from "@/lib/config/medications";
@@ -15,9 +11,9 @@ import PageHeader from "@/components/portal/PageHeader";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Record<MedicationStatusId, React.ElementType> = {
-  active:        Check,
-  completed:     Clock,
-  discontinued:  Ban,
+  active: Check,
+  completed: Clock,
+  discontinued: Ban,
 };
 
 type MedicationStatus = MedicationStatusId;
@@ -100,13 +96,28 @@ export default function MedicationsPage() {
   const { petId } = useParams<{ petId: string }>();
 
   const {
-    petName, rows, loading, filteredRows,
-    filter: statusFilter, setFilter: setStatusFilter,
-    searchQ, setSearchQ,
-    showForm, editingId, deletingId, setDeletingId,
-    form, saving, error,
+    petName,
+    rows,
+    loading,
+    filteredRows,
+    filter: statusFilter,
+    setFilter: setStatusFilter,
+    searchQ,
+    setSearchQ,
+    showForm,
+    editingId,
+    deletingId,
+    setDeletingId,
+    form,
+    saving,
+    error,
     deleteError,
-    openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
+    openAdd,
+    openEdit,
+    closeForm,
+    handleSubmit,
+    handleDelete,
+    field,
   } = useHealthList<Medication, FormState>({
     petId,
     apiPath: "/api/medications",
@@ -140,38 +151,40 @@ export default function MedicationsPage() {
         purpose={t("medsSubtitle")}
         action={
           <div className="flex items-center gap-2 flex-wrap">
-          {rows.length > 0 && !showForm && (
-            <>
-              <div className="relative">
-                <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
-                <input
-                  type="text"
-                  placeholder={t("medsSearch")}
-                  className="form-input form-input-icon text-sm py-1.5 w-44"
-                  value={searchQ}
-                  onChange={(e) => setSearchQ(e.target.value)}
-                  aria-label={t("medsSearch")}
-                />
-              </div>
-              <select
-                className="form-input text-sm py-1.5"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                aria-label={t("listStatusLabel")}
-              >
-                <option value="all">{t("listAllStatuses")}</option>
-                {(Object.keys(MEDICATION_STATUS_CONFIG) as MedicationStatus[]).map(
-                  (val) => <option key={val} value={val}>{t(`medStatus_${val}` as Parameters<typeof t>[0])}</option>
-                )}
-              </select>
-            </>
-          )}
-          {!showForm && (
-            <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              {t("medsAdd")}
-            </button>
-          )}
+            {rows.length > 0 && !showForm && (
+              <>
+                <div className="relative">
+                  <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder={t("medsSearch")}
+                    className="form-input form-input-icon text-sm py-1.5 w-44"
+                    value={searchQ}
+                    onChange={(e) => setSearchQ(e.target.value)}
+                    aria-label={t("medsSearch")}
+                  />
+                </div>
+                <select
+                  className="form-input text-sm py-1.5"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  aria-label={t("listStatusLabel")}
+                >
+                  <option value="all">{t("listAllStatuses")}</option>
+                  {(Object.keys(MEDICATION_STATUS_CONFIG) as MedicationStatus[]).map((val) => (
+                    <option key={val} value={val}>
+                      {t(`medStatus_${val}` as Parameters<typeof t>[0])}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+            {!showForm && (
+              <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                {t("medsAdd")}
+              </button>
+            )}
           </div>
         }
       />
@@ -213,7 +226,8 @@ export default function MedicationsPage() {
 
             <div>
               <label className="form-label">
-                {t("medsDosage")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
+                {t("medsDosage")}{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
@@ -225,7 +239,8 @@ export default function MedicationsPage() {
 
             <div>
               <label className="form-label">
-                {t("medsFrequency")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
+                {t("medsFrequency")}{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
@@ -250,7 +265,8 @@ export default function MedicationsPage() {
 
             <div>
               <label className="form-label">
-                {t("medsEndDate")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
+                {t("medsEndDate")}{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 type="date"
@@ -267,15 +283,18 @@ export default function MedicationsPage() {
                 value={form.status}
                 onChange={(e) => field("status", e.target.value)}
               >
-                {(Object.keys(MEDICATION_STATUS_CONFIG) as MedicationStatus[]).map(
-                  (val) => <option key={val} value={val}>{t(`medStatus_${val}` as Parameters<typeof t>[0])}</option>
-                )}
+                {(Object.keys(MEDICATION_STATUS_CONFIG) as MedicationStatus[]).map((val) => (
+                  <option key={val} value={val}>
+                    {t(`medStatus_${val}` as Parameters<typeof t>[0])}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div>
               <label className="form-label">
-                {t("medsPrescribedBy")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
+                {t("medsPrescribedBy")}{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
@@ -287,7 +306,8 @@ export default function MedicationsPage() {
 
             <div className="sm:col-span-2">
               <label className="form-label">
-                {t("logNotes")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
+                {t("logNotes")}{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <textarea
                 className="form-input min-h-[80px] resize-y"
@@ -301,7 +321,9 @@ export default function MedicationsPage() {
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
                 {saving ? t("saving") : editingId ? t("medsUpdate") : t("medsSave")}
               </button>
-              <button type="button" onClick={closeForm} className="btn-outline">{t("cancel")}</button>
+              <button type="button" onClick={closeForm} className="btn-outline">
+                {t("cancel")}
+              </button>
             </div>
           </form>
         </div>
@@ -327,7 +349,10 @@ export default function MedicationsPage() {
           <div className="py-12 text-center">
             <p className="font-medium text-[var(--ink)] mb-1">{t("medsNoMatch")}</p>
             <button
-              onClick={() => { setStatusFilter("all"); setSearchQ(""); }}
+              onClick={() => {
+                setStatusFilter("all");
+                setSearchQ("");
+              }}
               className="text-sm text-[var(--teal)] hover:underline mt-1"
             >
               {t("listClearFilters")}
@@ -337,23 +362,37 @@ export default function MedicationsPage() {
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
               <tr>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">{t("medsColMedication")}</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">{t("medsColDosage")}</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">{t("medsColDuration")}</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">{t("listStatusLabel")}</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
+                  {t("medsColMedication")}
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">
+                  {t("medsColDosage")}
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">
+                  {t("medsColDuration")}
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
+                  {t("listStatusLabel")}
+                </th>
                 <th className="py-3 px-4 w-20" />
               </tr>
             </thead>
             <tbody>
               {filteredRows.map((m) => {
-                const status = MEDICATION_STATUS_CONFIG[m.status] ?? MEDICATION_STATUS_CONFIG.active;
+                const status =
+                  MEDICATION_STATUS_CONFIG[m.status] ?? MEDICATION_STATUS_CONFIG.active;
                 const StatusIcon = STATUS_ICONS[m.status] ?? STATUS_ICONS.active;
                 const isDeleting = deletingId === m.id;
                 return (
-                  <tr key={m.id} className="border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">
+                  <tr
+                    key={m.id}
+                    className="border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors"
+                  >
                     <td className="py-3 px-4">
                       <p className="font-medium text-[var(--ink)]">{m.name}</p>
-                      {m.prescribedBy && <p className="text-xs text-[var(--muted)] mt-0.5">{m.prescribedBy}</p>}
+                      {m.prescribedBy && (
+                        <p className="text-xs text-[var(--muted)] mt-0.5">{m.prescribedBy}</p>
+                      )}
                       {(m.dosage || m.frequency) && (
                         <p className="text-xs text-[var(--muted)] mt-0.5 sm:hidden">
                           {[m.dosage, m.frequency].filter(Boolean).join(" · ")}
@@ -361,9 +400,11 @@ export default function MedicationsPage() {
                       )}
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell">
-                      {m.dosage || m.frequency
-                        ? <span>{[m.dosage, m.frequency].filter(Boolean).join(" · ")}</span>
-                        : <span className="text-[var(--faint)]">–</span>}
+                      {m.dosage || m.frequency ? (
+                        <span>{[m.dosage, m.frequency].filter(Boolean).join(" · ")}</span>
+                      ) : (
+                        <span className="text-[var(--faint)]">–</span>
+                      )}
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden md:table-cell">
                       {formatDateShort(m.startDate)}

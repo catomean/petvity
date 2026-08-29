@@ -161,12 +161,15 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         .limit(1);
 
       if (applicant?.email) {
-        const tpl = adoptionApplicationStatusChanged({
-          applicantName: applicant.name ?? applicant.email,
-          petName: pet?.name ?? "the pet",
-          status: parsed.data.status,
-          ownerNote: null,
-        }, applicant.locale);
+        const tpl = adoptionApplicationStatusChanged(
+          {
+            applicantName: applicant.name ?? applicant.email,
+            petName: pet?.name ?? "the pet",
+            status: parsed.data.status,
+            ownerNote: null,
+          },
+          applicant.locale,
+        );
         await sendEmail({ to: applicant.email, ...tpl });
       }
     } catch {

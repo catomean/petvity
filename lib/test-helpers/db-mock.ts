@@ -29,11 +29,20 @@ export function makeMockDb() {
     const value = selectQueue.length > 0 ? selectQueue.shift()! : [];
     const p = Promise.resolve(value);
     const chain: any = {
-      then:    p.then.bind(p),
-      catch:   p.catch.bind(p),
+      then: p.then.bind(p),
+      catch: p.catch.bind(p),
       finally: p.finally.bind(p),
     };
-    for (const m of ["from", "innerJoin", "leftJoin", "where", "orderBy", "groupBy", "offset", "limit"]) {
+    for (const m of [
+      "from",
+      "innerJoin",
+      "leftJoin",
+      "where",
+      "orderBy",
+      "groupBy",
+      "offset",
+      "limit",
+    ]) {
       chain[m] = vi.fn().mockReturnValue(chain);
     }
     return chain;
@@ -45,7 +54,7 @@ export function makeMockDb() {
 
   // Relational query mocks — shared across all tables
   const _queryFindFirst = vi.fn().mockResolvedValue(undefined);
-  const _queryFindMany  = vi.fn().mockResolvedValue([]);
+  const _queryFindMany = vi.fn().mockResolvedValue([]);
   const queryTable = { findFirst: _queryFindFirst, findMany: _queryFindMany };
 
   /**
@@ -56,9 +65,9 @@ export function makeMockDb() {
     // Direct await resolves to undefined (routes that don't use .returning())
     const p = Promise.resolve(undefined as unknown);
     return {
-      then:      p.then.bind(p),
-      catch:     p.catch.bind(p),
-      finally:   p.finally.bind(p),
+      then: p.then.bind(p),
+      catch: p.catch.bind(p),
+      finally: p.finally.bind(p),
       returning: _deleteReturning,
     };
   }

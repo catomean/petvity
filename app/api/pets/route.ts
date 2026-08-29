@@ -10,7 +10,10 @@ const createPetSchema = z.object({
   name: z.string().min(1).max(100),
   species: z.enum(speciesEnum.enumValues),
   breed: z.string().max(100).optional(),
-  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  birthDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
   sex: z.enum(sexEnum.enumValues).default("unknown"),
   weightGrams: z.number().int().positive().optional(),
   bio: z.string().max(500).optional(),
@@ -63,9 +66,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: petWithHandle }, { status: 201 });
   } catch {
-    return NextResponse.json(
-      { success: false, error: "Failed to create pet" },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false, error: "Failed to create pet" }, { status: 500 });
   }
 }

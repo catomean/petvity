@@ -69,21 +69,26 @@ describe("formatTemperature", () => {
  * These functions now require a `t` function (from next-intl). We pass
  * a minimal English mock so tests remain self-contained.
  */
-const mockTShort = (key: string, v?: Record<string, number>) => ({
-  petAgeShortLess1Month: "< 1mo",
-  petAgeShortMonths: `${v?.n}mo`,
-  petAgeShortYears: `${v?.n}yr`,
-}[key] ?? key);
+const mockTShort = (key: string, v?: Record<string, number>) =>
+  ({
+    petAgeShortLess1Month: "< 1mo",
+    petAgeShortMonths: `${v?.n}mo`,
+    petAgeShortYears: `${v?.n}yr`,
+  })[key] ?? key;
 
-const mockT = (key: string, v?: Record<string, number>) => ({
-  petAgeLess1Month: "< 1 month old",
-  petAgeMonths: `${v?.n} month${v?.n === 1 ? "" : "s"} old`,
-  petAgeYears: `${v?.n} year${v?.n === 1 ? "" : "s"} old`,
-  petAgeYearsMonths: `${v?.years}y ${v?.months}mo old`,
-}[key] ?? key);
+const mockT = (key: string, v?: Record<string, number>) =>
+  ({
+    petAgeLess1Month: "< 1 month old",
+    petAgeMonths: `${v?.n} month${v?.n === 1 ? "" : "s"} old`,
+    petAgeYears: `${v?.n} year${v?.n === 1 ? "" : "s"} old`,
+    petAgeYearsMonths: `${v?.years}y ${v?.months}mo old`,
+  })[key] ?? key;
 
 describe("formatPetAgeShort", () => {
-  beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(new Date("2026-04-24T12:00:00Z")); });
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-24T12:00:00Z"));
+  });
   afterEach(() => vi.useRealTimers());
 
   it("returns empty string for null", () => {
@@ -106,7 +111,10 @@ describe("formatPetAgeShort", () => {
 });
 
 describe("formatPetAge", () => {
-  beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(new Date("2026-04-24T12:00:00Z")); });
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-04-24T12:00:00Z"));
+  });
   afterEach(() => vi.useRealTimers());
 
   it("returns empty string for null", () => {

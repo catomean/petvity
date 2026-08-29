@@ -40,15 +40,12 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       and(
         eq(bookings.id, bookingId),
         or(eq(bookings.ownerId, userId), eq(bookings.professionalId, userId)),
-      )
+      ),
     )
     .limit(1);
 
   if (!booking) {
-    return NextResponse.json(
-      { success: false, error: "Booking not found." },
-      { status: 404 },
-    );
+    return NextResponse.json({ success: false, error: "Booking not found." }, { status: 404 });
   }
 
   const { status } = parsed.data;
@@ -71,27 +68,39 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
   // Notify the owner when the professional changes status — fire-and-forget
   const shouldNotifyOwner =
-    isProfessional &&
-    (status === "confirmed" || status === "cancelled" || status === "completed");
+    isProfessional && (status === "confirmed" || status === "cancelled" || status === "completed");
 
   if (shouldNotifyOwner) {
     Promise.all([
-      db.select({ email: users.email, name: users.name, locale: users.locale }).from(users).where(eq(users.id, booking.ownerId)).limit(1),
+      db
+        .select({ email: users.email, name: users.name, locale: users.locale })
+        .from(users)
+        .where(eq(users.id, booking.ownerId))
+        .limit(1),
       db.select({ name: pets.name }).from(pets).where(eq(pets.id, booking.petId)).limit(1),
-    ]).then(([[owner], [petRow]]) => {
-      if (!owner) return;
-      const formatDate = (d: Date) =>
-        d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-      sendEmail({
-        to: owner.email,
-        ...bookingStatusChanged({
-          ownerName: owner.name ?? "there",
-          petName: petRow?.name ?? "your pet",
-          status: status as "confirmed" | "cancelled" | "completed",
-          startDate: formatDate(booking.startDate),
-        }, owner.locale),
-      }).catch(() => {/* email failure must not affect response */});
-    }).catch(() => {/* lookup failure must not affect response */});
+    ])
+      .then(([[owner], [petRow]]) => {
+        if (!owner) return;
+        const formatDate = (d: Date) =>
+          d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        sendEmail({
+          to: owner.email,
+          ...bookingStatusChanged(
+            {
+              ownerName: owner.name ?? "there",
+              petName: petRow?.name ?? "your pet",
+              status: status as "confirmed" | "cancelled" | "completed",
+              startDate: formatDate(booking.startDate),
+            },
+            owner.locale,
+          ),
+        }).catch(() => {
+          /* email failure must not affect response */
+        });
+      })
+      .catch(() => {
+        /* lookup failure must not affect response */
+      });
   }
 
   return NextResponse.json({ success: true, data: updated });
@@ -114,10 +123,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     .limit(1);
 
   if (!booking) {
-    return NextResponse.json(
-      { success: false, error: "Booking not found." },
-      { status: 404 },
-    );
+    return NextResponse.json({ success: false, error: "Booking not found." }, { status: 404 });
   }
 
   if (booking.status !== "pending") {

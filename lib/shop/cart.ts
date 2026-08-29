@@ -11,10 +11,7 @@
  */
 
 import { createCart, localStorageAdapter, memoryStorage } from "@/packages/commercekit/src/cart";
-import {
-  useCartLines,
-  useCartCount as useCount,
-} from "@/packages/commercekit/src/react";
+import { useCartLines, useCartCount as useCount } from "@/packages/commercekit/src/react";
 import { MAX_ITEM_QUANTITY } from "@/lib/config/products";
 
 export type { CartLine } from "@/packages/commercekit/src/cart";

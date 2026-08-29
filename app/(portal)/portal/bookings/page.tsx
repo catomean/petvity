@@ -33,7 +33,7 @@ interface BookingRow {
 
 // Icons are UI-layer; labels/colors sourced from lib/config/orders SSOT
 const STATUS_ICONS: Record<BookingStatusId, React.ElementType> = {
-  pending:   Clock,
+  pending: Clock,
   confirmed: CheckCircle,
   cancelled: XCircle,
   completed: CheckCircle,
@@ -67,13 +67,24 @@ export default function BookingsPage() {
     setLoading(true);
     setFetchError("");
     fetch("/api/bookings")
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setBookings(data ?? []); setLoading(false); })
-      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(({ data }) => {
+        setBookings(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadBookings(); }, []);
+  useEffect(() => {
+    loadBookings();
+  }, []);
 
   async function load() {
     const res = await fetch("/api/bookings");
@@ -106,12 +117,15 @@ export default function BookingsPage() {
 
   return (
     <div>
-      <HubTabs tabs={[{ href: "/portal/find", label: t("findAPro") }, { href: "/portal/bookings", label: t("bookings") }]} />
+      <HubTabs
+        tabs={[
+          { href: "/portal/find", label: t("findAPro") },
+          { href: "/portal/bookings", label: t("bookings") },
+        ]}
+      />
       <PageHeader title={t("bookings")} purpose={t("bookingsSubtitle")} />
 
-      {mutationError && (
-        <div className="alert-error mb-4">{mutationError}</div>
-      )}
+      {mutationError && <div className="alert-error mb-4">{mutationError}</div>}
 
       {loading ? (
         <div className="space-y-3">
@@ -175,7 +189,10 @@ export default function BookingsPage() {
         <ReviewModal
           booking={reviewTarget}
           onClose={() => setReviewTarget(null)}
-          onSubmitted={() => { setReviewTarget(null); startTransition(() => load()); }}
+          onSubmitted={() => {
+            setReviewTarget(null);
+            startTransition(() => load());
+          }}
         />
       )}
     </div>
@@ -222,11 +239,11 @@ function BookingCard({
             {b.startDate !== b.endDate && ` – ${formatIsoDate(b.endDate)}`}
           </p>
           {b.ownerName && (
-            <p className="text-sm text-[var(--ink2)] mt-0.5">{t("bookingsOwner", { name: b.ownerName })}</p>
+            <p className="text-sm text-[var(--ink2)] mt-0.5">
+              {t("bookingsOwner", { name: b.ownerName })}
+            </p>
           )}
-          {b.notes && (
-            <p className="text-sm text-[var(--muted)] mt-1.5 line-clamp-2">{b.notes}</p>
-          )}
+          {b.notes && <p className="text-sm text-[var(--muted)] mt-1.5 line-clamp-2">{b.notes}</p>}
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -264,7 +281,10 @@ function BookingCard({
                   {b.status === "pending" && (
                     <button
                       className="w-full text-start px-3 py-2 text-sm text-[var(--green-text)] hover:bg-[var(--green-bg)] transition-colors"
-                      onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "confirmed"); }}
+                      onClick={() => {
+                        setActionsOpen(false);
+                        onUpdateStatus(b.id, "confirmed");
+                      }}
                     >
                       {t("bookingsConfirm")}
                     </button>
@@ -272,21 +292,30 @@ function BookingCard({
                   {b.status === "confirmed" && (
                     <button
                       className="w-full text-start px-3 py-2 text-sm text-[var(--teal)] hover:bg-[var(--teal-light)] transition-colors"
-                      onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "completed"); }}
+                      onClick={() => {
+                        setActionsOpen(false);
+                        onUpdateStatus(b.id, "completed");
+                      }}
                     >
                       {t("bookingsMarkCompleted")}
                     </button>
                   )}
                   <button
                     className="w-full text-start px-3 py-2 text-sm text-[var(--danger-text)] hover:bg-[var(--danger-bg)] transition-colors"
-                    onClick={() => { setActionsOpen(false); onUpdateStatus(b.id, "cancelled"); }}
+                    onClick={() => {
+                      setActionsOpen(false);
+                      onUpdateStatus(b.id, "cancelled");
+                    }}
                   >
                     {t("bookingsCancel")}
                   </button>
                   {b.status === "pending" && (
                     <button
                       className="w-full text-start px-3 py-2 text-sm text-[var(--muted)] hover:bg-[var(--off)] transition-colors"
-                      onClick={() => { setActionsOpen(false); onDelete(b.id); }}
+                      onClick={() => {
+                        setActionsOpen(false);
+                        onDelete(b.id);
+                      }}
                     >
                       {t("listDelete")}
                     </button>
@@ -316,10 +345,7 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
           onMouseLeave={() => setHover(0)}
           className="text-[var(--warn-text)] transition-transform hover:scale-110"
         >
-          <Star
-            className="w-7 h-7"
-            fill={(hover || value) >= n ? "currentColor" : "none"}
-          />
+          <Star className="w-7 h-7" fill={(hover || value) >= n ? "currentColor" : "none"} />
         </button>
       ))}
     </div>
@@ -343,7 +369,10 @@ function ReviewModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (rating === 0) { setError(t("bookingsRatingRequired")); return; }
+    if (rating === 0) {
+      setError(t("bookingsRatingRequired"));
+      return;
+    }
     setSaving(true);
     setError("");
     const res = await fetch("/api/reviews", {
@@ -369,7 +398,10 @@ function ReviewModal({
               {b.petName ?? t("petFallback")} · {roleLabel}
             </p>
           </div>
-          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors">
+          <button
+            onClick={onClose}
+            className="text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -378,7 +410,9 @@ function ReviewModal({
           {error && <p className="alert-error">{error}</p>}
 
           <div>
-            <label className="block text-sm font-medium text-[var(--ink2)] mb-2">{t("bookingsRatingLabel")} *</label>
+            <label className="block text-sm font-medium text-[var(--ink2)] mb-2">
+              {t("bookingsRatingLabel")} *
+            </label>
             <StarPicker value={rating} onChange={setRating} />
           </div>
 
@@ -394,8 +428,14 @@ function ReviewModal({
           </div>
 
           <div className="flex gap-3 pb-1">
-            <button type="button" onClick={onClose} className="btn-outline flex-1">{t("cancel")}</button>
-            <button type="submit" disabled={saving || rating === 0} className="btn-primary flex-1 disabled:opacity-60">
+            <button type="button" onClick={onClose} className="btn-outline flex-1">
+              {t("cancel")}
+            </button>
+            <button
+              type="submit"
+              disabled={saving || rating === 0}
+              className="btn-primary flex-1 disabled:opacity-60"
+            >
               {saving ? t("bookingsSubmitting") : t("bookingsSubmitReview")}
             </button>
           </div>

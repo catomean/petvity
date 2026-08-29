@@ -26,11 +26,7 @@ export async function POST(
     return NextResponse.json({ success: false, error: "Order not found" }, { status: 404 });
   }
 
-  const result = await startCheckoutForOrder(
-    order,
-    session.user.email ?? null,
-    "/portal/orders",
-  );
+  const result = await startCheckoutForOrder(order, session.user.email ?? null, "/portal/orders");
   if (!result.ok) {
     return NextResponse.json({ success: false, error: result.error }, { status: result.status });
   }

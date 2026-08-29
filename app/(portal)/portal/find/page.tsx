@@ -2,7 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Stethoscope, Home, Scissors, BadgeCheck, MapPin, Phone, Search, CalendarPlus, X, Star } from "lucide-react";
+import {
+  Stethoscope,
+  Home,
+  Scissors,
+  BadgeCheck,
+  MapPin,
+  Phone,
+  Search,
+  CalendarPlus,
+  X,
+  Star,
+} from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { formatPrice, formatDateShort } from "@/lib/utils/format";
 import { EmptyState } from "@/components/portal/PageState";
@@ -88,11 +99,13 @@ function VerifiedBadge() {
 function AcceptingBadge({ accepting }: { accepting: boolean }) {
   const t = useTranslations("portal");
   return (
-    <span className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
-      accepting
-        ? "bg-[var(--green-bg)] text-[var(--green-text)]"
-        : "bg-[var(--off)] text-[var(--muted)]"
-    }`}>
+    <span
+      className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded-full ${
+        accepting
+          ? "bg-[var(--green-bg)] text-[var(--green-text)]"
+          : "bg-[var(--off)] text-[var(--muted)]"
+      }`}
+    >
       {accepting ? t("acceptingClients") : t("notAccepting")}
     </span>
   );
@@ -142,7 +155,15 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
         </div>
         {vet.isAcceptingClients && (
           <button
-            onClick={() => onBook({ professionalId: vet.userId, name: vet.name, role: "veterinarian", pricePerDay: null, priceFrom: null })}
+            onClick={() =>
+              onBook({
+                professionalId: vet.userId,
+                name: vet.name,
+                role: "veterinarian",
+                pricePerDay: null,
+                priceFrom: null,
+              })
+            }
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
@@ -160,11 +181,18 @@ function VetCard({ vet, onBook }: { vet: VetRow; onBook: (t: BookingTarget) => v
       {vet.phone && (
         <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
           <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-          <a href={`tel:${vet.phone}`} className="hover:text-[var(--teal)] transition-colors">{vet.phone}</a>
+          <a href={`tel:${vet.phone}`} className="hover:text-[var(--teal)] transition-colors">
+            {vet.phone}
+          </a>
         </div>
       )}
       <div className="mt-2">
-        <a href={`/${locale}/pros/${vet.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
+        <a
+          href={`/${locale}/pros/${vet.userId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-[var(--teal)] hover:underline"
+        >
           {t("findViewProfile")}
         </a>
       </div>
@@ -184,21 +212,32 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <p className="font-semibold text-[var(--ink)]">{sitter.name ?? t("findSitterFallback")}</p>
+              <p className="font-semibold text-[var(--ink)]">
+                {sitter.name ?? t("findSitterFallback")}
+              </p>
               {sitter.isVerified && <VerifiedBadge />}
               <AcceptingBadge accepting={sitter.isAcceptingClients} />
               <StarRating avg={sitter.avgRating} count={sitter.reviewCount} />
             </div>
             {sitter.pricePerDay != null && (
               <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">
-                {formatPrice(sitter.pricePerDay!, locale)}{t("findPerDay")}
+                {formatPrice(sitter.pricePerDay!, locale)}
+                {t("findPerDay")}
               </p>
             )}
           </div>
         </div>
         {sitter.isAcceptingClients && (
           <button
-            onClick={() => onBook({ professionalId: sitter.userId, name: sitter.name, role: "pet_sitter", pricePerDay: sitter.pricePerDay, priceFrom: null })}
+            onClick={() =>
+              onBook({
+                professionalId: sitter.userId,
+                name: sitter.name,
+                role: "pet_sitter",
+                pricePerDay: sitter.pricePerDay,
+                priceFrom: null,
+              })
+            }
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
@@ -206,7 +245,9 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
           </button>
         )}
       </div>
-      {sitter.services && <p className="text-sm text-[var(--muted)] mt-2">{formatServices(sitter.services, t)}</p>}
+      {sitter.services && (
+        <p className="text-sm text-[var(--muted)] mt-2">{formatServices(sitter.services, t)}</p>
+      )}
       {(sitter.city || sitter.country) && (
         <div className="flex items-center gap-1.5 mt-1 text-sm text-[var(--muted)]">
           <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
@@ -217,11 +258,18 @@ function SitterCard({ sitter, onBook }: { sitter: SitterRow; onBook: (t: Booking
       {sitter.phone && (
         <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
           <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-          <a href={`tel:${sitter.phone}`} className="hover:text-[var(--teal)] transition-colors">{sitter.phone}</a>
+          <a href={`tel:${sitter.phone}`} className="hover:text-[var(--teal)] transition-colors">
+            {sitter.phone}
+          </a>
         </div>
       )}
       <div className="mt-2">
-        <a href={`/${locale}/pros/${sitter.userId}`} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--teal)] hover:underline">
+        <a
+          href={`/${locale}/pros/${sitter.userId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-[var(--teal)] hover:underline"
+        >
           {t("findViewProfile")}
         </a>
       </div>
@@ -256,7 +304,9 @@ export default function FindPage() {
 
   // Fetch pets once (not city-dependent)
   useEffect(() => {
-    fetch("/api/pets").then(async (r) => { if (r.ok) setPets((await r.json()).data ?? []); });
+    fetch("/api/pets").then(async (r) => {
+      if (r.ok) setPets((await r.json()).data ?? []);
+    });
   }, []);
 
   // Refetch vets + sitters whenever city filter changes
@@ -294,7 +344,12 @@ export default function FindPage() {
 
   return (
     <div>
-      <HubTabs tabs={[{ href: "/portal/find", label: t("findAPro") }, { href: "/portal/bookings", label: t("bookings") }]} />
+      <HubTabs
+        tabs={[
+          { href: "/portal/find", label: t("findAPro") },
+          { href: "/portal/bookings", label: t("bookings") },
+        ]}
+      />
       <PageHeader title={t("findTitle")} purpose={t("findSubtitle")} />
 
       {/* Tabs + search */}
@@ -310,7 +365,11 @@ export default function FindPage() {
                   : "text-[var(--muted)] hover:text-[var(--ink)]"
               }`}
             >
-              {tabId === "vets" ? t("veterinarians") : tabId === "sitters" ? t("petSitters") : t("groomers")}
+              {tabId === "vets"
+                ? t("veterinarians")
+                : tabId === "sitters"
+                  ? t("petSitters")
+                  : t("groomers")}
             </button>
           ))}
         </div>
@@ -336,10 +395,14 @@ export default function FindPage() {
           <EmptyState
             icon={Stethoscope}
             title={t("findNoVets")}
-            body={debouncedCity
-              ? t("findNoVetsCity", { city: debouncedCity })
-              : t("findNoVetsBody")}
-            cta={debouncedCity ? undefined : { label: t("findRegisterVet"), href: "/register?role=vet" }}
+            body={
+              debouncedCity ? t("findNoVetsCity", { city: debouncedCity }) : t("findNoVetsBody")
+            }
+            cta={
+              debouncedCity
+                ? undefined
+                : { label: t("findRegisterVet"), href: "/register?role=vet" }
+            }
           />
         ) : (
           <div className="space-y-3">
@@ -347,7 +410,9 @@ export default function FindPage() {
               <VetCard key={vet.id} vet={vet} onBook={setBookingTarget} />
             ))}
             {vetsHasMore && (
-              <p className="text-xs text-center text-[var(--muted)] pt-2">{t("findResultsLimited")}</p>
+              <p className="text-xs text-center text-[var(--muted)] pt-2">
+                {t("findResultsLimited")}
+              </p>
             )}
           </div>
         )
@@ -356,10 +421,16 @@ export default function FindPage() {
           <EmptyState
             icon={Scissors}
             title={t("findNoGroomers")}
-            body={debouncedCity
-              ? t("findNoGroomersCity", { city: debouncedCity })
-              : t("findNoGroomersBody")}
-            cta={debouncedCity ? undefined : { label: t("findRegisterGroomer"), href: "/register?role=groomer" }}
+            body={
+              debouncedCity
+                ? t("findNoGroomersCity", { city: debouncedCity })
+                : t("findNoGroomersBody")
+            }
+            cta={
+              debouncedCity
+                ? undefined
+                : { label: t("findRegisterGroomer"), href: "/register?role=groomer" }
+            }
           />
         ) : (
           <div className="space-y-3">
@@ -367,45 +438,52 @@ export default function FindPage() {
               <GroomerCard key={groomer.id} groomer={groomer} onBook={setBookingTarget} />
             ))}
             {groomersHasMore && (
-              <p className="text-xs text-center text-[var(--muted)] pt-2">{t("findResultsLimited")}</p>
+              <p className="text-xs text-center text-[var(--muted)] pt-2">
+                {t("findResultsLimited")}
+              </p>
             )}
           </div>
         )
+      ) : sitters.length === 0 ? (
+        <EmptyState
+          icon={Home}
+          title={t("findNoSitters")}
+          body={
+            debouncedCity ? t("findNoSittersCity", { city: debouncedCity }) : t("findNoSittersBody")
+          }
+          cta={
+            debouncedCity
+              ? undefined
+              : { label: t("findRegisterSitter"), href: "/register?role=sitter" }
+          }
+        />
       ) : (
-        sitters.length === 0 ? (
-          <EmptyState
-            icon={Home}
-            title={t("findNoSitters")}
-            body={debouncedCity
-              ? t("findNoSittersCity", { city: debouncedCity })
-              : t("findNoSittersBody")}
-            cta={debouncedCity ? undefined : { label: t("findRegisterSitter"), href: "/register?role=sitter" }}
-          />
-        ) : (
-          <div className="space-y-3">
-            {sitters.map((sitter) => (
-              <SitterCard key={sitter.id} sitter={sitter} onBook={setBookingTarget} />
-            ))}
-            {sittersHasMore && (
-              <p className="text-xs text-center text-[var(--muted)] pt-2">{t("findResultsLimited")}</p>
-            )}
-          </div>
-        )
+        <div className="space-y-3">
+          {sitters.map((sitter) => (
+            <SitterCard key={sitter.id} sitter={sitter} onBook={setBookingTarget} />
+          ))}
+          {sittersHasMore && (
+            <p className="text-xs text-center text-[var(--muted)] pt-2">
+              {t("findResultsLimited")}
+            </p>
+          )}
+        </div>
       )}
 
       {bookingTarget && (
-        <BookingModal
-          target={bookingTarget}
-          pets={pets}
-          onClose={() => setBookingTarget(null)}
-        />
+        <BookingModal target={bookingTarget} pets={pets} onClose={() => setBookingTarget(null)} />
       )}
     </div>
   );
 }
 
-
-function GroomerCard({ groomer, onBook }: { groomer: GroomerRow; onBook: (t: BookingTarget) => void }) {
+function GroomerCard({
+  groomer,
+  onBook,
+}: {
+  groomer: GroomerRow;
+  onBook: (t: BookingTarget) => void;
+}) {
   const t = useTranslations("portal");
   const locale = useLocale();
   return (
@@ -417,12 +495,16 @@ function GroomerCard({ groomer, onBook }: { groomer: GroomerRow; onBook: (t: Boo
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <p className="font-semibold text-[var(--ink)]">{groomer.name ?? t("findGroomerFallback")}</p>
+              <p className="font-semibold text-[var(--ink)]">
+                {groomer.name ?? t("findGroomerFallback")}
+              </p>
               {groomer.isVerified && <VerifiedBadge />}
               <AcceptingBadge accepting={groomer.isAcceptingClients} />
               <StarRating avg={groomer.avgRating} count={groomer.reviewCount} />
             </div>
-            {groomer.salonName && <p className="text-sm text-[var(--role-groomer)] mt-0.5">{groomer.salonName}</p>}
+            {groomer.salonName && (
+              <p className="text-sm text-[var(--role-groomer)] mt-0.5">{groomer.salonName}</p>
+            )}
             {groomer.priceFrom != null && (
               <p className="text-sm text-[var(--accent)] mt-0.5 font-medium">
                 {t("findPriceFrom", { price: formatPrice(groomer.priceFrom, locale) })}
@@ -432,7 +514,15 @@ function GroomerCard({ groomer, onBook }: { groomer: GroomerRow; onBook: (t: Boo
         </div>
         {groomer.isAcceptingClients && (
           <button
-            onClick={() => onBook({ professionalId: groomer.userId, name: groomer.name, role: "groomer", pricePerDay: null, priceFrom: groomer.priceFrom })}
+            onClick={() =>
+              onBook({
+                professionalId: groomer.userId,
+                name: groomer.name,
+                role: "groomer",
+                pricePerDay: null,
+                priceFrom: groomer.priceFrom,
+              })
+            }
             className="btn-primary text-sm flex items-center gap-1.5 px-3 py-1.5 flex-shrink-0"
           >
             <CalendarPlus className="w-3.5 h-3.5" />
@@ -440,7 +530,9 @@ function GroomerCard({ groomer, onBook }: { groomer: GroomerRow; onBook: (t: Boo
           </button>
         )}
       </div>
-      {groomer.services && <p className="text-sm text-[var(--muted)] mt-2">{formatServices(groomer.services, t)}</p>}
+      {groomer.services && (
+        <p className="text-sm text-[var(--muted)] mt-2">{formatServices(groomer.services, t)}</p>
+      )}
       {(groomer.city || groomer.country) && (
         <div className="flex items-center gap-1.5 mt-1 text-sm text-[var(--muted)]">
           <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
@@ -451,7 +543,9 @@ function GroomerCard({ groomer, onBook }: { groomer: GroomerRow; onBook: (t: Boo
       {groomer.phone && (
         <div className="flex items-center gap-1.5 mt-1.5 text-sm text-[var(--muted)]">
           <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-          <a href={`tel:${groomer.phone}`} className="hover:text-[var(--teal)] transition-colors">{groomer.phone}</a>
+          <a href={`tel:${groomer.phone}`} className="hover:text-[var(--teal)] transition-colors">
+            {groomer.phone}
+          </a>
         </div>
       )}
     </div>
@@ -493,20 +587,28 @@ function BookingModal({
   useEffect(() => {
     fetch(`/api/bookings/busy?professionalId=${target.professionalId}`)
       .then((r) => r.json())
-      .then(({ success, data }) => { if (success) setBusy(data); })
+      .then(({ success, data }) => {
+        if (success) setBusy(data);
+      })
       .catch(() => {});
   }, [target.professionalId]);
 
   const effectiveEnd = isSitter ? endDate : startDate;
   const clash = Boolean(startDate && effectiveEnd) && datesClash(startDate, effectiveEnd, busy);
 
-  const nights = isSitter && startDate && endDate
-    ? Math.max(0, Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86_400_000))
-    : 0;
+  const nights =
+    isSitter && startDate && endDate
+      ? Math.max(
+          0,
+          Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86_400_000),
+        )
+      : 0;
   const totalCents = nights > 0 && target.pricePerDay != null ? nights * target.pricePerDay : null;
 
   const ready =
-    Boolean(petId) && Boolean(startDate) && !clash &&
+    Boolean(petId) &&
+    Boolean(startDate) &&
+    !clash &&
     (isSitter ? Boolean(endDate) && endDate > startDate : Boolean(slot));
 
   async function handleSubmit(e: React.FormEvent) {
@@ -560,7 +662,10 @@ function BookingModal({
                   : t("findVetVisitHint")}
             </p>
           </div>
-          <button onClick={onClose} className="p-2 -me-2 text-[var(--muted)] hover:text-[var(--ink)] transition-colors rounded-lg">
+          <button
+            onClick={onClose}
+            className="p-2 -me-2 text-[var(--muted)] hover:text-[var(--ink)] transition-colors rounded-lg"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -573,8 +678,12 @@ function BookingModal({
             <p className="font-medium text-[var(--ink)] mb-1">{t("findBookingSuccess")}</p>
             <p className="text-sm text-[var(--muted)] mb-4">{t("findBookingSuccessDesc")}</p>
             <div className="flex flex-col gap-2">
-              <Link href="/portal/bookings" className="btn-primary w-full text-center">{t("findViewBookings")}</Link>
-              <button onClick={onClose} className="btn-outline w-full">{t("findDone")}</button>
+              <Link href="/portal/bookings" className="btn-primary w-full text-center">
+                {t("findViewBookings")}
+              </Link>
+              <button onClick={onClose} className="btn-outline w-full">
+                {t("findDone")}
+              </button>
             </div>
           </div>
         ) : (
@@ -584,7 +693,10 @@ function BookingModal({
             {/* Pet: silent when there is only one — no decisions the user can't get wrong */}
             {pets.length === 0 ? (
               <p className="text-sm text-[var(--muted)]">
-                {t("noPets")} <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">{t("noPetsAction")}</Link>
+                {t("noPets")}{" "}
+                <Link href="/portal/pets/new" className="text-[var(--teal)] hover:underline">
+                  {t("noPetsAction")}
+                </Link>
               </p>
             ) : pets.length === 1 ? (
               <p className="text-sm text-[var(--ink2)]">
@@ -593,9 +705,16 @@ function BookingModal({
             ) : (
               <div>
                 <label className="form-label">{t("findPetLabel")} *</label>
-                <select className="form-input" value={petId} onChange={(e) => setPetId(e.target.value)} required>
+                <select
+                  className="form-input"
+                  value={petId}
+                  onChange={(e) => setPetId(e.target.value)}
+                  required
+                >
                   {pets.map((p) => (
-                    <option key={p.id} value={p.id}>{p.name ?? t("unnamedPet")}</option>
+                    <option key={p.id} value={p.id}>
+                      {p.name ?? t("unnamedPet")}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -667,15 +786,17 @@ function BookingModal({
             )}
 
             {/* Availability feedback BEFORE submitting, not after */}
-            {clash && (
-              <p className="alert-error text-sm">{t("findDatesUnavailable")}</p>
-            )}
+            {clash && <p className="alert-error text-sm">{t("findDatesUnavailable")}</p>}
             {!clash && busy.length > 0 && (
               <p className="text-xs text-[var(--muted)]">
                 {t("findBusyHint", {
                   dates: busy
                     .slice(0, 3)
-                    .map((r) => (r.start === r.end ? formatDateShort(r.start, locale) : `${formatDateShort(r.start, locale)} – ${formatDateShort(r.end, locale)}`))
+                    .map((r) =>
+                      r.start === r.end
+                        ? formatDateShort(r.start, locale)
+                        : `${formatDateShort(r.start, locale)} – ${formatDateShort(r.end, locale)}`,
+                    )
                     .join(", "),
                 })}
               </p>
@@ -689,7 +810,9 @@ function BookingModal({
                   {target.pricePerDay != null && ` × ${formatPrice(target.pricePerDay, locale)}`}
                 </span>
                 {totalCents != null && (
-                  <span className="font-semibold text-[var(--ink)]">{formatPrice(totalCents, locale)}</span>
+                  <span className="font-semibold text-[var(--ink)]">
+                    {formatPrice(totalCents, locale)}
+                  </span>
                 )}
               </div>
             )}
@@ -705,16 +828,23 @@ function BookingModal({
             </div>
 
             <div className="flex gap-3 pb-1">
-              <button type="button" onClick={onClose} className="btn-outline flex-1">{t("cancel")}</button>
-              <button type="submit" disabled={saving || !ready} className="btn-primary flex-1 disabled:opacity-60">
+              <button type="button" onClick={onClose} className="btn-outline flex-1">
+                {t("cancel")}
+              </button>
+              <button
+                type="submit"
+                disabled={saving || !ready}
+                className="btn-primary flex-1 disabled:opacity-60"
+              >
                 {saving ? t("findBookingInProgress") : t("findRequestBooking")}
               </button>
             </div>
-            <p className="text-xs text-[var(--muted)] text-center pb-1">{t("findRequestExplainer")}</p>
+            <p className="text-xs text-[var(--muted)] text-center pb-1">
+              {t("findRequestExplainer")}
+            </p>
           </form>
         )}
       </div>
     </div>
   );
 }
-

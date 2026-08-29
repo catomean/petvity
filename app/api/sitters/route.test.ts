@@ -42,7 +42,10 @@ describe("GET /api/sitters", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(requireSession).mockResolvedValue({ session: { user: { id: "user-1" } } as any, error: null });
+    vi.mocked(requireSession).mockResolvedValue({
+      session: { user: { id: "user-1" } } as any,
+      error: null,
+    });
   });
 
   it("returns 401 when not authenticated", async () => {

@@ -72,11 +72,17 @@ export async function GET() {
     userListings,
     userApplications,
   ] = await Promise.all([
-    petIds.length ? db.select().from(healthMetrics).where(inArray(healthMetrics.petId, petIds)) : [],
-    petIds.length ? db.select().from(healthRecords).where(inArray(healthRecords.petId, petIds)) : [],
+    petIds.length
+      ? db.select().from(healthMetrics).where(inArray(healthMetrics.petId, petIds))
+      : [],
+    petIds.length
+      ? db.select().from(healthRecords).where(inArray(healthRecords.petId, petIds))
+      : [],
     petIds.length ? db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)) : [],
     petIds.length ? db.select().from(medications).where(inArray(medications.petId, petIds)) : [],
-    petIds.length ? db.select().from(petSignalHistory).where(inArray(petSignalHistory.petId, petIds)) : [],
+    petIds.length
+      ? db.select().from(petSignalHistory).where(inArray(petSignalHistory.petId, petIds))
+      : [],
     db.select().from(bookings).where(eq(bookings.ownerId, userId)),
     db.select().from(reviews).where(eq(reviews.reviewerId, userId)),
     db.select().from(orders).where(eq(orders.userId, userId)),

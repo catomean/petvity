@@ -35,7 +35,10 @@ export async function GET(req: NextRequest) {
         ),
       ),
     db
-      .select({ startDate: professionalBlockedDates.startDate, endDate: professionalBlockedDates.endDate })
+      .select({
+        startDate: professionalBlockedDates.startDate,
+        endDate: professionalBlockedDates.endDate,
+      })
       .from(professionalBlockedDates)
       .where(eq(professionalBlockedDates.professionalId, professionalId)),
   ]);

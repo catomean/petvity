@@ -9,9 +9,7 @@ export default function PortalNotFound() {
       </div>
 
       <h1 className="text-4xl font-extrabold text-[var(--teal)] mb-2">404</h1>
-      <p className="text-lg font-semibold text-[var(--ink)] mb-2">
-        This page has gone for a walk
-      </p>
+      <p className="text-lg font-semibold text-[var(--ink)] mb-2">This page has gone for a walk</p>
       <p className="text-sm text-[var(--muted)] max-w-xs mb-7">
         The page you&apos;re looking for doesn&apos;t exist or may have been moved.
       </p>

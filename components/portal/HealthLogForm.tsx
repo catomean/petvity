@@ -39,7 +39,14 @@ const EMPTY_FORM: InitialValues = {
   notes: "",
 };
 
-export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, initialValues }: Props) {
+export function HealthLogForm({
+  petId,
+  petName,
+  weightHint,
+  tempHint,
+  hrHint,
+  initialValues,
+}: Props) {
   const t = useTranslations("portal");
   const tTwin = useTranslations("twin");
   const router = useRouter();
@@ -56,7 +63,8 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
     const payload: Record<string, unknown> = { date: form.date };
 
     if (form.weightKg) payload.weightGrams = Math.round(parseFloat(form.weightKg) * 1000);
-    if (form.temperatureC) payload.temperatureCentidegrees = Math.round(parseFloat(form.temperatureC) * 100);
+    if (form.temperatureC)
+      payload.temperatureCentidegrees = Math.round(parseFloat(form.temperatureC) * 100);
     if (form.heartRateBpm) payload.heartRateBpm = parseInt(form.heartRateBpm);
     if (form.energy) payload.energy = parseInt(form.energy);
     if (form.mood) payload.mood = parseInt(form.mood);
@@ -92,7 +100,9 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
       label: t("healthWeightLabel"),
       unit: "kg",
       step: "0.01",
-      placeholder: weightHint ? `${weightHint.min}–${weightHint.max} ${weightHint.unit}` : "e.g. 8.5",
+      placeholder: weightHint
+        ? `${weightHint.min}–${weightHint.max} ${weightHint.unit}`
+        : "e.g. 8.5",
       hint: weightHint,
     },
     {
@@ -119,9 +129,7 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
 
       {/* Date */}
       <div className="card p-5">
-        <label className="form-label">
-          {t("logDate")}
-        </label>
+        <label className="form-label">{t("logDate")}</label>
         <input
           type="date"
           value={form.date}
@@ -169,12 +177,13 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
         <div className="grid grid-cols-2 gap-4">
           {EMOTIONAL_METRICS.map((metricId) => {
             const def = HEALTH_METRIC_CONFIG[metricId];
-            const labelKey = `metric${metricId.charAt(0).toUpperCase()}${metricId.slice(1)}Label` as Parameters<typeof t>[0];
+            const labelKey =
+              `metric${metricId.charAt(0).toUpperCase()}${metricId.slice(1)}Label` as Parameters<
+                typeof t
+              >[0];
             return (
               <div key={metricId}>
-                <label className="form-label">
-                  {t(labelKey)}
-                </label>
+                <label className="form-label">{t(labelKey)}</label>
                 <select
                   value={form[metricId as keyof typeof form]}
                   onChange={(e) => setForm({ ...form, [metricId]: e.target.value })}
@@ -191,7 +200,8 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
                   ))}
                 </select>
                 <p className="text-xs text-[var(--muted)] mt-1">
-                  1 = {tTwin(`${metricId}Scale1` as Parameters<typeof tTwin>[0])} · 5 = {tTwin(`${metricId}Scale5` as Parameters<typeof tTwin>[0])}
+                  1 = {tTwin(`${metricId}Scale1` as Parameters<typeof tTwin>[0])} · 5 ={" "}
+                  {tTwin(`${metricId}Scale5` as Parameters<typeof tTwin>[0])}
                 </p>
               </div>
             );
@@ -202,7 +212,8 @@ export function HealthLogForm({ petId, petName, weightHint, tempHint, hrHint, in
       {/* Notes */}
       <div className="card p-5">
         <label className="form-label">
-          {t("logNotes")} <span className="text-[var(--faint)] font-normal">{t("notesOptional")}</span>
+          {t("logNotes")}{" "}
+          <span className="text-[var(--faint)] font-normal">{t("notesOptional")}</span>
         </label>
         <textarea
           rows={3}

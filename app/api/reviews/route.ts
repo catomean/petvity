@@ -78,16 +78,17 @@ export async function POST(req: NextRequest) {
 
   // Verify booking: must be owned by this user and have status=completed
   const [booking] = await db
-    .select({ ownerId: bookings.ownerId, professionalId: bookings.professionalId, status: bookings.status })
+    .select({
+      ownerId: bookings.ownerId,
+      professionalId: bookings.professionalId,
+      status: bookings.status,
+    })
     .from(bookings)
     .where(and(eq(bookings.id, bookingId), eq(bookings.ownerId, userId)))
     .limit(1);
 
   if (!booking) {
-    return NextResponse.json(
-      { success: false, error: "Booking not found." },
-      { status: 404 },
-    );
+    return NextResponse.json({ success: false, error: "Booking not found." }, { status: 404 });
   }
   if (booking.status !== "completed") {
     return NextResponse.json(

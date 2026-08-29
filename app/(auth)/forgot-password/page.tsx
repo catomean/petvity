@@ -11,7 +11,9 @@ export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => { emailRef.current?.focus(); }, []);
+  useEffect(() => {
+    emailRef.current?.focus();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,7 +41,9 @@ export default function ForgotPasswordPage() {
         <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center mx-auto mb-5">
           <Mail className="w-7 h-7 text-[var(--teal)]" />
         </div>
-        <h1 className="font-display font-medium text-3xl mb-2 text-[var(--warm-ink)] text-center">Check your inbox</h1>
+        <h1 className="font-display font-medium text-3xl mb-2 text-[var(--warm-ink)] text-center">
+          Check your inbox
+        </h1>
         <p className="text-sm text-[var(--muted)] text-center mb-7 leading-relaxed">
           If <strong className="text-[var(--ink2)]">{email}</strong> is registered, we sent a
           password reset link. Check your spam folder if it doesn&apos;t arrive.
@@ -63,7 +67,9 @@ export default function ForgotPasswordPage() {
         Back to login
       </Link>
 
-      <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">Reset your password</h1>
+      <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">
+        Reset your password
+      </h1>
       <p className="text-sm text-[var(--muted)] mb-7">
         Enter your email and we&apos;ll send you a reset link.
       </p>

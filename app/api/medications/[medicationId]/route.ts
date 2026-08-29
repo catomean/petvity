@@ -10,8 +10,15 @@ const patchSchema = z.object({
   name: z.string().min(1).max(150).optional(),
   dosage: z.string().max(100).nullable().optional(),
   frequency: z.string().max(100).nullable().optional(),
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
-  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+  startDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
+  endDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .nullable()
+    .optional(),
   prescribedBy: z.string().max(150).nullable().optional(),
   status: z.enum(medicationStatusEnum.enumValues).optional(),
   notes: z.string().max(500).nullable().optional(),

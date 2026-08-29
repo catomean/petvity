@@ -36,119 +36,115 @@ export default async function OgImage({ params }: Params) {
   const price = row?.priceCents != null ? formatPrice(row.priceCents) : null;
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #0D6E78 0%, #0A5860 100%)",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+      }}
+    >
+      {/* Category icon */}
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          width: 120,
+          height: 120,
+          borderRadius: 24,
+          background: "rgba(255,255,255,0.18)",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #0D6E78 0%, #0A5860 100%)",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontSize: 64,
+          marginBottom: 28,
+          border: "4px solid rgba(255,255,255,0.25)",
         }}
       >
-        {/* Category icon */}
-        <div
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: 24,
-            background: "rgba(255,255,255,0.18)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 64,
-            marginBottom: 28,
-            border: "4px solid rgba(255,255,255,0.25)",
-          }}
-        >
-          {emoji}
-        </div>
-
-        {/* Category label */}
-        <div
-          style={{
-            fontSize: 18,
-            fontWeight: 600,
-            color: "rgba(255,255,255,0.7)",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            marginBottom: 12,
-          }}
-        >
-          {categoryLabel}
-        </div>
-
-        {/* Product name */}
-        <div
-          style={{
-            fontSize: 54,
-            fontWeight: 800,
-            color: "white",
-            letterSpacing: "-1px",
-            marginBottom: 14,
-            textAlign: "center",
-            maxWidth: 900,
-            lineHeight: 1.15,
-          }}
-        >
-          {name}
-        </div>
-
-        {/* Description (truncated) */}
-        {description && (
-          <div
-            style={{
-              fontSize: 20,
-              color: "rgba(255,255,255,0.7)",
-              marginBottom: 28,
-              textAlign: "center",
-              maxWidth: 760,
-              lineHeight: 1.4,
-            }}
-          >
-            {description.length > 100 ? `${description.slice(0, 100)}…` : description}
-          </div>
-        )}
-
-        {/* Price badge */}
-        {price && (
-          <div
-            style={{
-              background: "rgba(255,255,255,0.15)",
-              border: "1.5px solid rgba(255,255,255,0.35)",
-              borderRadius: 32,
-              padding: "10px 28px",
-              fontSize: 26,
-              fontWeight: 700,
-              color: "white",
-              marginBottom: 32,
-            }}
-          >
-            {price}
-          </div>
-        )}
-
-        {/* App badge */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            background: "rgba(255,255,255,0.12)",
-            borderRadius: 32,
-            padding: "10px 24px",
-          }}
-        >
-          <span style={{ fontSize: 22 }}>🐾</span>
-          <span style={{ fontSize: 22, fontWeight: 700, color: "white" }}>
-            {APP.name}
-          </span>
-        </div>
+        {emoji}
       </div>
-    ),
+
+      {/* Category label */}
+      <div
+        style={{
+          fontSize: 18,
+          fontWeight: 600,
+          color: "rgba(255,255,255,0.7)",
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          marginBottom: 12,
+        }}
+      >
+        {categoryLabel}
+      </div>
+
+      {/* Product name */}
+      <div
+        style={{
+          fontSize: 54,
+          fontWeight: 800,
+          color: "white",
+          letterSpacing: "-1px",
+          marginBottom: 14,
+          textAlign: "center",
+          maxWidth: 900,
+          lineHeight: 1.15,
+        }}
+      >
+        {name}
+      </div>
+
+      {/* Description (truncated) */}
+      {description && (
+        <div
+          style={{
+            fontSize: 20,
+            color: "rgba(255,255,255,0.7)",
+            marginBottom: 28,
+            textAlign: "center",
+            maxWidth: 760,
+            lineHeight: 1.4,
+          }}
+        >
+          {description.length > 100 ? `${description.slice(0, 100)}…` : description}
+        </div>
+      )}
+
+      {/* Price badge */}
+      {price && (
+        <div
+          style={{
+            background: "rgba(255,255,255,0.15)",
+            border: "1.5px solid rgba(255,255,255,0.35)",
+            borderRadius: 32,
+            padding: "10px 28px",
+            fontSize: 26,
+            fontWeight: 700,
+            color: "white",
+            marginBottom: 32,
+          }}
+        >
+          {price}
+        </div>
+      )}
+
+      {/* App badge */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          background: "rgba(255,255,255,0.12)",
+          borderRadius: 32,
+          padding: "10px 24px",
+        }}
+      >
+        <span style={{ fontSize: 22 }}>🐾</span>
+        <span style={{ fontSize: 22, fontWeight: 700, color: "white" }}>{APP.name}</span>
+      </div>
+    </div>,
     { ...size },
   );
 }

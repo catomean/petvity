@@ -98,7 +98,7 @@ describe("refreshSignalCache", () => {
     const dogMetric = {
       petId: PET_ID,
       date: todayStr,
-      weightGrams: 10000,          // 10 kg — normal for a dog
+      weightGrams: 10000, // 10 kg — normal for a dog
       temperatureCentidegrees: 3850, // 38.5°C — normal
       heartRateBpm: 80,
       energy: 3,
@@ -110,7 +110,7 @@ describe("refreshSignalCache", () => {
     db._queryFindFirst.mockResolvedValueOnce(makePet({ lastKnownSignal: "watch" }));
     db._queryFindMany
       .mockResolvedValueOnce([dogMetric]) // one recent metric
-      .mockResolvedValueOnce([]);          // no overdue vaccinations
+      .mockResolvedValueOnce([]); // no overdue vaccinations
 
     await refreshSignalCache(PET_ID, NOW);
 
@@ -130,14 +130,15 @@ describe("refreshSignalCache", () => {
       weightGrams: 10000,
       temperatureCentidegrees: 3850,
       heartRateBpm: 80,
-      energy: 3, mood: 3, anxiety: 2, socialization: 3,
+      energy: 3,
+      mood: 3,
+      anxiety: 2,
+      socialization: 3,
     };
 
     // Already healthy
     db._queryFindFirst.mockResolvedValueOnce(makePet({ lastKnownSignal: "healthy" }));
-    db._queryFindMany
-      .mockResolvedValueOnce([dogMetric])
-      .mockResolvedValueOnce([]);
+    db._queryFindMany.mockResolvedValueOnce([dogMetric]).mockResolvedValueOnce([]);
 
     await refreshSignalCache(PET_ID, NOW);
 

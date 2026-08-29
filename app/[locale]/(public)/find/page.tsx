@@ -3,7 +3,16 @@ import { vetProfiles, sitterProfiles, groomerProfiles, users, reviews } from "@/
 import { eq, and, ilike, avg, count, inArray, isNotNull, sql } from "drizzle-orm";
 import Link from "next/link";
 import { APP, APP_URL } from "@/lib/config/app";
-import { PawPrint, Search, Stethoscope, Home, Scissors, MapPin, Star, BadgeCheck } from "lucide-react";
+import {
+  PawPrint,
+  Search,
+  Stethoscope,
+  Home,
+  Scissors,
+  MapPin,
+  Star,
+  BadgeCheck,
+} from "lucide-react";
 import { formatPrice } from "@/lib/utils/format";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
@@ -33,7 +42,13 @@ export async function generateMetadata({ params, searchParams }: Params): Promis
     ? t("dirMetaTitleCity", { app: APP.name, city })
     : t("dirMetaTitle", { app: APP.name });
   const description = t("dirMetaDesc", { app: APP.name });
-  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description }, alternates: buildAlternates("/find") };
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { card: "summary", title, description },
+    alternates: buildAlternates("/find"),
+  };
 }
 
 export default async function PublicDirectoryPage({ params, searchParams }: Params) {
@@ -43,7 +58,9 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
   const tPortal = await getTranslations({ locale, namespace: "portal" });
   const db = getInstance();
 
-  const activeType: ProType = TYPES.includes(typeParam as ProType) ? (typeParam as ProType) : "vets";
+  const activeType: ProType = TYPES.includes(typeParam as ProType)
+    ? (typeParam as ProType)
+    : "vets";
   const city = cityParam?.trim() ?? "";
 
   const PAGE = 50;
@@ -60,66 +77,117 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
 
   if (activeType === "vets") {
     const conditions = [
-      eq(users.role, "veterinarian"), eq(vetProfiles.isAcceptingClients, true),
-      isNotNull(vetProfiles.clinicName), isNotNull(vetProfiles.specialty),
-      isNotNull(vetProfiles.city), isNotNull(vetProfiles.phone),
+      eq(users.role, "veterinarian"),
+      eq(vetProfiles.isAcceptingClients, true),
+      isNotNull(vetProfiles.clinicName),
+      isNotNull(vetProfiles.specialty),
+      isNotNull(vetProfiles.city),
+      isNotNull(vetProfiles.phone),
       sql`length(coalesce(${vetProfiles.bio}, '')) >= 40`,
     ];
     if (city) conditions.push(ilike(vetProfiles.city, `%${city}%`));
     const r = await db
       .select({
-        userId: vetProfiles.userId, name: users.name, specialty: vetProfiles.specialty,
-        clinicName: vetProfiles.clinicName, city: vetProfiles.city, country: vetProfiles.country,
-        bio: vetProfiles.bio, isVerified: vetProfiles.isVerified,
+        userId: vetProfiles.userId,
+        name: users.name,
+        specialty: vetProfiles.specialty,
+        clinicName: vetProfiles.clinicName,
+        city: vetProfiles.city,
+        country: vetProfiles.country,
+        bio: vetProfiles.bio,
+        isVerified: vetProfiles.isVerified,
       })
-      .from(vetProfiles).innerJoin(users, eq(users.id, vetProfiles.userId))
-      .where(and(...conditions)).limit(PAGE);
+      .from(vetProfiles)
+      .innerJoin(users, eq(users.id, vetProfiles.userId))
+      .where(and(...conditions))
+      .limit(PAGE);
     rows = r.map((v) => ({
-      userId: v.userId, name: v.name, headline: [v.specialty, v.clinicName].filter(Boolean).join(" · ") || null,
-      priceLabel: null, city: v.city, country: v.country, bio: v.bio, isVerified: v.isVerified,
+      userId: v.userId,
+      name: v.name,
+      headline: [v.specialty, v.clinicName].filter(Boolean).join(" · ") || null,
+      priceLabel: null,
+      city: v.city,
+      country: v.country,
+      bio: v.bio,
+      isVerified: v.isVerified,
     }));
   } else if (activeType === "sitters") {
     const conditions = [
-      eq(users.role, "pet_sitter"), eq(sitterProfiles.isAcceptingClients, true),
-      isNotNull(sitterProfiles.services), isNotNull(sitterProfiles.pricePerDay),
-      isNotNull(sitterProfiles.city), isNotNull(sitterProfiles.phone),
+      eq(users.role, "pet_sitter"),
+      eq(sitterProfiles.isAcceptingClients, true),
+      isNotNull(sitterProfiles.services),
+      isNotNull(sitterProfiles.pricePerDay),
+      isNotNull(sitterProfiles.city),
+      isNotNull(sitterProfiles.phone),
       sql`length(coalesce(${sitterProfiles.bio}, '')) >= 40`,
     ];
     if (city) conditions.push(ilike(sitterProfiles.city, `%${city}%`));
     const r = await db
       .select({
-        userId: sitterProfiles.userId, name: users.name, pricePerDay: sitterProfiles.pricePerDay,
-        city: sitterProfiles.city, country: sitterProfiles.country, bio: sitterProfiles.bio,
+        userId: sitterProfiles.userId,
+        name: users.name,
+        pricePerDay: sitterProfiles.pricePerDay,
+        city: sitterProfiles.city,
+        country: sitterProfiles.country,
+        bio: sitterProfiles.bio,
         isVerified: sitterProfiles.isVerified,
       })
-      .from(sitterProfiles).innerJoin(users, eq(users.id, sitterProfiles.userId))
-      .where(and(...conditions)).limit(PAGE);
+      .from(sitterProfiles)
+      .innerJoin(users, eq(users.id, sitterProfiles.userId))
+      .where(and(...conditions))
+      .limit(PAGE);
     rows = r.map((s) => ({
-      userId: s.userId, name: s.name, headline: null,
-      priceLabel: s.pricePerDay != null ? `${formatPrice(s.pricePerDay, locale)}${tPortal("findPerDay")}` : null,
-      city: s.city, country: s.country, bio: s.bio, isVerified: s.isVerified,
+      userId: s.userId,
+      name: s.name,
+      headline: null,
+      priceLabel:
+        s.pricePerDay != null
+          ? `${formatPrice(s.pricePerDay, locale)}${tPortal("findPerDay")}`
+          : null,
+      city: s.city,
+      country: s.country,
+      bio: s.bio,
+      isVerified: s.isVerified,
     }));
   } else {
     const conditions = [
-      eq(users.role, "groomer"), eq(groomerProfiles.isAcceptingClients, true),
-      isNotNull(groomerProfiles.salonName), isNotNull(groomerProfiles.services),
-      isNotNull(groomerProfiles.priceFrom), isNotNull(groomerProfiles.city),
+      eq(users.role, "groomer"),
+      eq(groomerProfiles.isAcceptingClients, true),
+      isNotNull(groomerProfiles.salonName),
+      isNotNull(groomerProfiles.services),
+      isNotNull(groomerProfiles.priceFrom),
+      isNotNull(groomerProfiles.city),
       isNotNull(groomerProfiles.phone),
       sql`length(coalesce(${groomerProfiles.bio}, '')) >= 40`,
     ];
     if (city) conditions.push(ilike(groomerProfiles.city, `%${city}%`));
     const r = await db
       .select({
-        userId: groomerProfiles.userId, name: users.name, salonName: groomerProfiles.salonName,
-        priceFrom: groomerProfiles.priceFrom, city: groomerProfiles.city, country: groomerProfiles.country,
-        bio: groomerProfiles.bio, isVerified: groomerProfiles.isVerified,
+        userId: groomerProfiles.userId,
+        name: users.name,
+        salonName: groomerProfiles.salonName,
+        priceFrom: groomerProfiles.priceFrom,
+        city: groomerProfiles.city,
+        country: groomerProfiles.country,
+        bio: groomerProfiles.bio,
+        isVerified: groomerProfiles.isVerified,
       })
-      .from(groomerProfiles).innerJoin(users, eq(users.id, groomerProfiles.userId))
-      .where(and(...conditions)).limit(PAGE);
+      .from(groomerProfiles)
+      .innerJoin(users, eq(users.id, groomerProfiles.userId))
+      .where(and(...conditions))
+      .limit(PAGE);
     rows = r.map((g) => ({
-      userId: g.userId, name: g.name, headline: g.salonName,
-      priceLabel: g.priceFrom != null ? tPortal("findPriceFrom", { price: formatPrice(g.priceFrom, locale) }) : null,
-      city: g.city, country: g.country, bio: g.bio, isVerified: g.isVerified,
+      userId: g.userId,
+      name: g.name,
+      headline: g.salonName,
+      priceLabel:
+        g.priceFrom != null
+          ? tPortal("findPriceFrom", { price: formatPrice(g.priceFrom, locale) })
+          : null,
+      city: g.city,
+      country: g.country,
+      bio: g.bio,
+      isVerified: g.isVerified,
     }));
   }
 
@@ -127,15 +195,26 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
   const ids = rows.map((r) => r.userId);
   const ratingRows = ids.length
     ? await db
-        .select({ professionalId: reviews.professionalId, avgRating: avg(reviews.rating), reviewCount: count(reviews.id) })
-        .from(reviews).where(inArray(reviews.professionalId, ids)).groupBy(reviews.professionalId)
+        .select({
+          professionalId: reviews.professionalId,
+          avgRating: avg(reviews.rating),
+          reviewCount: count(reviews.id),
+        })
+        .from(reviews)
+        .where(inArray(reviews.professionalId, ids))
+        .groupBy(reviews.professionalId)
     : [];
-  const ratingMap = new Map(ratingRows.map((r) => [r.professionalId, { avg: r.avgRating ? Number(Number(r.avgRating).toFixed(1)) : null, n: r.reviewCount }]));
+  const ratingMap = new Map(
+    ratingRows.map((r) => [
+      r.professionalId,
+      { avg: r.avgRating ? Number(Number(r.avgRating).toFixed(1)) : null, n: r.reviewCount },
+    ]),
+  );
 
   const TYPE_META: Record<ProType, { icon: React.ElementType; label: string }> = {
-    vets:     { icon: Stethoscope, label: t("dirTabVets") },
-    sitters:  { icon: Home,        label: t("dirTabSitters") },
-    groomers: { icon: Scissors,    label: t("dirTabGroomers") },
+    vets: { icon: Stethoscope, label: t("dirTabVets") },
+    sitters: { icon: Home, label: t("dirTabSitters") },
+    groomers: { icon: Scissors, label: t("dirTabGroomers") },
   };
 
   const listSchema = {
@@ -151,15 +230,24 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listSchema) }}
+      />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
-        <Link href={`/${locale}`} className="font-bold text-[var(--warm-ink)] text-lg no-underline flex items-center gap-2">
+        <Link
+          href={`/${locale}`}
+          className="font-bold text-[var(--warm-ink)] text-lg no-underline flex items-center gap-2"
+        >
           <PawPrint className="w-5 h-5" />
           {APP.name}
         </Link>
         <div className="flex items-center gap-3">
-          <Link href="/login" className="text-sm text-[var(--ink2)] hover:text-[var(--warm-ink)] no-underline transition-colors">
+          <Link
+            href="/login"
+            className="text-sm text-[var(--ink2)] hover:text-[var(--warm-ink)] no-underline transition-colors"
+          >
             {t("signIn")}
           </Link>
           <Link href="/register" className="btn-editorial-sm">
@@ -177,9 +265,7 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
             {t("dirHeroTitle")}
           </h1>
-          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto">
-            {t("dirHeroDesc")}
-          </p>
+          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto">{t("dirHeroDesc")}</p>
         </div>
       </div>
 
@@ -250,7 +336,9 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
                     className="bg-white rounded-2xl border border-[var(--border)] p-5 no-underline hover:shadow-md transition-shadow flex flex-col gap-2"
                   >
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-semibold text-[var(--ink)]">{r.name ?? TYPE_META[activeType].label}</p>
+                      <p className="font-semibold text-[var(--ink)]">
+                        {r.name ?? TYPE_META[activeType].label}
+                      </p>
                       {r.isVerified && (
                         <span className="badge badge-green">
                           <BadgeCheck className="w-3 h-3" />
@@ -265,7 +353,9 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
                       )}
                     </div>
                     {r.headline && <p className="text-sm text-[var(--teal)]">{r.headline}</p>}
-                    {r.priceLabel && <p className="text-sm font-medium text-[var(--accent)]">{r.priceLabel}</p>}
+                    {r.priceLabel && (
+                      <p className="text-sm font-medium text-[var(--accent)]">{r.priceLabel}</p>
+                    )}
                     {(r.city || r.country) && (
                       <p className="flex items-center gap-1.5 text-sm text-[var(--muted)]">
                         <MapPin className="w-3.5 h-3.5" />
@@ -284,8 +374,13 @@ export default async function PublicDirectoryPage({ params, searchParams }: Para
       {/* Provider CTA */}
       <div className="bg-[var(--obsidian-deep)] py-14 text-center">
         <p className="ed-title-sm ed-title-on-dark mb-2">{t("dirProviderCtaTitle")}</p>
-        <p className="text-[var(--platinum-dim)] text-sm max-w-md mx-auto mb-6">{t("dirProviderCtaDesc")}</p>
-        <Link href={`/${locale}/pros`} className="btn-editorial-light inline-flex items-center gap-2">
+        <p className="text-[var(--platinum-dim)] text-sm max-w-md mx-auto mb-6">
+          {t("dirProviderCtaDesc")}
+        </p>
+        <Link
+          href={`/${locale}/pros`}
+          className="btn-editorial-light inline-flex items-center gap-2"
+        >
           {t("dirJoinCta")}
         </Link>
       </div>

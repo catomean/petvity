@@ -49,15 +49,21 @@ function makeRequest(body: Record<string, unknown>) {
   });
 }
 
-function makeProduct(overrides: Partial<{
-  id: string; name: string; priceCents: number; isActive: boolean; stock: number | null;
-}> = {}) {
+function makeProduct(
+  overrides: Partial<{
+    id: string;
+    name: string;
+    priceCents: number;
+    isActive: boolean;
+    stock: number | null;
+  }> = {},
+) {
   return {
     id: "prod-1",
     name: "Dog Food",
     priceCents: 1000,
     isActive: true,
-    stock: null,          // unlimited by default
+    stock: null, // unlimited by default
     imageUrl: null,
     ...overrides,
   };
@@ -87,7 +93,9 @@ describe("POST /api/orders", () => {
   });
 
   it("returns 400 when the delivery address is missing (an order must be shippable)", async () => {
-    const res = await POST(makeRequest({ items: [{ productId: PROD_ID_1, quantity: 1 }], shippingName: "" }));
+    const res = await POST(
+      makeRequest({ items: [{ productId: PROD_ID_1, quantity: 1 }], shippingName: "" }),
+    );
     expect(res.status).toBe(400);
   });
 
@@ -160,34 +168,44 @@ describe("POST /api/orders", () => {
       }),
     }));
     db._insertReturning
-      .mockResolvedValueOnce([{ id: "order-1", totalCents: 4500, userId: "user-1", status: "pending", notes: null }])
+      .mockResolvedValueOnce([
+        { id: "order-1", totalCents: 4500, userId: "user-1", status: "pending", notes: null },
+      ])
       .mockResolvedValueOnce([]); // order items
 
-    await POST(makeRequest({
-      items: [
-        { productId: PROD_ID_1, quantity: 2 },
-        { productId: PROD_ID_2, quantity: 1 },
-      ],
-    }));
+    await POST(
+      makeRequest({
+        items: [
+          { productId: PROD_ID_1, quantity: 2 },
+          { productId: PROD_ID_2, quantity: 1 },
+        ],
+      }),
+    );
 
     expect(capturedTotalCents).toBe(2 * 1000 + 1 * 2500); // 4500 cents = $45
   });
 
   it("returns 201 with order data on success", async () => {
     const prod = makeProduct({ id: PROD_ID_1 });
-    db._queueSelectResult([prod]);                                       // products
+    db._queueSelectResult([prod]); // products
     // Stock is now reserved through commercekit's conditional UPDATE, which
     // runs for unlimited-stock products too (`stock IS NULL OR stock >= n`,
     // where NULL - n stays NULL). A matching UPDATE returns its row, so the
     // mock has to say so — returning [] would mean "sold out".
     db._updateReturning.mockResolvedValue([{ id: PROD_ID_1 }]);
-    db._queueSelectResult([{ name: "Test", email: "t@t.com" }]);        // user email
+    db._queueSelectResult([{ name: "Test", email: "t@t.com" }]); // user email
 
-    const mockOrder = { id: "order-1", totalCents: 1000, userId: "user-1", status: "pending", notes: null };
-    const mockItems = [{ id: "item-1", orderId: "order-1", productId: PROD_ID_1, quantity: 1, priceCents: 1000 }];
-    db._insertReturning
-      .mockResolvedValueOnce([mockOrder])
-      .mockResolvedValueOnce(mockItems);
+    const mockOrder = {
+      id: "order-1",
+      totalCents: 1000,
+      userId: "user-1",
+      status: "pending",
+      notes: null,
+    };
+    const mockItems = [
+      { id: "item-1", orderId: "order-1", productId: PROD_ID_1, quantity: 1, priceCents: 1000 },
+    ];
+    db._insertReturning.mockResolvedValueOnce([mockOrder]).mockResolvedValueOnce(mockItems);
 
     const res = await POST(makeRequest({ items: [{ productId: PROD_ID_1, quantity: 1 }] }));
     expect(res.status).toBe(201);

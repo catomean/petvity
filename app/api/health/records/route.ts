@@ -24,10 +24,7 @@ export async function GET(req: NextRequest) {
 
   const petId = req.nextUrl.searchParams.get("petId");
   if (!petId) {
-    return NextResponse.json(
-      { success: false, error: "petId is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ success: false, error: "petId is required" }, { status: 400 });
   }
 
   const db = getInstance();
@@ -67,10 +64,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
   }
 
-  const [record] = await db
-    .insert(healthRecords)
-    .values(parsed.data)
-    .returning();
+  const [record] = await db.insert(healthRecords).values(parsed.data).returning();
 
   return NextResponse.json({ success: true, data: record }, { status: 201 });
 }

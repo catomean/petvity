@@ -22,13 +22,22 @@ import { translateSignalReason } from "@/lib/i18n/signal-reason";
 export const revalidate = 60;
 
 const TWIN_METRIC_LABELS: Record<string, string> = {
-  energy: "metricEnergy", mood: "metricMood", anxiety: "metricAnxiety", socialization: "metricSocialization",
+  energy: "metricEnergy",
+  mood: "metricMood",
+  anxiety: "metricAnxiety",
+  socialization: "metricSocialization",
 };
 const TWIN_SCALE: Record<string, string[]> = {
-  energy:        ["energyScale1",        "energyScale2",        "energyScale3",        "energyScale4",        "energyScale5"],
-  mood:          ["moodScale1",          "moodScale2",          "moodScale3",          "moodScale4",          "moodScale5"],
-  anxiety:       ["anxietyScale1",       "anxietyScale2",       "anxietyScale3",       "anxietyScale4",       "anxietyScale5"],
-  socialization: ["socializationScale1", "socializationScale2", "socializationScale3", "socializationScale4", "socializationScale5"],
+  energy: ["energyScale1", "energyScale2", "energyScale3", "energyScale4", "energyScale5"],
+  mood: ["moodScale1", "moodScale2", "moodScale3", "moodScale4", "moodScale5"],
+  anxiety: ["anxietyScale1", "anxietyScale2", "anxietyScale3", "anxietyScale4", "anxietyScale5"],
+  socialization: [
+    "socializationScale1",
+    "socializationScale2",
+    "socializationScale3",
+    "socializationScale4",
+    "socializationScale5",
+  ],
 };
 
 type Params = { params: Promise<{ handle: string; locale: string }> };
@@ -45,11 +54,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const tPub = await getTranslations({ locale, namespace: "public" });
   const speciesLabel = tPub(`species_${pet.species}` as Parameters<typeof tPub>[0]);
   const title = `${pet.name} · ${APP.name}`;
-  const description = [
-    speciesLabel,
-    pet.breed,
-    pet.bio,
-  ].filter(Boolean).join(" · ") || `${pet.name} is on ${APP.name}`;
+  const description =
+    [speciesLabel, pet.breed, pet.bio].filter(Boolean).join(" · ") ||
+    `${pet.name} is on ${APP.name}`;
 
   return {
     title,
@@ -91,15 +98,20 @@ export default async function PublicPetPage({ params }: Params) {
 
   // Fetch recent metrics (30-day window for chart/twin) and vaccinations (for live signal)
   const now = new Date();
-  const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
-  const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
+  const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
   const today = now.toISOString().slice(0, 10);
   const [recentMetrics, petVaccinations] = await Promise.all([
     db.query.healthMetrics.findMany({
       where: and(eq(healthMetrics.petId, pet.id), gte(healthMetrics.date, since30)),
       orderBy: [desc(healthMetrics.date)],
     }),
-    db.select({ nextDueDate: vaccinations.nextDueDate, status: vaccinations.status })
+    db
+      .select({ nextDueDate: vaccinations.nextDueDate, status: vaccinations.status })
       .from(vaccinations)
       .where(eq(vaccinations.petId, pet.id)),
   ]);
@@ -133,7 +145,10 @@ export default async function PublicPetPage({ params }: Params) {
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(petSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(petSchema) }}
+      />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between">
         <Link href={`/${locale}`} className="font-bold text-[var(--warm-ink)] text-lg no-underline">
@@ -152,13 +167,9 @@ export default async function PublicPetPage({ params }: Params) {
             <div className="absolute bottom-0 translate-y-1/2 w-24 h-24 rounded-full bg-[var(--accent-light)] border-4 border-white flex items-center justify-center text-4xl overflow-hidden">
               {pet.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={pet.avatarUrl}
-                  alt={pet.name}
-                  className="w-full h-full object-cover"
-                />
+                <img src={pet.avatarUrl} alt={pet.name} className="w-full h-full object-cover" />
               ) : (
-                speciesDef?.emoji ?? "🐾"
+                (speciesDef?.emoji ?? "🐾")
               )}
             </div>
           </div>
@@ -166,12 +177,8 @@ export default async function PublicPetPage({ params }: Params) {
           {/* Info */}
           <div className="pt-16 pb-6 px-6 text-center">
             <h1 className="font-display font-light text-4xl text-[var(--warm-ink)]">{pet.name}</h1>
-            {pet.handle && (
-              <p className="text-sm text-[var(--muted)] mb-2">@{pet.handle}</p>
-            )}
-            <span className={`${SIGNAL_BG_CLASSES[signal]} mt-1`}>
-              {tSignal(signal)}
-            </span>
+            {pet.handle && <p className="text-sm text-[var(--muted)] mb-2">@{pet.handle}</p>}
+            <span className={`${SIGNAL_BG_CLASSES[signal]} mt-1`}>{tSignal(signal)}</span>
             {signal !== "healthy" && (
               <p className="text-xs text-[var(--muted)] mt-1 mb-1">
                 {translateSignalReason(signalResult.reasonData, tSignal)}
@@ -185,9 +192,7 @@ export default async function PublicPetPage({ params }: Params) {
                 ? ` · ${t("bornDate", { date: formatDateShort(pet.birthDate, locale) })}`
                 : ""}
             </p>
-            {pet.bio && (
-              <p className="mt-4 text-sm text-[var(--ink2)]">{pet.bio}</p>
-            )}
+            {pet.bio && <p className="mt-4 text-sm text-[var(--ink2)]">{pet.bio}</p>}
           </div>
 
           {/* Digital twin — only shown when data exists */}
@@ -196,7 +201,9 @@ export default async function PublicPetPage({ params }: Params) {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className={`text-sm font-semibold ${twinCfg.text}`}>{tTwin(twin.id)}</p>
-                  <p className="text-xs text-[var(--muted)] mt-0.5">{tTwin(twin.summaryKey as Parameters<typeof tTwin>[0])}</p>
+                  <p className="text-xs text-[var(--muted)] mt-0.5">
+                    {tTwin(twin.summaryKey as Parameters<typeof tTwin>[0])}
+                  </p>
                 </div>
                 <span className={`text-2xl font-extrabold tabular-nums ${twinCfg.text}`}>
                   {twin.scorePercent}
@@ -216,8 +223,15 @@ export default async function PublicPetPage({ params }: Params) {
                   {twin.metrics.map((m) => (
                     <div key={m.id}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-[var(--muted)]">{tTwin((TWIN_METRIC_LABELS[m.id] ?? m.id) as Parameters<typeof tTwin>[0])}</span>
-                        <span className="text-[var(--ink2)]">{tTwin((TWIN_SCALE[m.id]?.[m.rawValue - 1] ?? String(m.rawValue)) as Parameters<typeof tTwin>[0])}</span>
+                        <span className="text-[var(--muted)]">
+                          {tTwin((TWIN_METRIC_LABELS[m.id] ?? m.id) as Parameters<typeof tTwin>[0])}
+                        </span>
+                        <span className="text-[var(--ink2)]">
+                          {tTwin(
+                            (TWIN_SCALE[m.id]?.[m.rawValue - 1] ??
+                              String(m.rawValue)) as Parameters<typeof tTwin>[0],
+                          )}
+                        </span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[var(--border)]">
                         <div
@@ -235,16 +249,17 @@ export default async function PublicPetPage({ params }: Params) {
           {/* Species info */}
           {speciesDef && (
             <div className="border-t border-[var(--border)] px-6 py-4 bg-[var(--off)] text-sm text-center text-[var(--muted)]">
-              {t("typicalLifespan", { min: speciesDef.typicalLifespanYears.min, max: speciesDef.typicalLifespanYears.max })}
+              {t("typicalLifespan", {
+                min: speciesDef.typicalLifespanYears.min,
+                max: speciesDef.typicalLifespanYears.max,
+              })}
             </div>
           )}
         </div>
 
         {/* CTA */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-[var(--muted)] mb-3">
-            {t("trackOwn", { app: APP.name })}
-          </p>
+          <p className="text-sm text-[var(--muted)] mb-3">{t("trackOwn", { app: APP.name })}</p>
           <Link href="/register" className="btn-editorial">
             {tNav("getStartedFree")}
           </Link>

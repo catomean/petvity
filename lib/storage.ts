@@ -7,7 +7,10 @@ import path from "path";
 const UPLOADS_DIR = process.env.UPLOADS_DIR || path.join(process.cwd(), "uploads");
 
 function safeKey(key: string): string {
-  const clean = path.posix.normalize(key).replace(/^(\.\.\/?)+/, "").replace(/^\/+/, "");
+  const clean = path.posix
+    .normalize(key)
+    .replace(/^(\.\.\/?)+/, "")
+    .replace(/^\/+/, "");
   if (clean.includes("..")) throw new Error("invalid storage key");
   return clean;
 }

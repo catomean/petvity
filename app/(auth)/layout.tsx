@@ -3,25 +3,27 @@ import { PawPrint, Activity, Heart, Syringe, BarChart3, Globe } from "lucide-rea
 import { APP } from "@/lib/config/app";
 
 const BRAND_FEATURES = [
-  { icon: Activity,  text: "Health & vitals tracking" },
-  { icon: Heart,     text: "Emotional wellbeing scores" },
-  { icon: Syringe,   text: "Vaccination reminders" },
+  { icon: Activity, text: "Health & vitals tracking" },
+  { icon: Heart, text: "Emotional wellbeing scores" },
+  { icon: Syringe, text: "Vaccination reminders" },
   { icon: BarChart3, text: "Wellness trends over time" },
-  { icon: Globe,     text: "9 languages, global community" },
+  { icon: Globe, text: "9 languages, global community" },
 ];
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex">
       {/* ── Brand panel — obsidian luxury, same surface as the marketing site ── */}
       <div className="hidden lg:flex w-[460px] flex-shrink-0 flex-col bg-[var(--obsidian)] text-[var(--platinum)] p-12 relative overflow-hidden">
         {/* Decorative circles */}
-        <div aria-hidden className="absolute -top-20 -end-20 w-80 h-80 rounded-full bg-[var(--champagne)]/[0.08] pointer-events-none" />
-        <div aria-hidden className="absolute bottom-12 -start-16 w-64 h-64 rounded-full bg-[var(--champagne)]/[0.06] pointer-events-none" />
+        <div
+          aria-hidden
+          className="absolute -top-20 -end-20 w-80 h-80 rounded-full bg-[var(--champagne)]/[0.08] pointer-events-none"
+        />
+        <div
+          aria-hidden
+          className="absolute bottom-12 -start-16 w-64 h-64 rounded-full bg-[var(--champagne)]/[0.06] pointer-events-none"
+        />
 
         <div className="relative z-10 flex flex-col h-full">
           {/* Logo */}
@@ -40,11 +42,11 @@ export default function AuthLayout({
             <p className="ed-eyebrow mb-4">Pet wellness platform</p>
             <h2 className="font-display font-extralight text-[2.6rem] text-[var(--platinum)] leading-[1.08] tracking-tight mb-4">
               Your pet&apos;s health,
-              <br />understood.
+              <br />
+              understood.
             </h2>
             <p className="text-[var(--platinum-dim)] text-base leading-relaxed">
-              Track wellness. Get insights. Build a deeper
-              bond through care and data.
+              Track wellness. Get insights. Build a deeper bond through care and data.
             </p>
           </div>
 
@@ -83,9 +85,7 @@ export default function AuthLayout({
         </Link>
 
         <div className="auth-card">
-          <div className="card p-8 shadow-md">
-            {children}
-          </div>
+          <div className="card p-8 shadow-md">{children}</div>
         </div>
       </div>
     </div>

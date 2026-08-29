@@ -47,12 +47,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Delete any existing reset token for this email
-    await db.delete(verificationTokens).where(
-      and(
-        like(verificationTokens.identifier, "pw-reset:%"),
-        eq(verificationTokens.identifier, `pw-reset:${normalised}`),
-      ),
-    );
+    await db
+      .delete(verificationTokens)
+      .where(
+        and(
+          like(verificationTokens.identifier, "pw-reset:%"),
+          eq(verificationTokens.identifier, `pw-reset:${normalised}`),
+        ),
+      );
 
     // Generate a new secure token
     const token = randomBytes(32).toString("hex");

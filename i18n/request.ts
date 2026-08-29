@@ -13,9 +13,7 @@ function injectAppName(node: unknown): unknown {
   if (typeof node === "string") return node.replaceAll("{app}", APP.name);
   if (Array.isArray(node)) return node.map(injectAppName);
   if (node && typeof node === "object") {
-    return Object.fromEntries(
-      Object.entries(node).map(([k, v]) => [k, injectAppName(v)]),
-    );
+    return Object.fromEntries(Object.entries(node).map(([k, v]) => [k, injectAppName(v)]));
   }
   return node;
 }

@@ -15,12 +15,7 @@ export async function POST(req: NextRequest) {
   const pending = await db
     .select()
     .from(emailQueue)
-    .where(
-      and(
-        eq(emailQueue.status, "pending"),
-        lte(emailQueue.sendAt, new Date()),
-      ),
-    );
+    .where(and(eq(emailQueue.status, "pending"), lte(emailQueue.sendAt, new Date())));
 
   if (pending.length === 0) {
     return NextResponse.json({ success: true, data: { sent: 0, failed: 0 } });
@@ -29,7 +24,13 @@ export async function POST(req: NextRequest) {
   // Fetch all user emails in one query to avoid N+1
   const userIds = [...new Set(pending.map((item) => item.userId))];
   const userRows = await db
-    .select({ id: users.id, name: users.name, email: users.email, locale: users.locale, digestOptOut: users.digestOptOut })
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      locale: users.locale,
+      digestOptOut: users.digestOptOut,
+    })
     .from(users)
     .where(inArray(users.id, userIds));
   const userMap = new Map(userRows.map((u) => [u.id, u]));
@@ -76,10 +77,7 @@ export async function POST(req: NextRequest) {
 
       sent++;
     } catch {
-      await db
-        .update(emailQueue)
-        .set({ status: "failed" })
-        .where(eq(emailQueue.id, item.id));
+      await db.update(emailQueue).set({ status: "failed" }).where(eq(emailQueue.id, item.id));
       failed++;
     }
   }

@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Heart, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2, Mail,
-} from "lucide-react";
+import { Heart, ChevronDown, ChevronUp, CheckCircle, XCircle, Loader2, Mail } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import { LISTING_STATUS_CONFIG, APPLICATION_STATUS_CONFIG } from "@/lib/config/adoptions";
@@ -67,7 +65,10 @@ function ApplicationRow({
     });
     const data = await res.json();
     setBusy(false);
-    if (!data.success) { setActionError(data.error ?? t("loadFailed")); return; }
+    if (!data.success) {
+      setActionError(data.error ?? t("loadFailed"));
+      return;
+    }
     onUpdate({ ...app, status });
     if (status === "approved") onApproved?.();
   }
@@ -88,7 +89,9 @@ function ApplicationRow({
             </p>
           )}
         </div>
-        <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${badge.className}`}>
+        <span
+          className={`text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 ${badge.className}`}
+        >
           {t(`appStatus_${app.status}` as Parameters<typeof t>[0])}
         </span>
       </div>
@@ -106,7 +109,11 @@ function ApplicationRow({
               disabled={busy}
               className="text-xs font-medium text-[var(--green-text)] hover:underline disabled:opacity-60 flex items-center gap-1"
             >
-              {busy ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
+              {busy ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <CheckCircle className="w-3 h-3" />
+              )}
               {t("adoptionsApprove")}
             </button>
             <button
@@ -207,7 +214,11 @@ function ListingCard({
         <div className="w-12 h-12 rounded-xl bg-[var(--teal-light)] flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
           {listing.pet.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={listing.pet.avatarUrl} alt={listing.pet.name} className="w-full h-full object-cover" />
+            <img
+              src={listing.pet.avatarUrl}
+              alt={listing.pet.name}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <span>{emoji}</span>
           )}
@@ -219,7 +230,9 @@ function ListingCard({
           <p className="text-xs text-[var(--muted)] mt-0.5">
             {listing.pet.name}
             {listing.location ? ` · ${listing.location}` : ""}
-            {listing.feeCents ? ` · ${t("adoptFee", { price: formatAdoptionFee(listing.feeCents) })}` : ` · ${t("adoptFree")}`}
+            {listing.feeCents
+              ? ` · ${t("adoptFee", { price: formatAdoptionFee(listing.feeCents) })}`
+              : ` · ${t("adoptFree")}`}
           </p>
         </div>
 
@@ -228,7 +241,11 @@ function ListingCard({
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${badge.className}`}>
             {t(`listingStatus_${listing.status}` as Parameters<typeof t>[0])}
           </span>
-          {expanded ? <ChevronUp className="w-4 h-4 text-[var(--muted)]" /> : <ChevronDown className="w-4 h-4 text-[var(--muted)]" />}
+          {expanded ? (
+            <ChevronUp className="w-4 h-4 text-[var(--muted)]" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-[var(--muted)]" />
+          )}
         </div>
       </div>
 
@@ -278,9 +295,9 @@ function ListingCard({
                 {t("adoptionsWithdraw")}
               </button>
             )}
-          {statusError && (
-            <p className="text-xs text-[var(--danger-text)] px-4 pb-2">{statusError}</p>
-          )}
+            {statusError && (
+              <p className="text-xs text-[var(--danger-text)] px-4 pb-2">{statusError}</p>
+            )}
           </div>
 
           {/* Applications */}
@@ -293,7 +310,9 @@ function ListingCard({
                 <Loader2 className="w-4 h-4 animate-spin" /> {t("loading")}
               </div>
             ) : applications.length === 0 ? (
-              <p className="text-sm text-[var(--muted)] px-4 py-3">{t("adoptionsNoApplications")}</p>
+              <p className="text-sm text-[var(--muted)] px-4 py-3">
+                {t("adoptionsNoApplications")}
+              </p>
             ) : (
               applications.map((app) => (
                 <ApplicationRow
@@ -327,13 +346,24 @@ export default function AdoptionsPage() {
     setFetchError("");
     // GET /api/adoptions?mine=1 — the server requiresSession and returns only user's listings.
     fetch("/api/adoptions?mine=1")
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setListings(data ?? []); setLoading(false); })
-      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(({ data }) => {
+        setListings(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadListings(); }, []);
+  useEffect(() => {
+    loadListings();
+  }, []);
 
   function handleStatusChange(id: string, status: AdoptionListing["status"]) {
     setListings((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)));
@@ -341,7 +371,12 @@ export default function AdoptionsPage() {
 
   return (
     <div>
-      <HubTabs tabs={[{ href: "/portal/adopt", label: t("adopt") }, { href: "/portal/adoptions", label: t("myAdoptions") }]} />
+      <HubTabs
+        tabs={[
+          { href: "/portal/adopt", label: t("adopt") },
+          { href: "/portal/adoptions", label: t("myAdoptions") },
+        ]}
+      />
       <PageHeader
         title={t("adoptionsTitle")}
         purpose={t("adoptionsSubtitle")}
@@ -355,7 +390,9 @@ export default function AdoptionsPage() {
 
       {loading ? (
         <div className="space-y-3">
-          {[1, 2].map((i) => <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />)}
+          {[1, 2].map((i) => (
+            <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />
+          ))}
         </div>
       ) : fetchError ? (
         <ErrorState message={fetchError} onRetry={loadListings} retryLabel={t("retry")} />
@@ -369,11 +406,7 @@ export default function AdoptionsPage() {
       ) : (
         <div className="space-y-3">
           {listings.map((listing) => (
-            <ListingCard
-              key={listing.id}
-              listing={listing}
-              onStatusChange={handleStatusChange}
-            />
+            <ListingCard key={listing.id} listing={listing} onStatusChange={handleStatusChange} />
           ))}
         </div>
       )}

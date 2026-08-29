@@ -38,11 +38,7 @@ export default async function GuestOrderPage({ params }: Props) {
   const t = await getTranslations({ locale, namespace: "public" });
   const db = getInstance();
 
-  const [order] = await db
-    .select()
-    .from(orders)
-    .where(eq(orders.publicToken, token))
-    .limit(1);
+  const [order] = await db.select().from(orders).where(eq(orders.publicToken, token)).limit(1);
 
   // A wrong or truncated token looks exactly like an order that never existed —
   // deliberately, so the page cannot be used to probe for valid tokens.
@@ -126,7 +122,9 @@ export default async function GuestOrderPage({ params }: Props) {
                       {item.productName}
                     </Link>
                   ) : (
-                    <span className="text-sm font-medium text-[var(--ink)]">{item.productName}</span>
+                    <span className="text-sm font-medium text-[var(--ink)]">
+                      {item.productName}
+                    </span>
                   )}
                   <p className="text-xs text-[var(--muted)]">
                     {t("orderQuantity", { count: item.quantity })}

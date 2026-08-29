@@ -2,12 +2,21 @@
 
 import { useParams } from "next/navigation";
 import {
-  Plus, Syringe, X,
-  Check, AlertTriangle, Clock,
-  Pencil, Trash2, Search,
+  Plus,
+  Syringe,
+  X,
+  Check,
+  AlertTriangle,
+  Clock,
+  Pencil,
+  Trash2,
+  Search,
 } from "lucide-react";
 import { formatDateShort, formatRelativeDate } from "@/lib/utils/format";
-import { VACCINATION_STATUS_CONFIG, computeVaccinationDisplayStatus } from "@/lib/config/vaccinations";
+import {
+  VACCINATION_STATUS_CONFIG,
+  computeVaccinationDisplayStatus,
+} from "@/lib/config/vaccinations";
 import type { VaccinationStatusId } from "@/lib/config/vaccinations";
 import { VACCINATION_DUE_SOON_DAYS } from "@/lib/config/pet-signal";
 import { useHealthList } from "@/hooks/useHealthList";
@@ -16,9 +25,9 @@ import PageHeader from "@/components/portal/PageHeader";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const STATUS_ICONS: Partial<Record<VaccinationStatusId, React.ElementType>> = {
-  up_to_date:     Check,
-  due_soon:       Clock,
-  overdue:        AlertTriangle,
+  up_to_date: Check,
+  due_soon: Clock,
+  overdue: AlertTriangle,
   not_applicable: undefined,
 };
 
@@ -89,25 +98,42 @@ export default function VaccinationsPage() {
   const todayStr = new Date().toISOString().slice(0, 10);
 
   function matchesFilterAndSearch(v: Vaccination, filter: string, q: string): boolean {
-    const displayStatus = computeVaccinationDisplayStatus(v.status, v.nextDueDate, todayStr, VACCINATION_DUE_SOON_DAYS);
+    const displayStatus = computeVaccinationDisplayStatus(
+      v.status,
+      v.nextDueDate,
+      todayStr,
+      VACCINATION_DUE_SOON_DAYS,
+    );
     if (filter !== "all" && displayStatus !== filter) return false;
     if (q) {
-      return (
-        v.name.toLowerCase().includes(q) ||
-        (v.notes?.toLowerCase().includes(q) ?? false)
-      );
+      return v.name.toLowerCase().includes(q) || (v.notes?.toLowerCase().includes(q) ?? false);
     }
     return true;
   }
 
   const {
-    petName, rows, loading, filteredRows,
-    filter: statusFilter, setFilter: setStatusFilter,
-    searchQ, setSearchQ,
-    showForm, editingId, deletingId, setDeletingId,
-    form, saving, error,
+    petName,
+    rows,
+    loading,
+    filteredRows,
+    filter: statusFilter,
+    setFilter: setStatusFilter,
+    searchQ,
+    setSearchQ,
+    showForm,
+    editingId,
+    deletingId,
+    setDeletingId,
+    form,
+    saving,
+    error,
     deleteError,
-    openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
+    openAdd,
+    openEdit,
+    closeForm,
+    handleSubmit,
+    handleDelete,
+    field,
   } = useHealthList<Vaccination, FormState>({
     petId,
     apiPath: "/api/vaccinations",
@@ -143,38 +169,40 @@ export default function VaccinationsPage() {
         purpose={t("vaccSubtitle")}
         action={
           <div className="flex items-center gap-2 flex-wrap">
-          {rows.length > 0 && !showForm && (
-            <>
-              <div className="relative">
-                <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
-                <input
-                  type="text"
-                  placeholder={t("vaccSearch")}
-                  className="form-input form-input-icon text-sm py-1.5 w-40"
-                  value={searchQ}
-                  onChange={(e) => setSearchQ(e.target.value)}
-                  aria-label={t("vaccSearch")}
-                />
-              </div>
-              <select
-                className="form-input text-sm py-1.5"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                aria-label={t("listStatusLabel")}
-              >
-                <option value="all">{t("vaccAllTypes")}</option>
-                {(Object.keys(VACCINATION_STATUS_CONFIG) as VaccinationStatus[]).map(
-                  (val) => <option key={val} value={val}>{t(`vaccStatus_${val}` as Parameters<typeof t>[0])}</option>
-                )}
-              </select>
-            </>
-          )}
-          {!showForm && (
-            <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              {t("vaccAdd")}
-            </button>
-          )}
+            {rows.length > 0 && !showForm && (
+              <>
+                <div className="relative">
+                  <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder={t("vaccSearch")}
+                    className="form-input form-input-icon text-sm py-1.5 w-40"
+                    value={searchQ}
+                    onChange={(e) => setSearchQ(e.target.value)}
+                    aria-label={t("vaccSearch")}
+                  />
+                </div>
+                <select
+                  className="form-input text-sm py-1.5"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  aria-label={t("listStatusLabel")}
+                >
+                  <option value="all">{t("vaccAllTypes")}</option>
+                  {(Object.keys(VACCINATION_STATUS_CONFIG) as VaccinationStatus[]).map((val) => (
+                    <option key={val} value={val}>
+                      {t(`vaccStatus_${val}` as Parameters<typeof t>[0])}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+            {!showForm && (
+              <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                {t("vaccAdd")}
+              </button>
+            )}
           </div>
         }
       />
@@ -247,9 +275,11 @@ export default function VaccinationsPage() {
                 value={form.status}
                 onChange={(e) => field("status", e.target.value)}
               >
-                {(Object.keys(VACCINATION_STATUS_CONFIG) as VaccinationStatus[]).map(
-                  (val) => <option key={val} value={val}>{t(`vaccStatus_${val}` as Parameters<typeof t>[0])}</option>
-                )}
+                {(Object.keys(VACCINATION_STATUS_CONFIG) as VaccinationStatus[]).map((val) => (
+                  <option key={val} value={val}>
+                    {t(`vaccStatus_${val}` as Parameters<typeof t>[0])}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -297,7 +327,9 @@ export default function VaccinationsPage() {
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
                 {saving ? t("saving") : editingId ? t("vaccUpdate") : t("vaccSave")}
               </button>
-              <button type="button" onClick={closeForm} className="btn-outline">{t("cancel")}</button>
+              <button type="button" onClick={closeForm} className="btn-outline">
+                {t("cancel")}
+              </button>
             </div>
           </form>
         </div>
@@ -323,7 +355,10 @@ export default function VaccinationsPage() {
           <div className="py-12 text-center">
             <p className="font-medium text-[var(--ink)] mb-1">{t("vaccNoMatch")}</p>
             <button
-              onClick={() => { setStatusFilter("all"); setSearchQ(""); }}
+              onClick={() => {
+                setStatusFilter("all");
+                setSearchQ("");
+              }}
               className="text-sm text-[var(--teal)] hover:underline mt-1"
             >
               {t("listClearFilters")}
@@ -333,33 +368,58 @@ export default function VaccinationsPage() {
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
               <tr>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">{t("vaccColVaccine")}</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">{t("vaccColGiven")}</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">{t("vaccColNextDue")}</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">{t("listStatusLabel")}</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
+                  {t("vaccColVaccine")}
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">
+                  {t("vaccColGiven")}
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">
+                  {t("vaccColNextDue")}
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
+                  {t("listStatusLabel")}
+                </th>
                 <th className="py-3 px-4 w-20" />
               </tr>
             </thead>
             <tbody>
               {filteredRows.map((v) => {
-                const displayStatus = computeVaccinationDisplayStatus(v.status, v.nextDueDate, todayStr, VACCINATION_DUE_SOON_DAYS);
-                const status = VACCINATION_STATUS_CONFIG[displayStatus] ?? VACCINATION_STATUS_CONFIG.up_to_date;
+                const displayStatus = computeVaccinationDisplayStatus(
+                  v.status,
+                  v.nextDueDate,
+                  todayStr,
+                  VACCINATION_DUE_SOON_DAYS,
+                );
+                const status =
+                  VACCINATION_STATUS_CONFIG[displayStatus] ?? VACCINATION_STATUS_CONFIG.up_to_date;
                 const StatusIcon = STATUS_ICONS[displayStatus];
                 const isDeleting = deletingId === v.id;
                 return (
-                  <tr key={v.id} className="group border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">
+                  <tr
+                    key={v.id}
+                    className="group border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors"
+                  >
                     <td className="py-3 px-4">
                       <p className="font-medium text-[var(--ink)]">{v.name}</p>
-                      {v.vetName && <p className="text-xs text-[var(--muted)] mt-0.5">{v.vetName}</p>}
-                      {v.notes && <p className="text-xs text-[var(--muted)] mt-0.5 italic">{v.notes}</p>}
-                      <p className="text-xs text-[var(--muted)] mt-0.5 sm:hidden">{formatDateShort(v.administeredDate)}</p>
+                      {v.vetName && (
+                        <p className="text-xs text-[var(--muted)] mt-0.5">{v.vetName}</p>
+                      )}
+                      {v.notes && (
+                        <p className="text-xs text-[var(--muted)] mt-0.5 italic">{v.notes}</p>
+                      )}
+                      <p className="text-xs text-[var(--muted)] mt-0.5 sm:hidden">
+                        {formatDateShort(v.administeredDate)}
+                      </p>
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell">
                       {formatDateShort(v.administeredDate)}
                     </td>
                     <td className="py-3 px-4 text-[var(--muted)] hidden md:table-cell">
                       {v.nextDueDate ? (
-                        <span title={formatDateShort(v.nextDueDate)}>{formatRelativeDate(v.nextDueDate, locale)}</span>
+                        <span title={formatDateShort(v.nextDueDate)}>
+                          {formatRelativeDate(v.nextDueDate, locale)}
+                        </span>
                       ) : (
                         <span className="text-[var(--faint)]">–</span>
                       )}

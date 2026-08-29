@@ -68,7 +68,9 @@ export default function AdminBlogPage() {
     }
   }
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   function openNew() {
     setEditingId(null);
@@ -101,14 +103,11 @@ export default function AdminBlogPage() {
 
     setSaving(true);
     try {
-      const res = await fetch(
-        editingId ? `/api/admin/blog/${editingId}` : "/api/admin/blog",
-        {
-          method: editingId ? "PATCH" : "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        },
-      );
+      const res = await fetch(editingId ? `/api/admin/blog/${editingId}` : "/api/admin/blog", {
+        method: editingId ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
       const data = await res.json();
       if (!data.success) {
         setError(data.error ?? "Could not save.");
@@ -155,15 +154,16 @@ export default function AdminBlogPage() {
       {/* Editor */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4">
-          <form
-            onSubmit={save}
-            className="card p-6 w-full max-w-3xl my-8 flex flex-col gap-4"
-          >
+          <form onSubmit={save} className="card p-6 w-full max-w-3xl my-8 flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-[var(--ink)]">
                 {editingId ? "Edit post" : "New post"}
               </h2>
-              <button type="button" onClick={() => setShowForm(false)} className="btn-ghost p-2 rounded-lg">
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="btn-ghost p-2 rounded-lg"
+              >
                 <X className="w-5 h-5 text-[var(--muted)]" />
               </button>
             </div>
@@ -181,12 +181,18 @@ export default function AdminBlogPage() {
 
             <div>
               <label className="form-label">
-                URL <span className="text-[var(--muted)] font-normal ms-1">/blog/{form.slug || "…"}</span>
+                URL{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">
+                  /blog/{form.slug || "…"}
+                </span>
               </label>
               <input
                 className="form-input"
                 value={form.slug}
-                onChange={(e) => { setSlugTouched(true); setForm((f) => ({ ...f, slug: e.target.value })); }}
+                onChange={(e) => {
+                  setSlugTouched(true);
+                  setForm((f) => ({ ...f, slug: e.target.value }));
+                }}
                 required
                 maxLength={200}
               />
@@ -199,7 +205,10 @@ export default function AdminBlogPage() {
 
             <div>
               <label className="form-label">
-                Excerpt <span className="text-[var(--muted)] font-normal ms-1">— shown on the index and in search results</span>
+                Excerpt{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">
+                  — shown on the index and in search results
+                </span>
               </label>
               <textarea
                 className="form-input min-h-[70px] resize-y"
@@ -233,13 +242,19 @@ export default function AdminBlogPage() {
                 <div className="max-h-64 overflow-y-auto space-y-2">
                   {preview.map((b, i) =>
                     b.type === "h2" ? (
-                      <h3 key={i} className="font-semibold text-[var(--ink)]">{b.text}</h3>
+                      <h3 key={i} className="font-semibold text-[var(--ink)]">
+                        {b.text}
+                      </h3>
                     ) : b.type === "ul" ? (
                       <ul key={i} className="list-disc ps-5 text-sm text-[var(--ink2)]">
-                        {b.items.map((it, j) => <li key={j}>{it}</li>)}
+                        {b.items.map((it, j) => (
+                          <li key={j}>{it}</li>
+                        ))}
                       </ul>
                     ) : (
-                      <p key={i} className="text-sm text-[var(--ink2)]">{b.text}</p>
+                      <p key={i} className="text-sm text-[var(--ink2)]">
+                        {b.text}
+                      </p>
                     ),
                   )}
                 </div>
@@ -249,7 +264,9 @@ export default function AdminBlogPage() {
             {error && <p className="alert-error">{error}</p>}
 
             <div className="flex justify-end gap-3 pt-1">
-              <button type="button" onClick={() => setShowForm(false)} className="btn-outline">Cancel</button>
+              <button type="button" onClick={() => setShowForm(false)} className="btn-outline">
+                Cancel
+              </button>
               <button type="submit" disabled={saving} className="btn-primary">
                 {saving ? "Saving…" : editingId ? "Save changes" : "Create draft"}
               </button>
@@ -264,7 +281,9 @@ export default function AdminBlogPage() {
       ) : fetchError ? (
         <div className="card p-8 text-center">
           <p className="text-[var(--danger-text)] mb-3">{fetchError}</p>
-          <button onClick={load} className="btn-outline">Try again</button>
+          <button onClick={load} className="btn-outline">
+            Try again
+          </button>
         </div>
       ) : posts.length === 0 ? (
         <div className="card p-10 text-center">
@@ -273,7 +292,9 @@ export default function AdminBlogPage() {
           <p className="text-sm text-[var(--muted)] mb-5">
             Write the first one — it goes live the moment you publish it.
           </p>
-          <button onClick={openNew} className="btn-primary">New post</button>
+          <button onClick={openNew} className="btn-primary">
+            New post
+          </button>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -307,11 +328,17 @@ export default function AdminBlogPage() {
                   className="btn-ghost p-2 rounded-lg"
                   title={p.status === "published" ? "Unpublish" : "Publish"}
                 >
-                  {p.status === "published"
-                    ? <EyeOff className="w-4 h-4 text-[var(--muted)]" />
-                    : <Eye className="w-4 h-4 text-[var(--teal)]" />}
+                  {p.status === "published" ? (
+                    <EyeOff className="w-4 h-4 text-[var(--muted)]" />
+                  ) : (
+                    <Eye className="w-4 h-4 text-[var(--teal)]" />
+                  )}
                 </button>
-                <button onClick={() => openEdit(p)} className="btn-ghost p-2 rounded-lg" title="Edit">
+                <button
+                  onClick={() => openEdit(p)}
+                  className="btn-ghost p-2 rounded-lg"
+                  title="Edit"
+                >
                   <Pencil className="w-4 h-4 text-[var(--muted)]" />
                 </button>
                 {confirmDelete === p.id ? (
@@ -322,7 +349,10 @@ export default function AdminBlogPage() {
                     >
                       Delete for good
                     </button>
-                    <button onClick={() => setConfirmDelete(null)} className="btn-ghost text-xs px-2 py-1.5">
+                    <button
+                      onClick={() => setConfirmDelete(null)}
+                      className="btn-ghost text-xs px-2 py-1.5"
+                    >
                       Keep
                     </button>
                   </span>

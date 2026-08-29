@@ -8,11 +8,7 @@ import { getInstance } from "@/lib/db";
 import { sellerProfiles } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
-export default async function PortalLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   if (!session) redirect("/login");
 
@@ -40,9 +36,7 @@ export default async function PortalLayout({
         {/* Offset for desktop sidebar (w-60) and mobile top/bottom bars */}
         <div className="lg:ps-60">
           <main className="pt-14 lg:pt-0 pb-20 lg:pb-0 min-h-screen">
-            <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8">
-              {children}
-            </div>
+            <div className="max-w-4xl mx-auto px-4 lg:px-8 py-8">{children}</div>
           </main>
         </div>
       </div>

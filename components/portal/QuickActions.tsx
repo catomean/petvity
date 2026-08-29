@@ -26,15 +26,35 @@ export default async function QuickActions({
   ];
 
   if (isProfessional) {
-    actions.push({ href: "/portal/bookings", icon: CalendarCheck, title: t("qaBookingsTitle"), desc: t("qaBookingsDesc") });
+    actions.push({
+      href: "/portal/bookings",
+      icon: CalendarCheck,
+      title: t("qaBookingsTitle"),
+      desc: t("qaBookingsDesc"),
+    });
   } else {
-    actions.push({ href: "/portal/become-a-pro", icon: Briefcase, title: t("qaOfferTitle"), desc: t("qaOfferDesc") });
+    actions.push({
+      href: "/portal/become-a-pro",
+      icon: Briefcase,
+      title: t("qaOfferTitle"),
+      desc: t("qaOfferDesc"),
+    });
   }
 
   actions.push(
     isSeller
-      ? { href: "/portal/my-products", icon: Store, title: t("qaMyStoreTitle"), desc: t("qaMyStoreDesc") }
-      : { href: "/portal/seller-profile", icon: Store, title: t("qaSellTitle"), desc: t("qaSellDesc") },
+      ? {
+          href: "/portal/my-products",
+          icon: Store,
+          title: t("qaMyStoreTitle"),
+          desc: t("qaMyStoreDesc"),
+        }
+      : {
+          href: "/portal/seller-profile",
+          icon: Store,
+          title: t("qaSellTitle"),
+          desc: t("qaSellDesc"),
+        },
   );
 
   return (

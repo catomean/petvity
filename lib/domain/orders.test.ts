@@ -29,9 +29,7 @@ describe("orderCreateSchema", () => {
   });
 
   it("rejects a country that is two letters but not a country", () => {
-    expect(
-      orderCreateSchema.safeParse({ ...VALID, shippingCountry: "XX" }).success,
-    ).toBe(false);
+    expect(orderCreateSchema.safeParse({ ...VALID, shippingCountry: "XX" }).success).toBe(false);
   });
 
   it("rejects a quantity above the shared cap", () => {
@@ -54,8 +52,7 @@ describe("orderCreateSchema", () => {
   it("rejects a zero or fractional quantity", () => {
     for (const quantity of [0, -1, 1.5]) {
       expect(
-        orderCreateSchema.safeParse({ ...VALID, items: [{ ...VALID.items[0], quantity }] })
-          .success,
+        orderCreateSchema.safeParse({ ...VALID, items: [{ ...VALID.items[0], quantity }] }).success,
       ).toBe(false);
     }
   });
@@ -86,9 +83,9 @@ describe("guestOrderCreateSchema", () => {
   });
 
   it("rejects a malformed email", () => {
-    expect(
-      guestOrderCreateSchema.safeParse({ ...VALID, email: "not-an-email" }).success,
-    ).toBe(false);
+    expect(guestOrderCreateSchema.safeParse({ ...VALID, email: "not-an-email" }).success).toBe(
+      false,
+    );
   });
 });
 

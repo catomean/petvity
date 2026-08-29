@@ -15,8 +15,8 @@ import { getInstance } from "@/lib/db";
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
-const USER_ID   = "00000000-0000-4000-8000-000000000010";
-const ADMIN_ID  = "00000000-0000-4000-8000-000000000001";
+const USER_ID = "00000000-0000-4000-8000-000000000010";
+const ADMIN_ID = "00000000-0000-4000-8000-000000000001";
 
 const ADMIN_SESSION = {
   user: { id: ADMIN_ID, role: "admin", email: "admin@example.com", name: "Admin" },
@@ -24,7 +24,7 @@ const ADMIN_SESSION = {
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ userId: USER_ID }) };
-const SELF_CONTEXT  = { params: Promise.resolve({ userId: ADMIN_ID }) };
+const SELF_CONTEXT = { params: Promise.resolve({ userId: ADMIN_ID }) };
 
 function makePatchRequest(body: unknown) {
   return new NextRequest(`http://localhost/api/admin/users/${USER_ID}`, {

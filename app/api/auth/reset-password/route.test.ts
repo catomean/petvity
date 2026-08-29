@@ -7,7 +7,7 @@ import { makeMockDb } from "@/lib/test-helpers/db-mock";
 vi.mock("@/lib/db", () => ({ getInstance: vi.fn() }));
 vi.mock("bcryptjs", () => ({
   default: {
-    hash:    vi.fn().mockResolvedValue("hashed-password"),
+    hash: vi.fn().mockResolvedValue("hashed-password"),
     compare: vi.fn().mockResolvedValue(true),
   },
 }));
@@ -75,7 +75,7 @@ describe("POST /api/auth/reset-password", () => {
 
   it("returns 200 and resets password on valid token", async () => {
     db._queryFindFirst.mockResolvedValueOnce(MOCK_TOKEN_RECORD); // token found
-    db._queryFindFirst.mockResolvedValueOnce(MOCK_USER);          // user found
+    db._queryFindFirst.mockResolvedValueOnce(MOCK_USER); // user found
     const res = await POST(makeRequest({ token: VALID_TOKEN, password: "newpassword123" }));
     expect(res.status).toBe(200);
     const body = await res.json();
@@ -84,7 +84,7 @@ describe("POST /api/auth/reset-password", () => {
 
   it("returns 404 when token is valid but user account no longer exists", async () => {
     db._queryFindFirst.mockResolvedValueOnce(MOCK_TOKEN_RECORD); // token found
-    db._queryFindFirst.mockResolvedValueOnce(undefined);          // user not found
+    db._queryFindFirst.mockResolvedValueOnce(undefined); // user not found
     const res = await POST(makeRequest({ token: VALID_TOKEN, password: "newpassword123" }));
     expect(res.status).toBe(404);
   });

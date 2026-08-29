@@ -1,14 +1,19 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { PawPrint, Users, LogOut, Package, ShoppingBag, Heart, LayoutDashboard, FileText } from "lucide-react";
+import {
+  PawPrint,
+  Users,
+  LogOut,
+  Package,
+  ShoppingBag,
+  Heart,
+  LayoutDashboard,
+  FileText,
+} from "lucide-react";
 import { APP } from "@/lib/config/app";
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   if (!session || session.user.role !== "admin") redirect("/portal/dashboard");
 
@@ -75,7 +80,9 @@ export default async function AdminLayout({
 
         <div className="px-2 pb-4 border-t border-white/10 pt-4">
           <div className="px-3 mb-3">
-            <p className="text-xs font-medium text-white/80 truncate">{session.user.name ?? session.user.email}</p>
+            <p className="text-xs font-medium text-white/80 truncate">
+              {session.user.name ?? session.user.email}
+            </p>
             <p className="text-[11px] text-white/40 truncate">{session.user.email}</p>
           </div>
           <Link
@@ -90,9 +97,7 @@ export default async function AdminLayout({
 
       {/* Main */}
       <main className="flex-1 ms-52 min-h-screen">
-        <div className="max-w-5xl mx-auto px-6 py-8">
-          {children}
-        </div>
+        <div className="max-w-5xl mx-auto px-6 py-8">{children}</div>
       </main>
     </div>
   );

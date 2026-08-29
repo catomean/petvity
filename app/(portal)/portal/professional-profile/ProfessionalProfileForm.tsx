@@ -69,17 +69,13 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
 
   /* ── Sitter / groomer state (both are service-based) ──────────────────── */
   const sitterInit = initialData as (SitterProfile & Partial<GroomerProfile>) | null;
-  const selectedServices = new Set(
-    (sitterInit?.services ?? "").split(",").filter(Boolean),
-  );
+  const selectedServices = new Set((sitterInit?.services ?? "").split(",").filter(Boolean));
   const initialPriceCents = isGroomer ? sitterInit?.priceFrom : sitterInit?.pricePerDay;
   const [sitterForm, setSitterForm] = useState({
     salonName: sitterInit?.salonName ?? "",
     bio: sitterInit?.bio ?? "",
     services: selectedServices,
-    pricePerDay: initialPriceCents != null
-      ? String(initialPriceCents / 100)
-      : "",
+    pricePerDay: initialPriceCents != null ? String(initialPriceCents / 100) : "",
     city: sitterInit?.city ?? "",
     country: sitterInit?.country ?? "",
     phone: sitterInit?.phone ?? "",
@@ -144,7 +140,11 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
     });
   }
 
-  const title = isVet ? t("profVetTitle") : isGroomer ? t("profGroomerTitle") : t("profSitterTitle");
+  const title = isVet
+    ? t("profVetTitle")
+    : isGroomer
+      ? t("profGroomerTitle")
+      : t("profSitterTitle");
 
   return (
     <div className="max-w-2xl">
@@ -171,7 +171,13 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
             <label className="form-label">{t("petBioLabel")}</label>
             <textarea
               className="form-input min-h-[100px] resize-y"
-              placeholder={isVet ? t("profVetBioPlaceholder") : isGroomer ? t("profGroomerBioPlaceholder") : t("profSitterBioPlaceholder")}
+              placeholder={
+                isVet
+                  ? t("profVetBioPlaceholder")
+                  : isGroomer
+                    ? t("profGroomerBioPlaceholder")
+                    : t("profSitterBioPlaceholder")
+              }
               value={isVet ? vetForm.bio : sitterForm.bio}
               onChange={(e) =>
                 isVet
@@ -353,13 +359,15 @@ export default function ProfessionalProfileForm({ role, initialData }: Props) {
               {t("profAcceptingClients")}
             </span>
           </label>
-          <p className="text-xs text-[var(--muted)] mt-1.5 ms-7">
-            {t("profAcceptingClientsHint")}
-          </p>
+          <p className="text-xs text-[var(--muted)] mt-1.5 ms-7">{t("profAcceptingClientsHint")}</p>
         </div>
 
         <div className="flex gap-3">
-          <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2 disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={saving}
+            className="btn-primary flex items-center gap-2 disabled:opacity-60"
+          >
             <Save className="w-4 h-4" />
             {saving ? t("saving") : t("profSaveProfile")}
           </button>

@@ -21,9 +21,7 @@ import { timingSafeEqual } from "node:crypto";
  * it wrong, and it was already wrong in all seven.
  */
 
-export type CronAuthResult =
-  | { ok: true }
-  | { ok: false; response: NextResponse };
+export type CronAuthResult = { ok: true } | { ok: false; response: NextResponse };
 
 const unauthorized = () =>
   NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });

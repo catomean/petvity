@@ -47,7 +47,10 @@ export default function DemoPage() {
         </>
       ) : (
         <>
-          <div className="w-8 h-8 mx-auto mb-4 rounded-full border-2 border-[var(--border)] border-t-[var(--accent)] animate-spin" aria-hidden />
+          <div
+            className="w-8 h-8 mx-auto mb-4 rounded-full border-2 border-[var(--border)] border-t-[var(--accent)] animate-spin"
+            aria-hidden
+          />
           <p className="text-sm text-[var(--muted)]">Opening the live demo…</p>
         </>
       )}

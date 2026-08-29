@@ -28,14 +28,52 @@ export type Currency = {
  */
 const EXPONENTS: Record<string, number> = {
   // Zero-decimal
-  BIF: 0, CLP: 0, DJF: 0, GNF: 0, ISK: 0, JPY: 0, KMF: 0, KRW: 0,
-  PYG: 0, RWF: 0, UGX: 0, VND: 0, VUV: 0, XAF: 0, XOF: 0, XPF: 0,
+  BIF: 0,
+  CLP: 0,
+  DJF: 0,
+  GNF: 0,
+  ISK: 0,
+  JPY: 0,
+  KMF: 0,
+  KRW: 0,
+  PYG: 0,
+  RWF: 0,
+  UGX: 0,
+  VND: 0,
+  VUV: 0,
+  XAF: 0,
+  XOF: 0,
+  XPF: 0,
   // Three-decimal
-  BHD: 3, IQD: 3, JOD: 3, KWD: 3, LYD: 3, OMR: 3, TND: 3,
+  BHD: 3,
+  IQD: 3,
+  JOD: 3,
+  KWD: 3,
+  LYD: 3,
+  OMR: 3,
+  TND: 3,
   // Two-decimal, listed so they are known rather than defaulted
-  AUD: 2, BRL: 2, CAD: 2, CHF: 2, CNY: 2, CZK: 2, DKK: 2, EUR: 2,
-  GBP: 2, HKD: 2, ILS: 2, INR: 2, MXN: 2, NOK: 2, NZD: 2, PLN: 2,
-  SEK: 2, SGD: 2, TRY: 2, USD: 2, ZAR: 2,
+  AUD: 2,
+  BRL: 2,
+  CAD: 2,
+  CHF: 2,
+  CNY: 2,
+  CZK: 2,
+  DKK: 2,
+  EUR: 2,
+  GBP: 2,
+  HKD: 2,
+  ILS: 2,
+  INR: 2,
+  MXN: 2,
+  NOK: 2,
+  NZD: 2,
+  PLN: 2,
+  SEK: 2,
+  SGD: 2,
+  TRY: 2,
+  USD: 2,
+  ZAR: 2,
 };
 
 const DEFAULT_EXPONENT = 2;
@@ -261,11 +299,7 @@ const formatters = new Map<string, Intl.NumberFormat>();
  * count all come from Intl, so there is no table to maintain and ¥1,250 renders
  * without decimals because the exponent came from the currency.
  */
-export function format(
-  m: Money,
-  locale = "en",
-  options: Intl.NumberFormatOptions = {},
-): string {
+export function format(m: Money, locale = "en", options: Intl.NumberFormatOptions = {}): string {
   const key = `${locale}|${m.currency}|${JSON.stringify(options)}`;
   let fmt = formatters.get(key);
   if (!fmt) {
@@ -279,7 +313,9 @@ export function format(
 export function toText(m: Money): string {
   const c = currency(m.currency);
   const negative = m.amount < 0;
-  const abs = Math.abs(m.amount).toString().padStart(c.exponent + 1, "0");
+  const abs = Math.abs(m.amount)
+    .toString()
+    .padStart(c.exponent + 1, "0");
   const whole = abs.slice(0, abs.length - c.exponent) || "0";
   const fraction = c.exponent > 0 ? `.${abs.slice(abs.length - c.exponent)}` : "";
   return `${negative ? "-" : ""}${whole}${fraction} ${c.code}`;

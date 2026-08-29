@@ -52,15 +52,14 @@ describe("sendEmail", () => {
     // Every caller ignores the return value and only cares about throw/no-throw
     // (the cron marks a queue row failed on throw). Suppression must not look
     // like a failure, or queued items would retry forever.
-    await expect(
-      sendEmail({ to: "e2e-vet-1@petvity.orangecat.ch", subject: "s", html: "h" }),
-    ).resolves.not.toThrow;
+    await expect(sendEmail({ to: "e2e-vet-1@petvity.orangecat.ch", subject: "s", html: "h" }))
+      .resolves.not.toThrow;
   });
 
   it("still throws on a genuine Resend error", async () => {
     send.mockResolvedValue({ error: { message: "rate limited" } });
-    await expect(
-      sendEmail({ to: "owner@proton.me", subject: "s", html: "h" }),
-    ).rejects.toThrow(/rate limited/);
+    await expect(sendEmail({ to: "owner@proton.me", subject: "s", html: "h" })).rejects.toThrow(
+      /rate limited/,
+    );
   });
 });

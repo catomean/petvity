@@ -29,9 +29,13 @@ const PRO_SESSION = {
 };
 
 const MOCK_BOOKING_PENDING = {
-  id: BOOKING_ID, ownerId: "owner-1", professionalId: "pro-1",
-  petId: "pet-1", status: "pending",
-  startDate: new Date("2026-06-01"), endDate: new Date("2026-06-03"),
+  id: BOOKING_ID,
+  ownerId: "owner-1",
+  professionalId: "pro-1",
+  petId: "pet-1",
+  status: "pending",
+  startDate: new Date("2026-06-01"),
+  endDate: new Date("2026-06-03"),
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ bookingId: BOOKING_ID }) };

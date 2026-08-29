@@ -209,8 +209,8 @@ describe("POST /api/adoptions", () => {
   });
 
   it("returns 409 when an active listing already exists for the pet", async () => {
-    db._queueSelectResult([MOCK_PET]);               // pet found
-    db._queueSelectResult([{ id: "existing-1" }]);  // existing listing found
+    db._queueSelectResult([MOCK_PET]); // pet found
+    db._queueSelectResult([{ id: "existing-1" }]); // existing listing found
     const res = await POST(makeRequest(VALID_BODY));
     expect(res.status).toBe(409);
     const body = await res.json();
@@ -219,7 +219,7 @@ describe("POST /api/adoptions", () => {
 
   it("returns 201 when listing is created successfully", async () => {
     db._queueSelectResult([MOCK_PET]); // pet found
-    db._queueSelectResult([]);          // no existing listing
+    db._queueSelectResult([]); // no existing listing
 
     const mockListing = {
       id: "listing-1",

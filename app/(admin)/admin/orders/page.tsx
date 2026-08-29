@@ -2,8 +2,16 @@
 
 import { useState, useEffect } from "react";
 import {
-  ShoppingBag, Clock, CheckCircle, Truck, XCircle,
-  ChevronDown, ChevronUp, User, Store, BadgeCheck,
+  ShoppingBag,
+  Clock,
+  CheckCircle,
+  Truck,
+  XCircle,
+  ChevronDown,
+  ChevronUp,
+  User,
+  Store,
+  BadgeCheck,
 } from "lucide-react";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
@@ -45,25 +53,28 @@ interface Order {
 
 // Icons are UI-layer; labels/colors sourced from lib/config/orders SSOT
 const STATUS_ICONS: Record<OrderStatus, React.ElementType> = {
-  pending:   Clock,
+  pending: Clock,
   confirmed: CheckCircle,
-  shipped:   Truck,
+  shipped: Truck,
   delivered: ShoppingBag,
   cancelled: XCircle,
 };
 
-const STATUS_CONFIG: Record<OrderStatus, { label: string; icon: React.ElementType; color: string; bg: string; className: string }> = {
-  pending:   { ...ORDER_STATUS_CONFIG.pending,   icon: STATUS_ICONS.pending },
+const STATUS_CONFIG: Record<
+  OrderStatus,
+  { label: string; icon: React.ElementType; color: string; bg: string; className: string }
+> = {
+  pending: { ...ORDER_STATUS_CONFIG.pending, icon: STATUS_ICONS.pending },
   confirmed: { ...ORDER_STATUS_CONFIG.confirmed, icon: STATUS_ICONS.confirmed },
-  shipped:   { ...ORDER_STATUS_CONFIG.shipped,   icon: STATUS_ICONS.shipped },
+  shipped: { ...ORDER_STATUS_CONFIG.shipped, icon: STATUS_ICONS.shipped },
   delivered: { ...ORDER_STATUS_CONFIG.delivered, icon: STATUS_ICONS.delivered },
   cancelled: { ...ORDER_STATUS_CONFIG.cancelled, icon: STATUS_ICONS.cancelled },
 };
 
 const STATUS_FLOW: Record<OrderStatus, OrderStatus[]> = {
-  pending:   ["confirmed", "cancelled"],
+  pending: ["confirmed", "cancelled"],
   confirmed: ["shipped", "cancelled"],
-  shipped:   ["delivered"],
+  shipped: ["delivered"],
   delivered: [],
   cancelled: [],
 };
@@ -72,7 +83,6 @@ const STATUS_FILTER_OPTIONS: { value: string; label: string }[] = [
   { value: "all", label: "All orders" },
   ...Object.entries(ORDER_STATUS_CONFIG).map(([value, { label }]) => ({ value, label })),
 ];
-
 
 /* ─── Order row ──────────────────────────────────────────────────────────── */
 
@@ -109,7 +119,9 @@ function OrderRow({
         onClick={() => setExpanded((v) => !v)}
       >
         {/* Status badge */}
-        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${cfg.className}`}>
+        <span
+          className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${cfg.className}`}
+        >
           <Icon className="w-3 h-3" />
           {cfg.label}
         </span>
@@ -120,7 +132,8 @@ function OrderRow({
             {order.customer.name ?? order.customer.email}
           </p>
           <p className="text-xs text-[var(--muted)]">
-            {order.items.length} {order.items.length === 1 ? "item" : "items"} · {formatIsoDate(order.createdAt)}
+            {order.items.length} {order.items.length === 1 ? "item" : "items"} ·{" "}
+            {formatIsoDate(order.createdAt)}
           </p>
         </div>
 
@@ -250,17 +263,19 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     fetch("/api/admin/orders")
       .then((r) => r.json())
-      .then(({ data }) => { setOrders(data ?? []); setLoading(false); })
+      .then(({ data }) => {
+        setOrders(data ?? []);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
 
   function handleStatusChange(id: string, status: OrderStatus) {
-    setOrders((prev) => prev.map((o) => o.id === id ? { ...o, status } : o));
+    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
   }
 
-  const displayed = statusFilter === "all"
-    ? orders
-    : orders.filter((o) => o.status === statusFilter);
+  const displayed =
+    statusFilter === "all" ? orders : orders.filter((o) => o.status === statusFilter);
 
   // Summary counts
   const counts = orders.reduce<Record<string, number>>((acc, o) => {
@@ -295,7 +310,9 @@ export default function AdminOrdersPage() {
           </div>
           <div className="card p-4">
             <p className="stat-caption">In transit</p>
-            <p className="stat-value stat-value-muted">{(counts.confirmed ?? 0) + (counts.shipped ?? 0)}</p>
+            <p className="stat-value stat-value-muted">
+              {(counts.confirmed ?? 0) + (counts.shipped ?? 0)}
+            </p>
           </div>
         </div>
       )}
@@ -322,7 +339,10 @@ export default function AdminOrdersPage() {
       {loading ? (
         <div className="card">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-center gap-3 px-4 py-3 border-t border-[var(--border)] first:border-0">
+            <div
+              key={i}
+              className="flex items-center gap-3 px-4 py-3 border-t border-[var(--border)] first:border-0"
+            >
               <div className="h-6 w-20 bg-[var(--off)] rounded-full animate-pulse" />
               <div className="flex-1 space-y-1">
                 <div className="h-4 bg-[var(--off)] rounded w-40 animate-pulse" />
@@ -347,11 +367,7 @@ export default function AdminOrdersPage() {
       ) : (
         <div className="card overflow-hidden">
           {displayed.map((order) => (
-            <OrderRow
-              key={order.id}
-              order={order}
-              onStatusChange={handleStatusChange}
-            />
+            <OrderRow key={order.id} order={order} onStatusChange={handleStatusChange} />
           ))}
         </div>
       )}

@@ -1,15 +1,6 @@
 import { APP } from "@/lib/config/app";
 
-export type EmailLocale =
-  | "en"
-  | "de"
-  | "fr"
-  | "es"
-  | "ja"
-  | "zh"
-  | "ko"
-  | "tr"
-  | "ar";
+export type EmailLocale = "en" | "de" | "fr" | "es" | "ja" | "zh" | "ko" | "tr" | "ar";
 
 /** Replace {{key}} placeholders in a translation string at call time. */
 export function t(str: string, vars: Record<string, string | number>): string {
@@ -140,10 +131,26 @@ const strings = {
       greeting: "Hi {{name}},",
       totalLabel: "Order total",
       button: "View my orders",
-      confirmed: { subject: "Order confirmed", h2: "Order confirmed", body: "Your order has been confirmed and is being prepared for shipment." },
-      shipped: { subject: "Order shipped!", h2: "Order shipped!", body: "Great news — your order is on its way." },
-      delivered: { subject: "Order delivered", h2: "Order delivered", body: "Your order has been marked as delivered. Enjoy!" },
-      cancelled: { subject: "Order cancelled", h2: "Order cancelled", body: "Your order has been cancelled." },
+      confirmed: {
+        subject: "Order confirmed",
+        h2: "Order confirmed",
+        body: "Your order has been confirmed and is being prepared for shipment.",
+      },
+      shipped: {
+        subject: "Order shipped!",
+        h2: "Order shipped!",
+        body: "Great news — your order is on its way.",
+      },
+      delivered: {
+        subject: "Order delivered",
+        h2: "Order delivered",
+        body: "Your order has been marked as delivered. Enjoy!",
+      },
+      cancelled: {
+        subject: "Order cancelled",
+        h2: "Order cancelled",
+        body: "Your order has been cancelled.",
+      },
     },
     sellerOrderNotification: {
       subject: "New order on {{app}} — {{count}} {{itemWord}} to fulfill",
@@ -171,7 +178,7 @@ const strings = {
       approved: {
         subject: "Your application to adopt {{petName}} was approved! 🎉",
         h2: "Application approved! 🎉",
-        body: "Congratulations! Your adoption application for <strong>{{petName}}</strong> has been <strong style=\"color:#16A34A;\">approved</strong>. The owner will be in touch to arrange the next steps.",
+        body: 'Congratulations! Your adoption application for <strong>{{petName}}</strong> has been <strong style="color:#16A34A;">approved</strong>. The owner will be in touch to arrange the next steps.',
       },
       rejected: {
         subject: "Update on your application to adopt {{petName}}",
@@ -298,9 +305,21 @@ const strings = {
     bookingStatusChanged: {
       greeting: "Hallo {{name}},",
       button: "Meine Buchungen ansehen",
-      confirmed: { subject: "Buchung bestätigt!", h2: "Buchung bestätigt!", body: "Dein Termin für <strong>{{petName}}</strong> am <strong>{{date}}</strong> wurde bestätigt." },
-      cancelled: { subject: "Buchung storniert", h2: "Buchung storniert", body: "Deine Buchung für <strong>{{petName}}</strong> am <strong>{{date}}</strong> wurde storniert." },
-      completed: { subject: "Termin abgeschlossen", h2: "Termin abgeschlossen", body: "Dein Termin für <strong>{{petName}}</strong> am <strong>{{date}}</strong> wurde als abgeschlossen markiert. Hinterlasse eine Bewertung!" },
+      confirmed: {
+        subject: "Buchung bestätigt!",
+        h2: "Buchung bestätigt!",
+        body: "Dein Termin für <strong>{{petName}}</strong> am <strong>{{date}}</strong> wurde bestätigt.",
+      },
+      cancelled: {
+        subject: "Buchung storniert",
+        h2: "Buchung storniert",
+        body: "Deine Buchung für <strong>{{petName}}</strong> am <strong>{{date}}</strong> wurde storniert.",
+      },
+      completed: {
+        subject: "Termin abgeschlossen",
+        h2: "Termin abgeschlossen",
+        body: "Dein Termin für <strong>{{petName}}</strong> am <strong>{{date}}</strong> wurde als abgeschlossen markiert. Hinterlasse eine Bewertung!",
+      },
     },
     orderConfirmation: {
       subject: `Deine ${APP.name}-Bestellung ist bestätigt`,
@@ -314,10 +333,26 @@ const strings = {
       greeting: "Hallo {{name}},",
       totalLabel: "Bestellbetrag",
       button: "Meine Bestellungen ansehen",
-      confirmed: { subject: "Bestellung bestätigt", h2: "Bestellung bestätigt", body: "Deine Bestellung wurde bestätigt und für den Versand vorbereitet." },
-      shipped: { subject: "Bestellung versendet!", h2: "Bestellung versendet!", body: "Deine Bestellung ist unterwegs." },
-      delivered: { subject: "Bestellung zugestellt", h2: "Bestellung zugestellt", body: "Deine Bestellung wurde als zugestellt markiert. Viel Spaß!" },
-      cancelled: { subject: "Bestellung storniert", h2: "Bestellung storniert", body: "Deine Bestellung wurde storniert." },
+      confirmed: {
+        subject: "Bestellung bestätigt",
+        h2: "Bestellung bestätigt",
+        body: "Deine Bestellung wurde bestätigt und für den Versand vorbereitet.",
+      },
+      shipped: {
+        subject: "Bestellung versendet!",
+        h2: "Bestellung versendet!",
+        body: "Deine Bestellung ist unterwegs.",
+      },
+      delivered: {
+        subject: "Bestellung zugestellt",
+        h2: "Bestellung zugestellt",
+        body: "Deine Bestellung wurde als zugestellt markiert. Viel Spaß!",
+      },
+      cancelled: {
+        subject: "Bestellung storniert",
+        h2: "Bestellung storniert",
+        body: "Deine Bestellung wurde storniert.",
+      },
     },
     sellerOrderNotification: {
       subject: "Neue Bestellung bei {{app}} – {{count}} {{itemWord}} zu erfüllen",
@@ -345,7 +380,7 @@ const strings = {
       approved: {
         subject: "Deine Adoptionsanfrage für {{petName}} wurde genehmigt! 🎉",
         h2: "Anfrage genehmigt! 🎉",
-        body: "Herzlichen Glückwunsch! Deine Adoptionsanfrage für <strong>{{petName}}</strong> wurde <strong style=\"color:#16A34A;\">genehmigt</strong>. Der Besitzer wird sich wegen der nächsten Schritte bei dir melden.",
+        body: 'Herzlichen Glückwunsch! Deine Adoptionsanfrage für <strong>{{petName}}</strong> wurde <strong style="color:#16A34A;">genehmigt</strong>. Der Besitzer wird sich wegen der nächsten Schritte bei dir melden.',
       },
       rejected: {
         subject: "Update zu deiner Adoptionsanfrage für {{petName}}",
@@ -472,9 +507,21 @@ const strings = {
     bookingStatusChanged: {
       greeting: "Bonjour {{name}},",
       button: "Voir mes réservations",
-      confirmed: { subject: "Réservation confirmée !", h2: "Réservation confirmée !", body: "Ton rendez-vous pour <strong>{{petName}}</strong> le <strong>{{date}}</strong> a été confirmé." },
-      cancelled: { subject: "Réservation annulée", h2: "Réservation annulée", body: "Ta réservation pour <strong>{{petName}}</strong> le <strong>{{date}}</strong> a été annulée." },
-      completed: { subject: "Séance terminée", h2: "Séance terminée", body: "Ta séance pour <strong>{{petName}}</strong> le <strong>{{date}}</strong> a été marquée comme terminée. Laisse un avis !" },
+      confirmed: {
+        subject: "Réservation confirmée !",
+        h2: "Réservation confirmée !",
+        body: "Ton rendez-vous pour <strong>{{petName}}</strong> le <strong>{{date}}</strong> a été confirmé.",
+      },
+      cancelled: {
+        subject: "Réservation annulée",
+        h2: "Réservation annulée",
+        body: "Ta réservation pour <strong>{{petName}}</strong> le <strong>{{date}}</strong> a été annulée.",
+      },
+      completed: {
+        subject: "Séance terminée",
+        h2: "Séance terminée",
+        body: "Ta séance pour <strong>{{petName}}</strong> le <strong>{{date}}</strong> a été marquée comme terminée. Laisse un avis !",
+      },
     },
     orderConfirmation: {
       subject: `Ta commande ${APP.name} est confirmée`,
@@ -488,10 +535,26 @@ const strings = {
       greeting: "Bonjour {{name}},",
       totalLabel: "Total de la commande",
       button: "Voir mes commandes",
-      confirmed: { subject: "Commande confirmée", h2: "Commande confirmée", body: "Ta commande a été confirmée et est en cours de préparation pour l'expédition." },
-      shipped: { subject: "Commande expédiée !", h2: "Commande expédiée !", body: "Bonne nouvelle — ta commande est en chemin." },
-      delivered: { subject: "Commande livrée", h2: "Commande livrée", body: "Ta commande a été marquée comme livrée. Profites-en !" },
-      cancelled: { subject: "Commande annulée", h2: "Commande annulée", body: "Ta commande a été annulée." },
+      confirmed: {
+        subject: "Commande confirmée",
+        h2: "Commande confirmée",
+        body: "Ta commande a été confirmée et est en cours de préparation pour l'expédition.",
+      },
+      shipped: {
+        subject: "Commande expédiée !",
+        h2: "Commande expédiée !",
+        body: "Bonne nouvelle — ta commande est en chemin.",
+      },
+      delivered: {
+        subject: "Commande livrée",
+        h2: "Commande livrée",
+        body: "Ta commande a été marquée comme livrée. Profites-en !",
+      },
+      cancelled: {
+        subject: "Commande annulée",
+        h2: "Commande annulée",
+        body: "Ta commande a été annulée.",
+      },
     },
     sellerOrderNotification: {
       subject: "Nouvelle commande sur {{app}} — {{count}} {{itemWord}} à traiter",
@@ -519,7 +582,7 @@ const strings = {
       approved: {
         subject: "Ta demande d'adoption pour {{petName}} a été approuvée ! 🎉",
         h2: "Demande approuvée ! 🎉",
-        body: "Félicitations ! Ta demande d'adoption pour <strong>{{petName}}</strong> a été <strong style=\"color:#16A34A;\">approuvée</strong>. Le propriétaire te contactera pour organiser les prochaines étapes.",
+        body: 'Félicitations ! Ta demande d\'adoption pour <strong>{{petName}}</strong> a été <strong style="color:#16A34A;">approuvée</strong>. Le propriétaire te contactera pour organiser les prochaines étapes.',
       },
       rejected: {
         subject: "Mise à jour sur ta demande d'adoption pour {{petName}}",
@@ -646,9 +709,21 @@ const strings = {
     bookingStatusChanged: {
       greeting: "Hola {{name}},",
       button: "Ver mis reservas",
-      confirmed: { subject: "¡Reserva confirmada!", h2: "¡Reserva confirmada!", body: "Tu cita para <strong>{{petName}}</strong> el <strong>{{date}}</strong> ha sido confirmada." },
-      cancelled: { subject: "Reserva cancelada", h2: "Reserva cancelada", body: "Tu reserva para <strong>{{petName}}</strong> el <strong>{{date}}</strong> ha sido cancelada." },
-      completed: { subject: "Sesión completada", h2: "Sesión completada", body: "Tu sesión para <strong>{{petName}}</strong> el <strong>{{date}}</strong> ha sido marcada como completada. ¡Deja una reseña!" },
+      confirmed: {
+        subject: "¡Reserva confirmada!",
+        h2: "¡Reserva confirmada!",
+        body: "Tu cita para <strong>{{petName}}</strong> el <strong>{{date}}</strong> ha sido confirmada.",
+      },
+      cancelled: {
+        subject: "Reserva cancelada",
+        h2: "Reserva cancelada",
+        body: "Tu reserva para <strong>{{petName}}</strong> el <strong>{{date}}</strong> ha sido cancelada.",
+      },
+      completed: {
+        subject: "Sesión completada",
+        h2: "Sesión completada",
+        body: "Tu sesión para <strong>{{petName}}</strong> el <strong>{{date}}</strong> ha sido marcada como completada. ¡Deja una reseña!",
+      },
     },
     orderConfirmation: {
       subject: `Tu pedido de ${APP.name} está confirmado`,
@@ -662,10 +737,26 @@ const strings = {
       greeting: "Hola {{name}},",
       totalLabel: "Total del pedido",
       button: "Ver mis pedidos",
-      confirmed: { subject: "Pedido confirmado", h2: "Pedido confirmado", body: "Tu pedido ha sido confirmado y está siendo preparado para el envío." },
-      shipped: { subject: "¡Pedido enviado!", h2: "¡Pedido enviado!", body: "¡Buenas noticias! Tu pedido está en camino." },
-      delivered: { subject: "Pedido entregado", h2: "Pedido entregado", body: "Tu pedido ha sido marcado como entregado. ¡Disfrútalo!" },
-      cancelled: { subject: "Pedido cancelado", h2: "Pedido cancelado", body: "Tu pedido ha sido cancelado." },
+      confirmed: {
+        subject: "Pedido confirmado",
+        h2: "Pedido confirmado",
+        body: "Tu pedido ha sido confirmado y está siendo preparado para el envío.",
+      },
+      shipped: {
+        subject: "¡Pedido enviado!",
+        h2: "¡Pedido enviado!",
+        body: "¡Buenas noticias! Tu pedido está en camino.",
+      },
+      delivered: {
+        subject: "Pedido entregado",
+        h2: "Pedido entregado",
+        body: "Tu pedido ha sido marcado como entregado. ¡Disfrútalo!",
+      },
+      cancelled: {
+        subject: "Pedido cancelado",
+        h2: "Pedido cancelado",
+        body: "Tu pedido ha sido cancelado.",
+      },
     },
     sellerOrderNotification: {
       subject: "Nuevo pedido en {{app}} — {{count}} {{itemWord}} por gestionar",
@@ -693,7 +784,7 @@ const strings = {
       approved: {
         subject: "¡Tu solicitud para adoptar a {{petName}} fue aprobada! 🎉",
         h2: "¡Solicitud aprobada! 🎉",
-        body: "¡Felicidades! Tu solicitud de adopción para <strong>{{petName}}</strong> ha sido <strong style=\"color:#16A34A;\">aprobada</strong>. El propietario se pondrá en contacto contigo para los próximos pasos.",
+        body: '¡Felicidades! Tu solicitud de adopción para <strong>{{petName}}</strong> ha sido <strong style="color:#16A34A;">aprobada</strong>. El propietario se pondrá en contacto contigo para los próximos pasos.',
       },
       rejected: {
         subject: "Actualización sobre tu solicitud para adoptar a {{petName}}",
@@ -820,9 +911,21 @@ const strings = {
     bookingStatusChanged: {
       greeting: "{{name}}さん、こんにちは。",
       button: "予約を確認",
-      confirmed: { subject: "予約が確定しました！", h2: "予約確定！", body: "<strong>{{petName}}</strong>の<strong>{{date}}</strong>の予約が確定しました。" },
-      cancelled: { subject: "予約がキャンセルされました", h2: "予約キャンセル", body: "<strong>{{petName}}</strong>の<strong>{{date}}</strong>の予約がキャンセルされました。" },
-      completed: { subject: "セッションが完了しました", h2: "セッション完了", body: "<strong>{{petName}}</strong>の<strong>{{date}}</strong>のセッションが完了としてマークされました。レビューを残してください！" },
+      confirmed: {
+        subject: "予約が確定しました！",
+        h2: "予約確定！",
+        body: "<strong>{{petName}}</strong>の<strong>{{date}}</strong>の予約が確定しました。",
+      },
+      cancelled: {
+        subject: "予約がキャンセルされました",
+        h2: "予約キャンセル",
+        body: "<strong>{{petName}}</strong>の<strong>{{date}}</strong>の予約がキャンセルされました。",
+      },
+      completed: {
+        subject: "セッションが完了しました",
+        h2: "セッション完了",
+        body: "<strong>{{petName}}</strong>の<strong>{{date}}</strong>のセッションが完了としてマークされました。レビューを残してください！",
+      },
     },
     orderConfirmation: {
       subject: `${APP.name}のご注文が確定しました`,
@@ -836,10 +939,22 @@ const strings = {
       greeting: "{{name}}さん、こんにちは。",
       totalLabel: "注文合計",
       button: "注文を確認",
-      confirmed: { subject: "注文確定", h2: "注文確定", body: "ご注文が確定し、発送の準備が進められています。" },
+      confirmed: {
+        subject: "注文確定",
+        h2: "注文確定",
+        body: "ご注文が確定し、発送の準備が進められています。",
+      },
       shipped: { subject: "注文発送！", h2: "注文発送！", body: "ご注文が発送されました。" },
-      delivered: { subject: "注文配達完了", h2: "注文配達完了", body: "ご注文が配達完了としてマークされました。お楽しみください！" },
-      cancelled: { subject: "注文キャンセル", h2: "注文キャンセル", body: "ご注文がキャンセルされました。" },
+      delivered: {
+        subject: "注文配達完了",
+        h2: "注文配達完了",
+        body: "ご注文が配達完了としてマークされました。お楽しみください！",
+      },
+      cancelled: {
+        subject: "注文キャンセル",
+        h2: "注文キャンセル",
+        body: "ご注文がキャンセルされました。",
+      },
     },
     sellerOrderNotification: {
       subject: "{{app}}で新しい注文 — {{count}}{{itemWord}}を処理してください",
@@ -867,7 +982,7 @@ const strings = {
       approved: {
         subject: "{{petName}}の里親申請が承認されました！ 🎉",
         h2: "申請承認！ 🎉",
-        body: "おめでとうございます！<strong>{{petName}}</strong>の里親申請が<strong style=\"color:#16A34A;\">承認</strong>されました。オーナーから次のステップについてご連絡があります。",
+        body: 'おめでとうございます！<strong>{{petName}}</strong>の里親申請が<strong style="color:#16A34A;">承認</strong>されました。オーナーから次のステップについてご連絡があります。',
       },
       rejected: {
         subject: "{{petName}}の里親申請の更新",
@@ -994,9 +1109,21 @@ const strings = {
     bookingStatusChanged: {
       greeting: "您好，{{name}}，",
       button: "查看我的预约",
-      confirmed: { subject: "预约已确认！", h2: "预约已确认！", body: "<strong>{{petName}}</strong>在<strong>{{date}}</strong>的预约已确认。" },
-      cancelled: { subject: "预约已取消", h2: "预约已取消", body: "<strong>{{petName}}</strong>在<strong>{{date}}</strong>的预约已取消。" },
-      completed: { subject: "服务已完成", h2: "服务已完成", body: "<strong>{{petName}}</strong>在<strong>{{date}}</strong>的服务已标记为完成。欢迎留下评价！" },
+      confirmed: {
+        subject: "预约已确认！",
+        h2: "预约已确认！",
+        body: "<strong>{{petName}}</strong>在<strong>{{date}}</strong>的预约已确认。",
+      },
+      cancelled: {
+        subject: "预约已取消",
+        h2: "预约已取消",
+        body: "<strong>{{petName}}</strong>在<strong>{{date}}</strong>的预约已取消。",
+      },
+      completed: {
+        subject: "服务已完成",
+        h2: "服务已完成",
+        body: "<strong>{{petName}}</strong>在<strong>{{date}}</strong>的服务已标记为完成。欢迎留下评价！",
+      },
     },
     orderConfirmation: {
       subject: `您的${APP.name}订单已确认`,
@@ -1010,9 +1137,17 @@ const strings = {
       greeting: "您好，{{name}}，",
       totalLabel: "订单总计",
       button: "查看我的订单",
-      confirmed: { subject: "订单已确认", h2: "订单已确认", body: "您的订单已确认，正在准备发货。" },
+      confirmed: {
+        subject: "订单已确认",
+        h2: "订单已确认",
+        body: "您的订单已确认，正在准备发货。",
+      },
       shipped: { subject: "订单已发货！", h2: "订单已发货！", body: "好消息 — 您的订单已在途中。" },
-      delivered: { subject: "订单已送达", h2: "订单已送达", body: "您的订单已标记为送达。尽情享用！" },
+      delivered: {
+        subject: "订单已送达",
+        h2: "订单已送达",
+        body: "您的订单已标记为送达。尽情享用！",
+      },
       cancelled: { subject: "订单已取消", h2: "订单已取消", body: "您的订单已取消。" },
     },
     sellerOrderNotification: {
@@ -1041,7 +1176,7 @@ const strings = {
       approved: {
         subject: "您领养{{petName}}的申请已获批准！ 🎉",
         h2: "申请已批准！ 🎉",
-        body: "恭喜！您领养<strong>{{petName}}</strong>的申请已<strong style=\"color:#16A34A;\">获批准</strong>。主人将与您联系安排后续步骤。",
+        body: '恭喜！您领养<strong>{{petName}}</strong>的申请已<strong style="color:#16A34A;">获批准</strong>。主人将与您联系安排后续步骤。',
       },
       rejected: {
         subject: "关于您领养{{petName}}申请的更新",
@@ -1168,9 +1303,21 @@ const strings = {
     bookingStatusChanged: {
       greeting: "안녕하세요, {{name}}님,",
       button: "내 예약 보기",
-      confirmed: { subject: "예약이 확정되었습니다!", h2: "예약 확정!", body: "<strong>{{petName}}</strong>의 <strong>{{date}}</strong> 예약이 확정되었습니다." },
-      cancelled: { subject: "예약이 취소되었습니다", h2: "예약 취소", body: "<strong>{{petName}}</strong>의 <strong>{{date}}</strong> 예약이 취소되었습니다." },
-      completed: { subject: "세션이 완료되었습니다", h2: "세션 완료", body: "<strong>{{petName}}</strong>의 <strong>{{date}}</strong> 세션이 완료로 표시되었습니다. 리뷰를 남겨주세요!" },
+      confirmed: {
+        subject: "예약이 확정되었습니다!",
+        h2: "예약 확정!",
+        body: "<strong>{{petName}}</strong>의 <strong>{{date}}</strong> 예약이 확정되었습니다.",
+      },
+      cancelled: {
+        subject: "예약이 취소되었습니다",
+        h2: "예약 취소",
+        body: "<strong>{{petName}}</strong>의 <strong>{{date}}</strong> 예약이 취소되었습니다.",
+      },
+      completed: {
+        subject: "세션이 완료되었습니다",
+        h2: "세션 완료",
+        body: "<strong>{{petName}}</strong>의 <strong>{{date}}</strong> 세션이 완료로 표시되었습니다. 리뷰를 남겨주세요!",
+      },
     },
     orderConfirmation: {
       subject: `${APP.name} 주문이 확정되었습니다`,
@@ -1184,9 +1331,21 @@ const strings = {
       greeting: "{{name}}님,",
       totalLabel: "주문 합계",
       button: "내 주문 보기",
-      confirmed: { subject: "주문 확정", h2: "주문 확정", body: "주문이 확정되었으며 배송 준비 중입니다." },
-      shipped: { subject: "주문 배송 중!", h2: "주문 배송 중!", body: "좋은 소식입니다 — 주문이 배송 중입니다." },
-      delivered: { subject: "주문 배달 완료", h2: "주문 배달 완료", body: "주문이 배달 완료로 표시되었습니다. 즐기세요!" },
+      confirmed: {
+        subject: "주문 확정",
+        h2: "주문 확정",
+        body: "주문이 확정되었으며 배송 준비 중입니다.",
+      },
+      shipped: {
+        subject: "주문 배송 중!",
+        h2: "주문 배송 중!",
+        body: "좋은 소식입니다 — 주문이 배송 중입니다.",
+      },
+      delivered: {
+        subject: "주문 배달 완료",
+        h2: "주문 배달 완료",
+        body: "주문이 배달 완료로 표시되었습니다. 즐기세요!",
+      },
       cancelled: { subject: "주문 취소", h2: "주문 취소", body: "주문이 취소되었습니다." },
     },
     sellerOrderNotification: {
@@ -1215,7 +1374,7 @@ const strings = {
       approved: {
         subject: "{{petName}} 입양 신청이 승인되었습니다! 🎉",
         h2: "신청 승인! 🎉",
-        body: "축하합니다! <strong>{{petName}}</strong> 입양 신청이 <strong style=\"color:#16A34A;\">승인</strong>되었습니다. 보호자가 다음 단계를 안내해 드릴 것입니다.",
+        body: '축하합니다! <strong>{{petName}}</strong> 입양 신청이 <strong style="color:#16A34A;">승인</strong>되었습니다. 보호자가 다음 단계를 안내해 드릴 것입니다.',
       },
       rejected: {
         subject: "{{petName}} 입양 신청 업데이트",
@@ -1342,9 +1501,21 @@ const strings = {
     bookingStatusChanged: {
       greeting: "Merhaba {{name}},",
       button: "Rezervasyonlarımı görüntüle",
-      confirmed: { subject: "Rezervasyon onaylandı!", h2: "Rezervasyon onaylandı!", body: "<strong>{{petName}}</strong> için <strong>{{date}}</strong> tarihindeki randevunuz onaylandı." },
-      cancelled: { subject: "Rezervasyon iptal edildi", h2: "Rezervasyon iptal edildi", body: "<strong>{{petName}}</strong> için <strong>{{date}}</strong> tarihindeki rezervasyonunuz iptal edildi." },
-      completed: { subject: "Seans tamamlandı", h2: "Seans tamamlandı", body: "<strong>{{petName}}</strong> için <strong>{{date}}</strong> tarihindeki seans tamamlandı olarak işaretlendi. Deneyiminizi paylaşmak için yorum bırakın!" },
+      confirmed: {
+        subject: "Rezervasyon onaylandı!",
+        h2: "Rezervasyon onaylandı!",
+        body: "<strong>{{petName}}</strong> için <strong>{{date}}</strong> tarihindeki randevunuz onaylandı.",
+      },
+      cancelled: {
+        subject: "Rezervasyon iptal edildi",
+        h2: "Rezervasyon iptal edildi",
+        body: "<strong>{{petName}}</strong> için <strong>{{date}}</strong> tarihindeki rezervasyonunuz iptal edildi.",
+      },
+      completed: {
+        subject: "Seans tamamlandı",
+        h2: "Seans tamamlandı",
+        body: "<strong>{{petName}}</strong> için <strong>{{date}}</strong> tarihindeki seans tamamlandı olarak işaretlendi. Deneyiminizi paylaşmak için yorum bırakın!",
+      },
     },
     orderConfirmation: {
       subject: `${APP.name} siparişiniz onaylandı`,
@@ -1358,10 +1529,26 @@ const strings = {
       greeting: "Merhaba {{name}},",
       totalLabel: "Sipariş toplamı",
       button: "Siparişlerimi görüntüle",
-      confirmed: { subject: "Sipariş onaylandı", h2: "Sipariş onaylandı", body: "Siparişiniz onaylandı ve kargo için hazırlanıyor." },
-      shipped: { subject: "Sipariş kargoya verildi!", h2: "Sipariş kargoya verildi!", body: "Harika haber — siparişiniz yolda." },
-      delivered: { subject: "Sipariş teslim edildi", h2: "Sipariş teslim edildi", body: "Siparişiniz teslim edildi olarak işaretlendi. İyi günler!" },
-      cancelled: { subject: "Sipariş iptal edildi", h2: "Sipariş iptal edildi", body: "Siparişiniz iptal edildi." },
+      confirmed: {
+        subject: "Sipariş onaylandı",
+        h2: "Sipariş onaylandı",
+        body: "Siparişiniz onaylandı ve kargo için hazırlanıyor.",
+      },
+      shipped: {
+        subject: "Sipariş kargoya verildi!",
+        h2: "Sipariş kargoya verildi!",
+        body: "Harika haber — siparişiniz yolda.",
+      },
+      delivered: {
+        subject: "Sipariş teslim edildi",
+        h2: "Sipariş teslim edildi",
+        body: "Siparişiniz teslim edildi olarak işaretlendi. İyi günler!",
+      },
+      cancelled: {
+        subject: "Sipariş iptal edildi",
+        h2: "Sipariş iptal edildi",
+        body: "Siparişiniz iptal edildi.",
+      },
     },
     sellerOrderNotification: {
       subject: "{{app}}'de yeni sipariş — {{count}} {{itemWord}} karşılanacak",
@@ -1389,7 +1576,7 @@ const strings = {
       approved: {
         subject: "{{petName}}'yi sahiplenmek için başvurunuz onaylandı! 🎉",
         h2: "Başvuru onaylandı! 🎉",
-        body: "Tebrikler! <strong>{{petName}}</strong> için sahiplenme başvurunuz <strong style=\"color:#16A34A;\">onaylandı</strong>. Sahip, sonraki adımları düzenlemek için sizinle iletişime geçecek.",
+        body: 'Tebrikler! <strong>{{petName}}</strong> için sahiplenme başvurunuz <strong style="color:#16A34A;">onaylandı</strong>. Sahip, sonraki adımları düzenlemek için sizinle iletişime geçecek.',
       },
       rejected: {
         subject: "{{petName}}'yi sahiplenme başvurunuz hakkında güncelleme",
@@ -1516,9 +1703,21 @@ const strings = {
     bookingStatusChanged: {
       greeting: "مرحباً {{name}}،",
       button: "عرض حجوزاتي",
-      confirmed: { subject: "تم تأكيد الحجز!", h2: "تم تأكيد الحجز!", body: "تم تأكيد موعد <strong>{{petName}}</strong> في <strong>{{date}}</strong>." },
-      cancelled: { subject: "تم إلغاء الحجز", h2: "تم إلغاء الحجز", body: "تم إلغاء حجز <strong>{{petName}}</strong> في <strong>{{date}}</strong>." },
-      completed: { subject: "اكتملت الجلسة", h2: "اكتملت الجلسة", body: "تم وضع علامة اكتمال على جلسة <strong>{{petName}}</strong> في <strong>{{date}}</strong>. اترك تقييماً لمشاركة تجربتك!" },
+      confirmed: {
+        subject: "تم تأكيد الحجز!",
+        h2: "تم تأكيد الحجز!",
+        body: "تم تأكيد موعد <strong>{{petName}}</strong> في <strong>{{date}}</strong>.",
+      },
+      cancelled: {
+        subject: "تم إلغاء الحجز",
+        h2: "تم إلغاء الحجز",
+        body: "تم إلغاء حجز <strong>{{petName}}</strong> في <strong>{{date}}</strong>.",
+      },
+      completed: {
+        subject: "اكتملت الجلسة",
+        h2: "اكتملت الجلسة",
+        body: "تم وضع علامة اكتمال على جلسة <strong>{{petName}}</strong> في <strong>{{date}}</strong>. اترك تقييماً لمشاركة تجربتك!",
+      },
     },
     orderConfirmation: {
       subject: `تم تأكيد طلبك في ${APP.name}`,
@@ -1532,9 +1731,21 @@ const strings = {
       greeting: "مرحباً {{name}}،",
       totalLabel: "إجمالي الطلب",
       button: "عرض طلباتي",
-      confirmed: { subject: "تم تأكيد الطلب", h2: "تم تأكيد الطلب", body: "تم تأكيد طلبك ويجري تحضيره للشحن." },
-      shipped: { subject: "تم شحن الطلب!", h2: "تم شحن الطلب!", body: "أخبار رائعة — طلبك في الطريق إليك." },
-      delivered: { subject: "تم تسليم الطلب", h2: "تم تسليم الطلب", body: "تم وضع علامة تسليم على طلبك. استمتع به!" },
+      confirmed: {
+        subject: "تم تأكيد الطلب",
+        h2: "تم تأكيد الطلب",
+        body: "تم تأكيد طلبك ويجري تحضيره للشحن.",
+      },
+      shipped: {
+        subject: "تم شحن الطلب!",
+        h2: "تم شحن الطلب!",
+        body: "أخبار رائعة — طلبك في الطريق إليك.",
+      },
+      delivered: {
+        subject: "تم تسليم الطلب",
+        h2: "تم تسليم الطلب",
+        body: "تم وضع علامة تسليم على طلبك. استمتع به!",
+      },
       cancelled: { subject: "تم إلغاء الطلب", h2: "تم إلغاء الطلب", body: "تم إلغاء طلبك." },
     },
     sellerOrderNotification: {
@@ -1563,7 +1774,7 @@ const strings = {
       approved: {
         subject: "تمت الموافقة على طلبك لتبني {{petName}}! 🎉",
         h2: "تمت الموافقة على الطلب! 🎉",
-        body: "تهانينا! تمت <strong style=\"color:#16A34A;\">الموافقة</strong> على طلب تبني <strong>{{petName}}</strong>. سيتواصل معك المالك لترتيب الخطوات التالية.",
+        body: 'تهانينا! تمت <strong style="color:#16A34A;">الموافقة</strong> على طلب تبني <strong>{{petName}}</strong>. سيتواصل معك المالك لترتيب الخطوات التالية.',
       },
       rejected: {
         subject: "تحديث بشأن طلبك لتبني {{petName}}",
@@ -1606,13 +1817,19 @@ const strings = {
 export type EmailStrings = Omit<(typeof strings)["en"], "dir"> & { dir: "ltr" | "rtl" };
 
 const SUPPORTED: ReadonlyArray<EmailLocale> = [
-  "en", "de", "fr", "es", "ja", "zh", "ko", "tr", "ar",
+  "en",
+  "de",
+  "fr",
+  "es",
+  "ja",
+  "zh",
+  "ko",
+  "tr",
+  "ar",
 ];
 
 export function getEmailStrings(locale?: string | null): EmailStrings {
-  const resolved = SUPPORTED.includes(locale as EmailLocale)
-    ? (locale as EmailLocale)
-    : "en";
+  const resolved = SUPPORTED.includes(locale as EmailLocale) ? (locale as EmailLocale) : "en";
   // Cast needed: EmailStrings widens `dir` to "ltr"|"rtl" while the const object
   // infers per-locale literal types. Runtime values are always valid members of the union.
   return strings[resolved] as unknown as EmailStrings;

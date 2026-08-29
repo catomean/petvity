@@ -12,12 +12,7 @@
  *  rejecting a large upload early is cheaper than streaming it to disk. */
 export const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 
-export const IMAGE_ALLOWED_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-] as const;
+export const IMAGE_ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"] as const;
 
 /** For the `accept` attribute of a file input — same list, so the picker and
  *  the API can never disagree about what is allowed. */

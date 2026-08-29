@@ -31,7 +31,7 @@ describe("getNormalRange", () => {
 
 describe("isMetricInRange", () => {
   it("treats both endpoints as in-range (inclusive)", () => {
-    expect(isMetricInRange("weight", 1500, "dog")).toBe(true);  // exact min
+    expect(isMetricInRange("weight", 1500, "dog")).toBe(true); // exact min
     expect(isMetricInRange("weight", 90000, "dog")).toBe(true); // exact max
   });
 

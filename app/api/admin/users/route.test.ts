@@ -21,8 +21,12 @@ const ADMIN_SESSION = {
 };
 
 const MOCK_USER_ROW = {
-  id: "user-1", name: "Alice", email: "alice@example.com",
-  role: "pet_owner", createdAt: new Date("2026-01-01"), petCount: 2,
+  id: "user-1",
+  name: "Alice",
+  email: "alice@example.com",
+  role: "pet_owner",
+  createdAt: new Date("2026-01-01"),
+  petCount: 2,
 };
 
 /* ─── Tests ────────────────────────────────────────────────────────────────── */
@@ -67,9 +71,9 @@ describe("GET /api/admin/users", () => {
 
   it("returns 200 with isVerified set for veterinarian users", async () => {
     const vetRow = { ...MOCK_USER_ROW, id: "vet-1", role: "veterinarian" };
-    db._queueSelectResult([vetRow]);          // users query
-    db._queueSelectResult([{ userId: "vet-1", isVerified: true }]);  // vetProfiles
-    db._queueSelectResult([]);                // sitterProfiles (empty)
+    db._queueSelectResult([vetRow]); // users query
+    db._queueSelectResult([{ userId: "vet-1", isVerified: true }]); // vetProfiles
+    db._queueSelectResult([]); // sitterProfiles (empty)
 
     const res = await GET();
     expect(res.status).toBe(200);

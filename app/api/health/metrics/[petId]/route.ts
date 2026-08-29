@@ -8,12 +8,12 @@ import { refreshSignalCache } from "@/lib/api/signal-cache";
 
 const logMetricsSchema = z.object({
   petId: z.string().uuid(),
-  date: z.string()
+  date: z
+    .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
-    .refine(
-      (d) => d <= new Date().toISOString().slice(0, 10),
-      { message: "Date cannot be in the future" },
-    ),
+    .refine((d) => d <= new Date().toISOString().slice(0, 10), {
+      message: "Date cannot be in the future",
+    }),
   weightGrams: z.number().int().positive().optional(),
   temperatureCentidegrees: z.number().int().optional(),
   heartRateBpm: z.number().int().positive().optional(),
@@ -48,10 +48,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   const sinceStr = since.toISOString().slice(0, 10);
 
   const metrics = await db.query.healthMetrics.findMany({
-    where: and(
-      eq(healthMetrics.petId, petId),
-      gte(healthMetrics.date, sinceStr),
-    ),
+    where: and(eq(healthMetrics.petId, petId), gte(healthMetrics.date, sinceStr)),
     orderBy: [desc(healthMetrics.date)],
   });
 

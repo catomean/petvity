@@ -15,10 +15,7 @@ const PAY_LIMIT = { limit: 10, windowMs: 60_000 };
  * is the same key that reaches their receipt page. Account orders are refused
  * here — they have /api/orders/[orderId]/pay, which checks a real session.
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ token: string }> },
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
   const limit = rateLimit(`guest-pay:${clientKey(req)}`, PAY_LIMIT);
   if (!limit.ok) {
     return NextResponse.json(

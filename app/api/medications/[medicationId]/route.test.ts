@@ -23,9 +23,16 @@ const OWNER_SESSION = {
 };
 
 const MOCK_MEDICATION = {
-  id: MEDICATION_ID, petId: "pet-1", name: "Frontline", dosage: "1 pipette",
-  frequency: "monthly", startDate: "2026-01-01", endDate: null,
-  prescribedBy: "Dr Smith", status: "active", notes: null,
+  id: MEDICATION_ID,
+  petId: "pet-1",
+  name: "Frontline",
+  dosage: "1 pipette",
+  frequency: "monthly",
+  startDate: "2026-01-01",
+  endDate: null,
+  prescribedBy: "Dr Smith",
+  status: "active",
+  notes: null,
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ medicationId: MEDICATION_ID }) };

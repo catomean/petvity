@@ -88,10 +88,7 @@ export async function POST(req: NextRequest) {
       mood: wave < -0.6 ? 3 : wave > 0 ? 5 : 4,
       anxiety: i % 9 === 0 ? 3 : i % 2 === 0 ? 1 : 2,
       socialization: wave > -0.2 ? 5 : 4,
-      notes:
-        i === 29
-          ? "Long lake walk this morning — soaked, ecstatic, exhausted."
-          : null,
+      notes: i === 29 ? "Long lake walk this morning — soaked, ecstatic, exhausted." : null,
     };
   });
   await db.insert(healthMetrics).values(rows);

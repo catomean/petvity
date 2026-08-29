@@ -22,7 +22,10 @@ describe("GET /api/admin/adoptions", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(requireAdmin).mockResolvedValue({ session: { user: { id: "admin-1", role: "admin" } } as any, error: null });
+    vi.mocked(requireAdmin).mockResolvedValue({
+      session: { user: { id: "admin-1", role: "admin" } } as any,
+      error: null,
+    });
   });
 
   it("returns 401 when not admin", async () => {
@@ -72,16 +75,32 @@ describe("GET /api/admin/adoptions", () => {
 
   it("returns multiple listings ordered by createdAt desc", async () => {
     const rows = [
-      { id: "listing-2", status: "available", title: "Cat listing", location: "Paris", feeCents: null,
-        createdAt: new Date(), updatedAt: new Date(),
+      {
+        id: "listing-2",
+        status: "available",
+        title: "Cat listing",
+        location: "Paris",
+        feeCents: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         pet: { id: "pet-2", name: "Whiskers", species: "cat", avatarUrl: null },
         owner: { id: "owner-2", name: "Bob", email: "bob@example.com" },
-        applicationCount: 0, pendingCount: 0 },
-      { id: "listing-1", status: "closed", title: "Dog listing", location: "Berlin", feeCents: 5000,
-        createdAt: new Date(Date.now() - 86400000), updatedAt: new Date(),
+        applicationCount: 0,
+        pendingCount: 0,
+      },
+      {
+        id: "listing-1",
+        status: "closed",
+        title: "Dog listing",
+        location: "Berlin",
+        feeCents: 5000,
+        createdAt: new Date(Date.now() - 86400000),
+        updatedAt: new Date(),
         pet: { id: "pet-1", name: "Rex", species: "dog", avatarUrl: null },
         owner: { id: "owner-1", name: "Alice", email: "alice@example.com" },
-        applicationCount: 2, pendingCount: 0 },
+        applicationCount: 2,
+        pendingCount: 0,
+      },
     ];
     db._queueSelectResult(rows);
 

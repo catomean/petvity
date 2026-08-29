@@ -22,10 +22,7 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json().catch(() => null);
   const parsed = patchSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { success: false, error: "Invalid locale" },
-      { status: 400 },
-    );
+    return NextResponse.json({ success: false, error: "Invalid locale" }, { status: 400 });
   }
 
   const db = getInstance();

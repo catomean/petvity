@@ -19,15 +19,15 @@ describe("safeReturnTo", () => {
 
   describe("rejects open-redirect attempts", () => {
     it.each([
-      ["//evil.com",                "protocol-relative"],
-      ["//evil.com/portal",         "protocol-relative with path"],
-      ["/\\evil.com",               "backslash-prefixed (browser may normalize \\\\ → //)"],
-      ["http://evil.com",           "absolute http"],
-      ["https://evil.com/portal",   "absolute https"],
-      ["javascript:alert(1)",       "javascript: scheme"],
-      ["data:text/html,<script>",   "data: scheme"],
-      ["evil.com/portal",           "no leading slash"],
-      ["",                          "empty string"],
+      ["//evil.com", "protocol-relative"],
+      ["//evil.com/portal", "protocol-relative with path"],
+      ["/\\evil.com", "backslash-prefixed (browser may normalize \\\\ → //)"],
+      ["http://evil.com", "absolute http"],
+      ["https://evil.com/portal", "absolute https"],
+      ["javascript:alert(1)", "javascript: scheme"],
+      ["data:text/html,<script>", "data: scheme"],
+      ["evil.com/portal", "no leading slash"],
+      ["", "empty string"],
     ])("%s — %s", (input) => {
       expect(safeReturnTo(input, FALLBACK)).toBe(FALLBACK);
     });

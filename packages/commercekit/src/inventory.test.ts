@@ -98,7 +98,10 @@ describe("all or nothing", () => {
       increment: inv.adapter.increment,
     };
     await expect(
-      reserveAll(flaky, [{ sku: "a", quantity: 3 }, { sku: "boom", quantity: 1 }]),
+      reserveAll(flaky, [
+        { sku: "a", quantity: 3 },
+        { sku: "boom", quantity: 1 },
+      ]),
     ).rejects.toThrow(ReservationError);
     expect(inv.get("a")).toBe(10);
   });
@@ -177,8 +180,14 @@ describe("concurrency", () => {
       },
       async increment() {},
     };
-    await reserveAll(adapter, [{ sku: "zebra", quantity: 1 }, { sku: "apple", quantity: 1 }]);
-    await reserveAll(adapter, [{ sku: "apple", quantity: 1 }, { sku: "zebra", quantity: 1 }]);
+    await reserveAll(adapter, [
+      { sku: "zebra", quantity: 1 },
+      { sku: "apple", quantity: 1 },
+    ]);
+    await reserveAll(adapter, [
+      { sku: "apple", quantity: 1 },
+      { sku: "zebra", quantity: 1 },
+    ]);
     expect(order).toEqual(["apple", "zebra", "apple", "zebra"]);
   });
 });

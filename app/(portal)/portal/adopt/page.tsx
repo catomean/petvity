@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  PawPrint, MapPin, Users,
-  Search, Filter, ChevronRight, Sparkles,
-} from "lucide-react";
+import { PawPrint, MapPin, Users, Search, Filter, ChevronRight, Sparkles } from "lucide-react";
 import { LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import { SPECIES_CONFIG, SPECIES_OPTIONS as SPECIES_OPTS } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
@@ -72,7 +69,9 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
           <span>{emoji}</span>
         )}
         <div className="absolute top-2 end-2 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-xs font-medium text-[var(--ink2)]">
-          {listing.feeCents ? t("adoptFee", { price: formatAdoptionFee(listing.feeCents) }) : t("adoptFree")}
+          {listing.feeCents
+            ? t("adoptFee", { price: formatAdoptionFee(listing.feeCents) })
+            : t("adoptFree")}
         </div>
       </div>
 
@@ -85,7 +84,9 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
               {tPub(`species_${listing.pet.species}` as Parameters<typeof tPub>[0])}
               {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
               {age ? ` · ${age}` : ""}
-              {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${tPub(`sex_${listing.pet.sex}` as Parameters<typeof tPub>[0])}` : ""}
+              {listing.pet.sex && listing.pet.sex !== "unknown"
+                ? ` · ${tPub(`sex_${listing.pet.sex}` as Parameters<typeof tPub>[0])}`
+                : ""}
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--teal)] transition-colors flex-shrink-0 mt-0.5" />
@@ -102,7 +103,10 @@ function ListingCard({ listing }: { listing: AdoptionListing }) {
         <div className="flex flex-wrap gap-1 mt-3">
           {LISTING_TRAIT_CONFIG.map((trait) =>
             listing[trait.field] ? (
-              <span key={trait.field} className={`text-xs font-medium ${trait.className} px-2 py-0.5 rounded-full`}>
+              <span
+                key={trait.field}
+                className={`text-xs font-medium ${trait.className} px-2 py-0.5 rounded-full`}
+              >
                 {tPub(`traitShort_${trait.field}` as Parameters<typeof tPub>[0])}
               </span>
             ) : null,
@@ -129,41 +133,56 @@ export default function AdoptPage() {
     setFetchError("");
     const url = currentSpecies ? `/api/adoptions?species=${currentSpecies}` : "/api/adoptions";
     fetch(url)
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setListings(data ?? []); setLoading(false); })
-      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(({ data }) => {
+        setListings(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
     loadListings(species);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [species]);
 
   const displayed = locationQ
-    ? listings.filter((l) =>
-        l.location?.toLowerCase().includes(locationQ.toLowerCase()),
-      )
+    ? listings.filter((l) => l.location?.toLowerCase().includes(locationQ.toLowerCase()))
     : listings;
 
   return (
     <div>
-      <HubTabs tabs={[{ href: "/portal/adopt", label: t("adopt") }, { href: "/portal/adoptions", label: t("myAdoptions") }]} />
+      <HubTabs
+        tabs={[
+          { href: "/portal/adopt", label: t("adopt") },
+          { href: "/portal/adoptions", label: t("myAdoptions") },
+        ]}
+      />
       <PageHeader
         title={t("adoptTitle")}
         purpose={t("adoptSubtitle")}
         action={
           <div className="flex items-center gap-2 flex-wrap">
-          <Link href="/portal/adopt/applications" className="btn-ghost text-sm flex items-center gap-2">
-            {t("adoptMyApplications")}
-          </Link>
-          <Link href="/portal/adoptions" className="btn-ghost text-sm flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            {t("adoptMyListings")}
-          </Link>
-          <Link href="/portal/pets" className="btn-outline text-sm flex items-center gap-2">
-            <PawPrint className="w-4 h-4" />
-            {t("adoptListAPet")}
-          </Link>
+            <Link
+              href="/portal/adopt/applications"
+              className="btn-ghost text-sm flex items-center gap-2"
+            >
+              {t("adoptMyApplications")}
+            </Link>
+            <Link href="/portal/adoptions" className="btn-ghost text-sm flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              {t("adoptMyListings")}
+            </Link>
+            <Link href="/portal/pets" className="btn-outline text-sm flex items-center gap-2">
+              <PawPrint className="w-4 h-4" />
+              {t("adoptListAPet")}
+            </Link>
           </div>
         }
       />
@@ -190,7 +209,8 @@ export default function AdoptPage() {
             <option value="">{t("allSpecies")}</option>
             {SPECIES_OPTS.map(({ value }) => (
               <option key={value} value={value}>
-                {SPECIES_CONFIG[value as SpeciesId].emoji} {tPub(`species_${value}` as Parameters<typeof tPub>[0])}
+                {SPECIES_CONFIG[value as SpeciesId].emoji}{" "}
+                {tPub(`species_${value}` as Parameters<typeof tPub>[0])}
               </option>
             ))}
           </select>
@@ -205,7 +225,11 @@ export default function AdoptPage() {
           ))}
         </div>
       ) : fetchError ? (
-        <ErrorState message={fetchError} onRetry={() => loadListings(species)} retryLabel={t("retry")} />
+        <ErrorState
+          message={fetchError}
+          onRetry={() => loadListings(species)}
+          retryLabel={t("retry")}
+        />
       ) : displayed.length === 0 ? (
         <EmptyState
           icon={Sparkles}

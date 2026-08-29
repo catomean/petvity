@@ -5,10 +5,7 @@ import {
   signalFromOutOfRangeCount,
   type MetricId,
 } from "@/lib/config/health-metrics";
-import {
-  NO_METRIC_LOG_ALERT_DAYS,
-  type PetWellnessSignal,
-} from "@/lib/config/pet-signal";
+import { NO_METRIC_LOG_ALERT_DAYS, type PetWellnessSignal } from "@/lib/config/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
 
 export type HealthMetricRow = {
@@ -93,9 +90,7 @@ export function computePetSignal({
     // Brand-new profile grace: no data AND nothing overdue AND the profile is
     // younger than the alert window ⇒ there was never a day it could have
     // missed. Healthy, with a nudge to log the first check-in.
-    const ageDays = petCreatedAt
-      ? (now.getTime() - petCreatedAt.getTime()) / dayMs
-      : Infinity;
+    const ageDays = petCreatedAt ? (now.getTime() - petCreatedAt.getTime()) / dayMs : Infinity;
     if (overdueVaccinations === 0 && ageDays < NO_METRIC_LOG_ALERT_DAYS) {
       return {
         signal: "healthy",
@@ -114,13 +109,9 @@ export function computePetSignal({
     };
   }
 
-  const sorted = [...recentMetrics].sort((a, b) =>
-    b.date.localeCompare(a.date),
-  );
+  const sorted = [...recentMetrics].sort((a, b) => b.date.localeCompare(a.date));
   const lastDate = new Date(sorted[0].date + "T00:00:00");
-  const daysSinceLast = Math.floor(
-    (now.getTime() - lastDate.getTime()) / dayMs,
-  );
+  const daysSinceLast = Math.floor((now.getTime() - lastDate.getTime()) / dayMs);
 
   if (daysSinceLast >= NO_METRIC_LOG_ALERT_DAYS) {
     const signal = overdueVaccinations > 0 ? "concern" : "watch";
@@ -167,9 +158,10 @@ export function computePetSignal({
     else if (signal === "watch") signal = "concern";
   }
 
-  const vaccStr = overdueVaccinations > 0
-    ? `${overdueVaccinations} overdue vaccination${overdueVaccinations !== 1 ? "s" : ""}`
-    : null;
+  const vaccStr =
+    overdueVaccinations > 0
+      ? `${overdueVaccinations} overdue vaccination${overdueVaccinations !== 1 ? "s" : ""}`
+      : null;
 
   const reason =
     outOfRangeDetails.length === 0 && !vaccStr

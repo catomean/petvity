@@ -2,12 +2,26 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingCart, Plus, Minus, Package, ShoppingBag, X, Store, BadgeCheck, Search } from "lucide-react";
+import {
+  ShoppingCart,
+  Plus,
+  Minus,
+  Package,
+  ShoppingBag,
+  X,
+  Store,
+  BadgeCheck,
+  Search,
+} from "lucide-react";
 import { formatPrice } from "@/lib/utils/format";
 import { APP } from "@/lib/config/app";
 import { EmptyState, ErrorState } from "@/components/portal/PageState";
 import { ProductArt } from "@/components/shop/ProductArt";
-import { PRODUCT_SORT_OPTIONS, DEFAULT_PRODUCT_SORT, type ProductSortId } from "@/lib/config/products";
+import {
+  PRODUCT_SORT_OPTIONS,
+  DEFAULT_PRODUCT_SORT,
+  type ProductSortId,
+} from "@/lib/config/products";
 import { useTranslations } from "next-intl";
 import HubTabs from "@/components/portal/HubTabs";
 import PageHeader from "@/components/portal/PageHeader";
@@ -41,8 +55,12 @@ interface Shipping {
 }
 
 const EMPTY_SHIPPING: Shipping = {
-  shippingName: "", shippingLine1: "", shippingPostalCode: "",
-  shippingCity: "", shippingCountry: "", shippingPhone: "",
+  shippingName: "",
+  shippingLine1: "",
+  shippingPostalCode: "",
+  shippingCity: "",
+  shippingCountry: "",
+  shippingPhone: "",
 };
 
 /* ─── Cart ───────────────────────────────────────────────────────────────── */
@@ -77,8 +95,10 @@ function CartDrawer({
   const t = useTranslations("portal");
   const total = cart.reduce((s, i) => s + i.product.priceCents * i.quantity, 0);
   const shipReady =
-    ship.shippingName.trim() && ship.shippingLine1.trim() &&
-    ship.shippingPostalCode.trim() && ship.shippingCity.trim() &&
+    ship.shippingName.trim() &&
+    ship.shippingLine1.trim() &&
+    ship.shippingPostalCode.trim() &&
+    ship.shippingCity.trim() &&
     ship.shippingCountry.trim().length === 2;
 
   return (
@@ -86,7 +106,9 @@ function CartDrawer({
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative w-full max-w-sm bg-white h-full shadow-xl flex flex-col">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
-          <h2 className="font-semibold text-[var(--ink)]">{t("shopCartTitle", { count: cart.length })}</h2>
+          <h2 className="font-semibold text-[var(--ink)]">
+            {t("shopCartTitle", { count: cart.length })}
+          </h2>
           <button onClick={onClose} className="btn-ghost p-2 rounded-lg">
             <X className="w-5 h-5 text-[var(--muted)]" />
           </button>
@@ -122,8 +144,12 @@ function CartDrawer({
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[var(--ink)] leading-snug">{product.name}</p>
-                    <p className="text-xs text-[var(--muted)]">{t("shopEach", { price: formatPrice(product.priceCents) })}</p>
+                    <p className="text-sm font-medium text-[var(--ink)] leading-snug">
+                      {product.name}
+                    </p>
+                    <p className="text-xs text-[var(--muted)]">
+                      {t("shopEach", { price: formatPrice(product.priceCents) })}
+                    </p>
                   </div>
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <button
@@ -248,13 +274,24 @@ export default function ShopPage() {
     setLoading(true);
     setFetchError("");
     fetch("/api/products")
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setProducts(data ?? []); setLoading(false); })
-      .catch(() => { setFetchError(t("shopLoadFailed")); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(({ data }) => {
+        setProducts(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("shopLoadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadProducts(); }, []);
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
   const categories = ["all", ...Array.from(new Set(products.map((p) => p.category)))];
 
@@ -271,18 +308,25 @@ export default function ShopPage() {
     )
     .sort((a, b) => {
       switch (sort) {
-        case "price_asc": return a.priceCents - b.priceCents;
-        case "price_desc": return b.priceCents - a.priceCents;
-        case "name": return a.name.localeCompare(b.name);
+        case "price_asc":
+          return a.priceCents - b.priceCents;
+        case "price_desc":
+          return b.priceCents - a.priceCents;
+        case "name":
+          return a.name.localeCompare(b.name);
         // The API already returns newest first; keep that order.
-        default: return 0;
+        default:
+          return 0;
       }
     });
 
   function addToCart(product: Product) {
     setCart((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
-      if (existing) return prev.map((i) => i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
+      if (existing)
+        return prev.map((i) =>
+          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
+        );
       return [...prev, { product, quantity: 1 }];
     });
   }
@@ -290,7 +334,7 @@ export default function ShopPage() {
   function adjustQty(productId: string, delta: number) {
     setCart((prev) =>
       prev
-        .map((i) => i.product.id === productId ? { ...i, quantity: i.quantity + delta } : i)
+        .map((i) => (i.product.id === productId ? { ...i, quantity: i.quantity + delta } : i))
         .filter((i) => i.quantity > 0),
     );
   }
@@ -338,13 +382,21 @@ export default function ShopPage() {
 
   return (
     <div>
-      <HubTabs tabs={[{ href: "/portal/shop", label: t("shop") }, { href: "/portal/orders", label: t("orders") }]} />
+      <HubTabs
+        tabs={[
+          { href: "/portal/shop", label: t("shop") },
+          { href: "/portal/orders", label: t("orders") },
+        ]}
+      />
       <PageHeader
         title={t("shop")}
         purpose={t("shopSubtitle")}
         action={
           <button
-            onClick={() => { setSuccess(false); setCartOpen(true); }}
+            onClick={() => {
+              setSuccess(false);
+              setCartOpen(true);
+            }}
             className="relative btn-outline flex items-center gap-2"
           >
             <ShoppingCart className="w-4 h-4" />
@@ -373,7 +425,9 @@ export default function ShopPage() {
             />
           </div>
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-            <span className="text-xs text-[var(--muted)] flex-shrink-0">{tPub("shopSortLabel")}</span>
+            <span className="text-xs text-[var(--muted)] flex-shrink-0">
+              {tPub("shopSortLabel")}
+            </span>
             {PRODUCT_SORT_OPTIONS.map((o) => (
               <button
                 key={o.id}
@@ -426,8 +480,12 @@ export default function ShopPage() {
           body={t("shopEmptyDesc")}
           actions={
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/portal/dashboard" className="btn-primary text-sm">{t("shopGoToDashboard")}</Link>
-              <Link href="/portal/find" className="btn-outline text-sm">{t("shopFindPro")}</Link>
+              <Link href="/portal/dashboard" className="btn-primary text-sm">
+                {t("shopGoToDashboard")}
+              </Link>
+              <Link href="/portal/find" className="btn-outline text-sm">
+                {t("shopFindPro")}
+              </Link>
             </div>
           }
         />
@@ -460,7 +518,9 @@ export default function ShopPage() {
                       <BadgeCheck className="w-3 h-3 text-[var(--teal)] flex-shrink-0" />
                     )}
                     <span className="truncate">
-                      {product.sellerId ? product.sellerName ?? t("shopSellerFallback") : APP.name}
+                      {product.sellerId
+                        ? (product.sellerName ?? t("shopSellerFallback"))
+                        : APP.name}
                     </span>
                   </p>
                   <div className="flex items-center justify-between gap-2 mt-2">
@@ -477,7 +537,9 @@ export default function ShopPage() {
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="w-5 text-center text-sm font-medium">{inCart.quantity}</span>
+                        <span className="w-5 text-center text-sm font-medium">
+                          {inCart.quantity}
+                        </span>
                         <button
                           onClick={() => adjustQty(product.id, +1)}
                           className="w-8 h-8 rounded-full bg-[var(--teal-light)] text-[var(--teal)] flex items-center justify-center"
@@ -495,7 +557,9 @@ export default function ShopPage() {
                     )}
                   </div>
                   {product.stock !== null && product.stock > 0 && product.stock <= 5 && (
-                    <p className="text-xs text-[var(--warn-text)] mt-1">{t("shopOnlyLeft", { count: product.stock })}</p>
+                    <p className="text-xs text-[var(--warn-text)] mt-1">
+                      {t("shopOnlyLeft", { count: product.stock })}
+                    </p>
                   )}
                 </div>
               </div>
@@ -508,7 +572,10 @@ export default function ShopPage() {
       {cartOpen && (
         <CartDrawer
           cart={cart}
-          onClose={() => { setCartOpen(false); setError(""); }}
+          onClose={() => {
+            setCartOpen(false);
+            setError("");
+          }}
           onQty={adjustQty}
           onRemove={removeFromCart}
           onPlace={placeOrder}

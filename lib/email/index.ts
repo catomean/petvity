@@ -11,8 +11,7 @@ function getResend(): Resend | null {
   return _resend;
 }
 
-const FROM =
-  process.env.RESEND_FROM ?? `${APP.name} <noreply@petvity.com>`;
+const FROM = process.env.RESEND_FROM ?? `${APP.name} <noreply@petvity.com>`;
 
 export type SendEmailOptions = {
   to: string;

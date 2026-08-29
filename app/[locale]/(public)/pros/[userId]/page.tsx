@@ -19,7 +19,11 @@ type Params = { params: Promise<{ userId: string; locale: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { userId, locale } = await params;
   const db = getInstance();
-  const [u] = await db.select({ name: users.name }).from(users).where(eq(users.id, userId)).limit(1);
+  const [u] = await db
+    .select({ name: users.name })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
   const name = u?.name ?? "Professional";
   return {
     title: `${name} · ${APP.name}`,
@@ -47,7 +51,10 @@ function StarRow({ rating }: { rating: number }) {
   );
 }
 
-function formatServices(services: string | null, t: Awaited<ReturnType<typeof getTranslations<"portal">>>): string {
+function formatServices(
+  services: string | null,
+  t: Awaited<ReturnType<typeof getTranslations<"portal">>>,
+): string {
   if (!services) return "";
   return services
     .split(",")
@@ -162,7 +169,9 @@ export default async function PublicProPage({ params }: Params) {
         }
       : {}),
     ...(profile.phone ? { telephone: profile.phone } : {}),
-    ...(isVet && vetRow?.clinicName ? { branchOf: { "@type": "Organization", name: vetRow.clinicName } } : {}),
+    ...(isVet && vetRow?.clinicName
+      ? { branchOf: { "@type": "Organization", name: vetRow.clinicName } }
+      : {}),
     ...(avgRating !== null
       ? {
           aggregateRating: {
@@ -178,7 +187,10 @@ export default async function PublicProPage({ params }: Params) {
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(proSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(proSchema) }}
+      />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between">
         <Link href={`/${locale}`} className="font-bold text-[var(--warm-ink)] text-lg no-underline">
@@ -199,12 +211,19 @@ export default async function PublicProPage({ params }: Params) {
             {/* Avatar + name */}
             <div className="flex items-end gap-4 -mt-10 mb-4">
               <div className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center bg-[var(--accent-light)] text-[var(--accent)] flex-shrink-0">
-                {isVet ? <Stethoscope className="w-9 h-9" /> : isGroomer ? <Scissors className="w-9 h-9" /> : <Home className="w-9 h-9" />}
+                {isVet ? (
+                  <Stethoscope className="w-9 h-9" />
+                ) : isGroomer ? (
+                  <Scissors className="w-9 h-9" />
+                ) : (
+                  <Home className="w-9 h-9" />
+                )}
               </div>
               <div className="pb-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="font-display font-light text-3xl text-[var(--warm-ink)]">
-                    {profile.name ?? (isVet ? t("proVet") : isGroomer ? t("proGroomer") : t("proSitter"))}
+                    {profile.name ??
+                      (isVet ? t("proVet") : isGroomer ? t("proGroomer") : t("proSitter"))}
                   </h1>
                   {profile.isVerified && (
                     <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--green-text)] bg-[var(--green-bg)] px-2 py-0.5 rounded-full">
@@ -222,11 +241,13 @@ export default async function PublicProPage({ params }: Params) {
             </div>
 
             {/* Availability */}
-            <span className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full mb-4 ${
-              profile.isAcceptingClients
-                ? "bg-[var(--green-bg)] text-[var(--green-text)]"
-                : "bg-[var(--off)] text-[var(--muted)]"
-            }`}>
+            <span
+              className={`inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full mb-4 ${
+                profile.isAcceptingClients
+                  ? "bg-[var(--green-bg)] text-[var(--green-text)]"
+                  : "bg-[var(--off)] text-[var(--muted)]"
+              }`}
+            >
               {profile.isAcceptingClients ? t("proAccepting") : t("proNotAccepting")}
             </span>
 
@@ -234,7 +255,9 @@ export default async function PublicProPage({ params }: Params) {
             {avgRating !== null && (
               <div className="flex items-center gap-2 mb-4">
                 <StarRow rating={Math.round(avgRating)} />
-                <span className="text-sm font-medium text-[var(--ink)]">{avgRating.toFixed(1)}</span>
+                <span className="text-sm font-medium text-[var(--ink)]">
+                  {avgRating.toFixed(1)}
+                </span>
                 <span className="text-sm text-[var(--muted)]">
                   {t("proReviewCount", { count: reviewRows.length })}
                 </span>
@@ -255,7 +278,10 @@ export default async function PublicProPage({ params }: Params) {
               {profile.phone && (
                 <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
                   <Phone className="w-4 h-4 flex-shrink-0" />
-                  <a href={`tel:${profile.phone}`} className="hover:text-[var(--accent)] transition-colors">
+                  <a
+                    href={`tel:${profile.phone}`}
+                    className="hover:text-[var(--accent)] transition-colors"
+                  >
                     {profile.phone}
                   </a>
                 </div>
@@ -271,7 +297,9 @@ export default async function PublicProPage({ params }: Params) {
             {isGroomer && groomerRow && (
               <div className="mt-3 pt-3 border-t border-[var(--border)]">
                 {groomerRow.services && (
-                  <p className="text-sm text-[var(--muted)]">{formatServices(groomerRow.services, tPortal)}</p>
+                  <p className="text-sm text-[var(--muted)]">
+                    {formatServices(groomerRow.services, tPortal)}
+                  </p>
                 )}
                 {groomerRow.priceFrom != null && (
                   <p className="text-sm font-semibold text-[var(--accent)] mt-1">
@@ -285,7 +313,9 @@ export default async function PublicProPage({ params }: Params) {
             {!isVet && sitterRow && (
               <div className="mt-3 pt-3 border-t border-[var(--border)]">
                 {sitterRow.services && (
-                  <p className="text-sm text-[var(--muted)]">{formatServices(sitterRow.services, tPortal)}</p>
+                  <p className="text-sm text-[var(--muted)]">
+                    {formatServices(sitterRow.services, tPortal)}
+                  </p>
                 )}
                 {sitterRow.pricePerDay != null && (
                   <p className="text-sm font-semibold text-[var(--accent)] mt-1">
@@ -319,14 +349,14 @@ export default async function PublicProPage({ params }: Params) {
                       <StarRow rating={r.rating} />
                       <span className="text-xs text-[var(--muted)]">
                         {new Date(r.createdAt).toLocaleDateString(locale, {
-                          year: "numeric", month: "short", day: "numeric",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
                         })}
                       </span>
                     </div>
                   </div>
-                  {r.comment && (
-                    <p className="text-sm text-[var(--ink2)]">{r.comment}</p>
-                  )}
+                  {r.comment && <p className="text-sm text-[var(--ink2)]">{r.comment}</p>}
                 </div>
               ))}
             </div>
@@ -338,9 +368,7 @@ export default async function PublicProPage({ params }: Params) {
           <p className="font-medium text-[var(--ink)] mb-1">
             {t("proReadyToBook", { name: profile.name?.split(" ")[0] ?? profile.name ?? "" })}
           </p>
-          <p className="text-sm text-[var(--muted)] mb-4">
-            {t("proBookDesc", { app: APP.name })}
-          </p>
+          <p className="text-sm text-[var(--muted)] mb-4">{t("proBookDesc", { app: APP.name })}</p>
           <Link href="/login" className="btn-editorial">
             {t("proSignInBook")}
           </Link>

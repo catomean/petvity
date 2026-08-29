@@ -96,15 +96,19 @@ describe("the daily set stays small enough to actually be filled in", () => {
     // off a thermometer and device readings were being filtered out. For an
     // ectotherm that reading IS the daily health check.
     for (const species of ALL_SPECIES) {
-      expect(dailyObservationsFor(species).length, `${species} has nothing daily`)
-        .toBeGreaterThan(0);
+      expect(dailyObservationsFor(species).length, `${species} has nothing daily`).toBeGreaterThan(
+        0,
+      );
     }
   });
 
   it("never asks the owner unaided for a device reading", () => {
     for (const species of ALL_SPECIES) {
       const bad = dailyOwnerObservationsFor(species).filter((o) => o.source !== "owner");
-      expect(bad.map((o) => o.id), species).toEqual([]);
+      expect(
+        bad.map((o) => o.id),
+        species,
+      ).toEqual([]);
     }
   });
 
@@ -175,7 +179,10 @@ describe("the signals that actually kill these animals are covered", () => {
 
   it("weighs birds and small rodents daily", () => {
     for (const species of ["bird", "hamster", "guinea_pig"] as SpeciesId[]) {
-      expect(dailyObservationsFor(species).map((o) => o.id), species).toContain("weight_small");
+      expect(
+        dailyObservationsFor(species).map((o) => o.id),
+        species,
+      ).toContain("weight_small");
     }
   });
 

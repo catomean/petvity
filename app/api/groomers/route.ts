@@ -68,8 +68,11 @@ export async function GET(req: NextRequest) {
   const ratingMap = new Map(
     ratingRows.map((r) => [
       r.professionalId,
-      { avgRating: r.avgRating ? Number(Number(r.avgRating).toFixed(1)) : null, reviewCount: r.reviewCount },
-    ])
+      {
+        avgRating: r.avgRating ? Number(Number(r.avgRating).toFixed(1)) : null,
+        reviewCount: r.reviewCount,
+      },
+    ]),
   );
 
   const data = filtered.map((r) => ({

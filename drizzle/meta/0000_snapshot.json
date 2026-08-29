@@ -81,12 +81,8 @@
           "name": "accounts_userId_users_id_fk",
           "tableFrom": "accounts",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -180,12 +176,8 @@
           "name": "bookings_owner_id_users_id_fk",
           "tableFrom": "bookings",
           "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -193,12 +185,8 @@
           "name": "bookings_pet_id_pets_id_fk",
           "tableFrom": "bookings",
           "tableTo": "pets",
-          "columnsFrom": [
-            "pet_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["pet_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -206,12 +194,8 @@
           "name": "bookings_professional_id_users_id_fk",
           "tableFrom": "bookings",
           "tableTo": "users",
-          "columnsFrom": [
-            "professional_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["professional_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -286,12 +270,8 @@
           "name": "email_queue_user_id_users_id_fk",
           "tableFrom": "email_queue",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -415,12 +395,8 @@
           "name": "health_metrics_pet_id_pets_id_fk",
           "tableFrom": "health_metrics",
           "tableTo": "pets",
-          "columnsFrom": [
-            "pet_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["pet_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -428,12 +404,8 @@
           "name": "health_metrics_logged_by_users_id_fk",
           "tableFrom": "health_metrics",
           "tableTo": "users",
-          "columnsFrom": [
-            "logged_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["logged_by"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -525,12 +497,8 @@
           "name": "health_records_pet_id_pets_id_fk",
           "tableFrom": "health_records",
           "tableTo": "pets",
-          "columnsFrom": [
-            "pet_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["pet_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -629,12 +597,8 @@
           "name": "medications_pet_id_pets_id_fk",
           "tableFrom": "medications",
           "tableTo": "pets",
-          "columnsFrom": [
-            "pet_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["pet_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -687,12 +651,8 @@
           "name": "order_items_order_id_orders_id_fk",
           "tableFrom": "order_items",
           "tableTo": "orders",
-          "columnsFrom": [
-            "order_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["order_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -700,12 +660,8 @@
           "name": "order_items_product_id_products_id_fk",
           "tableFrom": "order_items",
           "tableTo": "products",
-          "columnsFrom": [
-            "product_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["product_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -774,12 +730,8 @@
           "name": "orders_user_id_users_id_fk",
           "tableFrom": "orders",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -865,12 +817,8 @@
           "name": "owner_profiles_user_id_users_id_fk",
           "tableFrom": "owner_profiles",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -880,9 +828,7 @@
         "owner_profiles_user_id_unique": {
           "name": "owner_profiles_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -1003,12 +949,8 @@
           "name": "pets_owner_id_users_id_fk",
           "tableFrom": "pets",
           "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1018,9 +960,7 @@
         "pets_handle_unique": {
           "name": "pets_handle_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "handle"
-          ]
+          "columns": ["handle"]
         }
       },
       "policies": {},
@@ -1161,12 +1101,8 @@
           "name": "reviews_booking_id_bookings_id_fk",
           "tableFrom": "reviews",
           "tableTo": "bookings",
-          "columnsFrom": [
-            "booking_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["booking_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1174,12 +1110,8 @@
           "name": "reviews_reviewer_id_users_id_fk",
           "tableFrom": "reviews",
           "tableTo": "users",
-          "columnsFrom": [
-            "reviewer_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reviewer_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1187,12 +1119,8 @@
           "name": "reviews_professional_id_users_id_fk",
           "tableFrom": "reviews",
           "tableTo": "users",
-          "columnsFrom": [
-            "professional_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["professional_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1202,9 +1130,7 @@
         "reviews_booking_id_unique": {
           "name": "reviews_booking_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "booking_id"
-          ]
+          "columns": ["booking_id"]
         }
       },
       "policies": {},
@@ -1240,12 +1166,8 @@
           "name": "sessions_userId_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1344,12 +1266,8 @@
           "name": "sitter_profiles_user_id_users_id_fk",
           "tableFrom": "sitter_profiles",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1359,9 +1277,7 @@
         "sitter_profiles_user_id_unique": {
           "name": "sitter_profiles_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -1438,9 +1354,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -1529,12 +1443,8 @@
           "name": "vaccinations_pet_id_pets_id_fk",
           "tableFrom": "vaccinations",
           "tableTo": "pets",
-          "columnsFrom": [
-            "pet_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["pet_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1670,12 +1580,8 @@
           "name": "vet_profiles_user_id_users_id_fk",
           "tableFrom": "vet_profiles",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1685,9 +1591,7 @@
         "vet_profiles_user_id_unique": {
           "name": "vet_profiles_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -1699,21 +1603,12 @@
     "public.booking_status": {
       "name": "booking_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "confirmed",
-        "cancelled",
-        "completed"
-      ]
+      "values": ["pending", "confirmed", "cancelled", "completed"]
     },
     "public.email_queue_status": {
       "name": "email_queue_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "sent",
-        "failed"
-      ]
+      "values": ["pending", "sent", "failed"]
     },
     "public.health_record_type": {
       "name": "health_record_type",
@@ -1732,43 +1627,22 @@
     "public.medication_status": {
       "name": "medication_status",
       "schema": "public",
-      "values": [
-        "active",
-        "completed",
-        "discontinued"
-      ]
+      "values": ["active", "completed", "discontinued"]
     },
     "public.order_status": {
       "name": "order_status",
       "schema": "public",
-      "values": [
-        "pending",
-        "confirmed",
-        "shipped",
-        "delivered",
-        "cancelled"
-      ]
+      "values": ["pending", "confirmed", "shipped", "delivered", "cancelled"]
     },
     "public.product_category": {
       "name": "product_category",
       "schema": "public",
-      "values": [
-        "food",
-        "toys",
-        "health",
-        "accessories",
-        "grooming",
-        "other"
-      ]
+      "values": ["food", "toys", "health", "accessories", "grooming", "other"]
     },
     "public.sex": {
       "name": "sex",
       "schema": "public",
-      "values": [
-        "male",
-        "female",
-        "unknown"
-      ]
+      "values": ["male", "female", "unknown"]
     },
     "public.species": {
       "name": "species",
@@ -1789,22 +1663,12 @@
     "public.user_role": {
       "name": "user_role",
       "schema": "public",
-      "values": [
-        "pet_owner",
-        "veterinarian",
-        "pet_sitter",
-        "admin"
-      ]
+      "values": ["pet_owner", "veterinarian", "pet_sitter", "admin"]
     },
     "public.vaccination_status": {
       "name": "vaccination_status",
       "schema": "public",
-      "values": [
-        "up_to_date",
-        "due_soon",
-        "overdue",
-        "not_applicable"
-      ]
+      "values": ["up_to_date", "due_soon", "overdue", "not_applicable"]
     }
   },
   "schemas": {},

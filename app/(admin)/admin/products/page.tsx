@@ -33,7 +33,12 @@ interface FormState {
 }
 
 const EMPTY_FORM: FormState = {
-  name: "", description: "", priceDollars: "", imageUrl: "", category: "other", stock: "",
+  name: "",
+  description: "",
+  priceDollars: "",
+  imageUrl: "",
+  category: "other",
+  stock: "",
 };
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
@@ -51,7 +56,10 @@ export default function AdminProductsPage() {
     // Admin fetches all products including inactive
     fetch("/api/admin/products")
       .then((r) => r.json())
-      .then(({ data }) => { setProducts(data ?? []); setLoading(false); })
+      .then(({ data }) => {
+        setProducts(data ?? []);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
 
@@ -89,7 +97,11 @@ export default function AdminProductsPage() {
     setSaving(true);
 
     const priceCents = Math.round(parseFloat(form.priceDollars) * 100);
-    if (!priceCents || priceCents <= 0) { setError("Enter a valid price."); setSaving(false); return; }
+    if (!priceCents || priceCents <= 0) {
+      setError("Enter a valid price.");
+      setSaving(false);
+      return;
+    }
 
     const body = {
       name: form.name.trim(),
@@ -113,10 +125,13 @@ export default function AdminProductsPage() {
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? "Failed to save."); return; }
+    if (!data.success) {
+      setError(data.error ?? "Failed to save.");
+      return;
+    }
 
     if (isEdit) {
-      setProducts((prev) => prev.map((p) => p.id === editingId ? data.data : p));
+      setProducts((prev) => prev.map((p) => (p.id === editingId ? data.data : p)));
     } else {
       setProducts((prev) => [data.data, ...prev]);
     }
@@ -131,7 +146,7 @@ export default function AdminProductsPage() {
     });
     const data = await res.json();
     if (data.success) {
-      setProducts((prev) => prev.map((p) => p.id === product.id ? data.data : p));
+      setProducts((prev) => prev.map((p) => (p.id === product.id ? data.data : p)));
     }
   }
 
@@ -178,37 +193,59 @@ export default function AdminProductsPage() {
               <label className="form-label">
                 Name <span className="text-[var(--danger-text)]">*</span>
               </label>
-              <input className="form-input" required value={form.name}
+              <input
+                className="form-input"
+                required
+                value={form.name}
                 onChange={(e) => field("name", e.target.value)}
-                placeholder="e.g. Premium Salmon Dog Food" />
+                placeholder="e.g. Premium Salmon Dog Food"
+              />
             </div>
 
             <div>
               <label className="form-label">
                 Price ($) <span className="text-[var(--danger-text)]">*</span>
               </label>
-              <input className="form-input" required type="number" min="0.01" step="0.01"
-                value={form.priceDollars} onChange={(e) => field("priceDollars", e.target.value)}
-                placeholder="19.99" />
+              <input
+                className="form-input"
+                required
+                type="number"
+                min="0.01"
+                step="0.01"
+                value={form.priceDollars}
+                onChange={(e) => field("priceDollars", e.target.value)}
+                placeholder="19.99"
+              />
             </div>
 
             <div>
               <label className="form-label">Category</label>
-              <select className="form-input" value={form.category}
-                onChange={(e) => field("category", e.target.value)}>
+              <select
+                className="form-input"
+                value={form.category}
+                onChange={(e) => field("category", e.target.value)}
+              >
                 {CATEGORIES.map(({ value, label }) => (
-                  <option key={value} value={value}>{label}</option>
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div>
               <label className="form-label">
-                Stock <span className="text-[var(--muted)] font-normal ms-1">(blank = unlimited)</span>
+                Stock{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">(blank = unlimited)</span>
               </label>
-              <input className="form-input" type="number" min="0"
-                value={form.stock} onChange={(e) => field("stock", e.target.value)}
-                placeholder="e.g. 100" />
+              <input
+                className="form-input"
+                type="number"
+                min="0"
+                value={form.stock}
+                onChange={(e) => field("stock", e.target.value)}
+                placeholder="e.g. 100"
+              />
             </div>
 
             <div>
@@ -224,16 +261,21 @@ export default function AdminProductsPage() {
               <label className="form-label">
                 Description <span className="text-[var(--muted)] font-normal ms-1">(optional)</span>
               </label>
-              <textarea className="form-input min-h-[80px] resize-y" value={form.description}
+              <textarea
+                className="form-input min-h-[80px] resize-y"
+                value={form.description}
                 onChange={(e) => field("description", e.target.value)}
-                placeholder="Describe the product…" />
+                placeholder="Describe the product…"
+              />
             </div>
 
             <div className="sm:col-span-2 flex gap-3 pt-1">
               <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
                 {saving ? "Saving…" : editingId ? "Update product" : "Save product"}
               </button>
-              <button type="button" onClick={closeForm} className="btn-outline">Cancel</button>
+              <button type="button" onClick={closeForm} className="btn-outline">
+                Cancel
+              </button>
             </div>
           </form>
         </div>
@@ -253,48 +295,77 @@ export default function AdminProductsPage() {
           <table className="w-full text-sm">
             <thead className="bg-[var(--off)]">
               <tr>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Product</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">Category</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Price</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">Stock</th>
-                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">Status</th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
+                  Product
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden sm:table-cell">
+                  Category
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
+                  Price
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide hidden md:table-cell">
+                  Stock
+                </th>
+                <th className="text-start py-3 px-4 text-xs font-medium text-[var(--muted)] uppercase tracking-wide">
+                  Status
+                </th>
                 <th className="py-3 px-4 w-20" />
               </tr>
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p.id} className="border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors">
+                <tr
+                  key={p.id}
+                  className="border-t border-[var(--border)] hover:bg-[var(--off)] transition-colors"
+                >
                   <td className="py-3 px-4">
                     <p className="font-medium text-[var(--ink)]">{p.name}</p>
                     {p.description && (
-                      <p className="text-xs text-[var(--muted)] truncate max-w-[200px]">{p.description}</p>
+                      <p className="text-xs text-[var(--muted)] truncate max-w-[200px]">
+                        {p.description}
+                      </p>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell">{productCategoryLabel(p.category)}</td>
-                  <td className="py-3 px-4 font-medium text-[var(--ink2)]">{formatPrice(p.priceCents)}</td>
+                  <td className="py-3 px-4 text-[var(--muted)] hidden sm:table-cell">
+                    {productCategoryLabel(p.category)}
+                  </td>
+                  <td className="py-3 px-4 font-medium text-[var(--ink2)]">
+                    {formatPrice(p.priceCents)}
+                  </td>
                   <td className="py-3 px-4 text-[var(--muted)] hidden md:table-cell">
                     {p.stock != null ? p.stock : <span className="text-[var(--faint)]">∞</span>}
                   </td>
                   <td className="py-3 px-4">
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      p.isActive
-                        ? "bg-[var(--green-bg)] text-[var(--green-text)]"
-                        : "bg-[var(--off)] text-[var(--muted)]"
-                    }`}>
+                    <span
+                      className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                        p.isActive
+                          ? "bg-[var(--green-bg)] text-[var(--green-text)]"
+                          : "bg-[var(--off)] text-[var(--muted)]"
+                      }`}
+                    >
                       {p.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-1">
-                      <button onClick={() => openEdit(p)}
+                      <button
+                        onClick={() => openEdit(p)}
                         className="p-1.5 rounded-lg hover:bg-[var(--teal-light)] text-[var(--muted)] hover:text-[var(--teal)] transition-colors"
-                        title="Edit">
+                        title="Edit"
+                      >
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
-                      <button onClick={() => toggleActive(p)}
+                      <button
+                        onClick={() => toggleActive(p)}
                         className="p-1.5 rounded-lg hover:bg-[var(--off)] text-[var(--muted)] transition-colors"
-                        title={p.isActive ? "Deactivate" : "Activate"}>
-                        {p.isActive ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        title={p.isActive ? "Deactivate" : "Activate"}
+                      >
+                        {p.isActive ? (
+                          <EyeOff className="w-3.5 h-3.5" />
+                        ) : (
+                          <Eye className="w-3.5 h-3.5" />
+                        )}
                       </button>
                     </div>
                   </td>

@@ -23,10 +23,19 @@ const eslintConfig = defineConfig([
   // Test files: allow `any` — mocks need escape hatches to satisfy Drizzle/Next types
   // Allow `_`-prefixed unused vars — conventional "intentionally ignored" pattern in destructuring
   {
-    files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "lib/test-helpers/**"],
+    files: [
+      "**/*.test.ts",
+      "**/*.test.tsx",
+      "**/*.spec.ts",
+      "**/*.spec.tsx",
+      "lib/test-helpers/**",
+    ],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": ["warn", { varsIgnorePattern: "^_", argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
     },
   },
 ]);

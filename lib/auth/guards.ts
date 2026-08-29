@@ -11,26 +11,18 @@ export async function requireSession(): Promise<GuardSuccess | GuardFailure> {
   if (!session) {
     return {
       session: null,
-      error: NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      ),
+      error: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
     };
   }
   return { session, error: null };
 }
 
-export async function requireRole(
-  role: UserRole,
-): Promise<GuardSuccess | GuardFailure> {
+export async function requireRole(role: UserRole): Promise<GuardSuccess | GuardFailure> {
   const session = await auth();
   if (!session || session.user.role !== role) {
     return {
       session: null,
-      error: NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      ),
+      error: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
     };
   }
   return { session, error: null };

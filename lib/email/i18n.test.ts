@@ -1,9 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { getEmailStrings, t, type EmailLocale } from "./i18n";
 
-const SUPPORTED_LOCALES: EmailLocale[] = [
-  "en", "de", "fr", "es", "ja", "zh", "ko", "tr", "ar",
-];
+const SUPPORTED_LOCALES: EmailLocale[] = ["en", "de", "fr", "es", "ja", "zh", "ko", "tr", "ar"];
 
 describe("getEmailStrings", () => {
   it("returns English strings for unknown locale", () => {
@@ -41,20 +39,29 @@ describe("getEmailStrings", () => {
     for (const locale of SUPPORTED_LOCALES.filter((l) => l !== "en")) {
       const s = getEmailStrings(locale);
       // At minimum the welcome button text should differ from English
-      expect(s.ownerWelcome.button, `${locale} welcome button`).not.toBe(
-        en.ownerWelcome.button,
-      );
+      expect(s.ownerWelcome.button, `${locale} welcome button`).not.toBe(en.ownerWelcome.button);
     }
   });
 
   it("each locale has all required template namespaces", () => {
     const NAMESPACES = [
-      "ownerWelcome", "ownerAddPet", "ownerHealthTracking", "ownerWeekOne",
-      "passwordReset", "petHealthAlert", "vaccinationReminder",
-      "medicationEndingReminder", "bookingReminder", "bookingRequestReceived",
-      "bookingStatusChanged", "orderConfirmation", "orderStatusUpdate",
-      "sellerOrderNotification", "adoptionApplicationReceived",
-      "adoptionApplicationStatusChanged", "professionalVerification",
+      "ownerWelcome",
+      "ownerAddPet",
+      "ownerHealthTracking",
+      "ownerWeekOne",
+      "passwordReset",
+      "petHealthAlert",
+      "vaccinationReminder",
+      "medicationEndingReminder",
+      "bookingReminder",
+      "bookingRequestReceived",
+      "bookingStatusChanged",
+      "orderConfirmation",
+      "orderStatusUpdate",
+      "sellerOrderNotification",
+      "adoptionApplicationReceived",
+      "adoptionApplicationStatusChanged",
+      "professionalVerification",
     ] as const;
 
     for (const locale of SUPPORTED_LOCALES) {

@@ -2,7 +2,12 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SPECIES_OPTIONS, SPECIES_CONFIG, SEX_OPTIONS, getBreedOptions } from "@/lib/config/species";
+import {
+  SPECIES_OPTIONS,
+  SPECIES_CONFIG,
+  SEX_OPTIONS,
+  getBreedOptions,
+} from "@/lib/config/species";
 import type { SpeciesId, SexId } from "@/lib/config/species";
 import { PawPrint } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -28,12 +33,14 @@ function NewPetForm() {
     isPublic: false,
   });
 
-  const breedOptions =
-    form.species ? getBreedOptions(form.species as SpeciesId) : [];
+  const breedOptions = form.species ? getBreedOptions(form.species as SpeciesId) : [];
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.species) { setError(t("newPetSelectSpecies")); return; }
+    if (!form.species) {
+      setError(t("newPetSelectSpecies"));
+      return;
+    }
     setSaving(true);
     setError("");
 
@@ -83,27 +90,21 @@ function NewPetForm() {
 
       {error && <p className="alert-error mb-4">{error}</p>}
 
-      <form
-        onSubmit={handleSubmit}
-        className="card p-6 flex flex-col gap-5"
-      >
+      <form onSubmit={handleSubmit} className="card p-6 flex flex-col gap-5">
         {/* Species first — drives breed options */}
         <div>
-          <label className="form-label">
-            {t("petSpeciesLabel")} *
-          </label>
+          <label className="form-label">{t("petSpeciesLabel")} *</label>
           <select
             required
             value={form.species}
-            onChange={(e) =>
-              setForm({ ...form, species: e.target.value as SpeciesId, breed: "" })
-            }
+            onChange={(e) => setForm({ ...form, species: e.target.value as SpeciesId, breed: "" })}
             className="form-input"
           >
             <option value="">{t("newPetChooseType")}</option>
             {SPECIES_OPTIONS.map((s) => (
               <option key={s.value} value={s.value}>
-                {SPECIES_CONFIG[s.value as SpeciesId].emoji} {tPub(`species_${s.value}` as Parameters<typeof tPub>[0])}
+                {SPECIES_CONFIG[s.value as SpeciesId].emoji}{" "}
+                {tPub(`species_${s.value}` as Parameters<typeof tPub>[0])}
               </option>
             ))}
           </select>
@@ -111,9 +112,7 @@ function NewPetForm() {
 
         {/* Name */}
         <div>
-          <label className="form-label">
-            {t("petNameLabel")} *
-          </label>
+          <label className="form-label">{t("petNameLabel")} *</label>
           <input
             type="text"
             required
@@ -127,9 +126,7 @@ function NewPetForm() {
         {/* Breed (conditional) */}
         {breedOptions.length > 0 && (
           <div>
-            <label className="form-label">
-              {t("petBreedLabel")}
-            </label>
+            <label className="form-label">{t("petBreedLabel")}</label>
             <select
               value={form.breed}
               onChange={(e) => setForm({ ...form, breed: e.target.value })}
@@ -148,9 +145,7 @@ function NewPetForm() {
         {/* Birth date + sex */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="form-label">
-              {t("petBirthDate")}
-            </label>
+            <label className="form-label">{t("petBirthDate")}</label>
             <input
               type="date"
               value={form.birthDate}
@@ -159,9 +154,7 @@ function NewPetForm() {
             />
           </div>
           <div>
-            <label className="form-label">
-              {t("petSex")}
-            </label>
+            <label className="form-label">{t("petSex")}</label>
             <select
               value={form.sex}
               onChange={(e) =>
@@ -173,7 +166,9 @@ function NewPetForm() {
               className="form-input"
             >
               {SEX_OPTIONS.map(({ value }) => (
-                <option key={value} value={value}>{tPub(`sex_${value}` as Parameters<typeof tPub>[0])}</option>
+                <option key={value} value={value}>
+                  {tPub(`sex_${value}` as Parameters<typeof tPub>[0])}
+                </option>
               ))}
             </select>
           </div>
@@ -182,7 +177,8 @@ function NewPetForm() {
         {/* Bio */}
         <div>
           <label className="form-label">
-            {t("petBioLabel")} <span className="text-[var(--faint)] font-normal">{t("listOptional")}</span>
+            {t("petBioLabel")}{" "}
+            <span className="text-[var(--faint)] font-normal">{t("listOptional")}</span>
           </label>
           <textarea
             rows={3}
@@ -206,26 +202,16 @@ function NewPetForm() {
             <div className="absolute top-0.5 start-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform peer-checked:translate-x-5" />
           </div>
           <div>
-            <span className="text-sm font-medium text-[var(--ink2)]">
-              {t("newPetPublicLabel")}
-            </span>
+            <span className="text-sm font-medium text-[var(--ink2)]">{t("newPetPublicLabel")}</span>
             <p className="text-xs text-[var(--muted)]">{t("newPetPublicDesc")}</p>
           </div>
         </label>
 
         <div className="flex gap-3 pt-1">
-          <button
-            type="submit"
-            disabled={saving}
-            className="btn-primary disabled:opacity-60"
-          >
+          <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
             {saving ? t("saving") : t("newPetAdd")}
           </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="btn-outline"
-          >
+          <button type="button" onClick={() => router.back()} className="btn-outline">
             {t("cancel")}
           </button>
         </div>
