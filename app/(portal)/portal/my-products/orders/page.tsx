@@ -76,7 +76,8 @@ function SellerOrderCard({ order }: { order: SellerOrder }) {
               {formatIsoDate(order.createdAt)} · {order.buyerName ?? order.buyerEmail}
             </p>
             <p className="text-xs text-[var(--muted)]">
-              {t("ordersItemCount", { count: itemCount })} · {formatPrice(order.sellerSubtotalCents)}
+              {t("ordersItemCount", { count: itemCount })} ·{" "}
+              {formatPrice(order.sellerSubtotalCents)}
             </p>
           </div>
         </div>
@@ -85,7 +86,11 @@ function SellerOrderCard({ order }: { order: SellerOrder }) {
             <Icon className="w-3 h-3" />
             {t(`orderStatus_${order.status}` as Parameters<typeof t>[0])}
           </span>
-          {expanded ? <ChevronUp className="w-4 h-4 text-[var(--muted)]" /> : <ChevronDown className="w-4 h-4 text-[var(--muted)]" />}
+          {expanded ? (
+            <ChevronUp className="w-4 h-4 text-[var(--muted)]" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-[var(--muted)]" />
+          )}
         </div>
       </div>
 
@@ -93,7 +98,9 @@ function SellerOrderCard({ order }: { order: SellerOrder }) {
         <div className="border-t border-[var(--border)] px-4 py-3 space-y-3">
           <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
             <User className="w-3.5 h-3.5" />
-            <span className="font-medium text-[var(--ink2)]">{order.buyerName ?? t("sellerOrdersBuyer")}</span>
+            <span className="font-medium text-[var(--ink2)]">
+              {order.buyerName ?? t("sellerOrdersBuyer")}
+            </span>
             <span>·</span>
             <a href={`mailto:${order.buyerEmail}`} className="text-[var(--teal)] hover:underline">
               {order.buyerEmail}
@@ -154,15 +161,28 @@ export default function SellerOrdersPage() {
     setLoading(true);
     setFetchError("");
     fetch("/api/orders/seller")
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setOrders(data ?? []); setLoading(false); })
-      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(({ data }) => {
+        setOrders(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadOrders(); }, []);
+  useEffect(() => {
+    loadOrders();
+  }, []);
 
-  const pendingCount = orders.filter((o) => o.status === "pending" || o.status === "confirmed").length;
+  const pendingCount = orders.filter(
+    (o) => o.status === "pending" || o.status === "confirmed",
+  ).length;
 
   return (
     <div>
@@ -182,7 +202,9 @@ export default function SellerOrdersPage() {
 
       {loading ? (
         <div className="space-y-3">
-          {[1, 2].map((i) => <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />)}
+          {[1, 2].map((i) => (
+            <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />
+          ))}
         </div>
       ) : fetchError ? (
         <div className="card py-12 text-center">
@@ -200,7 +222,9 @@ export default function SellerOrdersPage() {
           <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">
             {t("sellerOrdersEmptyDesc")}
           </p>
-          <Link href="/portal/my-products" className="btn-outline">{t("sellerOrdersViewProducts")}</Link>
+          <Link href="/portal/my-products" className="btn-outline">
+            {t("sellerOrdersViewProducts")}
+          </Link>
         </div>
       ) : (
         <div className="space-y-3">

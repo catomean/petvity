@@ -22,7 +22,9 @@ function notifyProfessional(opts: {
   const tpl = opts.isVerified
     ? professionalVerified(data, opts.user.locale)
     : professionalUnverified(data, opts.user.locale);
-  sendEmail({ to: opts.user.email, ...tpl }).catch(() => {/* fire-and-forget */});
+  sendEmail({ to: opts.user.email, ...tpl }).catch(() => {
+    /* fire-and-forget */
+  });
 }
 
 type Params = { params: Promise<{ userId: string }> };
@@ -66,7 +68,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     if (!updated) {
       return NextResponse.json(
-        { success: false, error: "Vet profile not found. The user must set up their profile first." },
+        {
+          success: false,
+          error: "Vet profile not found. The user must set up their profile first.",
+        },
         { status: 404 },
       );
     }
@@ -83,7 +88,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     if (!updated) {
       return NextResponse.json(
-        { success: false, error: "Sitter profile not found. The user must set up their profile first." },
+        {
+          success: false,
+          error: "Sitter profile not found. The user must set up their profile first.",
+        },
         { status: 404 },
       );
     }
@@ -100,7 +108,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     if (!updated) {
       return NextResponse.json(
-        { success: false, error: "Groomer profile not found. The user must set up their profile first." },
+        {
+          success: false,
+          error: "Groomer profile not found. The user must set up their profile first.",
+        },
         { status: 404 },
       );
     }

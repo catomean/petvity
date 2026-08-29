@@ -3,11 +3,7 @@
 import { useRef, useState } from "react";
 import { Camera, Loader2, Trash2 } from "lucide-react";
 import { ProductArt } from "@/components/shop/ProductArt";
-import {
-  IMAGE_ACCEPT_ATTR,
-  IMAGE_MAX_BYTES,
-  IMAGE_MAX_MB,
-} from "@/lib/config/uploads";
+import { IMAGE_ACCEPT_ATTR, IMAGE_MAX_BYTES, IMAGE_MAX_MB } from "@/lib/config/uploads";
 
 /**
  * Pick a product photo from disk.
@@ -133,7 +129,10 @@ export function ProductImageField({ value, onChange, category, name, labels }: P
             {value && !uploading && (
               <button
                 type="button"
-                onClick={() => { onChange(""); setError(""); }}
+                onClick={() => {
+                  onChange("");
+                  setError("");
+                }}
                 className="btn-ghost text-sm py-1.5 px-3 flex items-center gap-1.5"
               >
                 <Trash2 className="w-3.5 h-3.5" />

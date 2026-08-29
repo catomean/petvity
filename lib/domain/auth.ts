@@ -34,6 +34,11 @@ export function resolveRole(
 ): UserRole {
   const adminEmails = getAdminEmails();
   if (adminEmails.includes(email.toLowerCase())) return "admin";
-  if (intendedRole === "veterinarian" || intendedRole === "pet_sitter" || intendedRole === "groomer") return intendedRole;
+  if (
+    intendedRole === "veterinarian" ||
+    intendedRole === "pet_sitter" ||
+    intendedRole === "groomer"
+  )
+    return intendedRole;
   return "pet_owner";
 }

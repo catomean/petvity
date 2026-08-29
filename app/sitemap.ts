@@ -20,15 +20,15 @@ const MARKETING_PATHS = [
   { path: "/about", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/pricing", changeFrequency: "monthly" as const, priority: 0.8 },
   { path: "/pros", changeFrequency: "monthly" as const, priority: 0.8 },
-  { path: "/species/dog",       changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/cat",       changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/horse",     changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/bird",      changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/rabbit",    changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/dog", changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/cat", changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/horse", changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/bird", changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/rabbit", changeFrequency: "monthly" as const, priority: 0.7 },
   { path: "/species/guinea_pig", changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/hamster",   changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/reptile",   changeFrequency: "monthly" as const, priority: 0.7 },
-  { path: "/species/fish",      changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/hamster", changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/reptile", changeFrequency: "monthly" as const, priority: 0.7 },
+  { path: "/species/fish", changeFrequency: "monthly" as const, priority: 0.7 },
   { path: "/adopt", changeFrequency: "daily" as const, priority: 0.9 },
 ];
 
@@ -43,13 +43,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getInstance();
     [publicPets, availableListings, vetUserIds, sitterUserIds] = await Promise.all([
-      db.select({ handle: pets.handle, updatedAt: pets.updatedAt }).from(pets).where(eq(pets.isPublic, true)),
+      db
+        .select({ handle: pets.handle, updatedAt: pets.updatedAt })
+        .from(pets)
+        .where(eq(pets.isPublic, true)),
       db
         .select({ id: adoptionListings.id, updatedAt: adoptionListings.updatedAt })
         .from(adoptionListings)
         .where(eq(adoptionListings.status, "available")),
       db.select({ userId: vetProfiles.userId, updatedAt: vetProfiles.updatedAt }).from(vetProfiles),
-      db.select({ userId: sitterProfiles.userId, updatedAt: sitterProfiles.updatedAt }).from(sitterProfiles),
+      db
+        .select({ userId: sitterProfiles.userId, updatedAt: sitterProfiles.updatedAt })
+        .from(sitterProfiles),
     ]);
   } catch (err) {
     console.error("[sitemap] DB read failed — serving marketing paths only:", err);
@@ -61,7 +66,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static marketing pages — one per locale
   for (const locale of LOCALES) {
     for (const { path, changeFrequency, priority } of MARKETING_PATHS) {
-      entries.push({ url: `${BASE}/${locale}${path}`, lastModified: now, changeFrequency, priority });
+      entries.push({
+        url: `${BASE}/${locale}${path}`,
+        lastModified: now,
+        changeFrequency,
+        priority,
+      });
     }
   }
 

@@ -62,7 +62,10 @@ export default async function BlogPostPage({ params }: Params) {
 
   return (
     <div className="lux-section min-h-screen pt-28 pb-24">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <article className="section-inner max-w-2xl">
         <Link
           href={`/${locale}/blog`}
@@ -72,7 +75,9 @@ export default async function BlogPostPage({ params }: Params) {
           {t("backToBlog")}
         </Link>
 
-        <p className="text-xs text-[var(--mist-dark)] mb-3">{formatDateShort(publishedAt.toISOString(), locale)}</p>
+        <p className="text-xs text-[var(--mist-dark)] mb-3">
+          {formatDateShort(publishedAt.toISOString(), locale)}
+        </p>
         <h1 className="ed-title-sm ed-title-on-dark mb-8 leading-tight">{post.title}</h1>
 
         <div className="space-y-5">
@@ -88,7 +93,10 @@ export default async function BlogPostPage({ params }: Params) {
               return (
                 <ul key={i} className="space-y-2 ps-1">
                   {block.items.map((item, j) => (
-                    <li key={j} className="flex items-start gap-2.5 text-[var(--platinum-dim)] leading-relaxed">
+                    <li
+                      key={j}
+                      className="flex items-start gap-2.5 text-[var(--platinum-dim)] leading-relaxed"
+                    >
                       <span className="text-[var(--champagne)] mt-0.5">·</span>
                       {item}
                     </li>

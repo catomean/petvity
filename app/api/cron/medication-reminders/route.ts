@@ -32,25 +32,23 @@ export async function POST(req: NextRequest) {
     .from(medications)
     .innerJoin(pets, eq(pets.id, medications.petId))
     .innerJoin(users, eq(users.id, pets.ownerId))
-    .where(
-      and(
-        eq(medications.status, "active"),
-        eq(medications.endDate, tomorrowStr),
-      ),
-    );
+    .where(and(eq(medications.status, "active"), eq(medications.endDate, tomorrowStr)));
 
   let sent = 0;
 
   for (const row of ending) {
     if (!row.ownerEmail || !row.endDate) continue;
 
-    const { subject, html } = medicationEndingReminder({
-      ownerName: row.ownerName ?? "there",
-      petName: row.petName,
-      medicationName: row.medicationName,
-      endDate: formatDateShort(row.endDate, row.ownerLocale ?? undefined),
-      petUrl: `${APP_URL}/portal/pets/${row.petId}/medications`,
-    }, row.ownerLocale);
+    const { subject, html } = medicationEndingReminder(
+      {
+        ownerName: row.ownerName ?? "there",
+        petName: row.petName,
+        medicationName: row.medicationName,
+        endDate: formatDateShort(row.endDate, row.ownerLocale ?? undefined),
+        petUrl: `${APP_URL}/portal/pets/${row.petId}/medications`,
+      },
+      row.ownerLocale,
+    );
 
     try {
       await sendEmail({ to: row.ownerEmail, subject, html });

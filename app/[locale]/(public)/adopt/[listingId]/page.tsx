@@ -7,7 +7,15 @@ import { APP, APP_URL } from "@/lib/config/app";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
 import {
-  Heart, MapPin, DollarSign, PawPrint, Baby, Dog, Cat, Star, ChevronLeft,
+  Heart,
+  MapPin,
+  DollarSign,
+  PawPrint,
+  Baby,
+  Dog,
+  Cat,
+  Star,
+  ChevronLeft,
 } from "lucide-react";
 import { LISTING_STATUS_CONFIG, LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
 import type { ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
@@ -20,7 +28,6 @@ import { buildAlternates } from "@/lib/i18n/alternates";
 export const revalidate = 30;
 
 type Params = { params: Promise<{ locale: string; listingId: string }> };
-
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { listingId, locale } = await params;
@@ -93,36 +100,42 @@ export default async function PublicListingDetailPage({ params }: Params) {
     about: {
       "@type": "Thing",
       name: row.pet.name,
-      description: [
-        SPECIES_CONFIG[row.pet.species as SpeciesId]?.label,
-        row.pet.breed,
-        row.pet.sex,
-      ].filter(Boolean).join(", "),
+      description: [SPECIES_CONFIG[row.pet.species as SpeciesId]?.label, row.pet.breed, row.pet.sex]
+        .filter(Boolean)
+        .join(", "),
     },
     ...(row.location ? { contentLocation: { "@type": "Place", name: row.location } } : {}),
-    offers: row.feeCents !== null
-      ? {
-          "@type": "Offer",
-          price: (row.feeCents / 100).toFixed(2),
-          priceCurrency: "USD",
-          availability: isAvailable
-            ? "https://schema.org/InStock"
-            : "https://schema.org/SoldOut",
-        }
-      : undefined,
+    offers:
+      row.feeCents !== null
+        ? {
+            "@type": "Offer",
+            price: (row.feeCents / 100).toFixed(2),
+            priceCurrency: "USD",
+            availability: isAvailable ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
+          }
+        : undefined,
   };
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(listingSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listingSchema) }}
+      />
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
-        <Link href={`/${locale}`} className="font-bold text-[var(--teal)] text-lg no-underline flex items-center gap-2">
+        <Link
+          href={`/${locale}`}
+          className="font-bold text-[var(--teal)] text-lg no-underline flex items-center gap-2"
+        >
           <PawPrint className="w-5 h-5" />
           {APP.name}
         </Link>
         <div className="flex items-center gap-3">
-          <Link href="/login" className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors">
+          <Link
+            href="/login"
+            className="text-sm text-[var(--ink2)] hover:text-[var(--teal)] no-underline transition-colors"
+          >
             {t("signIn")}
           </Link>
           <Link href="/register" className="btn-primary text-sm py-2 px-4">
@@ -166,10 +179,14 @@ export default async function PublicListingDetailPage({ params }: Params) {
                   {t(`species_${row.pet.species}` as Parameters<typeof t>[0])}
                   {row.pet.breed ? ` · ${row.pet.breed}` : ""}
                   {age ? ` · ${age}` : ""}
-                  {row.pet.sex && row.pet.sex !== "unknown" ? ` · ${t(`sex_${row.pet.sex}` as Parameters<typeof t>[0])}` : ""}
+                  {row.pet.sex && row.pet.sex !== "unknown"
+                    ? ` · ${t(`sex_${row.pet.sex}` as Parameters<typeof t>[0])}`
+                    : ""}
                 </p>
               </div>
-              <span className={`text-xs font-medium px-3 py-1 rounded-full flex-shrink-0 ${LISTING_STATUS_CONFIG[row.status as ListingStatusId].className}`}>
+              <span
+                className={`text-xs font-medium px-3 py-1 rounded-full flex-shrink-0 ${LISTING_STATUS_CONFIG[row.status as ListingStatusId].className}`}
+              >
                 {t(`listingStatus_${row.status}` as Parameters<typeof t>[0])}
               </span>
             </div>
@@ -184,7 +201,9 @@ export default async function PublicListingDetailPage({ params }: Params) {
               )}
               <span className="flex items-center gap-1.5">
                 <DollarSign className="w-4 h-4 flex-shrink-0" />
-                {row.feeCents ? t("adoptionFee", { price: formatAdoptionFee(row.feeCents) }) : t("freeAdoption")}
+                {row.feeCents
+                  ? t("adoptionFee", { price: formatAdoptionFee(row.feeCents) })
+                  : t("freeAdoption")}
               </span>
             </div>
 
@@ -194,13 +213,16 @@ export default async function PublicListingDetailPage({ params }: Params) {
                 {LISTING_TRAIT_CONFIG.map((trait) => {
                   if (!row[trait.field]) return null;
                   const icon: Record<ListingTraitKey, React.ReactNode> = {
-                    goodWithKids:       <Baby className="w-3.5 h-3.5" />,
-                    goodWithDogs:       <Dog className="w-3.5 h-3.5" />,
-                    goodWithCats:       <Cat className="w-3.5 h-3.5" />,
+                    goodWithKids: <Baby className="w-3.5 h-3.5" />,
+                    goodWithDogs: <Dog className="w-3.5 h-3.5" />,
+                    goodWithCats: <Cat className="w-3.5 h-3.5" />,
                     requiresExperience: <Star className="w-3.5 h-3.5" />,
                   };
                   return (
-                    <span key={trait.field} className={`inline-flex items-center gap-1.5 text-xs font-medium ${trait.className} px-3 py-1 rounded-full`}>
+                    <span
+                      key={trait.field}
+                      className={`inline-flex items-center gap-1.5 text-xs font-medium ${trait.className} px-3 py-1 rounded-full`}
+                    >
                       {icon[trait.field]} {t(`trait_${trait.field}` as Parameters<typeof t>[0])}
                     </span>
                   );
@@ -235,9 +257,7 @@ export default async function PublicListingDetailPage({ params }: Params) {
             <p className="font-semibold text-[var(--ink)] mb-1">
               {t("interestedIn", { name: row.pet.name })}
             </p>
-            <p className="text-sm text-[var(--muted)] mb-5">
-              {t("signUpDesc", { app: APP.name })}
-            </p>
+            <p className="text-sm text-[var(--muted)] mb-5">{t("signUpDesc", { app: APP.name })}</p>
             <div className="flex gap-3 justify-center">
               <Link
                 href={`/register?returnTo=/portal/adopt/${row.id}`}

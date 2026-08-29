@@ -13,9 +13,7 @@
  * below for the host schema to adopt.
  */
 
-export type Buyer =
-  | { kind: "account"; userId: string }
-  | { kind: "guest"; email: string };
+export type Buyer = { kind: "account"; userId: string } | { kind: "guest"; email: string };
 
 export class BuyerError extends Error {
   override name = "BuyerError";
@@ -23,10 +21,7 @@ export class BuyerError extends Error {
 
 /** Narrow a row with two nullable columns back into the union, refusing the
  *  two states that should have been impossible. */
-export function buyerFromRow(row: {
-  userId?: string | null;
-  guestEmail?: string | null;
-}): Buyer {
+export function buyerFromRow(row: { userId?: string | null; guestEmail?: string | null }): Buyer {
   const hasAccount = row.userId != null && row.userId !== "";
   const hasEmail = row.guestEmail != null && row.guestEmail !== "";
 
@@ -56,8 +51,7 @@ export const isGuest = (b: Buyer): b is { kind: "guest"; email: string } => b.ki
  *
  * Postgres. `<>` on two booleans is XOR.
  */
-export const BUYER_IDENTITY_CHECK =
-  "CHECK ((user_id IS NOT NULL) <> (guest_email IS NOT NULL))";
+export const BUYER_IDENTITY_CHECK = "CHECK ((user_id IS NOT NULL) <> (guest_email IS NOT NULL))";
 
 /**
  * A guest has no session, so an unguessable token is the only handle they have
@@ -82,6 +76,8 @@ export function createReceiptToken(): string {
 
 /** Reject a malformed token before it reaches a query. */
 export function isReceiptToken(value: string): boolean {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value) ||
-    /^[0-9a-f]{32}$/i.test(value);
+  return (
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value) ||
+    /^[0-9a-f]{32}$/i.test(value)
+  );
 }

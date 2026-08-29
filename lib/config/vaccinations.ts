@@ -6,10 +6,13 @@
  */
 
 export const VACCINATION_STATUS_CONFIG = {
-  up_to_date:     { label: "Up to date", className: "signal-healthy" },
-  due_soon:       { label: "Due soon",   className: "signal-watch" },
-  overdue:        { label: "Overdue",    className: "signal-concern" },
-  not_applicable: { label: "N/A",        className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium" },
+  up_to_date: { label: "Up to date", className: "signal-healthy" },
+  due_soon: { label: "Due soon", className: "signal-watch" },
+  overdue: { label: "Overdue", className: "signal-concern" },
+  not_applicable: {
+    label: "N/A",
+    className: "bg-[var(--off)] text-[var(--muted)] text-xs px-2 py-0.5 rounded-full font-medium",
+  },
 } as const;
 
 export type VaccinationStatusId = keyof typeof VACCINATION_STATUS_CONFIG;
@@ -45,10 +48,7 @@ type VaccinationOverdueRow = {
  * @param vaccs   - Array of vaccination rows
  * @param today   - YYYY-MM-DD string for the current date
  */
-export function countOverdueVaccinations(
-  vaccs: VaccinationOverdueRow[],
-  today: string,
-): number {
+export function countOverdueVaccinations(vaccs: VaccinationOverdueRow[], today: string): number {
   return vaccs.filter(
     (v) => v.nextDueDate && v.nextDueDate < today && v.status !== "not_applicable",
   ).length;
@@ -65,8 +65,7 @@ export function computeVaccinationDisplayStatus(
   if (nextDueDate < today) return "overdue";
   const msPerDay = 86_400_000;
   const daysUntil =
-    (new Date(nextDueDate + "T00:00:00Z").getTime() -
-      new Date(today + "T00:00:00Z").getTime()) /
+    (new Date(nextDueDate + "T00:00:00Z").getTime() - new Date(today + "T00:00:00Z").getTime()) /
     msPerDay;
   if (daysUntil <= dueSoonDays) return "due_soon";
   return "up_to_date";

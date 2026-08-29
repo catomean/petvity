@@ -36,10 +36,7 @@ export async function POST(req: NextRequest) {
   }
 
   const db = getInstance();
-  await db
-    .update(users)
-    .set({ role: parsed.data.role })
-    .where(eq(users.id, session.user.id));
+  await db.update(users).set({ role: parsed.data.role }).where(eq(users.id, session.user.id));
 
   return NextResponse.json({ success: true, data: { role: parsed.data.role } });
 }

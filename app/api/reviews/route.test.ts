@@ -15,16 +15,20 @@ import { getInstance } from "@/lib/db";
 
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
-const BOOKING_ID    = "00000000-0000-4000-8000-000000000055";
-const PRO_UUID      = "00000000-0000-4000-8000-000000000002";
+const BOOKING_ID = "00000000-0000-4000-8000-000000000055";
+const PRO_UUID = "00000000-0000-4000-8000-000000000002";
 
 const OWNER_SESSION = {
   user: { id: "owner-1", role: "pet_owner", email: "owner@example.com", name: "Owner" },
   expires: "2099-01-01",
 };
 
-const MOCK_BOOKING_COMPLETED = { ownerId: "owner-1", professionalId: PRO_UUID, status: "completed" };
-const MOCK_BOOKING_PENDING   = { ownerId: "owner-1", professionalId: PRO_UUID, status: "pending" };
+const MOCK_BOOKING_COMPLETED = {
+  ownerId: "owner-1",
+  professionalId: PRO_UUID,
+  status: "completed",
+};
+const MOCK_BOOKING_PENDING = { ownerId: "owner-1", professionalId: PRO_UUID, status: "pending" };
 
 function makeGetRequest(professionalId?: string) {
   const url = professionalId
@@ -70,8 +74,14 @@ describe("GET /api/reviews", () => {
   });
 
   it("returns 200 with reviews and aggregates", async () => {
-    const mockReview = { id: "r-1", rating: 5, comment: "Great!", createdAt: new Date(), reviewerName: "Owner" };
-    db._queueSelectResult([mockReview]);           // reviews rows
+    const mockReview = {
+      id: "r-1",
+      rating: 5,
+      comment: "Great!",
+      createdAt: new Date(),
+      reviewerName: "Owner",
+    };
+    db._queueSelectResult([mockReview]); // reviews rows
     db._queueSelectResult([{ avgRating: "4.5", total: 1 }]); // aggregate
 
     const res = await GET(makeGetRequest(PRO_UUID));
@@ -137,7 +147,7 @@ describe("POST /api/reviews", () => {
   });
 
   it("returns 409 when booking already has a review (one-per-booking guard)", async () => {
-    db._queueSelectResult([MOCK_BOOKING_COMPLETED]);   // booking valid
+    db._queueSelectResult([MOCK_BOOKING_COMPLETED]); // booking valid
     db._queueSelectResult([{ id: "existing-review" }]); // existing review found
     const res = await POST(makePostRequest(VALID_BODY));
     expect(res.status).toBe(409);
@@ -147,10 +157,14 @@ describe("POST /api/reviews", () => {
 
   it("returns 201 when review is created successfully", async () => {
     db._queueSelectResult([MOCK_BOOKING_COMPLETED]); // booking valid
-    db._queueSelectResult([]);                        // no existing review
+    db._queueSelectResult([]); // no existing review
     const mockReview = {
-      id: "review-1", bookingId: BOOKING_ID, reviewerId: "owner-1",
-      professionalId: PRO_UUID, rating: 5, comment: "Excellent service!",
+      id: "review-1",
+      bookingId: BOOKING_ID,
+      reviewerId: "owner-1",
+      professionalId: PRO_UUID,
+      rating: 5,
+      comment: "Excellent service!",
     };
     db._insertReturning.mockResolvedValueOnce([mockReview]);
 

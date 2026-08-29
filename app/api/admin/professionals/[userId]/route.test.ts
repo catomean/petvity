@@ -104,7 +104,9 @@ describe("PATCH /api/admin/professionals/[userId]", () => {
   });
 
   it("sends a verification email to the professional when isVerified becomes true", async () => {
-    db._queueSelectResult([{ role: "veterinarian", name: "Dr. Chen", email: "chen@example.com", locale: "zh" }]);
+    db._queueSelectResult([
+      { role: "veterinarian", name: "Dr. Chen", email: "chen@example.com", locale: "zh" },
+    ]);
     db._updateReturning.mockResolvedValueOnce([{ isVerified: true }]);
     await PATCH(makePatchRequest({ isVerified: true }), ROUTE_CONTEXT);
 
@@ -120,7 +122,9 @@ describe("PATCH /api/admin/professionals/[userId]", () => {
   });
 
   it("sends an unverification email when isVerified becomes false", async () => {
-    db._queueSelectResult([{ role: "pet_sitter", name: "Sam", email: "sam@example.com", locale: null }]);
+    db._queueSelectResult([
+      { role: "pet_sitter", name: "Sam", email: "sam@example.com", locale: null },
+    ]);
     db._updateReturning.mockResolvedValueOnce([{ isVerified: false }]);
     await PATCH(makePatchRequest({ isVerified: false }), ROUTE_CONTEXT);
 

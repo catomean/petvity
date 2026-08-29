@@ -42,7 +42,10 @@ describe("GET /api/vets", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(requireSession).mockResolvedValue({ session: { user: { id: "user-1" } } as any, error: null });
+    vi.mocked(requireSession).mockResolvedValue({
+      session: { user: { id: "user-1" } } as any,
+      error: null,
+    });
   });
 
   it("returns 401 when not authenticated", async () => {
@@ -78,7 +81,7 @@ describe("GET /api/vets", () => {
 
   it("returns null avgRating when vet has no reviews", async () => {
     db._queueSelectResult([MOCK_VET]); // vet profiles
-    db._queueSelectResult([]);          // no reviews
+    db._queueSelectResult([]); // no reviews
 
     const res = await GET(makeRequest());
     const body = await res.json();

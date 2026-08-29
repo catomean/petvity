@@ -19,11 +19,13 @@ export function translateSignalReason(data: SignalReasonData, tSignal: TSignal):
       break;
     case "out_of_range":
       for (const d of data.details)
-        parts.push(tSignal("reasonOutOfRange", {
-          metric: tSignal(`metric_${d.id}`),
-          value: d.formattedValue,
-          range: d.formattedRange,
-        }));
+        parts.push(
+          tSignal("reasonOutOfRange", {
+            metric: tSignal(`metric_${d.id}`),
+            value: d.formattedValue,
+            range: d.formattedRange,
+          }),
+        );
       if (data.overdueVaccinations > 0)
         parts.push(tSignal("reasonOverdueVaccinations", { count: data.overdueVaccinations }));
       break;

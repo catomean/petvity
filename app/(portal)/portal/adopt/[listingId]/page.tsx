@@ -4,12 +4,27 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
-  Heart, ChevronLeft, MapPin, DollarSign, CheckCircle,
-  Dog, Cat, Baby, Star, Loader2, Send, Mail,
+  Heart,
+  ChevronLeft,
+  MapPin,
+  DollarSign,
+  CheckCircle,
+  Dog,
+  Cat,
+  Baby,
+  Star,
+  Loader2,
+  Send,
+  Mail,
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
-import { APPLICATION_STATUS_CONFIG, HOUSING_TYPE_OPTIONS, LISTING_STATUS_CONFIG, LISTING_TRAIT_CONFIG } from "@/lib/config/adoptions";
+import {
+  APPLICATION_STATUS_CONFIG,
+  HOUSING_TYPE_OPTIONS,
+  LISTING_STATUS_CONFIG,
+  LISTING_TRAIT_CONFIG,
+} from "@/lib/config/adoptions";
 import type { ApplicationStatusId, ListingStatusId, ListingTraitKey } from "@/lib/config/adoptions";
 import { DEFAULT_LOCALE } from "@/lib/config/locales";
 import { formatPetAge, formatAdoptionFee } from "@/lib/utils/format";
@@ -52,9 +67,6 @@ interface FormState {
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 
-
-
-
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
 export default function ListingDetailPage() {
@@ -67,7 +79,9 @@ export default function ListingDetailPage() {
   const [fetchError, setFetchError] = useState("");
   const [applied, setApplied] = useState(false);
   const [existingStatus, setExistingStatus] = useState<ApplicationStatusId | null>(null);
-  const [ownerContact, setOwnerContact] = useState<{ name: string | null; email: string } | null>(null);
+  const [ownerContact, setOwnerContact] = useState<{ name: string | null; email: string } | null>(
+    null,
+  );
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -77,24 +91,41 @@ export default function ListingDetailPage() {
     setLoading(true);
     setFetchError("");
     Promise.all([
-      fetch(`/api/adoptions/${listingId}`).then((r) => { if (!r.ok) throw new Error(); return r.json(); }),
-      fetch("/api/adoptions?applied=1").then((r) => r.json()).catch(() => ({ data: [] })),
-    ]).then(([listingRes, appsRes]) => {
-      setListing(listingRes.data ?? null);
-      const apps: { listingId: string; applicationStatus: ApplicationStatusId; ownerName: string | null; ownerEmail: string }[] = appsRes.data ?? [];
-      const match = apps.find((a) => a.listingId === listingId);
-      if (match) {
-        setExistingStatus(match.applicationStatus);
-        if (match.applicationStatus === "approved") {
-          setOwnerContact({ name: match.ownerName, email: match.ownerEmail });
+      fetch(`/api/adoptions/${listingId}`).then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      }),
+      fetch("/api/adoptions?applied=1")
+        .then((r) => r.json())
+        .catch(() => ({ data: [] })),
+    ])
+      .then(([listingRes, appsRes]) => {
+        setListing(listingRes.data ?? null);
+        const apps: {
+          listingId: string;
+          applicationStatus: ApplicationStatusId;
+          ownerName: string | null;
+          ownerEmail: string;
+        }[] = appsRes.data ?? [];
+        const match = apps.find((a) => a.listingId === listingId);
+        if (match) {
+          setExistingStatus(match.applicationStatus);
+          if (match.applicationStatus === "approved") {
+            setOwnerContact({ name: match.ownerName, email: match.ownerEmail });
+          }
         }
-      }
-      setLoading(false);
-    }).catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadListing(); }, [listingId]);
+  useEffect(() => {
+    loadListing();
+  }, [listingId]);
 
   async function handleApply(e: React.FormEvent) {
     e.preventDefault();
@@ -113,7 +144,10 @@ export default function ListingDetailPage() {
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? t("listingSubmitFailed")); return; }
+    if (!data.success) {
+      setError(data.error ?? t("listingSubmitFailed"));
+      return;
+    }
     setApplied(true);
     setShowForm(false);
   }
@@ -131,7 +165,9 @@ export default function ListingDetailPage() {
     return (
       <div className="card py-12 text-center">
         <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
-        <button onClick={loadListing} className="btn-outline text-sm">{t("retry")}</button>
+        <button onClick={loadListing} className="btn-outline text-sm">
+          {t("retry")}
+        </button>
       </div>
     );
   }
@@ -140,7 +176,9 @@ export default function ListingDetailPage() {
     return (
       <div className="card py-16 text-center">
         <p className="font-medium text-[var(--ink)] mb-1">{t("listingNotFound")}</p>
-        <Link href="/portal/adopt" className="btn-primary mt-4">{t("listingBackToListings")}</Link>
+        <Link href="/portal/adopt" className="btn-primary mt-4">
+          {t("listingBackToListings")}
+        </Link>
       </div>
     );
   }
@@ -185,10 +223,14 @@ export default function ListingDetailPage() {
                 {tPub(`species_${listing.pet.species}` as Parameters<typeof tPub>[0])}
                 {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
                 {age ? ` · ${age}` : ""}
-                {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${tPub(`sex_${listing.pet.sex}` as Parameters<typeof tPub>[0])}` : ""}
+                {listing.pet.sex && listing.pet.sex !== "unknown"
+                  ? ` · ${tPub(`sex_${listing.pet.sex}` as Parameters<typeof tPub>[0])}`
+                  : ""}
               </p>
             </div>
-            <span className={`text-xs font-medium px-3 py-1 rounded-full ${LISTING_STATUS_CONFIG[listing.status as ListingStatusId].className}`}>
+            <span
+              className={`text-xs font-medium px-3 py-1 rounded-full ${LISTING_STATUS_CONFIG[listing.status as ListingStatusId].className}`}
+            >
               {t(`listingStatus_${listing.status}` as Parameters<typeof t>[0])}
             </span>
           </div>
@@ -203,7 +245,9 @@ export default function ListingDetailPage() {
             )}
             <span className="flex items-center gap-1.5">
               <DollarSign className="w-4 h-4 flex-shrink-0" />
-              {listing.feeCents ? t("listingAdoptionFee", { price: formatAdoptionFee(listing.feeCents) }) : t("adoptFree")}
+              {listing.feeCents
+                ? t("listingAdoptionFee", { price: formatAdoptionFee(listing.feeCents) })
+                : t("adoptFree")}
             </span>
           </div>
 
@@ -213,13 +257,16 @@ export default function ListingDetailPage() {
               {LISTING_TRAIT_CONFIG.map((trait) => {
                 if (!listing[trait.field]) return null;
                 const icon: Record<ListingTraitKey, React.ReactNode> = {
-                  goodWithKids:       <Baby className="w-3.5 h-3.5" />,
-                  goodWithDogs:       <Dog className="w-3.5 h-3.5" />,
-                  goodWithCats:       <Cat className="w-3.5 h-3.5" />,
+                  goodWithKids: <Baby className="w-3.5 h-3.5" />,
+                  goodWithDogs: <Dog className="w-3.5 h-3.5" />,
+                  goodWithCats: <Cat className="w-3.5 h-3.5" />,
                   requiresExperience: <Star className="w-3.5 h-3.5" />,
                 };
                 return (
-                  <span key={trait.field} className={`inline-flex items-center gap-1.5 text-xs font-medium ${trait.className} px-3 py-1 rounded-full`}>
+                  <span
+                    key={trait.field}
+                    className={`inline-flex items-center gap-1.5 text-xs font-medium ${trait.className} px-3 py-1 rounded-full`}
+                  >
                     {icon[trait.field]} {tPub(`trait_${trait.field}` as Parameters<typeof tPub>[0])}
                   </span>
                 );
@@ -255,37 +302,43 @@ export default function ListingDetailPage() {
           <p className="text-sm text-[var(--muted)]">{t("listingOwnerWillReview")}</p>
         </div>
       ) : existingStatus ? (
-        <div className={`card p-6 border-2 ${
-          existingStatus === "approved"
-            ? "border-[var(--green)]"
-            : existingStatus === "rejected"
-            ? "border-[var(--border)]"
-            : "border-[var(--warn-bg)]"
-        }`}>
+        <div
+          className={`card p-6 border-2 ${
+            existingStatus === "approved"
+              ? "border-[var(--green)]"
+              : existingStatus === "rejected"
+                ? "border-[var(--border)]"
+                : "border-[var(--warn-bg)]"
+          }`}
+        >
           <div className="flex items-center gap-3 mb-3">
-            <span className={`text-xs font-semibold px-3 py-1 rounded-full ${APPLICATION_STATUS_CONFIG[existingStatus].className}`}>
+            <span
+              className={`text-xs font-semibold px-3 py-1 rounded-full ${APPLICATION_STATUS_CONFIG[existingStatus].className}`}
+            >
               {t(`appStatus_${existingStatus}` as Parameters<typeof t>[0])}
             </span>
             <p className="text-sm font-medium text-[var(--ink)]">
               {existingStatus === "approved"
                 ? t("listingStatusApproved", { name: listing.pet.name })
                 : existingStatus === "rejected"
-                ? t("listingStatusRejected")
-                : existingStatus === "withdrawn"
-                ? t("listingStatusWithdrawn")
-                : t("listingStatusPending", { name: listing.pet.name })}
+                  ? t("listingStatusRejected")
+                  : existingStatus === "withdrawn"
+                    ? t("listingStatusWithdrawn")
+                    : t("listingStatusPending", { name: listing.pet.name })}
             </p>
           </div>
           <p className="text-sm text-[var(--muted)]">
             {existingStatus === "approved"
               ? t("listingStatusApprovedDesc")
               : existingStatus === "pending"
-              ? t("listingOwnerWillReview")
-              : t("listingStatusOtherDesc")}
+                ? t("listingOwnerWillReview")
+                : t("listingStatusOtherDesc")}
           </p>
           {existingStatus === "approved" && ownerContact && (
             <div className="mt-4 pt-4 border-t border-[var(--border)]">
-              <p className="text-xs font-medium text-[var(--ink2)] mb-2">{t("listingApprovedContactPrompt")}</p>
+              <p className="text-xs font-medium text-[var(--ink2)] mb-2">
+                {t("listingApprovedContactPrompt")}
+              </p>
               <a
                 href={`mailto:${ownerContact.email}`}
                 className="inline-flex items-center gap-2 text-sm font-medium text-[var(--teal)] hover:text-[var(--teal-dark)] no-underline"
@@ -298,7 +351,10 @@ export default function ListingDetailPage() {
               </a>
             </div>
           )}
-          <Link href="/portal/adopt" className="text-sm text-[var(--teal)] hover:underline mt-3 inline-block no-underline">
+          <Link
+            href="/portal/adopt"
+            className="text-sm text-[var(--teal)] hover:underline mt-3 inline-block no-underline"
+          >
             {t("listingBrowseOther")}
           </Link>
         </div>
@@ -309,7 +365,9 @@ export default function ListingDetailPage() {
               <div className="icon-tile bg-[var(--teal-light)]">
                 <Heart className="w-4 h-4 text-[var(--teal)]" />
               </div>
-              <h2 className="font-semibold text-[var(--ink)]">{t("listingApplyTitle", { name: listing.pet.name })}</h2>
+              <h2 className="font-semibold text-[var(--ink)]">
+                {t("listingApplyTitle", { name: listing.pet.name })}
+              </h2>
             </div>
 
             {error && <p className="alert-error mb-4">{error}</p>}
@@ -317,7 +375,8 @@ export default function ListingDetailPage() {
             <form onSubmit={handleApply} className="space-y-4">
               <div>
                 <label className="form-label">
-                  {t("listingHousingType")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
+                  {t("listingHousingType")}{" "}
+                  <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
                 </label>
                 <select
                   className="form-input"
@@ -326,7 +385,9 @@ export default function ListingDetailPage() {
                 >
                   <option value="">{t("listingSelectHousingType")}</option>
                   {HOUSING_TYPE_OPTIONS.map(({ value }) => (
-                    <option key={value} value={value}>{t(`housingType_${value}` as Parameters<typeof t>[0])}</option>
+                    <option key={value} value={value}>
+                      {t(`housingType_${value}` as Parameters<typeof t>[0])}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -358,8 +419,16 @@ export default function ListingDetailPage() {
               </div>
 
               <div className="flex gap-3 pt-1">
-                <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2 disabled:opacity-60">
-                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="btn-primary flex items-center gap-2 disabled:opacity-60"
+                >
+                  {saving ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
                   {saving ? t("listingSubmitting") : t("listingSubmitApplication")}
                 </button>
                 <button type="button" onClick={() => setShowForm(false)} className="btn-outline">

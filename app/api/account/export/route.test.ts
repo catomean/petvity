@@ -49,22 +49,27 @@ describe("GET /api/account/export", () => {
     // 11. listed products, 12. adoption listings, 13. applications,
     // 14. order items
     const userRow = {
-      id: USER_ID, name: "Owner", email: "owner@example.com", role: "pet_owner",
-      locale: "en", digestOptOut: false, createdAt: new Date(),
+      id: USER_ID,
+      name: "Owner",
+      email: "owner@example.com",
+      role: "pet_owner",
+      locale: "en",
+      digestOptOut: false,
+      createdAt: new Date(),
     };
     db._queueSelectResult([userRow]);
     db._queueSelectResult([{ id: PET_ID, ownerId: USER_ID, name: "Luna" }]); // pets
     db._queueSelectResult([{ id: "m1", petId: PET_ID, weightGrams: 4500 }]); // metrics
-    db._queueSelectResult([]);                                               // records
-    db._queueSelectResult([]);                                               // vaccinations
-    db._queueSelectResult([]);                                               // medications
-    db._queueSelectResult([]);                                               // signalHistory
-    db._queueSelectResult([]);                                               // bookings
-    db._queueSelectResult([]);                                               // reviews
+    db._queueSelectResult([]); // records
+    db._queueSelectResult([]); // vaccinations
+    db._queueSelectResult([]); // medications
+    db._queueSelectResult([]); // signalHistory
+    db._queueSelectResult([]); // bookings
+    db._queueSelectResult([]); // reviews
     db._queueSelectResult([{ id: "o1", userId: USER_ID, totalCents: 1000 }]); // orders
-    db._queueSelectResult([]);                                               // products listed
-    db._queueSelectResult([]);                                               // adoption listings
-    db._queueSelectResult([]);                                               // applications
+    db._queueSelectResult([]); // products listed
+    db._queueSelectResult([]); // adoption listings
+    db._queueSelectResult([]); // applications
     db._queueSelectResult([{ id: "i1", orderId: "o1", productId: "p1", quantity: 1 }]); // order items
 
     const res = await GET();
@@ -84,15 +89,24 @@ describe("GET /api/account/export", () => {
 
   it("never includes the password hash in the account section", async () => {
     const userRow = {
-      id: USER_ID, name: "Owner", email: "owner@example.com", role: "pet_owner",
-      locale: null, digestOptOut: false, createdAt: new Date(),
+      id: USER_ID,
+      name: "Owner",
+      email: "owner@example.com",
+      role: "pet_owner",
+      locale: null,
+      digestOptOut: false,
+      createdAt: new Date(),
     };
     db._queueSelectResult([userRow]);
     // No pets — skip the dependent queries (route checks petIds.length and uses [] inline)
     db._queueSelectResult([]); // pets
     // The remaining 6 unconditional queries (bookings, reviews, orders, products, listings, applications)
-    db._queueSelectResult([]); db._queueSelectResult([]); db._queueSelectResult([]);
-    db._queueSelectResult([]); db._queueSelectResult([]); db._queueSelectResult([]);
+    db._queueSelectResult([]);
+    db._queueSelectResult([]);
+    db._queueSelectResult([]);
+    db._queueSelectResult([]);
+    db._queueSelectResult([]);
+    db._queueSelectResult([]);
 
     const res = await GET();
     const body = await res.json();

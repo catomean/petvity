@@ -34,27 +34,24 @@ describe("generateResidentCheckin", () => {
   it.each([
     ["cat", cat],
     ["dog", dog],
-  ] as const)(
-    "stays inside %s physical normal ranges across a full year",
-    (species, profile) => {
-      const weight = getNormalRange("weight", species);
-      const temp = getNormalRange("temperature", species);
-      const hr = getNormalRange("heart_rate", species);
-      for (const date of datesOfYear(2026)) {
-        const c = generateResidentCheckin(date, profile);
-        expect(c.weightGrams).toBeGreaterThanOrEqual(weight.min);
-        expect(c.weightGrams).toBeLessThanOrEqual(weight.max);
-        expect(c.temperatureCentidegrees).toBeGreaterThanOrEqual(temp.min);
-        expect(c.temperatureCentidegrees).toBeLessThanOrEqual(temp.max);
-        expect(c.heartRateBpm).toBeGreaterThanOrEqual(hr.min);
-        expect(c.heartRateBpm).toBeLessThanOrEqual(hr.max);
-        for (const k of ["energy", "mood", "anxiety", "socialization"] as const) {
-          expect(c[k]).toBeGreaterThanOrEqual(1);
-          expect(c[k]).toBeLessThanOrEqual(5);
-        }
+  ] as const)("stays inside %s physical normal ranges across a full year", (species, profile) => {
+    const weight = getNormalRange("weight", species);
+    const temp = getNormalRange("temperature", species);
+    const hr = getNormalRange("heart_rate", species);
+    for (const date of datesOfYear(2026)) {
+      const c = generateResidentCheckin(date, profile);
+      expect(c.weightGrams).toBeGreaterThanOrEqual(weight.min);
+      expect(c.weightGrams).toBeLessThanOrEqual(weight.max);
+      expect(c.temperatureCentidegrees).toBeGreaterThanOrEqual(temp.min);
+      expect(c.temperatureCentidegrees).toBeLessThanOrEqual(temp.max);
+      expect(c.heartRateBpm).toBeGreaterThanOrEqual(hr.min);
+      expect(c.heartRateBpm).toBeLessThanOrEqual(hr.max);
+      for (const k of ["energy", "mood", "anxiety", "socialization"] as const) {
+        expect(c[k]).toBeGreaterThanOrEqual(1);
+        expect(c[k]).toBeLessThanOrEqual(5);
       }
-    },
-  );
+    }
+  });
 
   it.each([
     ["cat", cat],

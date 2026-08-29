@@ -21,9 +21,7 @@ describe("parseBlogBody", () => {
   });
 
   it("reads a subheading", () => {
-    expect(parseBlogBody("## Why it matters")).toEqual([
-      { type: "h2", text: "Why it matters" },
-    ]);
+    expect(parseBlogBody("## Why it matters")).toEqual([{ type: "h2", text: "Why it matters" }]);
   });
 
   it("groups consecutive dashes into one list", () => {
@@ -55,8 +53,8 @@ describe("parseBlogBody", () => {
   // Untrusted text must never become markup — this is the whole reason the
   // parser emits a closed set of blocks instead of HTML.
   it("keeps HTML as literal paragraph text", () => {
-    expect(parseBlogBody('<script>alert(1)</script>')).toEqual([
-      { type: "p", text: '<script>alert(1)</script>' },
+    expect(parseBlogBody("<script>alert(1)</script>")).toEqual([
+      { type: "p", text: "<script>alert(1)</script>" },
     ]);
   });
 

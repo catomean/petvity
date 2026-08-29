@@ -44,7 +44,13 @@ export async function generateMetadata({ params }: Pick<Props, "params">): Promi
   const t = await getTranslations({ locale, namespace: "public" });
   const title = t("shopMetaTitle", { app: APP.name });
   const description = t("shopMetaDesc", { app: APP.name });
-  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description }, alternates: buildAlternates("/shop") };
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { card: "summary", title, description },
+    alternates: buildAlternates("/shop"),
+  };
 }
 
 export default async function PublicShopPage({ params, searchParams }: Props) {
@@ -80,9 +86,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
     // Name or description — a shopper searching "harness" should find one
     // whose name is a brand they don't know.
     const like = `%${query}%`;
-    conditions.push(
-      or(ilike(products.name, like), ilike(products.description, like)) as SQL,
-    );
+    conditions.push(or(ilike(products.name, like), ilike(products.description, like)) as SQL);
   }
 
   const db = getInstance();
@@ -117,9 +121,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
             {t("shopHeroTitle")}
           </h1>
-          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-3">
-            {t("shopHeroDesc")}
-          </p>
+          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-3">{t("shopHeroDesc")}</p>
           {/* No sign-up CTA: the products below are the call to action now. */}
           <p className="text-sm text-[var(--teal)] font-medium">{t("shopNoAccountNeeded")}</p>
         </div>
@@ -203,7 +205,9 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
               {query
                 ? t("shopEmptySearch", { query })
                 : activeCategory
-                  ? t("shopEmptyCategory", { category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]).toLowerCase() })
+                  ? t("shopEmptyCategory", {
+                      category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]).toLowerCase(),
+                    })
                   : t("shopEmptyAny")}
             </p>
             {/* A search that found nothing needs a way back to everything,
@@ -222,12 +226,13 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
           <>
             <p className="text-sm text-[var(--muted)] mb-5">
               {t("shopCount", { count: rows.length })}
-              {activeCategory ? ` ${t("shopInCategory", { category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]) })}` : ""}
+              {activeCategory
+                ? ` ${t("shopInCategory", { category: t(`cat_${activeCategory}` as Parameters<typeof t>[0]) })}`
+                : ""}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {rows.map((product) => {
-                const catCfg =
-                  PRODUCT_CATEGORY_CONFIG[product.category as ProductCategoryId];
+                const catCfg = PRODUCT_CATEGORY_CONFIG[product.category as ProductCategoryId];
                 return (
                   /* A card, not a link: the buy button lives inside it, and a
                      button nested in an anchor is neither valid nor clickable
@@ -261,8 +266,12 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
                           </p>
                         )}
                         <p className="text-xs text-[var(--muted)] mt-1.5">
-                          {catCfg ? t(`cat_${product.category}` as Parameters<typeof t>[0]) : product.category}
-                          {product.sellerName ? ` · ${t("shopSoldBy", { seller: product.sellerName })}` : ""}
+                          {catCfg
+                            ? t(`cat_${product.category}` as Parameters<typeof t>[0])
+                            : product.category}
+                          {product.sellerName
+                            ? ` · ${t("shopSoldBy", { seller: product.sellerName })}`
+                            : ""}
                         </p>
                       </div>
                     </Link>

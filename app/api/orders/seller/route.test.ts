@@ -49,20 +49,52 @@ describe("GET /api/orders/seller", () => {
   it("groups items by order and computes per-seller subtotal", async () => {
     // Three items across two orders, all belong to this seller
     const sellerItems = [
-      { id: "i1", orderId: ORDER_A, productId: "p1", quantity: 2, priceCents: 1000, productName: "Treats", productImageUrl: null },
-      { id: "i2", orderId: ORDER_A, productId: "p2", quantity: 1, priceCents: 2500, productName: "Toy",    productImageUrl: null },
-      { id: "i3", orderId: ORDER_B, productId: "p1", quantity: 3, priceCents: 1000, productName: "Treats", productImageUrl: null },
+      {
+        id: "i1",
+        orderId: ORDER_A,
+        productId: "p1",
+        quantity: 2,
+        priceCents: 1000,
+        productName: "Treats",
+        productImageUrl: null,
+      },
+      {
+        id: "i2",
+        orderId: ORDER_A,
+        productId: "p2",
+        quantity: 1,
+        priceCents: 2500,
+        productName: "Toy",
+        productImageUrl: null,
+      },
+      {
+        id: "i3",
+        orderId: ORDER_B,
+        productId: "p1",
+        quantity: 3,
+        priceCents: 1000,
+        productName: "Treats",
+        productImageUrl: null,
+      },
     ];
     const orderRows = [
       {
-        id: ORDER_A, status: "pending", totalCents: 5000, notes: null,
+        id: ORDER_A,
+        status: "pending",
+        totalCents: 5000,
+        notes: null,
         createdAt: new Date("2026-04-01T10:00:00Z"),
-        buyerName: "Bob", buyerEmail: "bob@example.com",
+        buyerName: "Bob",
+        buyerEmail: "bob@example.com",
       },
       {
-        id: ORDER_B, status: "shipped", totalCents: 3000, notes: "ship fast",
+        id: ORDER_B,
+        status: "shipped",
+        totalCents: 3000,
+        notes: "ship fast",
         createdAt: new Date("2026-04-02T10:00:00Z"),
-        buyerName: null, buyerEmail: "carol@example.com",
+        buyerName: null,
+        buyerEmail: "carol@example.com",
       },
     ];
     db._queueSelectResult(sellerItems);
@@ -91,13 +123,25 @@ describe("GET /api/orders/seller", () => {
   it("subtotal is the seller's items only — never the order's overall total", async () => {
     // Buyer placed an order totaling $100 but only $25 is for this seller
     const sellerItems = [
-      { id: "i1", orderId: ORDER_A, productId: "p1", quantity: 1, priceCents: 2500, productName: "Toy", productImageUrl: null },
+      {
+        id: "i1",
+        orderId: ORDER_A,
+        productId: "p1",
+        quantity: 1,
+        priceCents: 2500,
+        productName: "Toy",
+        productImageUrl: null,
+      },
     ];
     const orderRows = [
       {
-        id: ORDER_A, status: "pending", totalCents: 10000, notes: null,
+        id: ORDER_A,
+        status: "pending",
+        totalCents: 10000,
+        notes: null,
         createdAt: new Date("2026-04-01T10:00:00Z"),
-        buyerName: "Bob", buyerEmail: "bob@example.com",
+        buyerName: "Bob",
+        buyerEmail: "bob@example.com",
       },
     ];
     db._queueSelectResult(sellerItems);

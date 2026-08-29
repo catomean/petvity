@@ -17,7 +17,7 @@ import { getInstance } from "@/lib/db";
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
 const LISTING_ID = "00000000-0000-4000-8000-000000000099";
-const APP_ID     = "00000000-0000-4000-8000-000000000088";
+const APP_ID = "00000000-0000-4000-8000-000000000088";
 
 const APPLICANT_SESSION = {
   user: { id: "applicant-1", role: "pet_owner", email: "applicant@example.com", name: "Alice" },
@@ -30,11 +30,17 @@ const OWNER_SESSION = {
 };
 
 const MOCK_LISTING_AVAILABLE = {
-  id: LISTING_ID, ownerId: "owner-1", status: "available", petId: "pet-1",
+  id: LISTING_ID,
+  ownerId: "owner-1",
+  status: "available",
+  petId: "pet-1",
 };
 
 const MOCK_LISTING_ON_HOLD = {
-  id: LISTING_ID, ownerId: "owner-1", status: "on_hold", petId: "pet-1",
+  id: LISTING_ID,
+  ownerId: "owner-1",
+  status: "on_hold",
+  petId: "pet-1",
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ listingId: LISTING_ID }) };
@@ -100,8 +106,8 @@ describe("POST /api/adoptions/[listingId]/apply", () => {
   });
 
   it("returns 409 when applicant has already applied (one-per-user guard)", async () => {
-    db._queueSelectResult([MOCK_LISTING_AVAILABLE]);       // listing found
-    db._queueSelectResult([{ id: APP_ID }]);               // existing application found
+    db._queueSelectResult([MOCK_LISTING_AVAILABLE]); // listing found
+    db._queueSelectResult([{ id: APP_ID }]); // existing application found
     const res = await POST(makePostRequest(VALID_BODY), ROUTE_CONTEXT);
     expect(res.status).toBe(409);
     const body = await res.json();
@@ -110,15 +116,20 @@ describe("POST /api/adoptions/[listingId]/apply", () => {
 
   it("returns 201 when a new application is submitted successfully", async () => {
     db._queueSelectResult([MOCK_LISTING_AVAILABLE]); // listing found
-    db._queueSelectResult([]);                        // no existing application
+    db._queueSelectResult([]); // no existing application
     const mockApplication = {
-      id: APP_ID, listingId: LISTING_ID, applicantId: "applicant-1", status: "pending",
-      message: VALID_BODY.message, experience: VALID_BODY.experience, housingType: VALID_BODY.housingType,
+      id: APP_ID,
+      listingId: LISTING_ID,
+      applicantId: "applicant-1",
+      status: "pending",
+      message: VALID_BODY.message,
+      experience: VALID_BODY.experience,
+      housingType: VALID_BODY.housingType,
     };
     db._insertReturning.mockResolvedValueOnce([mockApplication]);
     // fire-and-forget email lookups
     db._queueSelectResult([{ name: "Owner", email: "owner@example.com" }]); // owner
-    db._queueSelectResult([{ name: "Buddy" }]);                              // pet
+    db._queueSelectResult([{ name: "Buddy" }]); // pet
 
     const res = await POST(makePostRequest(VALID_BODY), ROUTE_CONTEXT);
     expect(res.status).toBe(201);

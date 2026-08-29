@@ -26,19 +26,68 @@ export default async function AdminOverviewPage() {
     db.select({ totalPets: count() }).from(pets),
     db.select({ pendingOrders: count() }).from(orders).where(eq(orders.status, "pending")),
     db.select({ totalOrders: count() }).from(orders).where(ne(orders.status, "cancelled")),
-    db.select({ revenue: sum(orders.totalCents) }).from(orders).where(ne(orders.status, "cancelled")),
-    db.select({ activeListings: count() }).from(adoptionListings).where(eq(adoptionListings.status, "available")),
+    db
+      .select({ revenue: sum(orders.totalCents) })
+      .from(orders)
+      .where(ne(orders.status, "cancelled")),
+    db
+      .select({ activeListings: count() })
+      .from(adoptionListings)
+      .where(eq(adoptionListings.status, "available")),
   ]);
 
   const revenueFormatted = formatPrice(revenue ? Number(revenue) : 0);
 
   const stats = [
-    { label: "Total users",        value: totalUsers,        icon: Users,       href: "/admin/users",     color: "text-[var(--teal)]",    bg: "bg-[var(--teal-light)]" },
-    { label: "Total pets",         value: totalPets,         icon: PawPrint,    href: "/admin/users",     color: "text-[var(--teal)]",    bg: "bg-[var(--teal-light)]" },
-    { label: "Active adoptions",   value: activeListings,    icon: Heart,       href: "/admin/adoptions", color: "text-[var(--accent)]",  bg: "bg-[var(--accent-light)]" },
-    { label: "Pending orders",     value: pendingOrders,     icon: ShoppingBag, href: "/admin/orders",    color: "text-[var(--warn-text)]",    bg: "bg-[var(--warn-bg)]", urgent: pendingOrders > 0 },
-    { label: "Total orders",       value: totalOrders,       icon: Package,     href: "/admin/orders",    color: "text-[var(--ink2)]",    bg: "bg-[var(--off)]" },
-    { label: "Revenue",            value: revenueFormatted,  icon: TrendingUp,  href: "/admin/orders",    color: "text-[var(--green-text)]",   bg: "bg-[var(--green-bg)]" },
+    {
+      label: "Total users",
+      value: totalUsers,
+      icon: Users,
+      href: "/admin/users",
+      color: "text-[var(--teal)]",
+      bg: "bg-[var(--teal-light)]",
+    },
+    {
+      label: "Total pets",
+      value: totalPets,
+      icon: PawPrint,
+      href: "/admin/users",
+      color: "text-[var(--teal)]",
+      bg: "bg-[var(--teal-light)]",
+    },
+    {
+      label: "Active adoptions",
+      value: activeListings,
+      icon: Heart,
+      href: "/admin/adoptions",
+      color: "text-[var(--accent)]",
+      bg: "bg-[var(--accent-light)]",
+    },
+    {
+      label: "Pending orders",
+      value: pendingOrders,
+      icon: ShoppingBag,
+      href: "/admin/orders",
+      color: "text-[var(--warn-text)]",
+      bg: "bg-[var(--warn-bg)]",
+      urgent: pendingOrders > 0,
+    },
+    {
+      label: "Total orders",
+      value: totalOrders,
+      icon: Package,
+      href: "/admin/orders",
+      color: "text-[var(--ink2)]",
+      bg: "bg-[var(--off)]",
+    },
+    {
+      label: "Revenue",
+      value: revenueFormatted,
+      icon: TrendingUp,
+      href: "/admin/orders",
+      color: "text-[var(--green-text)]",
+      bg: "bg-[var(--green-bg)]",
+    },
   ];
 
   return (
@@ -59,7 +108,9 @@ export default async function AdminOverviewPage() {
               <Icon className={`w-5 h-5 ${color}`} />
             </div>
             <p className={`text-2xl font-bold ${color}`}>{value}</p>
-            <p className="text-xs text-[var(--muted)] mt-0.5 group-hover:text-[var(--ink2)] transition-colors">{label}</p>
+            <p className="text-xs text-[var(--muted)] mt-0.5 group-hover:text-[var(--ink2)] transition-colors">
+              {label}
+            </p>
           </Link>
         ))}
       </div>
@@ -69,9 +120,9 @@ export default async function AdminOverviewPage() {
           <h2 className="font-semibold text-[var(--ink)] mb-4">Quick links</h2>
           <div className="space-y-2">
             {[
-              { href: "/admin/users",     label: "Manage users & roles" },
-              { href: "/admin/products",  label: "Manage products & stock" },
-              { href: "/admin/orders",    label: "Fulfil orders" },
+              { href: "/admin/users", label: "Manage users & roles" },
+              { href: "/admin/products", label: "Manage products & stock" },
+              { href: "/admin/orders", label: "Fulfil orders" },
               { href: "/admin/adoptions", label: "Moderate adoption listings" },
             ].map(({ href, label }) => (
               <Link

@@ -24,7 +24,10 @@ export default async function ProfessionalProfilePage() {
     });
     return (
       <>
-        <ProfileReadiness kind="veterinarian" profile={(profile ?? {}) as Record<string, unknown>} />
+        <ProfileReadiness
+          kind="veterinarian"
+          profile={(profile ?? {}) as Record<string, unknown>}
+        />
         <ProfessionalProfileForm role="veterinarian" initialData={profile ?? null} />
         <AvailabilityManager />
       </>
@@ -50,7 +53,7 @@ export default async function ProfessionalProfilePage() {
   return (
     <>
       <ProfileReadiness kind="pet_sitter" profile={(profile ?? {}) as Record<string, unknown>} />
-        <ProfessionalProfileForm role="pet_sitter" initialData={profile ?? null} />
+      <ProfessionalProfileForm role="pet_sitter" initialData={profile ?? null} />
       <AvailabilityManager />
     </>
   );

@@ -4,12 +4,12 @@
  */
 
 export const PRODUCT_CATEGORY_CONFIG = {
-  food:        { label: "Food",        emoji: "🍖" },
-  toys:        { label: "Toys",        emoji: "🎾" },
-  health:      { label: "Health",      emoji: "💊" },
+  food: { label: "Food", emoji: "🍖" },
+  toys: { label: "Toys", emoji: "🎾" },
+  health: { label: "Health", emoji: "💊" },
   accessories: { label: "Accessories", emoji: "🎀" },
-  grooming:    { label: "Grooming",    emoji: "✂️" },
-  other:       { label: "Other",       emoji: "📦" },
+  grooming: { label: "Grooming", emoji: "✂️" },
+  other: { label: "Other", emoji: "📦" },
 } as const;
 
 export type ProductCategoryId = keyof typeof PRODUCT_CATEGORY_CONFIG;

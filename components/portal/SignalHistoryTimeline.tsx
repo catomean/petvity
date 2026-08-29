@@ -14,7 +14,13 @@ type HistoryRow = {
   recordedAt: Date;
 };
 
-export async function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow[]; locale?: string }) {
+export async function SignalHistoryTimeline({
+  rows,
+  locale,
+}: {
+  rows: HistoryRow[];
+  locale?: string;
+}) {
   if (rows.length === 0) return null;
 
   const loc = locale ?? "en";
@@ -33,15 +39,17 @@ export async function SignalHistoryTimeline({ rows, locale }: { rows: HistoryRow
           return (
             <li key={row.id} className="ms-5">
               {/* Timeline dot — color matches signal level */}
-              <span className={`absolute -start-[7px] w-3.5 h-3.5 rounded-full border-2 border-white ${SIGNAL_STRIP_CLASSES[sig]}`} />
+              <span
+                className={`absolute -start-[7px] w-3.5 h-3.5 rounded-full border-2 border-white ${SIGNAL_STRIP_CLASSES[sig]}`}
+              />
 
               <div className="flex items-center gap-2 flex-wrap">
-                <span className={SIGNAL_BG_CLASSES[sig]}>
-                  {tSignal(sig)}
-                </span>
+                <span className={SIGNAL_BG_CLASSES[sig]}>{tSignal(sig)}</span>
                 <span className="text-xs text-[var(--muted)]">{date}</span>
                 {row.source === "cron" && (
-                  <span className="text-xs text-[var(--faint)] italic">{t("signalSourceCron")}</span>
+                  <span className="text-xs text-[var(--faint)] italic">
+                    {t("signalSourceCron")}
+                  </span>
                 )}
               </div>
 

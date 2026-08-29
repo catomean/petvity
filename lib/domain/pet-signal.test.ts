@@ -7,12 +7,12 @@ const YESTERDAY = "2026-01-14";
 
 const normalDogRow: HealthMetricRow = {
   date: TODAY,
-  weightGrams: 25000,           // 25 kg — normal for a medium dog
+  weightGrams: 25000, // 25 kg — normal for a medium dog
   temperatureCentidegrees: 3850, // 38.5°C — normal
-  heartRateBpm: 80,             // normal
+  heartRateBpm: 80, // normal
   energy: 4,
   mood: 4,
-  anxiety: 1,                   // calm = good
+  anxiety: 1, // calm = good
   socialization: 4,
 };
 
@@ -101,7 +101,7 @@ describe("computePetSignal", () => {
   it("returns concern with two or more out-of-range metrics", () => {
     const row: HealthMetricRow = {
       ...normalDogRow,
-      heartRateBpm: 200,           // out of range
+      heartRateBpm: 200, // out of range
       temperatureCentidegrees: 4100, // fever
     };
     const result = computePetSignal({

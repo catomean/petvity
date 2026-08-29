@@ -13,15 +13,17 @@ import { requireSession } from "@/lib/auth/guards";
 import { isDemoEmail } from "@/lib/config/demo";
 import { makeUnsubscribeUrl } from "@/lib/auth/unsubscribe-token";
 
-const updateAccountSchema = z.object({
-  name: z.string().min(1).max(100).optional(),
-  currentPassword: z.string().optional(),
-  newPassword: z.string().min(PASSWORD_MIN_LENGTH).optional(),
-  digestOptOut: z.boolean().optional(),
-}).refine(
-  (d) => !(d.newPassword && !d.currentPassword),
-  { message: "Current password is required to set a new password", path: ["currentPassword"] },
-);
+const updateAccountSchema = z
+  .object({
+    name: z.string().min(1).max(100).optional(),
+    currentPassword: z.string().optional(),
+    newPassword: z.string().min(PASSWORD_MIN_LENGTH).optional(),
+    digestOptOut: z.boolean().optional(),
+  })
+  .refine((d) => !(d.newPassword && !d.currentPassword), {
+    message: "Current password is required to set a new password",
+    path: ["currentPassword"],
+  });
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,8 +38,10 @@ export async function POST(req: NextRequest) {
 
     const { name: rawName, email, password, intendedRole } = parsed.data;
     // Derive a display name from the email prefix if not provided
-    const name = rawName?.trim() ||
-      email.split("@")[0]
+    const name =
+      rawName?.trim() ||
+      email
+        .split("@")[0]
         .replace(/[._-]+/g, " ")
         .replace(/\b\w/g, (c) => c.toUpperCase());
 
@@ -72,10 +76,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: { id: user.id } }, { status: 201 });
   } catch {
-    return NextResponse.json(
-      { success: false, error: "Registration failed" },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false, error: "Registration failed" }, { status: 500 });
   }
 }
 

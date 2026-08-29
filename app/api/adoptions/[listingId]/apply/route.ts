@@ -105,14 +105,17 @@ export async function POST(req: NextRequest, { params }: Params) {
       .limit(1);
 
     if (owner?.email) {
-      const tpl = adoptionApplicationReceived({
-        ownerName: owner.name ?? owner.email,
-        petName: pet?.name ?? "your pet",
-        applicantName: session.user.name ?? session.user.email ?? "Someone",
-        message: parsed.data.message ?? null,
-        experience: parsed.data.experience ?? null,
-        housingType: parsed.data.housingType ?? null,
-      }, owner.locale);
+      const tpl = adoptionApplicationReceived(
+        {
+          ownerName: owner.name ?? owner.email,
+          petName: pet?.name ?? "your pet",
+          applicantName: session.user.name ?? session.user.email ?? "Someone",
+          message: parsed.data.message ?? null,
+          experience: parsed.data.experience ?? null,
+          housingType: parsed.data.housingType ?? null,
+        },
+        owner.locale,
+      );
       await sendEmail({ to: owner.email, ...tpl });
     }
   } catch {

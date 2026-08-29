@@ -2,10 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import {
-  Activity, Search, ShoppingBag, Heart,
-  PawPrint, Menu, X, ChevronDown,
-} from "lucide-react";
+import { Activity, Search, ShoppingBag, Heart, PawPrint, Menu, X, ChevronDown } from "lucide-react";
 import { APP } from "@/lib/config/app";
 import { SPECIES_CONFIG, SPECIES_OPTIONS } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
@@ -40,7 +37,10 @@ export default function MarketingNav() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") { setPlatformOpen(false); setMenuOpen(false); }
+      if (e.key === "Escape") {
+        setPlatformOpen(false);
+        setMenuOpen(false);
+      }
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -58,10 +58,10 @@ export default function MarketingNav() {
 
   // The four platform pillars — each links to its real surface.
   const PILLARS = [
-    { icon: Activity,    label: t("pillarHealth"), desc: t("pillarHealthDesc"), href: "/features" },
-    { icon: Search,      label: t("pillarPros"),   desc: t("pillarProsDesc"),   href: "/find" },
-    { icon: ShoppingBag, label: t("pillarShop"),   desc: t("pillarShopDesc"),   href: "/shop" },
-    { icon: Heart,       label: t("pillarAdopt"),  desc: t("pillarAdoptDesc"),  href: "/adopt" },
+    { icon: Activity, label: t("pillarHealth"), desc: t("pillarHealthDesc"), href: "/features" },
+    { icon: Search, label: t("pillarPros"), desc: t("pillarProsDesc"), href: "/find" },
+    { icon: ShoppingBag, label: t("pillarShop"), desc: t("pillarShopDesc"), href: "/shop" },
+    { icon: Heart, label: t("pillarAdopt"), desc: t("pillarAdoptDesc"), href: "/adopt" },
   ];
 
   const GUIDES = SPECIES_OPTIONS.filter(({ value }) => value !== "other").map(({ value }) => ({
@@ -85,7 +85,9 @@ export default function MarketingNav() {
           <div className="w-8 h-8 rounded-lg bg-[var(--champagne)] flex items-center justify-center">
             <PawPrint className="w-4 h-4 text-[var(--obsidian)]" />
           </div>
-          <span className="font-semibold text-[var(--platinum)] text-lg tracking-wide">{APP.name}</span>
+          <span className="font-semibold text-[var(--platinum)] text-lg tracking-wide">
+            {APP.name}
+          </span>
         </Link>
 
         {/* Desktop nav — Platform ▾ · Pricing · Adopt */}
@@ -115,8 +117,12 @@ export default function MarketingNav() {
                         <Icon className="w-4 h-4 text-[var(--champagne)] group-hover:text-[var(--obsidian)] transition-colors" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-[var(--platinum)] leading-tight">{label}</p>
-                        <p className="text-xs text-[var(--mist-dark)] mt-0.5 leading-snug">{desc}</p>
+                        <p className="text-sm font-semibold text-[var(--platinum)] leading-tight">
+                          {label}
+                        </p>
+                        <p className="text-xs text-[var(--mist-dark)] mt-0.5 leading-snug">
+                          {desc}
+                        </p>
                       </div>
                     </Link>
                   ))}
@@ -133,7 +139,8 @@ export default function MarketingNav() {
                         onClick={() => setPlatformOpen(false)}
                         className="flex items-center gap-1.5 text-xs font-medium text-[var(--platinum-dim)] bg-white/[0.05] hover:bg-white/[0.09] hover:text-[var(--platinum)] px-3 py-1.5 rounded-full no-underline transition-colors"
                       >
-                        <span>{emoji}</span>{label}
+                        <span>{emoji}</span>
+                        {label}
                       </Link>
                     ))}
                   </div>
@@ -155,7 +162,9 @@ export default function MarketingNav() {
 
         {/* Desktop actions */}
         <div className="hidden md:flex items-center gap-3">
-          <div className="w-32"><LocaleSwitcher current={locale} tone="dark" /></div>
+          <div className="w-32">
+            <LocaleSwitcher current={locale} tone="dark" />
+          </div>
           {status === "loading" ? null : status === "authenticated" ? (
             <Link href={dashboardHref} className="btn-editorial-sm">
               {t("goToDashboard")}
@@ -224,7 +233,8 @@ export default function MarketingNav() {
                     onClick={() => setMenuOpen(false)}
                     className="flex items-center gap-1 text-sm font-medium text-[var(--platinum-dim)] bg-white/[0.05] px-3 py-1.5 rounded-full no-underline"
                   >
-                    <span>{emoji}</span>{label}
+                    <span>{emoji}</span>
+                    {label}
                   </Link>
                 ))}
               </div>

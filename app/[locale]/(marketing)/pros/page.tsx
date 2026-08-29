@@ -1,7 +1,16 @@
 import Link from "next/link";
 import {
-  Stethoscope, Heart, CheckCircle, ArrowRight, Star,
-  CalendarDays, Shield, TrendingUp, Users, Brain, Zap,
+  Stethoscope,
+  Heart,
+  CheckCircle,
+  ArrowRight,
+  Star,
+  CalendarDays,
+  Shield,
+  TrendingUp,
+  Users,
+  Brain,
+  Zap,
 } from "lucide-react";
 import type { Metadata } from "next";
 import { APP } from "@/lib/config/app";
@@ -27,11 +36,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 const VET_BENEFIT_ICONS = [Brain, TrendingUp, Shield, Star, CalendarDays, Users] as const;
 const SITTER_BENEFIT_ICONS = [Heart, TrendingUp, Shield, Star, CalendarDays, Zap] as const;
 
-const VET_BENEFIT_KEYS   = ["vb1","vb2","vb3","vb4","vb5","vb6"] as const;
-const SITTER_BENEFIT_KEYS = ["sb1","sb2","sb3","sb4","sb5","sb6"] as const;
+const VET_BENEFIT_KEYS = ["vb1", "vb2", "vb3", "vb4", "vb5", "vb6"] as const;
+const SITTER_BENEFIT_KEYS = ["sb1", "sb2", "sb3", "sb4", "sb5", "sb6"] as const;
 
-const VET_STEP_KEYS    = ["vs1","vs2","vs3"] as const;
-const SITTER_STEP_KEYS = ["ss1","ss2","ss3"] as const;
+const VET_STEP_KEYS = ["vs1", "vs2", "vs3"] as const;
+const SITTER_STEP_KEYS = ["ss1", "ss2", "ss3"] as const;
 
 export default async function ProsPage({ params }: Params) {
   const { locale } = await params;
@@ -48,9 +57,7 @@ export default async function ProsPage({ params }: Params) {
               {t("heroEyebrow")}
             </div>
 
-            <h1 className="ed-title mb-6">
-              {t("heroTitle")}
-            </h1>
+            <h1 className="ed-title mb-6">{t("heroTitle")}</h1>
 
             <p className="text-lg md:text-xl text-[var(--mist-dark)] leading-relaxed mb-9 max-w-2xl">
               {t("heroDesc")}
@@ -78,12 +85,8 @@ export default async function ProsPage({ params }: Params) {
             <div className="ed-icon w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5">
               <Stethoscope className="w-7 h-7" />
             </div>
-            <p className="ed-eyebrow mb-3">
-              {t("vetTabLabel")}
-            </p>
-            <h2 className="ed-title mb-5">
-              {t("vetHeroTitle")}
-            </h2>
+            <p className="ed-eyebrow mb-3">{t("vetTabLabel")}</p>
+            <h2 className="ed-title mb-5">{t("vetHeroTitle")}</h2>
             <p className="text-lg text-[var(--mist-dark)] max-w-xl mx-auto leading-relaxed">
               {t("vetHeroDesc")}
             </p>
@@ -105,14 +108,15 @@ export default async function ProsPage({ params }: Params) {
 
           {/* How it works */}
           <div className="lux-card p-8">
-            <h3 className="ed-title-sm mb-8 text-center">
-              {t("vetHowTitle")}
-            </h3>
+            <h3 className="ed-title-sm mb-8 text-center">{t("vetHowTitle")}</h3>
             <div className="grid md:grid-cols-3 gap-8">
               {VET_STEP_KEYS.map((key, i) => (
                 <div key={key} className="text-center relative">
                   {i < 2 && (
-                    <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--hairline)]" />
+                    <div
+                      aria-hidden
+                      className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--hairline)]"
+                    />
                   )}
                   <div className="ed-num w-14 h-14 rounded-full text-lg flex items-center justify-center mx-auto mb-4">
                     {String(i + 1).padStart(2, "0")}
@@ -138,12 +142,8 @@ export default async function ProsPage({ params }: Params) {
             <div className="ed-icon w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5">
               <Heart className="w-7 h-7" />
             </div>
-            <p className="ed-eyebrow mb-3">
-              {t("sitterTabLabel")}
-            </p>
-            <h2 className="ed-title mb-5">
-              {t("sitterHeroTitle")}
-            </h2>
+            <p className="ed-eyebrow mb-3">{t("sitterTabLabel")}</p>
+            <h2 className="ed-title mb-5">{t("sitterHeroTitle")}</h2>
             <p className="text-lg text-[var(--mist-dark)] max-w-xl mx-auto leading-relaxed">
               {t("sitterHeroDesc")}
             </p>
@@ -165,14 +165,15 @@ export default async function ProsPage({ params }: Params) {
 
           {/* How it works */}
           <div className="lux-section-raised rounded-2xl p-8">
-            <h3 className="ed-title-sm mb-8 text-center">
-              {t("sitterHowTitle")}
-            </h3>
+            <h3 className="ed-title-sm mb-8 text-center">{t("sitterHowTitle")}</h3>
             <div className="grid md:grid-cols-3 gap-8">
               {SITTER_STEP_KEYS.map((key, i) => (
                 <div key={key} className="text-center relative">
                   {i < 2 && (
-                    <div aria-hidden className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--hairline)]" />
+                    <div
+                      aria-hidden
+                      className="hidden md:block absolute top-7 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-[var(--hairline)]"
+                    />
                   )}
                   <div className="ed-num w-14 h-14 rounded-full text-lg flex items-center justify-center mx-auto mb-4">
                     {String(i + 1).padStart(2, "0")}
@@ -194,17 +195,19 @@ export default async function ProsPage({ params }: Params) {
       {/* Trust section */}
       <section className="py-20 lux-section border-y border-[var(--hairline-soft)]">
         <div className="section-inner">
-          <h2 className="ed-title text-center mb-10">
-            {t("trustTitle")}
-          </h2>
+          <h2 className="ed-title text-center mb-10">{t("trustTitle")}</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {(["trust1","trust2","trust3"] as const).map((key) => (
+            {(["trust1", "trust2", "trust3"] as const).map((key) => (
               <div key={key} className="lux-card p-7 text-center">
                 <div className="ed-icon w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-[var(--platinum)] mb-2">{t(`${key}Title`, { app: APP.name })}</h3>
-                <p className="text-sm text-[var(--mist-dark)] leading-relaxed">{t(`${key}Desc`, { app: APP.name })}</p>
+                <h3 className="font-bold text-[var(--platinum)] mb-2">
+                  {t(`${key}Title`, { app: APP.name })}
+                </h3>
+                <p className="text-sm text-[var(--mist-dark)] leading-relaxed">
+                  {t(`${key}Desc`, { app: APP.name })}
+                </p>
               </div>
             ))}
           </div>
@@ -213,14 +216,25 @@ export default async function ProsPage({ params }: Params) {
 
       {/* Final CTA */}
       <section className="lux-section-deep relative overflow-hidden py-24 md:py-32">
-        <div aria-hidden className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, var(--champagne) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-        <div aria-hidden className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
-        <div aria-hidden className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none" />
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
+          style={{
+            backgroundImage: "radial-gradient(circle, var(--champagne) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none"
+        />
+        <div
+          aria-hidden
+          className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-[var(--champagne)] opacity-[0.06] pointer-events-none"
+        />
 
         <div className="section-inner relative text-center">
-          <h2 className="ed-title ed-title-on-dark mb-5">
-            {t("ctaTitle")}
-          </h2>
+          <h2 className="ed-title ed-title-on-dark mb-5">{t("ctaTitle")}</h2>
           <p className="text-lg text-[var(--platinum-dim)] opacity-80 mb-10 max-w-xl mx-auto leading-relaxed">
             {t("ctaDesc")}
           </p>

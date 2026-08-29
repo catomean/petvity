@@ -27,9 +27,16 @@ vi.mock("@/lib/db", () => ({ getInstance: vi.fn() }));
 
 /* ─── Imports after mocks ──────────────────────────────────────────────────── */
 
-import { GET as getPet, PATCH as patchPet, DELETE as deletePet } from "@/app/api/pets/[petId]/route";
+import {
+  GET as getPet,
+  PATCH as patchPet,
+  DELETE as deletePet,
+} from "@/app/api/pets/[petId]/route";
 import { GET as getMetrics, POST as postMetrics } from "@/app/api/health/metrics/[petId]/route";
-import { PATCH as patchRecord, DELETE as deleteRecord } from "@/app/api/health/records/[recordId]/route";
+import {
+  PATCH as patchRecord,
+  DELETE as deleteRecord,
+} from "@/app/api/health/records/[recordId]/route";
 import { requireSession } from "@/lib/auth/guards";
 import { getInstance } from "@/lib/db";
 
@@ -223,7 +230,10 @@ describe("cross-owner isolation: /api/health/records/[recordId]", () => {
   });
 
   it("DELETE ownership JOIN is scoped by pets.owner_id bound to the session user", async () => {
-    await deleteRecord(makeRequest(`/api/health/records/${VICTIM_RECORD_ID}`, "DELETE"), RECORD_CONTEXT);
+    await deleteRecord(
+      makeRequest(`/api/health/records/${VICTIM_RECORD_ID}`, "DELETE"),
+      RECORD_CONTEXT,
+    );
     expectOwnerScoped(innerJoinOn(db));
   });
 });

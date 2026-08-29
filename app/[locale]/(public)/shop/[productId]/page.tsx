@@ -23,7 +23,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { productId } = await params;
   const db = getInstance();
   const [row] = await db
-    .select({ name: products.name, description: products.description, priceCents: products.priceCents })
+    .select({
+      name: products.name,
+      description: products.description,
+      priceCents: products.priceCents,
+    })
     .from(products)
     .where(and(eq(products.id, productId), eq(products.isActive, true)))
     .limit(1);
@@ -74,16 +78,17 @@ export default async function PublicProductDetailPage({ params }: Params) {
       "@type": "Offer",
       priceCurrency: "USD",
       price: (row.priceCents / 100).toFixed(2),
-      availability: outOfStock
-        ? "https://schema.org/OutOfStock"
-        : "https://schema.org/InStock",
+      availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       seller: { "@type": "Organization", name: row.sellerName ?? APP.name },
     },
   };
 
   return (
     <div className="min-h-screen bg-[var(--off)]">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
       <ShopNav locale={locale} />
 
       <div className="max-w-2xl mx-auto px-4 py-8">
@@ -112,7 +117,8 @@ export default async function PublicProductDetailPage({ params }: Params) {
             {/* Category + stock */}
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-medium bg-[var(--off)] text-[var(--ink2)] px-2.5 py-1 rounded-full">
-                {catCfg?.emoji} {catCfg ? t(`cat_${row.category}` as Parameters<typeof t>[0]) : row.category}
+                {catCfg?.emoji}{" "}
+                {catCfg ? t(`cat_${row.category}` as Parameters<typeof t>[0]) : row.category}
               </span>
               {outOfStock && (
                 <span className="text-xs font-medium text-[var(--danger)] bg-[var(--danger-bg)] px-2.5 py-1 rounded-full">

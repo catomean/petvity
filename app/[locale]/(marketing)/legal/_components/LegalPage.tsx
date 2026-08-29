@@ -17,21 +17,23 @@ export function LegalPage({ title, effectiveDate, children }: Props) {
           <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted)] mb-2">
             Legal
           </p>
-          <h1 className="text-3xl md:text-4xl font-bold text-[var(--ink)] mb-2">
-            {title}
-          </h1>
-          <p className="text-sm text-[var(--muted)] mb-10">
-            Effective {effectiveDate}
-          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-[var(--ink)] mb-2">{title}</h1>
+          <p className="text-sm text-[var(--muted)] mb-10">Effective {effectiveDate}</p>
 
           <article className="prose-legal text-[var(--ink2)] leading-relaxed space-y-5">
             {children}
           </article>
 
           <div className="mt-12 pt-6 border-t border-[var(--border)] flex items-center gap-4 text-xs text-[var(--muted)] flex-wrap">
-            <Link href="/legal/privacy" className="hover:text-[var(--teal)]">Privacy</Link>
-            <Link href="/legal/terms" className="hover:text-[var(--teal)]">Terms</Link>
-            <Link href="/legal/cookies" className="hover:text-[var(--teal)]">Cookies</Link>
+            <Link href="/legal/privacy" className="hover:text-[var(--teal)]">
+              Privacy
+            </Link>
+            <Link href="/legal/terms" className="hover:text-[var(--teal)]">
+              Terms
+            </Link>
+            <Link href="/legal/cookies" className="hover:text-[var(--teal)]">
+              Cookies
+            </Link>
           </div>
         </div>
       </div>

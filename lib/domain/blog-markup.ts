@@ -17,9 +17,7 @@
  */
 
 export type BlogBlock =
-  | { type: "p"; text: string }
-  | { type: "h2"; text: string }
-  | { type: "ul"; items: string[] };
+  { type: "p"; text: string } | { type: "h2"; text: string } | { type: "ul"; items: string[] };
 
 export function parseBlogBody(source: string): BlogBlock[] {
   const blocks: BlogBlock[] = [];
@@ -40,12 +38,18 @@ export function parseBlogBody(source: string): BlogBlock[] {
       list = [];
     }
   };
-  const flushAll = () => { flushParagraph(); flushList(); };
+  const flushAll = () => {
+    flushParagraph();
+    flushList();
+  };
 
   for (const rawLine of source.replace(/\r\n/g, "\n").split("\n")) {
     const line = rawLine.trim();
 
-    if (!line) { flushAll(); continue; }
+    if (!line) {
+      flushAll();
+      continue;
+    }
 
     if (line.startsWith("## ")) {
       flushAll();

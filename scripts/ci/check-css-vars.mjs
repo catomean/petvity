@@ -59,4 +59,6 @@ if (errors.length > 0) {
   console.error(`\nEvery var(--x) used in app/, components/, lib/ must be defined in ${CSS_FILE}.`);
   process.exit(1);
 }
-console.log(`✓ css-vars: all var(--x) references resolve against ${CSS_FILE} (${definedVars.size} tokens)`);
+console.log(
+  `✓ css-vars: all var(--x) references resolve against ${CSS_FILE} (${definedVars.size} tokens)`,
+);

@@ -24,14 +24,31 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "public" });
   const title = t("adoptMetaTitle", { app: APP.name });
   const description = t("adoptMetaDesc", { app: APP.name });
-  return { title, description, openGraph: { title, description }, twitter: { card: "summary", title, description }, alternates: buildAlternates("/adopt") };
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { card: "summary", title, description },
+    alternates: buildAlternates("/adopt"),
+  };
 }
 
 function speciesEmoji(species: string): string {
   return SPECIES_CONFIG[species as SpeciesId]?.emoji ?? "🐾";
 }
 
-const FILTER_SPECIES: SpeciesId[] = ["dog", "cat", "rabbit", "bird", "horse", "guinea_pig", "hamster", "reptile", "fish", "other"];
+const FILTER_SPECIES: SpeciesId[] = [
+  "dog",
+  "cat",
+  "rabbit",
+  "bird",
+  "horse",
+  "guinea_pig",
+  "hamster",
+  "reptile",
+  "fish",
+  "other",
+];
 
 export default async function PublicAdoptPage({ params, searchParams }: Params) {
   const { locale } = await params;
@@ -41,7 +58,9 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
   const tPortal = await getTranslations({ locale, namespace: "portal" });
   const db = getInstance();
 
-  const activeSpecies = FILTER_SPECIES.includes(speciesFilter as SpeciesId) ? (speciesFilter as SpeciesId) : null;
+  const activeSpecies = FILTER_SPECIES.includes(speciesFilter as SpeciesId)
+    ? (speciesFilter as SpeciesId)
+    : null;
   const activeLocation = locationFilter?.trim() ?? "";
 
   const conditions = [eq(adoptionListings.status, "available")];
@@ -82,12 +101,18 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
     <div className="min-h-screen bg-[var(--off)]">
       {/* Nav */}
       <nav className="bg-white border-b border-[var(--border)] px-6 h-14 flex items-center justify-between sticky top-0 z-10">
-        <Link href={`/${locale}`} className="font-bold text-[var(--warm-ink)] text-lg no-underline flex items-center gap-2">
+        <Link
+          href={`/${locale}`}
+          className="font-bold text-[var(--warm-ink)] text-lg no-underline flex items-center gap-2"
+        >
           <PawPrint className="w-5 h-5" />
           {APP.name}
         </Link>
         <div className="flex items-center gap-3">
-          <Link href="/login" className="text-sm text-[var(--ink2)] hover:text-[var(--warm-ink)] no-underline transition-colors">
+          <Link
+            href="/login"
+            className="text-sm text-[var(--ink2)] hover:text-[var(--warm-ink)] no-underline transition-colors"
+          >
             {t("signIn")}
           </Link>
           <Link href="/register" className="btn-editorial-sm">
@@ -105,9 +130,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--ink)] mb-3">
             {t("adoptHeroTitle")}
           </h1>
-          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-6">
-            {t("adoptHeroDesc")}
-          </p>
+          <p className="text-[var(--muted)] text-lg max-w-xl mx-auto mb-6">{t("adoptHeroDesc")}</p>
           <Link href="/register" className="btn-editorial inline-flex items-center gap-2">
             <Heart className="w-4 h-4" />
             {t("adoptListButton")}
@@ -156,7 +179,10 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                   className="form-input form-input-icon text-sm py-2 w-full"
                 />
               </div>
-              <button type="submit" className="btn-editorial-ghost text-sm py-2 px-4 flex items-center gap-1.5">
+              <button
+                type="submit"
+                className="btn-editorial-ghost text-sm py-2 px-4 flex items-center gap-1.5"
+              >
                 <Search className="w-3.5 h-3.5" />
                 {tPortal("adoptSearch")}
               </button>
@@ -196,7 +222,9 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                 <Link href={`/${locale}/adopt`} className="text-[var(--accent)] hover:underline">
                   {t("adoptClearFilters")}
                 </Link>
-              ) : t("adoptEmptyDesc")}
+              ) : (
+                t("adoptEmptyDesc")
+              )}
             </p>
             {!isFiltered && (
               <Link href="/register" className="btn-editorial">
@@ -247,7 +275,9 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                         {t(`species_${listing.pet.species}` as Parameters<typeof t>[0])}
                         {listing.pet.breed ? ` · ${listing.pet.breed}` : ""}
                         {age ? ` · ${age}` : ""}
-                        {listing.pet.sex && listing.pet.sex !== "unknown" ? ` · ${t(`sex_${listing.pet.sex}` as Parameters<typeof t>[0])}` : ""}
+                        {listing.pet.sex && listing.pet.sex !== "unknown"
+                          ? ` · ${t(`sex_${listing.pet.sex}` as Parameters<typeof t>[0])}`
+                          : ""}
                       </p>
                       {listing.location && (
                         <p className="text-xs text-[var(--muted)] flex items-center gap-1 mt-2">
@@ -259,7 +289,10 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
                       <div className="flex flex-wrap gap-1 mt-2">
                         {LISTING_TRAIT_CONFIG.map((trait) =>
                           listing[trait.field] ? (
-                            <span key={trait.field} className={`text-xs font-medium ${trait.className} px-2 py-0.5 rounded-full`}>
+                            <span
+                              key={trait.field}
+                              className={`text-xs font-medium ${trait.className} px-2 py-0.5 rounded-full`}
+                            >
                               {t(`traitShort_${trait.field}` as Parameters<typeof t>[0])}
                             </span>
                           ) : null,
@@ -278,9 +311,7 @@ export default async function PublicAdoptPage({ params, searchParams }: Params) 
       <div className="border-t border-[var(--border)] bg-white">
         <div className="max-w-5xl mx-auto px-6 py-10 text-center">
           <p className="font-medium text-[var(--ink)] mb-2">{t("adoptCtaTitle")}</p>
-          <p className="text-sm text-[var(--muted)] mb-5">
-            {t("adoptCtaDesc")}
-          </p>
+          <p className="text-sm text-[var(--muted)] mb-5">{t("adoptCtaDesc")}</p>
           <Link href="/register" className="btn-editorial inline-flex items-center gap-2">
             <PawPrint className="w-4 h-4" />
             {t("adoptCtaButton")}

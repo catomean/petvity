@@ -55,9 +55,7 @@ export default async function BlogIndexPage({ params }: Params) {
         </div>
 
         {posts.length === 0 && (
-          <p className="text-center text-[var(--mist-dark)] max-w-md mx-auto">
-            {t("empty")}
-          </p>
+          <p className="text-center text-[var(--mist-dark)] max-w-md mx-auto">{t("empty")}</p>
         )}
 
         <div className="max-w-2xl mx-auto space-y-6">
@@ -67,8 +65,12 @@ export default async function BlogIndexPage({ params }: Params) {
               href={`/${locale}/blog/${post.slug}`}
               className="lux-card lux-card-hover p-7 flex flex-col gap-3 no-underline"
             >
-              <p className="text-xs text-[var(--mist-dark)]">{formatDateShort((post.publishedAt ?? post.createdAt).toISOString(), locale)}</p>
-              <h2 className="text-xl font-semibold text-[var(--platinum)] leading-snug">{post.title}</h2>
+              <p className="text-xs text-[var(--mist-dark)]">
+                {formatDateShort((post.publishedAt ?? post.createdAt).toISOString(), locale)}
+              </p>
+              <h2 className="text-xl font-semibold text-[var(--platinum)] leading-snug">
+                {post.title}
+              </h2>
               <p className="text-sm text-[var(--platinum-dim)] leading-relaxed">{post.excerpt}</p>
               <span className="text-sm text-[var(--champagne)] inline-flex items-center gap-1.5 mt-1">
                 {t("readPost")} <ArrowRight className="w-3.5 h-3.5" />

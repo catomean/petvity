@@ -92,16 +92,12 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
       )}
 
       {error && <p className="alert-error mb-4">{error}</p>}
-      {success && !isNew && (
-        <p className="alert-success mb-4">{t("sellerSavedSuccess")}</p>
-      )}
+      {success && !isNew && <p className="alert-success mb-4">{t("sellerSavedSuccess")}</p>}
 
       <form onSubmit={handleSubmit} className="card p-6 flex flex-col gap-5">
         {/* Store name */}
         <div>
-          <label className="form-label">
-            {t("sellerStoreNameLabel")}
-          </label>
+          <label className="form-label">{t("sellerStoreNameLabel")}</label>
           <input
             type="text"
             value={form.displayName}
@@ -114,9 +110,7 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
 
         {/* Bio */}
         <div>
-          <label className="form-label">
-            {t("sellerBioLabel")}
-          </label>
+          <label className="form-label">{t("sellerBioLabel")}</label>
           <textarea
             rows={3}
             value={form.bio}
@@ -142,13 +136,13 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
             />
           </div>
           <div>
-            <label className="form-label">
-              {t("profCountry")}
-            </label>
+            <label className="form-label">{t("profCountry")}</label>
             <input
               type="text"
               value={form.country}
-              onChange={(e) => setForm({ ...form, country: e.target.value.toUpperCase().slice(0, 2) })}
+              onChange={(e) =>
+                setForm({ ...form, country: e.target.value.toUpperCase().slice(0, 2) })
+              }
               placeholder={t("profCountryPlaceholder")}
               maxLength={2}
               className="form-input"
@@ -210,16 +204,8 @@ export default function SellerProfileForm({ initialData, userName }: Props) {
         )}
 
         <div className="pt-1">
-          <button
-            type="submit"
-            disabled={saving}
-            className="btn-primary disabled:opacity-60"
-          >
-            {saving
-              ? t("sellerSaving")
-              : isNew
-              ? t("sellerActivateButton")
-              : t("sellerSaveButton")}
+          <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
+            {saving ? t("sellerSaving") : isNew ? t("sellerActivateButton") : t("sellerSaveButton")}
           </button>
         </div>
       </form>

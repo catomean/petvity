@@ -22,7 +22,10 @@ describe("GET /api/admin/orders", () => {
     vi.clearAllMocks();
     db = makeMockDb();
     vi.mocked(getInstance).mockReturnValue(db as any);
-    vi.mocked(requireAdmin).mockResolvedValue({ session: { user: { id: "admin-1", role: "admin" } } as any, error: null });
+    vi.mocked(requireAdmin).mockResolvedValue({
+      session: { user: { id: "admin-1", role: "admin" } } as any,
+      error: null,
+    });
   });
 
   it("returns 401 when not admin", async () => {
@@ -63,7 +66,7 @@ describe("GET /api/admin/orders", () => {
       productImageUrl: null,
     };
     db._queueSelectResult([order]); // allOrders
-    db._queueSelectResult([item]);  // items for the order
+    db._queueSelectResult([item]); // items for the order
 
     const res = await GET();
     expect(res.status).toBe(200);
@@ -86,7 +89,7 @@ describe("GET /api/admin/orders", () => {
       customer: { id: "user-2", name: "Bob", email: "bob@example.com" },
     };
     db._queueSelectResult([order]); // allOrders
-    db._queueSelectResult([]);       // no items
+    db._queueSelectResult([]); // no items
 
     const res = await GET();
     expect(res.status).toBe(200);
@@ -96,17 +99,53 @@ describe("GET /api/admin/orders", () => {
 
   it("groups items correctly across multiple orders", async () => {
     const orders = [
-      { id: "order-1", status: "pending", totalCents: 1000, notes: null,
-        createdAt: new Date(), updatedAt: new Date(),
-        customer: { id: "user-1", name: "Alice", email: "alice@example.com" } },
-      { id: "order-2", status: "shipped", totalCents: 2000, notes: null,
-        createdAt: new Date(), updatedAt: new Date(),
-        customer: { id: "user-2", name: "Bob", email: "bob@example.com" } },
+      {
+        id: "order-1",
+        status: "pending",
+        totalCents: 1000,
+        notes: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        customer: { id: "user-1", name: "Alice", email: "alice@example.com" },
+      },
+      {
+        id: "order-2",
+        status: "shipped",
+        totalCents: 2000,
+        notes: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        customer: { id: "user-2", name: "Bob", email: "bob@example.com" },
+      },
     ];
     const items = [
-      { id: "item-1", orderId: "order-1", productId: "p1", quantity: 1, priceCents: 1000, productName: "A", productImageUrl: null },
-      { id: "item-2", orderId: "order-2", productId: "p2", quantity: 2, priceCents: 500, productName: "B", productImageUrl: null },
-      { id: "item-3", orderId: "order-2", productId: "p3", quantity: 1, priceCents: 1000, productName: "C", productImageUrl: null },
+      {
+        id: "item-1",
+        orderId: "order-1",
+        productId: "p1",
+        quantity: 1,
+        priceCents: 1000,
+        productName: "A",
+        productImageUrl: null,
+      },
+      {
+        id: "item-2",
+        orderId: "order-2",
+        productId: "p2",
+        quantity: 2,
+        priceCents: 500,
+        productName: "B",
+        productImageUrl: null,
+      },
+      {
+        id: "item-3",
+        orderId: "order-2",
+        productId: "p3",
+        quantity: 1,
+        priceCents: 1000,
+        productName: "C",
+        productImageUrl: null,
+      },
     ];
     db._queueSelectResult(orders);
     db._queueSelectResult(items);

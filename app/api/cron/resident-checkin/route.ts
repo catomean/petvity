@@ -1,17 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { getInstance } from "@/lib/db";
-import {
-  users,
-  pets,
-  healthMetrics,
-  vaccinations,
-  healthRecords,
-} from "@/lib/db/schema";
-import {
-  RESIDENT_PETS,
-  type ResidentPetDef,
-} from "@/lib/config/resident-pet";
+import { users, pets, healthMetrics, vaccinations, healthRecords } from "@/lib/db/schema";
+import { RESIDENT_PETS, type ResidentPetDef } from "@/lib/config/resident-pet";
 import { generateResidentCheckin } from "@/lib/domain/resident-checkin";
 import { refreshSignalCache } from "@/lib/api/signal-cache";
 import { requireCronAuth } from "@/lib/auth/cron";
@@ -157,7 +148,6 @@ export async function POST(req: NextRequest) {
 
     petResults.push({ handle: def.pet.handle, petId: pet.id, date: today, logged, bootstrapped });
   }
-
 
   return NextResponse.json({
     success: true,

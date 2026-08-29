@@ -26,22 +26,14 @@
  * - petvity.com — the demo/seed identity domain (DEMO_ACCOUNT, seeded
  *   residents). Not ours, no MX.
  */
-export const UNDELIVERABLE_DOMAINS = [
-  "petvity.orangecat.ch",
-  "petvity.com",
-] as const;
+export const UNDELIVERABLE_DOMAINS = ["petvity.orangecat.ch", "petvity.com"] as const;
 
 /**
  * TLDs reserved by RFC 2606/6761 for testing and documentation. Guaranteed
  * never to belong to a real recipient, so any future fixture can use one and
  * be suppressed automatically without editing the list above.
  */
-export const UNDELIVERABLE_TLDS = [
-  ".invalid",
-  ".test",
-  ".example",
-  ".localhost",
-] as const;
+export const UNDELIVERABLE_TLDS = [".invalid", ".test", ".example", ".localhost"] as const;
 
 /**
  * True when the address provably cannot receive mail, so sending would only
@@ -50,7 +42,10 @@ export const UNDELIVERABLE_TLDS = [
 export function isUndeliverableRecipient(address: string): boolean {
   const at = address.lastIndexOf("@");
   if (at < 1 || at === address.length - 1) return true;
-  const domain = address.slice(at + 1).trim().toLowerCase();
+  const domain = address
+    .slice(at + 1)
+    .trim()
+    .toLowerCase();
   if (!domain) return true;
   if ((UNDELIVERABLE_DOMAINS as readonly string[]).includes(domain)) return true;
   return (UNDELIVERABLE_TLDS as readonly string[]).some((tld) => domain.endsWith(tld));

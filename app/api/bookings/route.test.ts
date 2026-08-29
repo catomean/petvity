@@ -17,8 +17,8 @@ import { getInstance } from "@/lib/db";
 /* ─── Helpers ──────────────────────────────────────────────────────────────── */
 
 // RFC 4122–compliant test UUIDs (version 4, variant 8)
-const PET_UUID  = "00000000-0000-4000-8000-000000000001";
-const PRO_UUID  = "00000000-0000-4000-8000-000000000002";
+const PET_UUID = "00000000-0000-4000-8000-000000000001";
+const PRO_UUID = "00000000-0000-4000-8000-000000000002";
 
 const OWNER_SESSION = {
   user: { id: "owner-1", role: "pet_owner", email: "owner@example.com", name: "Owner" },
@@ -26,17 +26,22 @@ const OWNER_SESSION = {
 };
 
 const VALID_BODY = {
-  petId:          PET_UUID,
+  petId: PET_UUID,
   professionalId: PRO_UUID,
-  startDate:      "2026-06-01T10:00:00.000Z",
-  endDate:        "2026-06-03T10:00:00.000Z",
-  notes:          "Please bring treats",
+  startDate: "2026-06-01T10:00:00.000Z",
+  endDate: "2026-06-03T10:00:00.000Z",
+  notes: "Please bring treats",
 };
 
-const MOCK_PET          = { id: PET_UUID, name: "Buddy" };
-const MOCK_VET          = { id: PRO_UUID, role: "veterinarian", email: "vet@example.com", name: "Dr Smith" };
-const MOCK_SITTER       = { id: PRO_UUID, role: "pet_sitter",   email: "sitter@example.com", name: "Jane" };
-const MOCK_NON_PRO_USER = { id: PRO_UUID, role: "pet_owner",    email: "random@example.com", name: "Random" };
+const MOCK_PET = { id: PET_UUID, name: "Buddy" };
+const MOCK_VET = { id: PRO_UUID, role: "veterinarian", email: "vet@example.com", name: "Dr Smith" };
+const MOCK_SITTER = { id: PRO_UUID, role: "pet_sitter", email: "sitter@example.com", name: "Jane" };
+const MOCK_NON_PRO_USER = {
+  id: PRO_UUID,
+  role: "pet_owner",
+  email: "random@example.com",
+  name: "Random",
+};
 
 function makeRequest(body: unknown) {
   return new NextRequest("http://localhost/api/bookings", {
@@ -78,11 +83,13 @@ describe("POST /api/bookings", () => {
   });
 
   it("returns 400 when endDate is not after startDate", async () => {
-    const res = await POST(makeRequest({
-      ...VALID_BODY,
-      startDate: "2026-06-03T10:00:00.000Z",
-      endDate:   "2026-06-01T10:00:00.000Z", // end before start
-    }));
+    const res = await POST(
+      makeRequest({
+        ...VALID_BODY,
+        startDate: "2026-06-03T10:00:00.000Z",
+        endDate: "2026-06-01T10:00:00.000Z", // end before start
+      }),
+    );
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.error).toContain("after start date");
@@ -104,7 +111,7 @@ describe("POST /api/bookings", () => {
 
   it("returns 404 when professional user does not exist", async () => {
     db._queueSelectResult([MOCK_PET]); // pet found
-    db._queueSelectResult([]);          // professional not found
+    db._queueSelectResult([]); // professional not found
     const res = await POST(makeRequest(VALID_BODY));
     expect(res.status).toBe(404);
     const body = await res.json();
@@ -124,8 +131,11 @@ describe("POST /api/bookings", () => {
     db._queueSelectResult([MOCK_PET]);
     db._queueSelectResult([MOCK_VET]);
     const mockBooking = {
-      id: "booking-1", petId: PET_UUID, professionalId: PRO_UUID,
-      professionalRole: "veterinarian", status: "pending",
+      id: "booking-1",
+      petId: PET_UUID,
+      professionalId: PRO_UUID,
+      professionalRole: "veterinarian",
+      status: "pending",
     };
     db._insertReturning.mockResolvedValueOnce([mockBooking]);
 
@@ -140,8 +150,11 @@ describe("POST /api/bookings", () => {
     db._queueSelectResult([MOCK_PET]);
     db._queueSelectResult([MOCK_SITTER]);
     const mockBooking = {
-      id: "booking-2", petId: PET_UUID, professionalId: PRO_UUID,
-      professionalRole: "pet_sitter", status: "pending",
+      id: "booking-2",
+      petId: PET_UUID,
+      professionalId: PRO_UUID,
+      professionalRole: "pet_sitter",
+      status: "pending",
     };
     db._insertReturning.mockResolvedValueOnce([mockBooking]);
 

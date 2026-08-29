@@ -91,13 +91,24 @@ export const RESIDENT_PETS: ResidentPetDef[] = [
       notes: CAT_NOTES,
     },
     vaccinations: [
-      { name: "Rabies", administeredDaysAgo: 100, nextDueInDays: 265, vetName: "Dr. Brunner, Kleintierpraxis Wiedikon" },
-      { name: "FVRCP booster", administeredDaysAgo: 330, nextDueInDays: 35, vetName: "Dr. Brunner, Kleintierpraxis Wiedikon" },
+      {
+        name: "Rabies",
+        administeredDaysAgo: 100,
+        nextDueInDays: 265,
+        vetName: "Dr. Brunner, Kleintierpraxis Wiedikon",
+      },
+      {
+        name: "FVRCP booster",
+        administeredDaysAgo: 330,
+        nextDueInDays: 35,
+        vetName: "Dr. Brunner, Kleintierpraxis Wiedikon",
+      },
     ],
     firstRecord: {
       daysAgo: 100,
       title: "Annual check-up and rabies shot",
-      notes: "Healthy, well-muscled. Teeth in great shape. Slightly dramatic about the thermometer.",
+      notes:
+        "Healthy, well-muscled. Teeth in great shape. Slightly dramatic about the thermometer.",
     },
   },
   {
@@ -125,14 +136,30 @@ export const RESIDENT_PETS: ResidentPetDef[] = [
       notes: DOG_NOTES,
     },
     vaccinations: [
-      { name: "Rabies", administeredDaysAgo: 200, nextDueInDays: 165, vetName: "Dr. Brunner, Kleintierpraxis Wiedikon" },
-      { name: "DHPP booster", administeredDaysAgo: 320, nextDueInDays: 45, vetName: "Dr. Brunner, Kleintierpraxis Wiedikon" },
-      { name: "Leptospirosis", administeredDaysAgo: 320, nextDueInDays: 45, vetName: "Dr. Brunner, Kleintierpraxis Wiedikon" },
+      {
+        name: "Rabies",
+        administeredDaysAgo: 200,
+        nextDueInDays: 165,
+        vetName: "Dr. Brunner, Kleintierpraxis Wiedikon",
+      },
+      {
+        name: "DHPP booster",
+        administeredDaysAgo: 320,
+        nextDueInDays: 45,
+        vetName: "Dr. Brunner, Kleintierpraxis Wiedikon",
+      },
+      {
+        name: "Leptospirosis",
+        administeredDaysAgo: 320,
+        nextDueInDays: 45,
+        vetName: "Dr. Brunner, Kleintierpraxis Wiedikon",
+      },
     ],
     firstRecord: {
       daysAgo: 60,
       title: "Ear check after lake season",
-      notes: "Mild wax buildup, cleaned in-clinic. Ears otherwise healthy. Advised drying ears after swims.",
+      notes:
+        "Mild wax buildup, cleaned in-clinic. Ears otherwise healthy. Advised drying ears after swims.",
     },
   },
 ];

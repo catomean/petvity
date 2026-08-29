@@ -52,7 +52,10 @@ export default function BecomeAProPage() {
       <div className="max-w-lg">
         <h1 className="text-2xl font-semibold text-[var(--ink)] mb-2">{t("becomeProTitle")}</h1>
         <p className="text-sm text-[var(--muted)] mb-4">{t("becomeProAlready")}</p>
-        <Link href="/portal/professional-profile" className="btn-primary inline-flex items-center gap-2">
+        <Link
+          href="/portal/professional-profile"
+          className="btn-primary inline-flex items-center gap-2"
+        >
           {t("becomeProGoToProfile")}
           <ArrowRight className="w-4 h-4" />
         </Link>
@@ -62,9 +65,24 @@ export default function BecomeAProPage() {
   }
 
   const OPTIONS: { id: ProRole; icon: React.ElementType; title: string; desc: string }[] = [
-    { id: "pet_sitter", icon: Home, title: t("becomeProSitterTitle"), desc: t("becomeProSitterDesc") },
-    { id: "groomer", icon: Scissors, title: t("becomeProGroomerTitle"), desc: t("becomeProGroomerDesc") },
-    { id: "veterinarian", icon: Stethoscope, title: t("becomeProVetTitle"), desc: t("becomeProVetDesc") },
+    {
+      id: "pet_sitter",
+      icon: Home,
+      title: t("becomeProSitterTitle"),
+      desc: t("becomeProSitterDesc"),
+    },
+    {
+      id: "groomer",
+      icon: Scissors,
+      title: t("becomeProGroomerTitle"),
+      desc: t("becomeProGroomerDesc"),
+    },
+    {
+      id: "veterinarian",
+      icon: Stethoscope,
+      title: t("becomeProVetTitle"),
+      desc: t("becomeProVetDesc"),
+    },
   ];
 
   return (
@@ -127,7 +145,10 @@ function SellOnPetvity() {
         <div className="min-w-0">
           <p className="font-semibold text-[var(--ink)]">{t("becomeSellerTitle")}</p>
           <p className="text-sm text-[var(--muted)] mt-0.5 mb-3">{t("becomeSellerDesc")}</p>
-          <Link href="/portal/seller-profile" className="btn-outline inline-flex items-center gap-2">
+          <Link
+            href="/portal/seller-profile"
+            className="btn-outline inline-flex items-center gap-2"
+          >
             {t("becomeSellerCta")}
             <ArrowRight className="w-4 h-4" />
           </Link>

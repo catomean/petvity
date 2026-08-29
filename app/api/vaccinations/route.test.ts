@@ -25,8 +25,12 @@ const OWNER_SESSION = {
 const MOCK_PET = { id: PET_ID, ownerId: "owner-1", name: "Buddy", species: "dog" };
 
 const MOCK_VACCINATION = {
-  id: "vacc-1", petId: PET_ID, name: "Rabies", administeredDate: "2026-01-10",
-  nextDueDate: "2027-01-10", status: "up_to_date",
+  id: "vacc-1",
+  petId: PET_ID,
+  name: "Rabies",
+  administeredDate: "2026-01-10",
+  nextDueDate: "2027-01-10",
+  status: "up_to_date",
 };
 
 function makeGetRequest(petId?: string) {
@@ -45,7 +49,9 @@ function makePostRequest(body: unknown) {
 }
 
 const VALID_BODY = {
-  petId: PET_ID, name: "Rabies", administeredDate: "2026-04-23",
+  petId: PET_ID,
+  name: "Rabies",
+  administeredDate: "2026-04-23",
 };
 
 /* ─── GET tests ────────────────────────────────────────────────────────────── */

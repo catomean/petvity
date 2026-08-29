@@ -14,10 +14,7 @@
 import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
-export interface UseHealthListOptions<
-  TRow extends { id: string },
-  TForm extends object,
-> {
+export interface UseHealthListOptions<TRow extends { id: string }, TForm extends object> {
   petId: string;
   /** Collection + item base path. POST goes to `apiPath`, PATCH/DELETE to `apiPath/${id}`. */
   apiPath: string;
@@ -38,10 +35,7 @@ export interface UseHealthListOptions<
   };
 }
 
-export function useHealthList<
-  TRow extends { id: string },
-  TForm extends object,
->({
+export function useHealthList<TRow extends { id: string }, TForm extends object>({
   petId,
   apiPath,
   emptyForm,
@@ -53,17 +47,17 @@ export function useHealthList<
   const router = useRouter();
   const [, startTransition] = useTransition();
 
-  const [petName, setPetName]   = useState("");
-  const [rows, setRows]         = useState<TRow[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [filter, setFilter]     = useState("all");
-  const [searchQ, setSearchQ]   = useState("");
+  const [petName, setPetName] = useState("");
+  const [rows, setRows] = useState<TRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
+  const [searchQ, setSearchQ] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId]   = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [form, setForm]   = useState<TForm>(emptyForm);
+  const [form, setForm] = useState<TForm>(emptyForm);
   const [saving, setSaving] = useState(false);
-  const [error, setError]   = useState("");
+  const [error, setError] = useState("");
   const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
@@ -74,12 +68,14 @@ export function useHealthList<
         fetch(`${apiPath}?petId=${petId}`),
       ]);
       if (cancelled) return;
-      if (petRes.ok)  setPetName((await petRes.json()).data?.name ?? "");
+      if (petRes.ok) setPetName((await petRes.json()).data?.name ?? "");
       if (dataRes.ok) setRows((await dataRes.json()).data ?? []);
       setLoading(false);
     }
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [petId, apiPath]);
 
   function openAdd() {
@@ -113,7 +109,7 @@ export function useHealthList<
     setSaving(true);
 
     const isEdit = editingId !== null;
-    const url    = isEdit ? `${apiPath}/${editingId}` : apiPath;
+    const url = isEdit ? `${apiPath}/${editingId}` : apiPath;
     const method = isEdit ? "PATCH" : "POST";
 
     const res = await fetch(url, {
@@ -124,7 +120,10 @@ export function useHealthList<
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? messages?.saveFailed ?? "Failed to save."); return; }
+    if (!data.success) {
+      setError(data.error ?? messages?.saveFailed ?? "Failed to save.");
+      return;
+    }
 
     if (isEdit) {
       setRows((prev) => prev.map((r) => (r.id === editingId ? (data.data as TRow) : r)));
@@ -159,16 +158,32 @@ export function useHealthList<
 
   return {
     // Data
-    petName, rows, loading, filteredRows,
+    petName,
+    rows,
+    loading,
+    filteredRows,
     // Filter / search
-    filter, setFilter, searchQ, setSearchQ,
+    filter,
+    setFilter,
+    searchQ,
+    setSearchQ,
     // Modal state
-    showForm, editingId, deletingId, setDeletingId,
+    showForm,
+    editingId,
+    deletingId,
+    setDeletingId,
     // Form state
-    form, saving, error,
+    form,
+    saving,
+    error,
     // Delete state
     deleteError,
     // Actions
-    openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
+    openAdd,
+    openEdit,
+    closeForm,
+    handleSubmit,
+    handleDelete,
+    field,
   };
 }

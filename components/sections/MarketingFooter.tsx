@@ -5,10 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 
 export default async function MarketingFooter() {
-  const [t, tPub] = await Promise.all([
-    getTranslations("footer"),
-    getTranslations("public"),
-  ]);
+  const [t, tPub] = await Promise.all([getTranslations("footer"), getTranslations("public")]);
 
   const speciesGuideLinks = Object.values(SPECIES_CONFIG)
     .filter((s) => s.id !== "other")
@@ -22,8 +19,8 @@ export default async function MarketingFooter() {
       heading: t("sections.product"),
       links: [
         { label: t("links.features"), href: "/features" },
-        { label: t("links.pricing"),  href: "/pricing" },
-        { label: t("links.shop"),     href: "/shop" },
+        { label: t("links.pricing"), href: "/pricing" },
+        { label: t("links.shop"), href: "/shop" },
         { label: t("links.findAPro"), href: "/find" },
         { label: t("links.adoptAPet"), href: "/adopt" },
       ],
@@ -36,26 +33,26 @@ export default async function MarketingFooter() {
       heading: t("sections.professionals"),
       links: [
         { label: t("links.forVetsSitters"), href: "/pros" },
-        { label: t("links.joinAsVet"),     href: "/register?role=vet" },
-        { label: t("links.joinAsSitter"),  href: "/register?role=sitter" },
+        { label: t("links.joinAsVet"), href: "/register?role=vet" },
+        { label: t("links.joinAsSitter"), href: "/register?role=sitter" },
         { label: t("links.joinAsGroomer"), href: "/register?role=groomer" },
       ],
     },
     {
       heading: t("sections.company"),
       links: [
-        { label: t("links.about"),     href: "/about" },
-        { label: t("links.blog"),      href: "/blog" },
-        { label: t("links.liveDemo"),  href: "/demo" },
+        { label: t("links.about"), href: "/about" },
+        { label: t("links.blog"), href: "/blog" },
+        { label: t("links.liveDemo"), href: "/demo" },
         { label: t("links.contactUs"), href: `mailto:${APP.supportEmail}` },
       ],
     },
     {
       heading: t("sections.legal"),
       links: [
-        { label: t("links.privacyPolicy"),  href: "/legal/privacy" },
+        { label: t("links.privacyPolicy"), href: "/legal/privacy" },
         { label: t("links.termsOfService"), href: "/legal/terms" },
-        { label: t("links.cookiePolicy"),   href: "/legal/cookies" },
+        { label: t("links.cookiePolicy"), href: "/legal/cookies" },
       ],
     },
   ];
@@ -70,11 +67,11 @@ export default async function MarketingFooter() {
               <div className="w-8 h-8 rounded-lg bg-[var(--champagne)] flex items-center justify-center">
                 <PawPrint className="w-4 h-4 text-[var(--obsidian)]" />
               </div>
-              <span className="font-semibold text-[var(--platinum)] text-lg tracking-wide">{APP.name}</span>
+              <span className="font-semibold text-[var(--platinum)] text-lg tracking-wide">
+                {APP.name}
+              </span>
             </Link>
-            <p className="text-sm text-[var(--mist-dark)] leading-relaxed mb-5">
-              {APP.tagline}
-            </p>
+            <p className="text-sm text-[var(--mist-dark)] leading-relaxed mb-5">{APP.tagline}</p>
             <a
               href={`mailto:${APP.email}`}
               className="text-sm text-[var(--mist-dark)] hover:text-[var(--champagne)] transition-colors no-underline"
@@ -111,13 +108,22 @@ export default async function MarketingFooter() {
             © {APP.foundingYear} {APP.name}. {t("bottom.rights")}
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/legal/privacy" className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors">
+            <Link
+              href="/legal/privacy"
+              className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors"
+            >
               {t("bottom.privacy")}
             </Link>
-            <Link href="/legal/terms" className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors">
+            <Link
+              href="/legal/terms"
+              className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors"
+            >
               {t("bottom.terms")}
             </Link>
-            <Link href="/legal/cookies" className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors">
+            <Link
+              href="/legal/cookies"
+              className="text-xs text-[var(--mist-dark)] hover:text-[var(--platinum)] no-underline transition-colors"
+            >
               {t("bottom.cookies")}
             </Link>
           </div>

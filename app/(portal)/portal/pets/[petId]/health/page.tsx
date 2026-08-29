@@ -15,7 +15,11 @@ import {
 } from "@/lib/config/health-metrics";
 import type { MetricId } from "@/lib/config/health-metrics";
 import type { SpeciesId } from "@/lib/config/species";
-import { getMetricDisplay, computeWellnessScore, WELLNESS_SCORE_THRESHOLDS } from "@/lib/domain/health";
+import {
+  getMetricDisplay,
+  computeWellnessScore,
+  WELLNESS_SCORE_THRESHOLDS,
+} from "@/lib/domain/health";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { SIGNAL_METRIC_WINDOW_DAYS, SIGNAL_TEXT_CLASSES } from "@/lib/config/pet-signal";
 import type { PetWellnessSignal } from "@/lib/config/pet-signal";
@@ -43,8 +47,12 @@ export default async function PetHealthPage({ params }: Params) {
 
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
-  const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
-  const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const since30 = new Date(now.getTime() - HEALTH_CHART_WINDOW_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
+  const sinceSignal = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
   const locale = await getPortalLocale();
   const [t, tSignal] = await Promise.all([
     getTranslations({ locale, namespace: "portal" }),
@@ -52,13 +60,13 @@ export default async function PetHealthPage({ params }: Params) {
   ]);
 
   const PORTAL_METRIC_LABEL_KEYS: Record<MetricId, Parameters<typeof t>[0]> = {
-    weight:         "healthWeightLabel",
-    temperature:    "healthTemperatureLabel",
-    heart_rate:     "healthHeartRateLabel",
-    energy:         "metricEnergyLabel",
-    mood:           "metricMoodLabel",
-    anxiety:        "metricAnxietyLabel",
-    socialization:  "metricSocializationLabel",
+    weight: "healthWeightLabel",
+    temperature: "healthTemperatureLabel",
+    heart_rate: "healthHeartRateLabel",
+    energy: "metricEnergyLabel",
+    mood: "metricMoodLabel",
+    anxiety: "metricAnxietyLabel",
+    socialization: "metricSocializationLabel",
   };
 
   const [metrics, petVacc, signalHistory] = await Promise.all([
@@ -81,7 +89,13 @@ export default async function PetHealthPage({ params }: Params) {
   // Live signal computation for the reason banner
   const signalMetrics = metrics.filter((m) => m.date >= sinceSignal);
   const overdueCount = countOverdueVaccinations(petVacc, todayStr);
-  const petSignal = computePetSignal({ species, recentMetrics: signalMetrics, overdueVaccinations: overdueCount, petCreatedAt: pet.createdAt, now });
+  const petSignal = computePetSignal({
+    species,
+    recentMetrics: signalMetrics,
+    overdueVaccinations: overdueCount,
+    petCreatedAt: pet.createdAt,
+    now,
+  });
 
   const metricFieldMap: Record<MetricId, keyof typeof latest> = {
     weight: "weightGrams",
@@ -116,9 +130,10 @@ export default async function PetHealthPage({ params }: Params) {
     .map((m) => ({
       date: formatDateShort(m.date, locale),
       weight: m.weightGrams != null ? HEALTH_METRIC_CONFIG.weight.toDisplay(m.weightGrams) : null,
-      temperature: m.temperatureCentidegrees != null
-        ? HEALTH_METRIC_CONFIG.temperature.toDisplay(m.temperatureCentidegrees)
-        : null,
+      temperature:
+        m.temperatureCentidegrees != null
+          ? HEALTH_METRIC_CONFIG.temperature.toDisplay(m.temperatureCentidegrees)
+          : null,
       heart_rate: m.heartRateBpm ?? null,
       energy: m.energy ?? null,
       mood: m.mood ?? null,
@@ -138,10 +153,7 @@ export default async function PetHealthPage({ params }: Params) {
         purpose={t("healthPurpose")}
         back={{ href: `/portal/pets/${petId}`, label: pet.name }}
         action={
-          <Link
-            href={`/portal/pets/${petId}/health/log`}
-            className="btn-primary text-sm"
-          >
+          <Link href={`/portal/pets/${petId}/health/log`} className="btn-primary text-sm">
             {t("logToday")}
           </Link>
         }
@@ -164,14 +176,20 @@ export default async function PetHealthPage({ params }: Params) {
         <div className="space-y-6">
           {/* Signal reason banner — shown for watch/concern */}
           {petSignal.signal !== "healthy" && (
-            <div className={`flex items-start gap-3 rounded-xl px-4 py-3 ${
-              petSignal.signal === "concern"
-                ? "bg-[var(--danger-bg)] border border-[var(--danger)]"
-                : "bg-[var(--warn-bg)] border border-[var(--warn)]"
-            }`}>
-              <AlertTriangle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${SIGNAL_TEXT_CLASSES[petSignal.signal as PetWellnessSignal]}`} />
+            <div
+              className={`flex items-start gap-3 rounded-xl px-4 py-3 ${
+                petSignal.signal === "concern"
+                  ? "bg-[var(--danger-bg)] border border-[var(--danger)]"
+                  : "bg-[var(--warn-bg)] border border-[var(--warn)]"
+              }`}
+            >
+              <AlertTriangle
+                className={`w-4 h-4 mt-0.5 flex-shrink-0 ${SIGNAL_TEXT_CLASSES[petSignal.signal as PetWellnessSignal]}`}
+              />
               <div className="flex-1 min-w-0">
-                <p className={`text-sm font-medium ${SIGNAL_TEXT_CLASSES[petSignal.signal as PetWellnessSignal]}`}>
+                <p
+                  className={`text-sm font-medium ${SIGNAL_TEXT_CLASSES[petSignal.signal as PetWellnessSignal]}`}
+                >
                   {translateSignalReason(petSignal.reasonData, tSignal)}
                 </p>
                 {overdueCount > 0 && (
@@ -230,7 +248,9 @@ export default async function PetHealthPage({ params }: Params) {
                         key={metricId}
                         className={`rounded-lg p-3 ${display.inRange ? "bg-[var(--green-bg)]" : "bg-[var(--danger-bg)]"}`}
                       >
-                        <div className="text-xs text-[var(--muted)] mb-1">{t(PORTAL_METRIC_LABEL_KEYS[metricId])}</div>
+                        <div className="text-xs text-[var(--muted)] mb-1">
+                          {t(PORTAL_METRIC_LABEL_KEYS[metricId])}
+                        </div>
                         <div className="text-lg font-semibold text-[var(--ink)]">
                           {display.value}
                           <span className="text-sm font-normal text-[var(--muted)] ms-1">
@@ -239,7 +259,11 @@ export default async function PetHealthPage({ params }: Params) {
                         </div>
                         {range && (
                           <p className="text-xs text-[var(--danger-text)] mt-1">
-                            {t("healthNormalRange", { min: def.toDisplay(range.min), max: def.toDisplay(range.max), unit: display.unit })}
+                            {t("healthNormalRange", {
+                              min: def.toDisplay(range.min),
+                              max: def.toDisplay(range.max),
+                              unit: display.unit,
+                            })}
                           </p>
                         )}
                       </div>
@@ -265,7 +289,9 @@ export default async function PetHealthPage({ params }: Params) {
                         key={metricId}
                         className={`rounded-lg p-3 ${display.inRange ? "bg-[var(--green-bg)]" : "bg-[var(--danger-bg)]"}`}
                       >
-                        <div className="text-xs text-[var(--muted)] mb-1">{t(PORTAL_METRIC_LABEL_KEYS[metricId])}</div>
+                        <div className="text-xs text-[var(--muted)] mb-1">
+                          {t(PORTAL_METRIC_LABEL_KEYS[metricId])}
+                        </div>
                         <div className="text-lg font-semibold text-[var(--ink)]">
                           {display.value}
                           <span className="text-sm font-normal text-[var(--muted)] ms-1">
@@ -274,7 +300,11 @@ export default async function PetHealthPage({ params }: Params) {
                         </div>
                         {range && (
                           <p className="text-xs text-[var(--danger-text)] mt-1">
-                            {t("healthNormalRange", { min: range.min, max: range.max, unit: display.unit })}
+                            {t("healthNormalRange", {
+                              min: range.min,
+                              max: range.max,
+                              unit: display.unit,
+                            })}
                           </p>
                         )}
                       </div>
@@ -288,13 +318,17 @@ export default async function PetHealthPage({ params }: Params) {
           {/* Trend charts — only show if ≥2 data points */}
           {metrics.length >= 2 && (
             <>
-              <h2 className="font-semibold text-[var(--ink)] -mb-2">
-                {t("health30DayTrends")}
-              </h2>
+              <h2 className="font-semibold text-[var(--ink)] -mb-2">{t("health30DayTrends")}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <HealthTrendChart
                   data={chartData}
-                  lines={[{ dataKey: "weight", name: t("healthWeightLabel"), color: HEALTH_METRIC_CONFIG.weight.chartColor }]}
+                  lines={[
+                    {
+                      dataKey: "weight",
+                      name: t("healthWeightLabel"),
+                      color: HEALTH_METRIC_CONFIG.weight.chartColor,
+                    },
+                  ]}
                   unit=" kg"
                   title={t("healthWeightLabel")}
                   normalMin={HEALTH_METRIC_CONFIG.weight.toDisplay(weightRange.min)}
@@ -304,7 +338,13 @@ export default async function PetHealthPage({ params }: Params) {
                 />
                 <HealthTrendChart
                   data={chartData}
-                  lines={[{ dataKey: "temperature", name: t("healthTempShort"), color: HEALTH_METRIC_CONFIG.temperature.chartColor }]}
+                  lines={[
+                    {
+                      dataKey: "temperature",
+                      name: t("healthTempShort"),
+                      color: HEALTH_METRIC_CONFIG.temperature.chartColor,
+                    },
+                  ]}
                   unit="°C"
                   title={t("healthTemperatureLabel")}
                   normalMin={HEALTH_METRIC_CONFIG.temperature.toDisplay(tempRange.min)}
@@ -314,7 +354,13 @@ export default async function PetHealthPage({ params }: Params) {
                 />
                 <HealthTrendChart
                   data={chartData}
-                  lines={[{ dataKey: "heart_rate", name: t("healthHrShort"), color: HEALTH_METRIC_CONFIG.heart_rate.chartColor }]}
+                  lines={[
+                    {
+                      dataKey: "heart_rate",
+                      name: t("healthHrShort"),
+                      color: HEALTH_METRIC_CONFIG.heart_rate.chartColor,
+                    },
+                  ]}
                   unit=" bpm"
                   title={t("healthHeartRateLabel")}
                   normalMin={hrRange.min}
@@ -344,25 +390,35 @@ export default async function PetHealthPage({ params }: Params) {
 
           {/* History table */}
           <div className="card p-5">
-            <h2 className="font-semibold text-[var(--ink)] mb-4">
-              {t("healthHistoryTitle")}
-            </h2>
+            <h2 className="font-semibold text-[var(--ink)] mb-4">{t("healthHistoryTitle")}</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-[var(--border)]">
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthColDate")}</th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthWeightLabel")}</th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthTempShort")}</th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthColEnergy")}</th>
-                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">{t("healthColMood")}</th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      {t("healthColDate")}
+                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      {t("healthWeightLabel")}
+                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      {t("healthTempShort")}
+                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      {t("healthColEnergy")}
+                    </th>
+                    <th className="text-start py-2 px-3 text-xs font-medium text-[var(--muted)]">
+                      {t("healthColMood")}
+                    </th>
                     <th className="py-2 px-3 w-8" />
                   </tr>
                 </thead>
                 <tbody>
                   {metrics.map((m) => (
                     <tr key={m.id} className="border-b border-[var(--border)] last:border-0 group">
-                      <td className="py-2 px-3 text-[var(--muted)]">{formatDateShort(m.date, locale)}</td>
+                      <td className="py-2 px-3 text-[var(--muted)]">
+                        {formatDateShort(m.date, locale)}
+                      </td>
                       <td className="py-2 px-3">
                         {m.weightGrams != null
                           ? `${HEALTH_METRIC_CONFIG.weight.toDisplay(m.weightGrams)} kg`

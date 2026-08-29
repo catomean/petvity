@@ -65,7 +65,9 @@ describe("PATCH /api/admin/blog/[postId]", () => {
 
   it("stamps publishedAt on the first publish", async () => {
     db._queryFindFirst.mockResolvedValueOnce({
-      id: POST_ID, status: "draft", publishedAt: null,
+      id: POST_ID,
+      status: "draft",
+      publishedAt: null,
     });
     await PATCH(req({ status: "published" }), CONTEXT);
     expect(updatedWith().publishedAt).toBeInstanceOf(Date);
@@ -75,7 +77,9 @@ describe("PATCH /api/admin/blog/[postId]", () => {
   // not silently move the post to today and re-order the whole index.
   it("keeps the original date when a post is published again", async () => {
     db._queryFindFirst.mockResolvedValueOnce({
-      id: POST_ID, status: "draft", publishedAt: FIRST_PUBLISH,
+      id: POST_ID,
+      status: "draft",
+      publishedAt: FIRST_PUBLISH,
     });
     await PATCH(req({ status: "published" }), CONTEXT);
     expect(updatedWith().publishedAt).toEqual(FIRST_PUBLISH);
@@ -83,7 +87,9 @@ describe("PATCH /api/admin/blog/[postId]", () => {
 
   it("keeps the date when unpublishing, so republishing restores it", async () => {
     db._queryFindFirst.mockResolvedValueOnce({
-      id: POST_ID, status: "published", publishedAt: FIRST_PUBLISH,
+      id: POST_ID,
+      status: "published",
+      publishedAt: FIRST_PUBLISH,
     });
     await PATCH(req({ status: "draft" }), CONTEXT);
     expect(updatedWith().publishedAt).toEqual(FIRST_PUBLISH);
@@ -91,7 +97,9 @@ describe("PATCH /api/admin/blog/[postId]", () => {
 
   it("does not publish a draft merely because its text was edited", async () => {
     db._queryFindFirst.mockResolvedValueOnce({
-      id: POST_ID, status: "draft", publishedAt: null,
+      id: POST_ID,
+      status: "draft",
+      publishedAt: null,
     });
     await PATCH(req({ body: "new text" }), CONTEXT);
     expect(updatedWith().publishedAt).toBeNull();

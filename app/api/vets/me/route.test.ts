@@ -21,9 +21,15 @@ const VET_SESSION = {
 };
 
 const MOCK_PROFILE = {
-  userId: "vet-1", bio: "Experienced vet", specialty: "Small animals",
-  clinicName: "City Vet", city: "Berlin", country: "DE",
-  phone: "+49123456789", isVerified: false, isAcceptingClients: true,
+  userId: "vet-1",
+  bio: "Experienced vet",
+  specialty: "Small animals",
+  clinicName: "City Vet",
+  city: "Berlin",
+  country: "DE",
+  phone: "+49123456789",
+  isVerified: false,
+  isAcceptingClients: true,
 };
 
 function makePostRequest(body: unknown) {

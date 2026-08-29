@@ -28,10 +28,7 @@ export async function POST(req: NextRequest) {
   const form = await req.formData().catch(() => null);
   const file = form?.get("file");
   if (!file || typeof file === "string") {
-    return NextResponse.json(
-      { success: false, error: "No file provided" },
-      { status: 400 },
-    );
+    return NextResponse.json({ success: false, error: "No file provided" }, { status: 400 });
   }
 
   if (file.size > IMAGE_MAX_BYTES) {

@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { makeUnsubscribeToken, verifyUnsubscribeToken, makeUnsubscribeUrl } from "./unsubscribe-token";
+import {
+  makeUnsubscribeToken,
+  verifyUnsubscribeToken,
+  makeUnsubscribeUrl,
+} from "./unsubscribe-token";
 
 const ORIGINAL_SECRET = process.env.NEXTAUTH_SECRET;
 

@@ -1,12 +1,23 @@
 import { auth } from "@/lib/auth";
 import { getInstance } from "@/lib/db";
-import { pets, healthMetrics, healthRecords, vaccinations, medications, petSignalHistory } from "@/lib/db/schema";
+import {
+  pets,
+  healthMetrics,
+  healthRecords,
+  vaccinations,
+  medications,
+  petSignalHistory,
+} from "@/lib/db/schema";
 import { and, eq, gte, desc, count } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import { computeDigitalTwin } from "@/lib/domain/digital-twin";
-import { SIGNAL_BG_CLASSES, SIGNAL_HERO_BG, SIGNAL_METRIC_WINDOW_DAYS } from "@/lib/config/pet-signal";
+import {
+  SIGNAL_BG_CLASSES,
+  SIGNAL_HERO_BG,
+  SIGNAL_METRIC_WINDOW_DAYS,
+} from "@/lib/config/pet-signal";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import type { SpeciesId } from "@/lib/config/species";
@@ -14,12 +25,22 @@ import { formatDateShort, formatPetAge } from "@/lib/utils/format";
 import { getPortalLocale } from "@/lib/i18n/portal-locale";
 import { getTranslations } from "next-intl/server";
 import { translateSignalReason } from "@/lib/i18n/signal-reason";
-import { Activity, Syringe, FileText, Pill, Pencil, Trash2, ChevronLeft, CalendarDays, Heart, Stethoscope } from "lucide-react";
+import {
+  Activity,
+  Syringe,
+  FileText,
+  Pill,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  CalendarDays,
+  Heart,
+  Stethoscope,
+} from "lucide-react";
 import { DigitalTwinCard } from "@/components/portal/DigitalTwinCard";
 import { SignalHistoryTimeline } from "@/components/portal/SignalHistoryTimeline";
 
 type Params = { params: Promise<{ petId: string }> };
-
 
 export default async function PetProfilePage({ params }: Params) {
   const session = await auth();
@@ -90,21 +111,28 @@ export default async function PetProfilePage({ params }: Params) {
       href: `/portal/pets/${pet.id}/records`,
       icon: FileText,
       label: t("petNavRecords"),
-      desc: recordCount > 0 ? t("petNavRecordsCount", { count: recordCount }) : t("petNavHealthHistory"),
+      desc:
+        recordCount > 0
+          ? t("petNavRecordsCount", { count: recordCount })
+          : t("petNavHealthHistory"),
     },
     {
       href: `/portal/pets/${pet.id}/vaccinations`,
       icon: Syringe,
       label: t("petNavVaccinations"),
-      desc: overdueCount > 0
-        ? t("petNavVaccOverdue", { count: allVacc.length, overdue: overdueCount })
-        : t("petNavVaccLogged", { count: allVacc.length }),
+      desc:
+        overdueCount > 0
+          ? t("petNavVaccOverdue", { count: allVacc.length, overdue: overdueCount })
+          : t("petNavVaccLogged", { count: allVacc.length }),
     },
     {
       href: `/portal/pets/${pet.id}/medications`,
       icon: Pill,
       label: t("petNavMedications"),
-      desc: activeMeds.length > 0 ? t("petNavMedsActive", { count: activeMeds.length }) : t("petNavMedsNone"),
+      desc:
+        activeMeds.length > 0
+          ? t("petNavMedsActive", { count: activeMeds.length })
+          : t("petNavMedsNone"),
     },
   ];
 
@@ -130,22 +158,16 @@ export default async function PetProfilePage({ params }: Params) {
               <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-2xl lg:rounded-3xl bg-white shadow-sm flex items-center justify-center text-4xl lg:text-5xl overflow-hidden flex-shrink-0 border border-[var(--border)]">
                 {pet.avatarUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={pet.avatarUrl}
-                    alt={pet.name}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={pet.avatarUrl} alt={pet.name} className="w-full h-full object-cover" />
                 ) : (
-                  speciesDef?.emoji ?? "🐾"
+                  (speciesDef?.emoji ?? "🐾")
                 )}
               </div>
 
               {/* Info */}
               <div>
                 <div className="flex items-center gap-3 mb-1 flex-wrap">
-                  <h1 className="text-2xl lg:text-3xl font-bold text-[var(--ink)]">
-                    {pet.name}
-                  </h1>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-[var(--ink)]">{pet.name}</h1>
                   <span className={SIGNAL_BG_CLASSES[sig as keyof typeof SIGNAL_BG_CLASSES]}>
                     {tSignal(sig)}
                   </span>
@@ -154,25 +176,24 @@ export default async function PetProfilePage({ params }: Params) {
                 <p className="text-sm text-[var(--muted)] leading-relaxed">
                   {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                   {pet.breed ? ` · ${pet.breed}` : ""}
-                  {pet.sex !== "unknown" ? ` · ${tPub(`sex_${pet.sex}` as Parameters<typeof tPub>[0])}` : ""}
-                  {age ? ` · ${age}` : pet.birthDate ? ` · ${t("petBorn", { date: formatDateShort(pet.birthDate, locale) })}` : ""}
+                  {pet.sex !== "unknown"
+                    ? ` · ${tPub(`sex_${pet.sex}` as Parameters<typeof tPub>[0])}`
+                    : ""}
+                  {age
+                    ? ` · ${age}`
+                    : pet.birthDate
+                      ? ` · ${t("petBorn", { date: formatDateShort(pet.birthDate, locale) })}`
+                      : ""}
                 </p>
 
-                {pet.bio && (
-                  <p className="text-sm text-[var(--ink2)] mt-2 max-w-md">
-                    {pet.bio}
-                  </p>
-                )}
+                {pet.bio && <p className="text-sm text-[var(--ink2)] mt-2 max-w-md">{pet.bio}</p>}
               </div>
             </div>
 
             {/* Edit / delete — delete lives with edit so it is findable
                 without hunting through a settings page. */}
             <div className="flex items-center gap-2 flex-shrink-0">
-              <Link
-                href={`/portal/pets/${pet.id}/edit`}
-                className="btn-outline text-sm"
-              >
+              <Link href={`/portal/pets/${pet.id}/edit`} className="btn-outline text-sm">
                 <Pencil className="w-3.5 h-3.5" />
                 {t("editButton")}
               </Link>
@@ -194,27 +215,18 @@ export default async function PetProfilePage({ params }: Params) {
             </p>
             <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
               {sig !== "healthy" && overdueCount > 0 && (
-                <Link
-                  href={`/portal/pets/${pet.id}/vaccinations`}
-                  className="btn-outline text-sm"
-                >
+                <Link href={`/portal/pets/${pet.id}/vaccinations`} className="btn-outline text-sm">
                   <Syringe className="w-4 h-4" />
                   {t("updateVaccinations")}
                 </Link>
               )}
               {sig !== "healthy" && signalResult.outOfRangeMetrics.length > 0 && (
-                <Link
-                  href="/portal/find"
-                  className="btn-outline text-sm"
-                >
+                <Link href="/portal/find" className="btn-outline text-sm">
                   <Stethoscope className="w-4 h-4" />
                   {t("findAVet")}
                 </Link>
               )}
-              <Link
-                href={`/portal/pets/${pet.id}/health/log`}
-                className="btn-primary text-sm"
-              >
+              <Link href={`/portal/pets/${pet.id}/health/log`} className="btn-primary text-sm">
                 <CalendarDays className="w-4 h-4" />
                 {t("logToday")}
               </Link>

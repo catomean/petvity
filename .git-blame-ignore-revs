@@ -1,0 +1,2 @@
+# Bulk reformats. `git config blame.ignoreRevsFile .git-blame-ignore-revs`
+e558eb5adb52909a3687017dcbf46895bcc6097c  # prettier, 252 files

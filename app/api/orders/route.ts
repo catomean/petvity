@@ -19,7 +19,11 @@ export async function GET() {
     .orderBy(desc(orders.createdAt));
 
   if (userOrders.length === 0) {
-    return NextResponse.json({ success: true, data: [], meta: { paymentsEnabled: paymentsEnabled() } });
+    return NextResponse.json({
+      success: true,
+      data: [],
+      meta: { paymentsEnabled: paymentsEnabled() },
+    });
   }
 
   const orderIds = userOrders.map((o) => o.id);
@@ -83,7 +87,10 @@ export async function POST(req: NextRequest) {
   }
 
   return NextResponse.json(
-    { success: true, data: { ...result.order, items: result.items, checkoutUrl: result.checkoutUrl } },
+    {
+      success: true,
+      data: { ...result.order, items: result.items, checkoutUrl: result.checkoutUrl },
+    },
     { status: 201 },
   );
 }

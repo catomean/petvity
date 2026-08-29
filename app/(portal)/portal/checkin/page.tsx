@@ -5,7 +5,12 @@ import { and, eq, desc, inArray, gte } from "drizzle-orm";
 import Link from "next/link";
 import { AlertTriangle, CalendarDays, ChevronRight, CheckCircle } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
-import { SIGNAL_BG_CLASSES, SIGNAL_SORT_ORDER, SIGNAL_METRIC_WINDOW_DAYS, SIGNAL_TEXT_CLASSES } from "@/lib/config/pet-signal";
+import {
+  SIGNAL_BG_CLASSES,
+  SIGNAL_SORT_ORDER,
+  SIGNAL_METRIC_WINDOW_DAYS,
+  SIGNAL_TEXT_CLASSES,
+} from "@/lib/config/pet-signal";
 import { countOverdueVaccinations } from "@/lib/config/vaccinations";
 import { computePetSignal } from "@/lib/domain/pet-signal";
 import type { SpeciesId } from "@/lib/config/species";
@@ -29,7 +34,9 @@ export default async function CheckinPage() {
   const db = getInstance();
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
-  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
 
   const userPets = await db.query.pets.findMany({
     where: eq(pets.ownerId, session.user.id),
@@ -39,17 +46,20 @@ export default async function CheckinPage() {
   const petIds = userPets.map((p) => p.id);
 
   // Batch-fetch today's check-ins + recent metrics + vaccinations (3 queries, no N+1)
-  const [todayRows, allMetrics, allVacc] = petIds.length > 0
-    ? await Promise.all([
-        db.select({ petId: healthMetrics.petId })
-          .from(healthMetrics)
-          .where(and(inArray(healthMetrics.petId, petIds), eq(healthMetrics.date, todayStr))),
-        db.select()
-          .from(healthMetrics)
-          .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr))),
-        db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
-      ])
-    : [[], [], []];
+  const [todayRows, allMetrics, allVacc] =
+    petIds.length > 0
+      ? await Promise.all([
+          db
+            .select({ petId: healthMetrics.petId })
+            .from(healthMetrics)
+            .where(and(inArray(healthMetrics.petId, petIds), eq(healthMetrics.date, todayStr))),
+          db
+            .select()
+            .from(healthMetrics)
+            .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr))),
+          db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
+        ])
+      : [[], [], []];
 
   // Group by petId in memory
   const metricsByPet = new Map<string, typeof allMetrics>();
@@ -72,7 +82,13 @@ export default async function CheckinPage() {
     const recentMetrics = metricsByPet.get(pet.id) ?? [];
     const petVacc = vaccByPet.get(pet.id) ?? [];
     const overdueCount = countOverdueVaccinations(petVacc, todayStr);
-    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, petCreatedAt: pet.createdAt, now });
+    const signal = computePetSignal({
+      species: pet.species as SpeciesId,
+      recentMetrics,
+      overdueVaccinations: overdueCount,
+      petCreatedAt: pet.createdAt,
+      now,
+    });
     return { ...pet, signal };
   });
 
@@ -98,7 +114,10 @@ export default async function CheckinPage() {
           ? t("checkinNoPets")
           : pendingCount === 0
             ? t("allCheckedIn", { total: userPets.length })
-            : t("partialCheckedIn", { done: userPets.length - pendingCount, total: userPets.length })}
+            : t("partialCheckedIn", {
+                done: userPets.length - pendingCount,
+                total: userPets.length,
+              })}
       </p>
 
       {userPets.length === 0 ? (
@@ -131,10 +150,16 @@ export default async function CheckinPage() {
               >
                 {/* Avatar */}
                 <div className="w-12 h-12 rounded-full bg-[var(--teal-light)] flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
-                  {pet.avatarUrl
+                  {pet.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    ? <img src={pet.avatarUrl} alt={pet.name} className="w-full h-full object-cover" />
-                    : speciesDef?.emoji ?? "🐾"}
+                    <img
+                      src={pet.avatarUrl}
+                      alt={pet.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    (speciesDef?.emoji ?? "🐾")
+                  )}
                 </div>
 
                 {/* Name + species + signal reason */}
@@ -144,9 +169,13 @@ export default async function CheckinPage() {
                     {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                   </div>
                   {!done && sig !== "healthy" && (
-                    <div className={`flex items-center gap-1 mt-1 text-xs ${SIGNAL_TEXT_CLASSES[sig as PetWellnessSignal]}`}>
+                    <div
+                      className={`flex items-center gap-1 mt-1 text-xs ${SIGNAL_TEXT_CLASSES[sig as PetWellnessSignal]}`}
+                    >
                       <AlertTriangle className="w-3 h-3 flex-shrink-0" />
-                      <span className="truncate">{translateSignalReason(pet.signal.reasonData, tSignal)}</span>
+                      <span className="truncate">
+                        {translateSignalReason(pet.signal.reasonData, tSignal)}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -158,9 +187,7 @@ export default async function CheckinPage() {
                     {t("loggedToday")}
                   </span>
                 ) : (
-                  <span className={`${SIGNAL_BG_CLASSES[sig]} flex-shrink-0`}>
-                    {tSignal(sig)}
-                  </span>
+                  <span className={`${SIGNAL_BG_CLASSES[sig]} flex-shrink-0`}>{tSignal(sig)}</span>
                 )}
 
                 <ChevronRight className="w-4 h-4 text-[var(--muted)] flex-shrink-0" />

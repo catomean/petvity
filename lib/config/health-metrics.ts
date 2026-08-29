@@ -1,20 +1,11 @@
 import type { SpeciesId } from "./species";
 import type { PetWellnessSignal } from "./pet-signal";
-import {
-  SIGNAL_WATCH_METRIC_COUNT,
-  SIGNAL_CONCERN_METRIC_COUNT,
-} from "./pet-signal";
+import { SIGNAL_WATCH_METRIC_COUNT, SIGNAL_CONCERN_METRIC_COUNT } from "./pet-signal";
 
 export type MetricCategory = "physical" | "emotional";
 
 export type MetricId =
-  | "weight"
-  | "temperature"
-  | "heart_rate"
-  | "energy"
-  | "mood"
-  | "anxiety"
-  | "socialization";
+  "weight" | "temperature" | "heart_rate" | "energy" | "mood" | "anxiety" | "socialization";
 
 export type NormalRange = { min: number; max: number };
 
@@ -62,16 +53,16 @@ export const HEALTH_METRIC_CONFIG: Record<MetricId, MetricDef> = {
     toDisplay: (g) => parseFloat((g / 1000).toFixed(3)),
     toStorage: (kg) => Math.round(kg * 1000),
     normalRange: {
-      dog:        { min: 1500,   max: 90000   },
-      cat:        { min: 2500,   max: 8000    },
-      horse:      { min: 380000, max: 1200000 },
-      bird:       { min: 15,     max: 1500    },
-      rabbit:     { min: 1000,   max: 8000    },
-      guinea_pig: { min: 700,    max: 1200    },
-      hamster:    { min: 25,     max: 200     },
-      reptile:    { min: 10,     max: 60000   },
-      fish:       { min: 5,      max: 10000   },
-      default:    { min: 50,     max: 200000  },
+      dog: { min: 1500, max: 90000 },
+      cat: { min: 2500, max: 8000 },
+      horse: { min: 380000, max: 1200000 },
+      bird: { min: 15, max: 1500 },
+      rabbit: { min: 1000, max: 8000 },
+      guinea_pig: { min: 700, max: 1200 },
+      hamster: { min: 25, max: 200 },
+      reptile: { min: 10, max: 60000 },
+      fish: { min: 5, max: 10000 },
+      default: { min: 50, max: 200000 },
     },
     icon: "Scale",
     description: "Body weight in kilograms",
@@ -86,16 +77,16 @@ export const HEALTH_METRIC_CONFIG: Record<MetricId, MetricDef> = {
     toDisplay: (cd) => parseFloat((cd / 100).toFixed(2)),
     toStorage: (c) => Math.round(c * 100),
     normalRange: {
-      dog:        { min: 3800, max: 3900 },
-      cat:        { min: 3800, max: 3925 },
-      horse:      { min: 3750, max: 3850 },
-      bird:       { min: 4100, max: 4300 },
-      rabbit:     { min: 3850, max: 4000 },
+      dog: { min: 3800, max: 3900 },
+      cat: { min: 3800, max: 3925 },
+      horse: { min: 3750, max: 3850 },
+      bird: { min: 4100, max: 4300 },
+      rabbit: { min: 3850, max: 4000 },
       guinea_pig: { min: 3720, max: 3950 },
-      hamster:    { min: 3700, max: 3850 },
-      reptile:    { min: 2500, max: 3800 },
-      fish:       { min: 1800, max: 2800 },
-      default:    { min: 3700, max: 4100 },
+      hamster: { min: 3700, max: 3850 },
+      reptile: { min: 2500, max: 3800 },
+      fish: { min: 1800, max: 2800 },
+      default: { min: 3700, max: 4100 },
     },
     icon: "Thermometer",
     description: "Body temperature in degrees Celsius",
@@ -110,15 +101,15 @@ export const HEALTH_METRIC_CONFIG: Record<MetricId, MetricDef> = {
     toDisplay: (v) => v,
     toStorage: (v) => Math.round(v),
     normalRange: {
-      dog:        { min: 60,  max: 140 },
-      cat:        { min: 120, max: 220 },
-      horse:      { min: 28,  max: 44  },
-      bird:       { min: 150, max: 500 },
-      rabbit:     { min: 130, max: 325 },
+      dog: { min: 60, max: 140 },
+      cat: { min: 120, max: 220 },
+      horse: { min: 28, max: 44 },
+      bird: { min: 150, max: 500 },
+      rabbit: { min: 130, max: 325 },
       guinea_pig: { min: 230, max: 380 },
-      hamster:    { min: 300, max: 600 },
-      reptile:    { min: 30,  max: 150 },
-      default:    { min: 40,  max: 400 },
+      hamster: { min: 300, max: 600 },
+      reptile: { min: 30, max: 150 },
+      default: { min: 40, max: 400 },
     },
     icon: "HeartPulse",
     description: "Resting heart rate in beats per minute",
@@ -186,18 +177,10 @@ export const HEALTH_METRIC_CONFIG: Record<MetricId, MetricDef> = {
 };
 
 export const PHYSICAL_METRICS: MetricId[] = ["weight", "temperature", "heart_rate"];
-export const EMOTIONAL_METRICS: MetricId[] = [
-  "energy",
-  "mood",
-  "anxiety",
-  "socialization",
-];
+export const EMOTIONAL_METRICS: MetricId[] = ["energy", "mood", "anxiety", "socialization"];
 
 /** Get the normal range for a metric, falling back to "default". */
-export function getNormalRange(
-  metricId: MetricId,
-  speciesId: SpeciesId,
-): NormalRange {
+export function getNormalRange(metricId: MetricId, speciesId: SpeciesId): NormalRange {
   const def = HEALTH_METRIC_CONFIG[metricId];
   return def.normalRange[speciesId] ?? def.normalRange.default;
 }

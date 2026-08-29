@@ -12,7 +12,5 @@ import { routing } from "@/i18n/routing";
 
 export async function getPortalLocale(): Promise<string> {
   const raw = (await cookies()).get("NEXT_LOCALE")?.value;
-  return (routing.locales as readonly string[]).includes(raw ?? "")
-    ? raw!
-    : routing.defaultLocale;
+  return (routing.locales as readonly string[]).includes(raw ?? "") ? raw! : routing.defaultLocale;
 }

@@ -3,12 +3,15 @@ import { computeDigitalTwin } from "./digital-twin";
 import type { HealthMetricRow } from "./pet-signal";
 
 const NOW = new Date("2026-01-15T12:00:00Z");
-const TODAY     = "2026-01-15";
+const TODAY = "2026-01-15";
 const YESTERDAY = "2026-01-14";
-const DAY2      = "2026-01-13";
-const DAY3      = "2026-01-12";
+const DAY2 = "2026-01-13";
+const DAY3 = "2026-01-12";
 
-function row(date: string, overrides: Partial<Pick<HealthMetricRow, "mood" | "energy" | "anxiety" | "socialization">> = {}): HealthMetricRow {
+function row(
+  date: string,
+  overrides: Partial<Pick<HealthMetricRow, "mood" | "energy" | "anxiety" | "socialization">> = {},
+): HealthMetricRow {
   return {
     date,
     weightGrams: null,
@@ -51,19 +54,13 @@ describe("computeDigitalTwin", () => {
   });
 
   it("inverts anxiety — anxiety=1 contributes 100% fill", () => {
-    const result = computeDigitalTwin(
-      [row(TODAY, { anxiety: 1 })],
-      NOW,
-    );
+    const result = computeDigitalTwin([row(TODAY, { anxiety: 1 })], NOW);
     const m = result.metrics.find((x) => x.id === "anxiety");
     expect(m?.fillPercent).toBe(100);
   });
 
   it("inverts anxiety — anxiety=5 contributes 0% fill", () => {
-    const result = computeDigitalTwin(
-      [row(TODAY, { anxiety: 5 })],
-      NOW,
-    );
+    const result = computeDigitalTwin([row(TODAY, { anxiety: 5 })], NOW);
     const m = result.metrics.find((x) => x.id === "anxiety");
     expect(m?.fillPercent).toBe(0);
   });
@@ -77,10 +74,7 @@ describe("computeDigitalTwin", () => {
   });
 
   it("only includes metrics with non-null values", () => {
-    const result = computeDigitalTwin(
-      [row(TODAY, { mood: 4, socialization: 3 })],
-      NOW,
-    );
+    const result = computeDigitalTwin([row(TODAY, { mood: 4, socialization: 3 })], NOW);
     expect(result.metrics).toHaveLength(2);
     expect(result.metrics.map((m) => m.id).sort()).toEqual(["mood", "socialization"]);
   });
@@ -96,10 +90,7 @@ describe("computeDigitalTwin", () => {
   });
 
   it("returns insufficient_data trend for single row", () => {
-    const result = computeDigitalTwin(
-      [row(TODAY, { mood: 4, energy: 4 })],
-      NOW,
-    );
+    const result = computeDigitalTwin([row(TODAY, { mood: 4, energy: 4 })], NOW);
     expect(result.trend).toBe("insufficient_data");
   });
 
@@ -107,10 +98,10 @@ describe("computeDigitalTwin", () => {
     // Recent: days 0–1 (mood=5 = score 100), Prior: days 2–3 (mood=1 = score 0)
     const result = computeDigitalTwin(
       [
-        row(TODAY,     { mood: 5 }),
+        row(TODAY, { mood: 5 }),
         row(YESTERDAY, { mood: 5 }),
-        row(DAY2,      { mood: 1 }),
-        row(DAY3,      { mood: 1 }),
+        row(DAY2, { mood: 1 }),
+        row(DAY3, { mood: 1 }),
       ],
       NOW,
     );
@@ -121,10 +112,10 @@ describe("computeDigitalTwin", () => {
   it("detects declining trend when recent scores are lower", () => {
     const result = computeDigitalTwin(
       [
-        row(TODAY,     { mood: 1 }),
+        row(TODAY, { mood: 1 }),
         row(YESTERDAY, { mood: 1 }),
-        row(DAY2,      { mood: 5 }),
-        row(DAY3,      { mood: 5 }),
+        row(DAY2, { mood: 5 }),
+        row(DAY3, { mood: 5 }),
       ],
       NOW,
     );
@@ -135,10 +126,10 @@ describe("computeDigitalTwin", () => {
   it("detects stable trend when scores are similar", () => {
     const result = computeDigitalTwin(
       [
-        row(TODAY,     { mood: 3, energy: 3 }),
+        row(TODAY, { mood: 3, energy: 3 }),
         row(YESTERDAY, { mood: 3, energy: 3 }),
-        row(DAY2,      { mood: 3, energy: 3 }),
-        row(DAY3,      { mood: 3, energy: 3 }),
+        row(DAY2, { mood: 3, energy: 3 }),
+        row(DAY3, { mood: 3, energy: 3 }),
       ],
       NOW,
     );
@@ -147,13 +138,7 @@ describe("computeDigitalTwin", () => {
   });
 
   it("handles two rows — trend from splitting into one each", () => {
-    const result = computeDigitalTwin(
-      [
-        row(TODAY,     { mood: 5 }),
-        row(YESTERDAY, { mood: 1 }),
-      ],
-      NOW,
-    );
+    const result = computeDigitalTwin([row(TODAY, { mood: 5 }), row(YESTERDAY, { mood: 1 })], NOW);
     // recent=[today=100], prior=[yesterday=0] → delta=100 → improving
     expect(result.trend).toBe("improving");
   });

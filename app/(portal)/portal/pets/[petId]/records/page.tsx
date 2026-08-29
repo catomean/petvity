@@ -2,10 +2,20 @@
 
 import { useParams } from "next/navigation";
 import {
-  Plus, X, FileText,
-  Stethoscope, Syringe, Pill, Scissors, FlaskConical,
-  Smile, Sparkles, MoreHorizontal,
-  Pencil, Trash2, Search,
+  Plus,
+  X,
+  FileText,
+  Stethoscope,
+  Syringe,
+  Pill,
+  Scissors,
+  FlaskConical,
+  Smile,
+  Sparkles,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Search,
 } from "lucide-react";
 import { formatDateShort } from "@/lib/utils/format";
 import { HEALTH_RECORD_TYPE_CONFIG, HEALTH_RECORD_TYPE_OPTIONS } from "@/lib/config/health-records";
@@ -16,14 +26,14 @@ import PageHeader from "@/components/portal/PageHeader";
 
 /* ── Icon map — React components stay in the UI layer, not in config ─────── */
 const RECORD_TYPE_ICONS: Record<HealthRecordTypeId, React.ElementType> = {
-  vet_visit:   Stethoscope,
+  vet_visit: Stethoscope,
   vaccination: Syringe,
-  medication:  Pill,
-  surgery:     Scissors,
-  lab_result:  FlaskConical,
-  dental:      Smile,
-  grooming:    Sparkles,
-  other:       MoreHorizontal,
+  medication: Pill,
+  surgery: Scissors,
+  lab_result: FlaskConical,
+  dental: Smile,
+  grooming: Sparkles,
+  other: MoreHorizontal,
 };
 
 type RecordType = HealthRecordTypeId;
@@ -97,13 +107,28 @@ export default function HealthRecordsPage() {
   const { petId } = useParams<{ petId: string }>();
 
   const {
-    petName, rows: records, loading, filteredRows: filteredRecords,
-    filter: typeFilter, setFilter: setTypeFilter,
-    searchQ, setSearchQ,
-    showForm, editingId, deletingId, setDeletingId,
-    form, saving, error,
+    petName,
+    rows: records,
+    loading,
+    filteredRows: filteredRecords,
+    filter: typeFilter,
+    setFilter: setTypeFilter,
+    searchQ,
+    setSearchQ,
+    showForm,
+    editingId,
+    deletingId,
+    setDeletingId,
+    form,
+    saving,
+    error,
     deleteError,
-    openAdd, openEdit, closeForm, handleSubmit, handleDelete, field,
+    openAdd,
+    openEdit,
+    closeForm,
+    handleSubmit,
+    handleDelete,
+    field,
   } = useHealthList<HealthRecord, FormState>({
     petId,
     apiPath: "/api/health/records",
@@ -137,38 +162,40 @@ export default function HealthRecordsPage() {
         purpose={t("recordsSubtitle")}
         action={
           <div className="flex items-center gap-2 flex-wrap">
-          {records.length > 0 && !showForm && (
-            <>
-              <div className="relative">
-                <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
-                <input
-                  type="text"
-                  placeholder={t("recordsSearch")}
-                  className="form-input form-input-icon text-sm py-1.5 w-44"
-                  value={searchQ}
-                  onChange={(e) => setSearchQ(e.target.value)}
-                  aria-label={t("recordsSearch")}
-                />
-              </div>
-              <select
-                className="form-input text-sm py-1.5"
-                value={typeFilter}
-                onChange={(e) => setTypeFilter(e.target.value)}
-                aria-label={t("recordsAllTypes")}
-              >
-                <option value="all">{t("recordsAllTypes")}</option>
-                {HEALTH_RECORD_TYPE_OPTIONS.map(({ value }) => (
-                  <option key={value} value={value}>{t(`recType_${value}` as Parameters<typeof t>[0])}</option>
-                ))}
-              </select>
-            </>
-          )}
-          {!showForm && (
-            <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-              <Plus className="w-4 h-4" />
-              {t("recordsAdd")}
-            </button>
-          )}
+            {records.length > 0 && !showForm && (
+              <>
+                <div className="relative">
+                  <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)] pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder={t("recordsSearch")}
+                    className="form-input form-input-icon text-sm py-1.5 w-44"
+                    value={searchQ}
+                    onChange={(e) => setSearchQ(e.target.value)}
+                    aria-label={t("recordsSearch")}
+                  />
+                </div>
+                <select
+                  className="form-input text-sm py-1.5"
+                  value={typeFilter}
+                  onChange={(e) => setTypeFilter(e.target.value)}
+                  aria-label={t("recordsAllTypes")}
+                >
+                  <option value="all">{t("recordsAllTypes")}</option>
+                  {HEALTH_RECORD_TYPE_OPTIONS.map(({ value }) => (
+                    <option key={value} value={value}>
+                      {t(`recType_${value}` as Parameters<typeof t>[0])}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+            {!showForm && (
+              <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+                <Plus className="w-4 h-4" />
+                {t("recordsAdd")}
+              </button>
+            )}
           </div>
         }
       />
@@ -187,11 +214,7 @@ export default function HealthRecordsPage() {
                 {editingId ? t("recordsEditTitle") : t("recordsNewTitle")}
               </h2>
             </div>
-            <button
-              type="button"
-              onClick={closeForm}
-              className="btn-ghost p-1 rounded-lg"
-            >
+            <button type="button" onClick={closeForm} className="btn-ghost p-1 rounded-lg">
               <X className="w-4 h-4 text-[var(--muted)]" />
             </button>
           </div>
@@ -209,7 +232,9 @@ export default function HealthRecordsPage() {
                 onChange={(e) => field("type", e.target.value)}
               >
                 {HEALTH_RECORD_TYPE_OPTIONS.map(({ value }) => (
-                  <option key={value} value={value}>{t(`recType_${value}` as Parameters<typeof t>[0])}</option>
+                  <option key={value} value={value}>
+                    {t(`recType_${value}` as Parameters<typeof t>[0])}
+                  </option>
                 ))}
               </select>
             </div>
@@ -310,7 +335,10 @@ export default function HealthRecordsPage() {
         <div className="card py-12 text-center">
           <p className="font-medium text-[var(--ink)] mb-1">{t("recordsNoMatch")}</p>
           <button
-            onClick={() => { setTypeFilter("all"); setSearchQ(""); }}
+            onClick={() => {
+              setTypeFilter("all");
+              setSearchQ("");
+            }}
             className="text-sm text-[var(--teal)] hover:underline mt-1"
           >
             {t("listClearFilters")}
@@ -323,7 +351,9 @@ export default function HealthRecordsPage() {
             const Icon = RECORD_TYPE_ICONS[r.type] ?? RECORD_TYPE_ICONS.other;
             return (
               <div key={r.id} className="card p-4 flex gap-4">
-                <div className={`w-10 h-10 rounded-xl ${cfg.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                <div
+                  className={`w-10 h-10 rounded-xl ${cfg.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}
+                >
                   <Icon className={`w-5 h-5 ${cfg.color}`} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -331,7 +361,8 @@ export default function HealthRecordsPage() {
                     <div className="min-w-0">
                       <p className="font-medium text-[var(--ink)] leading-snug">{r.title}</p>
                       <p className="text-xs text-[var(--muted)] mt-0.5">
-                        {t(`recType_${r.type}` as Parameters<typeof t>[0])} · {formatDateShort(r.date)}
+                        {t(`recType_${r.type}` as Parameters<typeof t>[0])} ·{" "}
+                        {formatDateShort(r.date)}
                         {r.vetName && ` · ${r.vetName}`}
                         {r.clinic && ` @ ${r.clinic}`}
                       </p>

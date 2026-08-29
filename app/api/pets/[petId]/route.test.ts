@@ -23,8 +23,12 @@ const OWNER_SESSION = {
 };
 
 const MOCK_PET = {
-  id: PET_ID, name: "Buddy", ownerId: "owner-1", species: "dog",
-  breed: "Labrador Retriever", isPublic: false,
+  id: PET_ID,
+  name: "Buddy",
+  ownerId: "owner-1",
+  species: "dog",
+  breed: "Labrador Retriever",
+  isPublic: false,
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ petId: PET_ID }) };
@@ -94,7 +98,10 @@ describe("PATCH /api/pets/[petId]", () => {
   it("returns 200 when setting pet public with valid handle", async () => {
     const updated = { ...MOCK_PET, isPublic: true, handle: "buddy-the-dog" };
     db._updateReturning.mockResolvedValueOnce([updated]);
-    const res = await PATCH(makePatchRequest({ isPublic: true, handle: "buddy-the-dog" }), ROUTE_CONTEXT);
+    const res = await PATCH(
+      makePatchRequest({ isPublic: true, handle: "buddy-the-dog" }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.data.handle).toBe("buddy-the-dog");

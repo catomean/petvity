@@ -29,7 +29,10 @@ const ADMIN_SESSION = {
 };
 
 const MOCK_ORDER_PENDING = {
-  id: ORDER_ID, userId: "owner-1", totalCents: 2999, status: "pending",
+  id: ORDER_ID,
+  userId: "owner-1",
+  totalCents: 2999,
+  status: "pending",
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ orderId: ORDER_ID }) };

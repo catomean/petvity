@@ -37,9 +37,7 @@ export function HealthTrendChart({
   noDataText = "No data yet",
   normalRangeLabel = "Normal range",
 }: Props) {
-  const hasData = data.some((d) =>
-    lines.some((l) => d[l.dataKey] != null),
-  );
+  const hasData = data.some((d) => lines.some((l) => d[l.dataKey] != null));
 
   if (!hasData) {
     return (
@@ -60,15 +58,25 @@ export function HealthTrendChart({
       <h3 className="text-sm font-semibold text-[var(--ink)] mb-1">{title}</h3>
       {showLegend && (
         <div className="flex flex-wrap items-center gap-3 mb-3">
-          {lines.length > 1 && lines.map((l) => (
-            <span key={l.dataKey} className="flex items-center gap-1.5 text-xs text-[var(--ink2)]">
-              <span className="inline-block w-3 h-0.5 rounded" style={{ backgroundColor: l.color }} />
-              {l.name}
-            </span>
-          ))}
+          {lines.length > 1 &&
+            lines.map((l) => (
+              <span
+                key={l.dataKey}
+                className="flex items-center gap-1.5 text-xs text-[var(--ink2)]"
+              >
+                <span
+                  className="inline-block w-3 h-0.5 rounded"
+                  style={{ backgroundColor: l.color }}
+                />
+                {l.name}
+              </span>
+            ))}
           {showRange && (
             <span className="flex items-center gap-1.5 text-xs text-[var(--ink2)]">
-              <span className="inline-block w-3 h-2 rounded-sm" style={{ background: "color-mix(in srgb, var(--green) 25%, transparent)" }} />
+              <span
+                className="inline-block w-3 h-2 rounded-sm"
+                style={{ background: "color-mix(in srgb, var(--green) 25%, transparent)" }}
+              />
               {normalRangeLabel}
             </span>
           )}
@@ -99,7 +107,9 @@ export function HealthTrendChart({
               border: "1px solid var(--border)",
               boxShadow: "var(--tooltip-shadow)",
             }}
-            formatter={(value) => (value != null ? [`${value}${unit}`, undefined] : [undefined, undefined])}
+            formatter={(value) =>
+              value != null ? [`${value}${unit}`, undefined] : [undefined, undefined]
+            }
           />
           {normalMin != null && normalMax != null && (
             <ReferenceArea

@@ -54,7 +54,10 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
     ? {
         date: targetDate,
         weightKg: existing.weightGrams != null ? (existing.weightGrams / 1000).toString() : "",
-        temperatureC: existing.temperatureCentidegrees != null ? (existing.temperatureCentidegrees / 100).toString() : "",
+        temperatureC:
+          existing.temperatureCentidegrees != null
+            ? (existing.temperatureCentidegrees / 100).toString()
+            : "",
         heartRateBpm: existing.heartRateBpm?.toString() ?? "",
         energy: existing.energy?.toString() ?? "",
         mood: existing.mood?.toString() ?? "",
@@ -62,12 +65,18 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
         socialization: existing.socialization?.toString() ?? "",
         notes: existing.notes ?? "",
       }
-    // Pre-fill the date when editing a past date with no prior entry
-    : isEditing
+    : // Pre-fill the date when editing a past date with no prior entry
+      isEditing
       ? {
           date: targetDate,
-          weightKg: "", temperatureC: "", heartRateBpm: "",
-          energy: "", mood: "", anxiety: "", socialization: "", notes: "",
+          weightKg: "",
+          temperatureC: "",
+          heartRateBpm: "",
+          energy: "",
+          mood: "",
+          anxiety: "",
+          socialization: "",
+          notes: "",
         }
       : undefined;
 
@@ -95,7 +104,9 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
   return (
     <div className="max-w-lg">
       <PageHeader
-        title={isEditing ? t("editPastEntry") : existing ? t("updateTodaysCheckin") : t("logHealthCheck")}
+        title={
+          isEditing ? t("editPastEntry") : existing ? t("updateTodaysCheckin") : t("logHealthCheck")
+        }
         purpose={
           isEditing
             ? t("editingEntryFor", { date: formatRelativeDate(targetDate, locale) })
@@ -107,21 +118,25 @@ export default async function LogHealthPage({ params, searchParams }: Params) {
       />
 
       {/* Previous log context — helps owners notice trends */}
-      {prevLog && (() => {
-        const parts: string[] = [];
-        if (prevLog.weightGrams != null)
-          parts.push(`${HEALTH_METRIC_CONFIG.weight.toDisplay(prevLog.weightGrams)} kg`);
-        if (prevLog.temperatureCentidegrees != null)
-          parts.push(`${HEALTH_METRIC_CONFIG.temperature.toDisplay(prevLog.temperatureCentidegrees)}°C`);
-        if (prevLog.heartRateBpm != null)
-          parts.push(`${prevLog.heartRateBpm} bpm`);
-        return parts.length > 0 ? (
-          <p className="text-xs text-[var(--muted)] bg-[var(--off)] border border-[var(--border)] rounded-lg px-3 py-2 mb-6">
-            <span className="font-medium text-[var(--ink2)]">{t("lastLoggedContext", { date: formatRelativeDate(prevLog.date, locale) })}</span>
-            {" "}{parts.join(" · ")}
-          </p>
-        ) : null;
-      })()}
+      {prevLog &&
+        (() => {
+          const parts: string[] = [];
+          if (prevLog.weightGrams != null)
+            parts.push(`${HEALTH_METRIC_CONFIG.weight.toDisplay(prevLog.weightGrams)} kg`);
+          if (prevLog.temperatureCentidegrees != null)
+            parts.push(
+              `${HEALTH_METRIC_CONFIG.temperature.toDisplay(prevLog.temperatureCentidegrees)}°C`,
+            );
+          if (prevLog.heartRateBpm != null) parts.push(`${prevLog.heartRateBpm} bpm`);
+          return parts.length > 0 ? (
+            <p className="text-xs text-[var(--muted)] bg-[var(--off)] border border-[var(--border)] rounded-lg px-3 py-2 mb-6">
+              <span className="font-medium text-[var(--ink2)]">
+                {t("lastLoggedContext", { date: formatRelativeDate(prevLog.date, locale) })}
+              </span>{" "}
+              {parts.join(" · ")}
+            </p>
+          ) : null;
+        })()}
 
       <HealthLogForm
         petId={petId}

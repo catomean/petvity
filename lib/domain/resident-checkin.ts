@@ -58,15 +58,11 @@ function dayIndex(dateStr: string): number {
   return Math.floor(Date.parse(dateStr + "T00:00:00Z") / 86_400_000);
 }
 
-export function generateResidentCheckin(
-  dateStr: string,
-  profile: CheckinProfile,
-): ResidentCheckin {
+export function generateResidentCheckin(dateStr: string, profile: CheckinProfile): ResidentCheckin {
   const day = dayIndex(dateStr);
   const rand = prng((day * 2654435761) ^ profile.seedSalt);
 
-  const seasonal =
-    Math.sin((day / 90) * 2 * Math.PI) * profile.seasonalAmplitudeGrams;
+  const seasonal = Math.sin((day / 90) * 2 * Math.PI) * profile.seasonalAmplitudeGrams;
   const weightGrams = Math.round(
     profile.baseWeightGrams + seasonal + (rand() - 0.5) * profile.weightJitterGrams,
   );
@@ -90,5 +86,14 @@ export function generateResidentCheckin(
       ? profile.notes[Math.floor(rand() * profile.notes.length)]
       : null;
 
-  return { weightGrams, temperatureCentidegrees, heartRateBpm, energy, mood, anxiety, socialization, notes };
+  return {
+    weightGrams,
+    temperatureCentidegrees,
+    heartRateBpm,
+    energy,
+    mood,
+    anxiety,
+    socialization,
+    notes,
+  };
 }

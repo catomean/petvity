@@ -25,7 +25,12 @@ export function EmptyState({
       </div>
       <p className="font-medium text-[var(--ink)] mb-2">{title}</p>
       <p className="text-sm text-[var(--muted)] mb-5 max-w-xs mx-auto">{body}</p>
-      {actions ?? (cta && <Link href={cta.href} className="btn-primary">{cta.label}</Link>)}
+      {actions ??
+        (cta && (
+          <Link href={cta.href} className="btn-primary">
+            {cta.label}
+          </Link>
+        ))}
     </div>
   );
 }
@@ -46,7 +51,9 @@ export function ErrorState({
   return (
     <div className="card py-12 text-center">
       <p className="text-[var(--danger-text)] font-medium mb-3">{message}</p>
-      <button onClick={onRetry} className="btn-outline text-sm">{retryLabel}</button>
+      <button onClick={onRetry} className="btn-outline text-sm">
+        {retryLabel}
+      </button>
     </div>
   );
 }

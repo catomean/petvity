@@ -38,10 +38,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
 
           if (!user?.password) return null;
 
-          const valid = await bcrypt.compare(
-            parsed.data.password,
-            user.password,
-          );
+          const valid = await bcrypt.compare(parsed.data.password, user.password);
           if (!valid) return null;
 
           return {
@@ -64,11 +61,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
       async jwt({ token, user, trigger }) {
         if (user) {
           token.id = user.id;
-          token.emailVerified =
-            (user as { emailVerified?: Date | null }).emailVerified ?? null;
+          token.emailVerified = (user as { emailVerified?: Date | null }).emailVerified ?? null;
 
-          const existingRole =
-            ((user as { role?: UserRole }).role ?? "pet_owner") as UserRole;
+          const existingRole = ((user as { role?: UserRole }).role ?? "pet_owner") as UserRole;
           // ADMIN_EMAILS may only PROMOTE at login — resolveRole without an
           // intendedRole returns "pet_owner" for everyone else, and writing
           // that back would silently demote every vet/sitter on their next
@@ -77,10 +72,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
             resolveRole(user.email ?? "") === "admin" ? "admin" : existingRole;
 
           if (effectiveRole !== existingRole && user.id) {
-            await db
-              .update(users)
-              .set({ role: effectiveRole })
-              .where(eq(users.id, user.id));
+            await db.update(users).set({ role: effectiveRole }).where(eq(users.id, user.id));
           }
           token.role = effectiveRole;
         }
@@ -103,8 +95,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
       session({ session, token }) {
         session.user.id = token.id as string;
         session.user.role = token.role as UserRole;
-        session.user.emailVerified =
-          (token.emailVerified as Date | null | undefined) ?? null;
+        session.user.emailVerified = (token.emailVerified as Date | null | undefined) ?? null;
         // Propagate name from token (updated via trigger="update" when settings are saved)
         if (token.name !== undefined) session.user.name = token.name as string | null;
         return session;

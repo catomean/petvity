@@ -56,8 +56,12 @@ describe("POST /api/cron/emails", () => {
 
   it("returns 200 and processes pending emails from the queue", async () => {
     const pendingItem = {
-      id: "email-1", userId: "user-1", templateKey: "owner_welcome",
-      payload: { name: "Alice" }, status: "pending", sendAt: new Date(),
+      id: "email-1",
+      userId: "user-1",
+      templateKey: "owner_welcome",
+      payload: { name: "Alice" },
+      status: "pending",
+      sendAt: new Date(),
     };
     db._queueSelectResult([pendingItem]); // pending items
     db._queueSelectResult([{ id: "user-1", name: "Alice", email: "alice@example.com" }]); // users
@@ -74,8 +78,12 @@ describe("POST /api/cron/emails", () => {
     vi.mocked(sendEmail).mockRejectedValueOnce(new Error("SMTP error"));
 
     const pendingItem = {
-      id: "email-2", userId: "user-1", templateKey: "owner_welcome",
-      payload: { name: "Bob" }, status: "pending", sendAt: new Date(),
+      id: "email-2",
+      userId: "user-1",
+      templateKey: "owner_welcome",
+      payload: { name: "Bob" },
+      status: "pending",
+      sendAt: new Date(),
     };
     db._queueSelectResult([pendingItem]);
     db._queueSelectResult([{ id: "user-1", name: "Bob", email: "bob@example.com" }]);
@@ -89,8 +97,12 @@ describe("POST /api/cron/emails", () => {
 
   it("skips items with unknown templateKey", async () => {
     const pendingItem = {
-      id: "email-3", userId: "user-1", templateKey: "nonexistent_template",
-      payload: {}, status: "pending", sendAt: new Date(),
+      id: "email-3",
+      userId: "user-1",
+      templateKey: "nonexistent_template",
+      payload: {},
+      status: "pending",
+      sendAt: new Date(),
     };
     db._queueSelectResult([pendingItem]);
     db._queueSelectResult([{ id: "user-1", name: "Carol", email: "carol@example.com" }]);

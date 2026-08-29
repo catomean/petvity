@@ -34,7 +34,12 @@ interface FormState {
 }
 
 const EMPTY_FORM: FormState = {
-  name: "", description: "", priceDollars: "", imageUrl: "", category: "other", stock: "",
+  name: "",
+  description: "",
+  priceDollars: "",
+  imageUrl: "",
+  category: "other",
+  stock: "",
 };
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
@@ -56,13 +61,24 @@ export default function MyProductsPage() {
     setLoading(true);
     setFetchError("");
     fetch("/api/products?mine=true")
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setItems(data ?? []); setLoading(false); })
-      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(({ data }) => {
+        setItems(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadItems(); }, []);
+  useEffect(() => {
+    loadItems();
+  }, []);
 
   function openAdd() {
     setEditingId(null);
@@ -98,7 +114,11 @@ export default function MyProductsPage() {
     setSaving(true);
 
     const priceCents = Math.round(parseFloat(form.priceDollars) * 100);
-    if (!priceCents || priceCents <= 0) { setError(t("myProductsInvalidPrice")); setSaving(false); return; }
+    if (!priceCents || priceCents <= 0) {
+      setError(t("myProductsInvalidPrice"));
+      setSaving(false);
+      return;
+    }
 
     const body = {
       name: form.name.trim(),
@@ -113,14 +133,21 @@ export default function MyProductsPage() {
     const url = isEdit ? `/api/products/${editingId}` : "/api/products";
     const method = isEdit ? "PATCH" : "POST";
 
-    const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? t("myProductsSaveFailed")); return; }
+    if (!data.success) {
+      setError(data.error ?? t("myProductsSaveFailed"));
+      return;
+    }
 
     if (isEdit) {
-      setItems((prev) => prev.map((p) => p.id === editingId ? data.data : p));
+      setItems((prev) => prev.map((p) => (p.id === editingId ? data.data : p)));
     } else {
       setItems((prev) => [data.data, ...prev]);
     }
@@ -135,7 +162,7 @@ export default function MyProductsPage() {
       body: JSON.stringify({ isActive: !p.isActive }),
     });
     const data = await res.json();
-    if (data.success) setItems((prev) => prev.map((x) => x.id === p.id ? data.data : x));
+    if (data.success) setItems((prev) => prev.map((x) => (x.id === p.id ? data.data : x)));
     else setMutationError(data.error ?? t("saveFailed"));
   }
 
@@ -173,36 +200,52 @@ export default function MyProductsPage() {
       {items.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div className="card p-4">
-            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">{t("myProductsTotalListings")}</p>
+            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">
+              {t("myProductsTotalListings")}
+            </p>
             <p className="text-2xl font-bold text-[var(--ink)] mt-1">{items.length}</p>
           </div>
           <div className="card p-4">
-            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">{t("myProductsActive")}</p>
+            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">
+              {t("myProductsActive")}
+            </p>
             <p className="text-2xl font-bold text-[var(--teal)] mt-1">{activeCount}</p>
           </div>
           <div className="card p-4 col-span-2 sm:col-span-1">
-            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">{t("myProductsHidden")}</p>
-            <p className="text-2xl font-bold text-[var(--ink2)] mt-1">{items.length - activeCount}</p>
+            <p className="text-xs text-[var(--muted)] uppercase tracking-wide">
+              {t("myProductsHidden")}
+            </p>
+            <p className="text-2xl font-bold text-[var(--ink2)] mt-1">
+              {items.length - activeCount}
+            </p>
           </div>
         </div>
       )}
 
       {/* Product form modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={(e) => e.target === e.currentTarget && closeForm()}>
+        <div
+          className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+          onClick={(e) => e.target === e.currentTarget && closeForm()}
+        >
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-semibold text-[var(--ink)]">
                 {editingId ? t("myProductsEditTitle") : t("myProductsNewTitle")}
               </h2>
-              <button onClick={closeForm} className="p-1.5 rounded-lg hover:bg-[var(--off)] transition-colors">
+              <button
+                onClick={closeForm}
+                className="p-1.5 rounded-lg hover:bg-[var(--off)] transition-colors"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsNameLabel")} *</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+                  {t("myProductsNameLabel")} *
+                </label>
                 <input
                   className="form-input"
                   value={form.name}
@@ -213,7 +256,9 @@ export default function MyProductsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsDescLabel")}</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+                  {t("myProductsDescLabel")}
+                </label>
                 <textarea
                   className="form-input min-h-[80px]"
                   value={form.description}
@@ -224,7 +269,9 @@ export default function MyProductsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsPriceLabel")} *</label>
+                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+                    {t("myProductsPriceLabel")} *
+                  </label>
                   <input
                     className="form-input"
                     type="number"
@@ -237,7 +284,9 @@ export default function MyProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsStockLabel")}</label>
+                  <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+                    {t("myProductsStockLabel")}
+                  </label>
                   <input
                     className="form-input"
                     type="number"
@@ -250,14 +299,18 @@ export default function MyProductsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">{t("myProductsCategoryLabel")}</label>
+                <label className="block text-sm font-medium text-[var(--ink2)] mb-1">
+                  {t("myProductsCategoryLabel")}
+                </label>
                 <select
                   className="form-input"
                   value={form.category}
                   onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
                 >
                   {PRODUCT_CATEGORY_OPTIONS.map(({ value }) => (
-                    <option key={value} value={value}>{tPub(`cat_${value}` as Parameters<typeof tPub>[0])}</option>
+                    <option key={value} value={value}>
+                      {tPub(`cat_${value}` as Parameters<typeof tPub>[0])}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -281,7 +334,9 @@ export default function MyProductsPage() {
               {error && <p className="alert-error">{error}</p>}
 
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={closeForm} className="btn-outline">{t("cancel")}</button>
+                <button type="button" onClick={closeForm} className="btn-outline">
+                  {t("cancel")}
+                </button>
                 <button type="submit" disabled={saving} className="btn-primary">
                   {saving ? t("saving") : editingId ? t("editPetSave") : t("myProductsList")}
                 </button>
@@ -313,7 +368,10 @@ export default function MyProductsPage() {
       ) : (
         <div className="space-y-3">
           {items.map((p) => (
-            <div key={p.id} className={`card p-4 flex items-center gap-4 ${!p.isActive ? "opacity-60" : ""}`}>
+            <div
+              key={p.id}
+              className={`card p-4 flex items-center gap-4 ${!p.isActive ? "opacity-60" : ""}`}
+            >
               {/* Icon placeholder */}
               <div className="w-12 h-12 rounded-xl bg-[var(--off)] flex items-center justify-center flex-shrink-0 overflow-hidden">
                 <ProductArt
@@ -328,11 +386,14 @@ export default function MyProductsPage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className="font-semibold text-[var(--ink)] truncate">{p.name}</p>
                   {!p.isActive && (
-                    <span className="text-xs bg-[var(--off)] text-[var(--muted)] px-2 py-0.5 rounded-full">{t("myProductsHidden")}</span>
+                    <span className="text-xs bg-[var(--off)] text-[var(--muted)] px-2 py-0.5 rounded-full">
+                      {t("myProductsHidden")}
+                    </span>
                   )}
                 </div>
                 <p className="text-xs text-[var(--muted)] mt-0.5">
-                  {tPub(`cat_${p.category}` as Parameters<typeof tPub>[0])} · {formatPrice(p.priceCents)}
+                  {tPub(`cat_${p.category}` as Parameters<typeof tPub>[0])} ·{" "}
+                  {formatPrice(p.priceCents)}
                   {p.stock != null && ` · ${t("myProductsInStock", { count: p.stock })}`}
                 </p>
               </div>

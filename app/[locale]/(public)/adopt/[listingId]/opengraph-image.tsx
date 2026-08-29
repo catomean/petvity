@@ -38,67 +38,83 @@ export default async function OgImage({ params }: Params) {
   const feeLabel = feeCents === null ? "Free" : `${formatAdoptionFee(feeCents)} adoption fee`;
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #E06B3A 0%, #C85E30 100%)",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+      }}
+    >
+      {/* Pet emoji circle */}
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          width: 120,
+          height: 120,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.2)",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #E06B3A 0%, #C85E30 100%)",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontSize: 64,
+          marginBottom: 28,
+          border: "4px solid rgba(255,255,255,0.3)",
         }}
       >
-        {/* Pet emoji circle */}
+        {emoji}
+      </div>
+
+      {/* Pet name */}
+      <div
+        style={{
+          fontSize: 60,
+          fontWeight: 800,
+          color: "white",
+          letterSpacing: "-1px",
+          marginBottom: 10,
+          textAlign: "center",
+          maxWidth: 900,
+        }}
+      >
+        {petName}
+      </div>
+
+      {/* Listing title */}
+      <div
+        style={{
+          fontSize: 22,
+          color: "rgba(255,255,255,0.85)",
+          marginBottom: 32,
+          textAlign: "center",
+          maxWidth: 800,
+        }}
+      >
+        {title}
+      </div>
+
+      {/* Meta pills */}
+      <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
         <div
           style={{
-            width: 120,
-            height: 120,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.2)",
+            background: "rgba(255,255,255,0.18)",
+            border: "1.5px solid rgba(255,255,255,0.35)",
+            borderRadius: 32,
+            padding: "8px 22px",
+            fontSize: 18,
+            fontWeight: 600,
+            color: "white",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            fontSize: 64,
-            marginBottom: 28,
-            border: "4px solid rgba(255,255,255,0.3)",
+            gap: 8,
           }}
         >
-          {emoji}
+          💰 {feeLabel}
         </div>
-
-        {/* Pet name */}
-        <div
-          style={{
-            fontSize: 60,
-            fontWeight: 800,
-            color: "white",
-            letterSpacing: "-1px",
-            marginBottom: 10,
-            textAlign: "center",
-            maxWidth: 900,
-          }}
-        >
-          {petName}
-        </div>
-
-        {/* Listing title */}
-        <div
-          style={{
-            fontSize: 22,
-            color: "rgba(255,255,255,0.85)",
-            marginBottom: 32,
-            textAlign: "center",
-            maxWidth: 800,
-          }}
-        >
-          {title}
-        </div>
-
-        {/* Meta pills */}
-        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
+        {location && (
           <div
             style={{
               background: "rgba(255,255,255,0.18)",
@@ -113,47 +129,27 @@ export default async function OgImage({ params }: Params) {
               gap: 8,
             }}
           >
-            💰 {feeLabel}
+            📍 {location}
           </div>
-          {location && (
-            <div
-              style={{
-                background: "rgba(255,255,255,0.18)",
-                border: "1.5px solid rgba(255,255,255,0.35)",
-                borderRadius: 32,
-                padding: "8px 22px",
-                fontSize: 18,
-                fontWeight: 600,
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              📍 {location}
-            </div>
-          )}
-        </div>
-
-        {/* App badge */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            background: "rgba(255,255,255,0.12)",
-            borderRadius: 32,
-            padding: "10px 24px",
-            marginTop: 36,
-          }}
-        >
-          <span style={{ fontSize: 22 }}>🐾</span>
-          <span style={{ fontSize: 22, fontWeight: 700, color: "white" }}>
-            {APP.name}
-          </span>
-        </div>
+        )}
       </div>
-    ),
+
+      {/* App badge */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          background: "rgba(255,255,255,0.12)",
+          borderRadius: 32,
+          padding: "10px 24px",
+          marginTop: 36,
+        }}
+      >
+        <span style={{ fontSize: 22 }}>🐾</span>
+        <span style={{ fontSize: 22, fontWeight: 700, color: "white" }}>{APP.name}</span>
+      </div>
+    </div>,
     { ...size },
   );
 }

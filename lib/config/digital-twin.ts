@@ -7,10 +7,10 @@ export type TwinTrend = "improving" | "stable" | "declining" | "insufficient_dat
 
 /** Color for each trend direction — use in any component showing trend UI. */
 export const TWIN_TREND_CONFIG: Record<TwinTrend, { color: string }> = {
-  improving:         { color: "text-[var(--green)]"  },
-  stable:            { color: "text-[var(--muted)]"  },
-  declining:         { color: "text-[var(--danger)]" },
-  insufficient_data: { color: "text-[var(--faint)]"  },
+  improving: { color: "text-[var(--green)]" },
+  stable: { color: "text-[var(--muted)]" },
+  declining: { color: "text-[var(--danger)]" },
+  insufficient_data: { color: "text-[var(--faint)]" },
 };
 
 export const TWIN_STATE_CONFIG: Record<
@@ -54,5 +54,5 @@ export const TWIN_STATE_THRESHOLDS: { min: number; id: TwinStateId }[] = [
   { min: 75, id: "thriving" },
   { min: 50, id: "content" },
   { min: 25, id: "attention" },
-  { min: 0,  id: "struggling" },
+  { min: 0, id: "struggling" },
 ];

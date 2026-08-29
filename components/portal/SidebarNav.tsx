@@ -39,7 +39,8 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
   const pathname = usePathname();
   const t = useTranslations("portal");
   const initials = userName?.[0]?.toUpperCase() ?? "?";
-  const isProfessional = userRole === "veterinarian" || userRole === "pet_sitter" || userRole === "groomer";
+  const isProfessional =
+    userRole === "veterinarian" || userRole === "pet_sitter" || userRole === "groomer";
 
   // Six entries. Each hub (Care, Shop, Adopt) is ONE entry; its sibling
   // pages are tabs inside the hub. Upsells (become a seller / offer
@@ -49,11 +50,33 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
     { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
     { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
     { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
-    { href: "/portal/find", icon: Search, label: t("navSectionCare"), match: ["/portal/find", "/portal/bookings"] },
-    { href: "/portal/shop", icon: ShoppingCart, label: t("shop"), match: ["/portal/shop", "/portal/orders"] },
-    { href: "/portal/adopt", icon: Heart, label: t("adopt"), match: ["/portal/adopt", "/portal/adoptions"] },
+    {
+      href: "/portal/find",
+      icon: Search,
+      label: t("navSectionCare"),
+      match: ["/portal/find", "/portal/bookings"],
+    },
+    {
+      href: "/portal/shop",
+      icon: ShoppingCart,
+      label: t("shop"),
+      match: ["/portal/shop", "/portal/orders"],
+    },
+    {
+      href: "/portal/adopt",
+      icon: Heart,
+      label: t("adopt"),
+      match: ["/portal/adopt", "/portal/adoptions"],
+    },
     ...(hasSeller
-      ? [{ href: "/portal/my-products", icon: Store, label: t("navMyStore"), match: ["/portal/my-products", "/portal/seller-profile"] }]
+      ? [
+          {
+            href: "/portal/my-products",
+            icon: Store,
+            label: t("navMyStore"),
+            match: ["/portal/my-products", "/portal/seller-profile"],
+          },
+        ]
       : []),
     ...(isProfessional
       ? [{ href: "/portal/professional-profile", icon: Stethoscope, label: t("myProfile") }]
@@ -68,8 +91,18 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
     { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
     { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
     { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
-    { href: "/portal/find", icon: Search, label: t("navSectionCare"), match: ["/portal/find", "/portal/bookings"] },
-    { href: "/portal/shop", icon: ShoppingCart, label: t("shop"), match: ["/portal/shop", "/portal/orders"] },
+    {
+      href: "/portal/find",
+      icon: Search,
+      label: t("navSectionCare"),
+      match: ["/portal/find", "/portal/bookings"],
+    },
+    {
+      href: "/portal/shop",
+      icon: ShoppingCart,
+      label: t("shop"),
+      match: ["/portal/shop", "/portal/orders"],
+    },
   ];
 
   const MOBILE_NAV_ITEMS_PRO: NavItem[] = [
@@ -77,7 +110,12 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
     { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
     { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
     { href: "/portal/professional-profile", icon: Stethoscope, label: t("myProfile") },
-    { href: "/portal/find", icon: Search, label: t("navSectionCare"), match: ["/portal/find", "/portal/bookings"] },
+    {
+      href: "/portal/find",
+      icon: Search,
+      label: t("navSectionCare"),
+      match: ["/portal/find", "/portal/bookings"],
+    },
   ];
 
   return (
@@ -140,9 +178,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
               <p className="text-sm font-medium text-[var(--ink)] truncate leading-tight">
                 {userName}
               </p>
-              <p className="text-xs text-[var(--muted)] truncate leading-tight">
-                {userEmail}
-              </p>
+              <p className="text-xs text-[var(--muted)] truncate leading-tight">{userEmail}</p>
             </div>
           </div>
         </div>
@@ -169,18 +205,20 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
 
       {/* ── Mobile bottom nav ────────────────────────────────────────────────── */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-[var(--border)] flex safe-area-inset-bottom z-20">
-        {(isProfessional ? MOBILE_NAV_ITEMS_PRO : MOBILE_NAV_ITEMS_DEFAULT).map(({ href, icon: Icon, label, match }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`mobile-tab-item ${isActive(pathname, href, match) ? "mobile-tab-item-active" : "mobile-tab-item-inactive"}`}
-          >
-            <Icon
-              className={`w-5 h-5 ${isActive(pathname, href, match) ? "stroke-2" : "stroke-[1.5]"}`}
-            />
-            {label}
-          </Link>
-        ))}
+        {(isProfessional ? MOBILE_NAV_ITEMS_PRO : MOBILE_NAV_ITEMS_DEFAULT).map(
+          ({ href, icon: Icon, label, match }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`mobile-tab-item ${isActive(pathname, href, match) ? "mobile-tab-item-active" : "mobile-tab-item-inactive"}`}
+            >
+              <Icon
+                className={`w-5 h-5 ${isActive(pathname, href, match) ? "stroke-2" : "stroke-[1.5]"}`}
+              />
+              {label}
+            </Link>
+          ),
+        )}
       </nav>
     </>
   );

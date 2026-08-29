@@ -33,10 +33,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   const form = await req.formData();
   const file = form.get("file") as File | null;
   if (!file) {
-    return NextResponse.json(
-      { success: false, error: "No file provided" },
-      { status: 400 },
-    );
+    return NextResponse.json({ success: false, error: "No file provided" }, { status: 400 });
   }
 
   if (file.size > IMAGE_MAX_BYTES) {
@@ -56,10 +53,7 @@ export async function POST(req: NextRequest, { params }: Params) {
   let blob;
   try {
     // Random suffix keeps old avatar URLs valid until the row is updated.
-    blob = await putLocal(
-      `pets/${petId}/avatar-${randomUUID()}${imageExtension(file.type)}`,
-      file,
-    );
+    blob = await putLocal(`pets/${petId}/avatar-${randomUUID()}${imageExtension(file.type)}`, file);
   } catch (err) {
     console.error("[avatar] upload failed", err);
     return NextResponse.json(

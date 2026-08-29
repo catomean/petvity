@@ -14,10 +14,10 @@ type IntendedRole = (typeof INTENDED_ROLES)[number];
 
 /* Labels come from the role SSOT; icons and the sign-up pitch are auth-page UI. */
 const ROLE_UI: Record<IntendedRole, { icon: React.ElementType; desc: string }> = {
-  pet_owner:    { icon: PawPrint,    desc: "Track my pet's health" },
+  pet_owner: { icon: PawPrint, desc: "Track my pet's health" },
   veterinarian: { icon: Stethoscope, desc: "Offer vet services" },
-  pet_sitter:   { icon: Heart,       desc: "Offer sitting & boarding" },
-  groomer:      { icon: Scissors,    desc: "Offer grooming services" },
+  pet_sitter: { icon: Heart, desc: "Offer sitting & boarding" },
+  groomer: { icon: Scissors, desc: "Offer grooming services" },
 };
 
 const ROLE_OPTIONS = INTENDED_ROLES.map((id) => ({
@@ -36,12 +36,20 @@ function RegisterForm() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [intendedRole, setIntendedRole] = useState<IntendedRole>(
-    roleParam === "vet" ? "veterinarian" : roleParam === "sitter" ? "pet_sitter" : roleParam === "groomer" ? "groomer" : "pet_owner",
+    roleParam === "vet"
+      ? "veterinarian"
+      : roleParam === "sitter"
+        ? "pet_sitter"
+        : roleParam === "groomer"
+          ? "groomer"
+          : "pet_owner",
   );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => { nameRef.current?.focus(); }, []);
+  useEffect(() => {
+    nameRef.current?.focus();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -76,7 +84,11 @@ function RegisterForm() {
     if (signInRes?.error) {
       setError("Account created — please log in.");
     } else {
-      router.push(intendedRole === "pet_owner" ? "/portal/pets/new?from=registration" : "/portal/professional-profile");
+      router.push(
+        intendedRole === "pet_owner"
+          ? "/portal/pets/new?from=registration"
+          : "/portal/professional-profile",
+      );
     }
   }
 
@@ -85,9 +97,7 @@ function RegisterForm() {
       <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">
         Start for free
       </h1>
-      <p className="text-sm text-[var(--muted)] mb-6">
-        No credit card · Cancel anytime
-      </p>
+      <p className="text-sm text-[var(--muted)] mb-6">No credit card · Cancel anytime</p>
 
       {error && <p className="alert-error mb-5">{error}</p>}
 
@@ -108,11 +118,17 @@ function RegisterForm() {
                     : "border-[var(--border)] hover:border-[var(--teal-light)] hover:bg-[var(--off)]"
                 }`}
               >
-                <Icon className={`w-5 h-5 ${selected ? "text-[var(--teal)]" : "text-[var(--muted)]"}`} />
-                <span className={`text-xs font-semibold leading-tight ${selected ? "text-[var(--teal)]" : "text-[var(--ink2)]"}`}>
+                <Icon
+                  className={`w-5 h-5 ${selected ? "text-[var(--teal)]" : "text-[var(--muted)]"}`}
+                />
+                <span
+                  className={`text-xs font-semibold leading-tight ${selected ? "text-[var(--teal)]" : "text-[var(--ink2)]"}`}
+                >
                   {label}
                 </span>
-                <span className="text-xs text-[var(--muted)] leading-tight hidden sm:block">{desc}</span>
+                <span className="text-xs text-[var(--muted)] leading-tight hidden sm:block">
+                  {desc}
+                </span>
               </button>
             );
           })}
@@ -191,8 +207,14 @@ function RegisterForm() {
 
       <p className="mt-5 text-center text-xs text-[var(--muted)] leading-relaxed">
         By continuing, you agree to our{" "}
-        <Link href="/en/legal/terms" className="link-accent font-normal">Terms of Service</Link>{" "}and{" "}
-        <Link href="/en/legal/privacy" className="link-accent font-normal">Privacy Policy</Link>.
+        <Link href="/en/legal/terms" className="link-accent font-normal">
+          Terms of Service
+        </Link>{" "}
+        and{" "}
+        <Link href="/en/legal/privacy" className="link-accent font-normal">
+          Privacy Policy
+        </Link>
+        .
       </p>
     </>
   );

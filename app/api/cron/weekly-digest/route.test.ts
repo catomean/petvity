@@ -24,15 +24,17 @@ function makeRequest(secret?: string) {
   });
 }
 
-function makeRow(overrides: Partial<{
-  userId: string;
-  userName: string;
-  userEmail: string | null;
-  userLocale: string | null;
-  petId: string;
-  petName: string;
-  petSignal: string | null;
-}> = {}) {
+function makeRow(
+  overrides: Partial<{
+    userId: string;
+    userName: string;
+    userEmail: string | null;
+    userLocale: string | null;
+    petId: string;
+    petName: string;
+    petSignal: string | null;
+  }> = {},
+) {
   return {
     userId: "user-1",
     userName: "Alice",
@@ -91,7 +93,7 @@ describe("POST /api/cron/weekly-digest", () => {
     // Two rows for same user (two pets), should produce one email
     db._queueSelectResult([
       makeRow({ petId: "pet-1", petName: "Buddy", petSignal: "healthy" }),
-      makeRow({ petId: "pet-2", petName: "Max",   petSignal: "watch" }),
+      makeRow({ petId: "pet-2", petName: "Max", petSignal: "watch" }),
     ]);
     const res = await POST(makeRequest(CRON_SECRET));
     expect(res.status).toBe(200);
@@ -103,7 +105,7 @@ describe("POST /api/cron/weekly-digest", () => {
   it("sends separate emails for different owners", async () => {
     db._queueSelectResult([
       makeRow({ userId: "user-1", userEmail: "alice@example.com", petId: "pet-1" }),
-      makeRow({ userId: "user-2", userEmail: "bob@example.com",   petId: "pet-2" }),
+      makeRow({ userId: "user-2", userEmail: "bob@example.com", petId: "pet-2" }),
     ]);
     const res = await POST(makeRequest(CRON_SECRET));
     expect(res.status).toBe(200);
@@ -128,7 +130,7 @@ describe("POST /api/cron/weekly-digest", () => {
 
     db._queueSelectResult([
       makeRow({ userId: "user-1", userEmail: "alice@example.com", petId: "pet-1" }),
-      makeRow({ userId: "user-2", userEmail: "bob@example.com",   petId: "pet-2" }),
+      makeRow({ userId: "user-2", userEmail: "bob@example.com", petId: "pet-2" }),
     ]);
 
     const res = await POST(makeRequest(CRON_SECRET));

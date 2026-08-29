@@ -55,12 +55,11 @@ export default async function UnsubscribePage({ searchParams }: Search) {
                 Link is invalid or expired
               </h1>
               <p className="text-sm text-[var(--muted)] text-center">
-                This unsubscribe link is no longer valid. You can manage email
-                preferences from{" "}
+                This unsubscribe link is no longer valid. You can manage email preferences from{" "}
                 <Link href="/portal/settings" className="text-[var(--teal)] hover:underline">
                   Settings
-                </Link>
-                {" "}after logging in.
+                </Link>{" "}
+                after logging in.
               </p>
             </>
           ) : done === "1" ? (
@@ -75,11 +74,14 @@ export default async function UnsubscribePage({ searchParams }: Search) {
                 You won&apos;t receive the weekly wellness digest or onboarding emails.
               </p>
               <p className="text-xs text-[var(--muted)] text-center mb-6">
-                You&apos;ll still get vaccination reminders, health alerts, and order
-                confirmations — those are necessary for the service.
+                You&apos;ll still get vaccination reminders, health alerts, and order confirmations
+                — those are necessary for the service.
               </p>
               <p className="text-center">
-                <Link href="/portal/settings" className="text-sm text-[var(--teal)] hover:underline">
+                <Link
+                  href="/portal/settings"
+                  className="text-sm text-[var(--teal)] hover:underline"
+                >
                   Manage all email preferences →
                 </Link>
               </p>
@@ -93,9 +95,8 @@ export default async function UnsubscribePage({ searchParams }: Search) {
                 Unsubscribe from digest emails?
               </h1>
               <p className="text-sm text-[var(--muted)] text-center mb-6">
-                You&apos;ll stop receiving the weekly wellness digest and the new-user
-                onboarding series. Vaccination reminders, health alerts, and order
-                confirmations will continue.
+                You&apos;ll stop receiving the weekly wellness digest and the new-user onboarding
+                series. Vaccination reminders, health alerts, and order confirmations will continue.
               </p>
               <form action={unsubscribeAction} className="space-y-3">
                 <input type="hidden" name="u" value={u} />
@@ -103,7 +104,10 @@ export default async function UnsubscribePage({ searchParams }: Search) {
                 <button type="submit" className="btn-primary w-full justify-center">
                   Unsubscribe
                 </button>
-                <Link href="/" className="block text-center text-sm text-[var(--muted)] hover:text-[var(--ink)]">
+                <Link
+                  href="/"
+                  className="block text-center text-sm text-[var(--muted)] hover:text-[var(--ink)]"
+                >
                   Cancel
                 </Link>
               </form>

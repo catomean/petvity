@@ -24,8 +24,12 @@ function makeRequest(secret?: string) {
 }
 
 const MOCK_DOG = {
-  id: "pet-1", name: "Buddy", species: "dog", ownerId: "owner-1",
-  lastKnownSignal: "healthy", signalAlertSentAt: null,
+  id: "pet-1",
+  name: "Buddy",
+  species: "dog",
+  ownerId: "owner-1",
+  lastKnownSignal: "healthy",
+  signalAlertSentAt: null,
 };
 
 /* ─── Tests ────────────────────────────────────────────────────────────────── */
@@ -61,8 +65,8 @@ describe("POST /api/cron/health-alerts", () => {
 
   it("returns 200 processing a healthy pet with no alert sent", async () => {
     db._queueSelectResult([MOCK_DOG]); // allPets
-    db._queueSelectResult([]);          // allMetrics (none = "watch" signal — no logs in 7 days)
-    db._queueSelectResult([]);          // allVaccinations
+    db._queueSelectResult([]); // allMetrics (none = "watch" signal — no logs in 7 days)
+    db._queueSelectResult([]); // allVaccinations
     // update lastKnownSignal called once — no owner query needed (no "concern" pets)
 
     const res = await POST(makeRequest(CRON_SECRET));
@@ -80,9 +84,9 @@ describe("POST /api/cron/health-alerts", () => {
       { petId: "pet-1", date: new Date().toISOString().slice(0, 10), heartRateBpm: 300, energy: 1 },
     ];
 
-    db._queueSelectResult([concernPet]);    // allPets
+    db._queueSelectResult([concernPet]); // allPets
     db._queueSelectResult(metricsOutOfRange); // allMetrics
-    db._queueSelectResult([]);               // allVaccinations
+    db._queueSelectResult([]); // allVaccinations
     // update lastKnownSignal loop (1 pet)
     // alertPets detected → fetch owners
     db._queueSelectResult([{ id: "owner-1", name: "Owner", email: "owner@example.com" }]);

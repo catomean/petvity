@@ -39,13 +39,24 @@ export default function MyApplicationsPage() {
     setLoading(true);
     setFetchError("");
     fetch("/api/adoptions?applied=1")
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setApplications(data ?? []); setLoading(false); })
-      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(({ data }) => {
+        setApplications(data ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadApplications(); }, []);
+  useEffect(() => {
+    loadApplications();
+  }, []);
 
   return (
     <div>
@@ -76,24 +87,34 @@ export default function MyApplicationsPage() {
           </div>
           <p className="font-medium text-[var(--ink)] mb-1">{t("myAppsEmpty")}</p>
           <p className="text-sm text-[var(--muted)] mb-5">{t("myAppsEmptyDesc")}</p>
-          <Link href="/portal/adopt" className="btn-primary">{t("myAppsBrowse")}</Link>
+          <Link href="/portal/adopt" className="btn-primary">
+            {t("myAppsBrowse")}
+          </Link>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
           {applications.map((app) => {
-            const statusCfg = APPLICATION_STATUS_CONFIG[app.applicationStatus] ?? APPLICATION_STATUS_CONFIG.pending;
+            const statusCfg =
+              APPLICATION_STATUS_CONFIG[app.applicationStatus] ?? APPLICATION_STATUS_CONFIG.pending;
             const speciesDef = SPECIES_CONFIG[app.petSpecies as SpeciesId];
             const listingClosed = app.listingStatus !== "available";
             return (
-              <div key={app.applicationId} className={`card p-5 ${listingClosed ? "opacity-70" : ""}`}>
+              <div
+                key={app.applicationId}
+                className={`card p-5 ${listingClosed ? "opacity-70" : ""}`}
+              >
                 <div className="flex items-start gap-4">
                   {/* Pet avatar */}
                   <div className="w-14 h-14 rounded-2xl bg-[var(--teal-light)] flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
                     {app.petAvatarUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={app.petAvatarUrl} alt={app.petName} className="w-full h-full object-cover" />
+                      <img
+                        src={app.petAvatarUrl}
+                        alt={app.petName}
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
-                      speciesDef?.emoji ?? "🐾"
+                      (speciesDef?.emoji ?? "🐾")
                     )}
                   </div>
 
@@ -108,7 +129,9 @@ export default function MyApplicationsPage() {
                         </p>
                         <p className="text-sm text-[var(--ink2)] mt-0.5">{app.listingTitle}</p>
                       </div>
-                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${statusCfg.className}`}>
+                      <span
+                        className={`text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${statusCfg.className}`}
+                      >
                         {t(`appStatus_${app.applicationStatus}` as Parameters<typeof t>[0])}
                       </span>
                     </div>
@@ -123,13 +146,19 @@ export default function MyApplicationsPage() {
                       {app.feeCents != null && (
                         <span className="flex items-center gap-1">
                           <DollarSign className="w-3 h-3" />
-                          {app.feeCents ? t("myAppsFee", { fee: formatAdoptionFee(app.feeCents) }) : t("adoptFree")}
+                          {app.feeCents
+                            ? t("myAppsFee", { fee: formatAdoptionFee(app.feeCents) })
+                            : t("adoptFree")}
                         </span>
                       )}
                       <span>{t("myAppsApplied", { date: formatDateShort(app.createdAt) })}</span>
                       {listingClosed && (
                         <span className="text-[var(--muted)]">
-                          {t("myAppsListingStatus", { status: t(`listingStatus_${app.listingStatus}` as Parameters<typeof t>[0]) })}
+                          {t("myAppsListingStatus", {
+                            status: t(
+                              `listingStatus_${app.listingStatus}` as Parameters<typeof t>[0],
+                            ),
+                          })}
                         </span>
                       )}
                     </div>
@@ -140,9 +169,7 @@ export default function MyApplicationsPage() {
                       </p>
                     )}
                     {app.applicationStatus === "rejected" && (
-                      <p className="text-sm text-[var(--muted)] mt-2">
-                        {t("myAppsRejected")}
-                      </p>
+                      <p className="text-sm text-[var(--muted)] mt-2">{t("myAppsRejected")}</p>
                     )}
                   </div>
                 </div>

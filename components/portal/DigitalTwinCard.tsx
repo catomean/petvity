@@ -1,37 +1,53 @@
 "use client";
 
 import Link from "next/link";
-import { Zap, Smile, Wind, Users, Brain, CalendarDays, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import {
+  Zap,
+  Smile,
+  Wind,
+  Users,
+  Brain,
+  CalendarDays,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+} from "lucide-react";
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import type { TwinState, TwinTrend } from "@/lib/domain/digital-twin";
 import { useTranslations } from "next-intl";
 
 const METRIC_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  mood:          Smile,
-  energy:        Zap,
-  anxiety:       Wind,
+  mood: Smile,
+  energy: Zap,
+  anxiety: Wind,
   socialization: Users,
 };
 
 // Explicit lookup tables — safe fallback if a metric id is unexpected
 const TWIN_METRIC_LABEL_KEYS: Record<string, string> = {
-  energy:        "metricEnergy",
-  mood:          "metricMood",
-  anxiety:       "metricAnxiety",
+  energy: "metricEnergy",
+  mood: "metricMood",
+  anxiety: "metricAnxiety",
   socialization: "metricSocialization",
 };
 const TWIN_SCALE_KEYS: Record<string, string[]> = {
-  energy:        ["energyScale1",        "energyScale2",        "energyScale3",        "energyScale4",        "energyScale5"],
-  mood:          ["moodScale1",          "moodScale2",          "moodScale3",          "moodScale4",          "moodScale5"],
-  anxiety:       ["anxietyScale1",       "anxietyScale2",       "anxietyScale3",       "anxietyScale4",       "anxietyScale5"],
-  socialization: ["socializationScale1", "socializationScale2", "socializationScale3", "socializationScale4", "socializationScale5"],
+  energy: ["energyScale1", "energyScale2", "energyScale3", "energyScale4", "energyScale5"],
+  mood: ["moodScale1", "moodScale2", "moodScale3", "moodScale4", "moodScale5"],
+  anxiety: ["anxietyScale1", "anxietyScale2", "anxietyScale3", "anxietyScale4", "anxietyScale5"],
+  socialization: [
+    "socializationScale1",
+    "socializationScale2",
+    "socializationScale3",
+    "socializationScale4",
+    "socializationScale5",
+  ],
 };
 
 // Icon mapping stays in the component (React component references are UI, not config)
 const TREND_ICONS: Record<TwinTrend, React.ComponentType<{ className?: string }>> = {
-  improving:         TrendingUp,
-  stable:            Minus,
-  declining:         TrendingDown,
+  improving: TrendingUp,
+  stable: Minus,
+  declining: TrendingDown,
   insufficient_data: Minus,
 };
 
@@ -71,7 +87,11 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
             )}
             {twin.daysAgo !== null && (
               <span className="text-xs text-[var(--muted)]">
-                {twin.daysAgo === 0 ? t("today") : twin.daysAgo === 1 ? t("yesterday") : t("daysAgo", { count: twin.daysAgo })}
+                {twin.daysAgo === 0
+                  ? t("today")
+                  : twin.daysAgo === 1
+                    ? t("yesterday")
+                    : t("daysAgo", { count: twin.daysAgo })}
               </span>
             )}
           </div>
@@ -103,7 +123,9 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className={`text-xl font-bold ${cfg.text}`}>{tTwin(twin.id)}</p>
-                <p className="text-sm text-[var(--ink2)] mt-0.5">{tTwin(twin.summaryKey as Parameters<typeof tTwin>[0])}</p>
+                <p className="text-sm text-[var(--ink2)] mt-0.5">
+                  {tTwin(twin.summaryKey as Parameters<typeof tTwin>[0])}
+                </p>
               </div>
               <div className="text-right flex-shrink-0">
                 <span className={`text-3xl font-extrabold tabular-nums ${cfg.text}`}>
@@ -131,14 +153,22 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 {twin.metrics.map((m) => {
                   const Icon = METRIC_ICONS[m.id] ?? Brain;
-                  const metricLabel = tTwin((TWIN_METRIC_LABEL_KEYS[m.id] ?? m.id) as Parameters<typeof tTwin>[0]);
-                  const scaleLabel  = tTwin((TWIN_SCALE_KEYS[m.id]?.[m.rawValue - 1] ?? String(m.rawValue)) as Parameters<typeof tTwin>[0]);
+                  const metricLabel = tTwin(
+                    (TWIN_METRIC_LABEL_KEYS[m.id] ?? m.id) as Parameters<typeof tTwin>[0],
+                  );
+                  const scaleLabel = tTwin(
+                    (TWIN_SCALE_KEYS[m.id]?.[m.rawValue - 1] ?? String(m.rawValue)) as Parameters<
+                      typeof tTwin
+                    >[0],
+                  );
                   return (
                     <div key={m.id} className="space-y-1.5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                           <Icon className="w-3.5 h-3.5 text-[var(--muted)]" />
-                          <span className="text-xs font-medium text-[var(--ink2)]">{metricLabel}</span>
+                          <span className="text-xs font-medium text-[var(--ink2)]">
+                            {metricLabel}
+                          </span>
                         </div>
                         <span className="text-xs text-[var(--muted)]">{scaleLabel}</span>
                       </div>

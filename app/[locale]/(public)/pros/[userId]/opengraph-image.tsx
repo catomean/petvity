@@ -38,81 +38,78 @@ export default async function OgImage({ params }: Params) {
   const icon = isVet ? "🩺" : "🏠";
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: `linear-gradient(135deg, ${accent} 0%, ${accentDark} 100%)`,
+        fontFamily: "system-ui, -apple-system, sans-serif",
+      }}
+    >
+      {/* Avatar circle */}
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          width: 120,
+          height: 120,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.2)",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: `linear-gradient(135deg, ${accent} 0%, ${accentDark} 100%)`,
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          fontSize: 64,
+          marginBottom: 28,
+          border: "4px solid rgba(255,255,255,0.3)",
         }}
       >
-        {/* Avatar circle */}
-        <div
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: "50%",
-            background: "rgba(255,255,255,0.2)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 64,
-            marginBottom: 28,
-            border: "4px solid rgba(255,255,255,0.3)",
-          }}
-        >
-          {icon}
-        </div>
-
-        {/* Name */}
-        <div
-          style={{
-            fontSize: 56,
-            fontWeight: 800,
-            color: "white",
-            letterSpacing: "-1px",
-            marginBottom: 12,
-            textAlign: "center",
-            maxWidth: 900,
-          }}
-        >
-          {name}
-        </div>
-
-        {/* Role + specialty */}
-        <div
-          style={{
-            fontSize: 26,
-            color: "rgba(255,255,255,0.8)",
-            marginBottom: 40,
-          }}
-        >
-          {role}{specialty}
-        </div>
-
-        {/* App badge */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            background: "rgba(255,255,255,0.15)",
-            borderRadius: 32,
-            padding: "10px 24px",
-          }}
-        >
-          <span style={{ fontSize: 22 }}>🐾</span>
-          <span style={{ fontSize: 22, fontWeight: 700, color: "white" }}>
-            {APP.name}
-          </span>
-        </div>
+        {icon}
       </div>
-    ),
+
+      {/* Name */}
+      <div
+        style={{
+          fontSize: 56,
+          fontWeight: 800,
+          color: "white",
+          letterSpacing: "-1px",
+          marginBottom: 12,
+          textAlign: "center",
+          maxWidth: 900,
+        }}
+      >
+        {name}
+      </div>
+
+      {/* Role + specialty */}
+      <div
+        style={{
+          fontSize: 26,
+          color: "rgba(255,255,255,0.8)",
+          marginBottom: 40,
+        }}
+      >
+        {role}
+        {specialty}
+      </div>
+
+      {/* App badge */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          background: "rgba(255,255,255,0.15)",
+          borderRadius: 32,
+          padding: "10px 24px",
+        }}
+      >
+        <span style={{ fontSize: 22 }}>🐾</span>
+        <span style={{ fontSize: 22, fontWeight: 700, color: "white" }}>{APP.name}</span>
+      </div>
+    </div>,
     { ...size },
   );
 }

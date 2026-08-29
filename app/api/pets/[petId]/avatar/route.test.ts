@@ -90,7 +90,10 @@ describe("POST /api/pets/[petId]/avatar", () => {
     const huge = new File(["x".repeat(6 * 1024 * 1024)], "big.jpg", { type: "image/jpeg" });
     const form = new FormData();
     form.append("file", huge);
-    const req = new NextRequest(`http://localhost/api/pets/${PET_ID}/avatar`, { method: "POST", body: form });
+    const req = new NextRequest(`http://localhost/api/pets/${PET_ID}/avatar`, {
+      method: "POST",
+      body: form,
+    });
     const res = await POST(req, ROUTE_CONTEXT);
     expect(res.status).toBe(413);
     expect(vi.mocked(putLocal)).not.toHaveBeenCalled();
@@ -101,7 +104,10 @@ describe("POST /api/pets/[petId]/avatar", () => {
     const pdf = new File(["%PDF-1.4"], "doc.pdf", { type: "application/pdf" });
     const form = new FormData();
     form.append("file", pdf);
-    const req = new NextRequest(`http://localhost/api/pets/${PET_ID}/avatar`, { method: "POST", body: form });
+    const req = new NextRequest(`http://localhost/api/pets/${PET_ID}/avatar`, {
+      method: "POST",
+      body: form,
+    });
     const res = await POST(req, ROUTE_CONTEXT);
     expect(res.status).toBe(415);
     expect(vi.mocked(putLocal)).not.toHaveBeenCalled();
@@ -118,7 +124,9 @@ describe("POST /api/pets/[petId]/avatar", () => {
 
   it("returns 200 with the stored URL on success", async () => {
     db.query.pets.findFirst.mockResolvedValueOnce(MOCK_PET);
-    db.update.mockReturnValueOnce({ set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) }) } as any);
+    db.update.mockReturnValueOnce({
+      set: vi.fn().mockReturnValue({ where: vi.fn().mockResolvedValue([]) }),
+    } as any);
 
     const res = await POST(makeFormRequest(true), ROUTE_CONTEXT);
     expect(res.status).toBe(200);

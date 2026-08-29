@@ -23,8 +23,15 @@ const OWNER_SESSION = {
 };
 
 const MOCK_VACCINATION = {
-  id: VACCINATION_ID, petId: "pet-1", name: "Rabies", administeredDate: "2026-01-10",
-  nextDueDate: "2027-01-10", status: "up_to_date", batchNumber: null, vetName: "Dr Lee", notes: null,
+  id: VACCINATION_ID,
+  petId: "pet-1",
+  name: "Rabies",
+  administeredDate: "2026-01-10",
+  nextDueDate: "2027-01-10",
+  status: "up_to_date",
+  batchNumber: null,
+  vetName: "Dr Lee",
+  notes: null,
 };
 
 const ROUTE_CONTEXT = { params: Promise.resolve({ vaccinationId: VACCINATION_ID }) };
@@ -38,7 +45,9 @@ function makePatchRequest(body: unknown) {
 }
 
 function makeDeleteRequest() {
-  return new NextRequest(`http://localhost/api/vaccinations/${VACCINATION_ID}`, { method: "DELETE" });
+  return new NextRequest(`http://localhost/api/vaccinations/${VACCINATION_ID}`, {
+    method: "DELETE",
+  });
 }
 
 /* ─── PATCH tests ──────────────────────────────────────────────────────────── */

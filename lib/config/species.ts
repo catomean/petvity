@@ -234,14 +234,13 @@ export const SPECIES_CONFIG: Record<SpeciesId, SpeciesDef> = {
 };
 
 /** Ordered species list for UI selects. */
-export const SPECIES_OPTIONS = Object.values(SPECIES_CONFIG).map(
-  ({ id, label, emoji }) => ({ value: id, label: `${emoji} ${label}` }),
-);
+export const SPECIES_OPTIONS = Object.values(SPECIES_CONFIG).map(({ id, label, emoji }) => ({
+  value: id,
+  label: `${emoji} ${label}`,
+}));
 
 /** Get breeds for a given species as select options. */
-export function getBreedOptions(
-  speciesId: SpeciesId,
-): { value: string; label: string }[] {
+export function getBreedOptions(speciesId: SpeciesId): { value: string; label: string }[] {
   return (SPECIES_CONFIG[speciesId]?.commonBreeds ?? []).map((b) => ({
     value: b,
     label: b,
@@ -253,14 +252,14 @@ export type SexId = "male" | "female" | "unknown";
 
 /** Human-readable labels for all sex values. */
 export const SEX_LABELS: Record<SexId, string> = {
-  male:    "Male",
-  female:  "Female",
+  male: "Male",
+  female: "Female",
   unknown: "Unknown",
 };
 
 /** Ordered sex options for UI selects. */
 export const SEX_OPTIONS: { value: SexId; label: string }[] = [
   { value: "unknown", label: "Unknown" },
-  { value: "male",    label: "Male" },
-  { value: "female",  label: "Female" },
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
 ];

@@ -33,7 +33,10 @@ export async function POST(req: NextRequest) {
 
     if (!record) {
       return NextResponse.json(
-        { success: false, error: "This reset link is invalid or has expired. Please request a new one." },
+        {
+          success: false,
+          error: "This reset link is invalid or has expired. Please request a new one.",
+        },
         { status: 400 },
       );
     }
@@ -49,9 +52,7 @@ export async function POST(req: NextRequest) {
     await db.update(users).set({ password: hashed }).where(eq(users.id, user.id));
 
     // Consume the token (one-time use)
-    await db.delete(verificationTokens).where(
-      eq(verificationTokens.identifier, record.identifier),
-    );
+    await db.delete(verificationTokens).where(eq(verificationTokens.identifier, record.identifier));
 
     return NextResponse.json({ success: true });
   } catch {

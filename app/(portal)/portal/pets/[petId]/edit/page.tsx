@@ -103,9 +103,7 @@ export default function EditPetPage() {
     e.target.value = "";
   }
 
-  const breedOptions = form.species
-    ? getBreedOptions(form.species as SpeciesId)
-    : [];
+  const breedOptions = form.species ? getBreedOptions(form.species as SpeciesId) : [];
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -187,7 +185,7 @@ export default function EditPetPage() {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={avatarUrl} alt="Pet avatar" className="w-full h-full object-cover" />
             ) : (
-              SPECIES_CONFIG[form.species as SpeciesId]?.emoji ?? "🐾"
+              (SPECIES_CONFIG[form.species as SpeciesId]?.emoji ?? "🐾")
             )}
           </div>
           {avatarUploading && (
@@ -219,15 +217,10 @@ export default function EditPetPage() {
         </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="card p-6 flex flex-col gap-5"
-      >
+      <form onSubmit={handleSubmit} className="card p-6 flex flex-col gap-5">
         {/* Name */}
         <div>
-          <label className="form-label">
-            {t("petNameLabel")} *
-          </label>
+          <label className="form-label">{t("petNameLabel")} *</label>
           <input
             type="text"
             required
@@ -239,11 +232,11 @@ export default function EditPetPage() {
 
         {/* Species (read-only after creation) */}
         <div>
-          <label className="form-label">
-            {t("petSpeciesLabel")}
-          </label>
+          <label className="form-label">{t("petSpeciesLabel")}</label>
           <div className="form-input bg-[var(--light)] text-[var(--muted)] cursor-not-allowed">
-            {form.species ? `${SPECIES_CONFIG[form.species as SpeciesId]?.emoji ?? ""} ${tPub(`species_${form.species}` as Parameters<typeof tPub>[0])}` : form.species}
+            {form.species
+              ? `${SPECIES_CONFIG[form.species as SpeciesId]?.emoji ?? ""} ${tPub(`species_${form.species}` as Parameters<typeof tPub>[0])}`
+              : form.species}
           </div>
           <p className="text-xs text-[var(--muted)] mt-1">{t("editPetSpeciesHint")}</p>
         </div>
@@ -251,9 +244,7 @@ export default function EditPetPage() {
         {/* Breed */}
         {breedOptions.length > 0 && (
           <div>
-            <label className="form-label">
-              {t("petBreedLabel")}
-            </label>
+            <label className="form-label">{t("petBreedLabel")}</label>
             <select
               value={form.breed}
               onChange={(e) => setForm({ ...form, breed: e.target.value })}
@@ -272,9 +263,7 @@ export default function EditPetPage() {
         {/* Birth date + sex */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="form-label">
-              {t("petBirthDate")}
-            </label>
+            <label className="form-label">{t("petBirthDate")}</label>
             <input
               type="date"
               value={form.birthDate}
@@ -283,9 +272,7 @@ export default function EditPetPage() {
             />
           </div>
           <div>
-            <label className="form-label">
-              {t("petSex")}
-            </label>
+            <label className="form-label">{t("petSex")}</label>
             <select
               value={form.sex}
               onChange={(e) =>
@@ -297,7 +284,9 @@ export default function EditPetPage() {
               className="form-input"
             >
               {SEX_OPTIONS.map(({ value }) => (
-                <option key={value} value={value}>{tPub(`sex_${value}` as Parameters<typeof tPub>[0])}</option>
+                <option key={value} value={value}>
+                  {tPub(`sex_${value}` as Parameters<typeof tPub>[0])}
+                </option>
               ))}
             </select>
           </div>
@@ -305,9 +294,7 @@ export default function EditPetPage() {
 
         {/* Bio */}
         <div>
-          <label className="form-label">
-            {t("petBioLabel")}
-          </label>
+          <label className="form-label">{t("petBioLabel")}</label>
           <textarea
             rows={3}
             value={form.bio}
@@ -319,9 +306,7 @@ export default function EditPetPage() {
 
         {/* Public handle */}
         <div>
-          <label className="form-label">
-            {t("editPetHandle")}
-          </label>
+          <label className="form-label">{t("editPetHandle")}</label>
           <div className="flex items-center gap-2">
             <span className="text-sm text-[var(--muted)]">petvity.com/pets/</span>
             <input
@@ -362,11 +347,7 @@ export default function EditPetPage() {
         </label>
 
         <div className="flex gap-3 pt-1">
-          <button
-            type="submit"
-            disabled={saving}
-            className="btn-primary disabled:opacity-60"
-          >
+          <button type="submit" disabled={saving} className="btn-primary disabled:opacity-60">
             {saving ? t("saving") : t("editPetSave")}
           </button>
           <Link href={`/portal/pets/${petId}`} className="btn-outline">
@@ -391,10 +372,7 @@ export default function EditPetPage() {
               <Trash2 className="w-4 h-4" />
               {deleting ? t("editPetDeleting") : t("editPetDeleteConfirm")}
             </button>
-            <button
-              onClick={() => setConfirmDelete(false)}
-              className="btn-outline text-sm"
-            >
+            <button onClick={() => setConfirmDelete(false)} className="btn-outline text-sm">
               {t("cancel")}
             </button>
           </div>

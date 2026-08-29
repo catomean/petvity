@@ -63,13 +63,16 @@ export async function POST(req: NextRequest) {
       timeZone: "UTC",
     });
 
-    const { subject, html } = bookingReminder({
-      ownerName: row.ownerName ?? "there",
-      petName: row.petName,
-      professionalName: row.professionalName ?? "your provider",
-      startDate: dateLabel,
-      bookingsUrl: `${APP_URL}/portal/bookings`,
-    }, row.ownerLocale);
+    const { subject, html } = bookingReminder(
+      {
+        ownerName: row.ownerName ?? "there",
+        petName: row.petName,
+        professionalName: row.professionalName ?? "your provider",
+        startDate: dateLabel,
+        bookingsUrl: `${APP_URL}/portal/bookings`,
+      },
+      row.ownerLocale,
+    );
 
     try {
       await sendEmail({ to: row.ownerEmail, subject, html });

@@ -52,8 +52,15 @@ export default function AdminUsersPage() {
       setRows((prev) =>
         prev.map((r) =>
           r.id === userId
-            ? { ...r, role: newRole, isVerified: newRole === "veterinarian" || newRole === "pet_sitter" ? (r.isVerified ?? false) : null }
-            : r
+            ? {
+                ...r,
+                role: newRole,
+                isVerified:
+                  newRole === "veterinarian" || newRole === "pet_sitter"
+                    ? (r.isVerified ?? false)
+                    : null,
+              }
+            : r,
         ),
       );
       startTransition(() => {});
@@ -80,8 +87,8 @@ export default function AdminUsersPage() {
     }
   }
 
-  const vets      = rows.filter((r) => r.role === "veterinarian").length;
-  const verified  = rows.filter((r) => r.isVerified === true).length;
+  const vets = rows.filter((r) => r.role === "veterinarian").length;
+  const verified = rows.filter((r) => r.isVerified === true).length;
   const totalPets = rows.reduce((sum, r) => sum + r.petCount, 0);
 
   return (
@@ -94,9 +101,9 @@ export default function AdminUsersPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {[
-          { icon: Users,      label: "Total users",       value: rows.length },
-          { icon: PawPrint,   label: "Total pets",        value: totalPets },
-          { icon: Shield,     label: "Veterinarians",     value: vets },
+          { icon: Users, label: "Total users", value: rows.length },
+          { icon: PawPrint, label: "Total pets", value: totalPets },
+          { icon: Shield, label: "Veterinarians", value: vets },
           { icon: BadgeCheck, label: "Verified profiles", value: verified },
         ].map(({ icon: Icon, label, value }) => (
           <div key={label} className="card p-5 flex items-center gap-4">
@@ -124,11 +131,21 @@ export default function AdminUsersPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[var(--border)] bg-[var(--off)]">
-                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">User</th>
-                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Role</th>
-                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Verified</th>
-                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Pets</th>
-                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">Joined</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    User
+                  </th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    Role
+                  </th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    Verified
+                  </th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    Pets
+                  </th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                    Joined
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -144,7 +161,9 @@ export default function AdminUsersPage() {
                         </div>
                         <div className="min-w-0">
                           <p className="font-medium text-[var(--ink)] truncate">
-                            {row.name ?? <span className="text-[var(--muted)] italic">No name</span>}
+                            {row.name ?? (
+                              <span className="text-[var(--muted)] italic">No name</span>
+                            )}
                           </p>
                           <p className="text-xs text-[var(--muted)] truncate">{row.email}</p>
                         </div>
@@ -152,7 +171,9 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${USER_ROLE_CONFIG[row.role]?.className ?? "bg-[var(--off)] text-[var(--ink2)]"}`}>
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${USER_ROLE_CONFIG[row.role]?.className ?? "bg-[var(--off)] text-[var(--ink2)]"}`}
+                        >
                           {USER_ROLE_CONFIG[row.role]?.label ?? row.role}
                         </span>
                         <select
@@ -163,7 +184,9 @@ export default function AdminUsersPage() {
                           aria-label={`Change role for ${row.name ?? row.email}`}
                         >
                           {USER_ROLE_OPTIONS.map((opt) => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
                           ))}
                         </select>
                         {changingId === row.id && (
@@ -191,7 +214,6 @@ export default function AdminUsersPage() {
                     </td>
                   </tr>
                 )}
-
               </tbody>
             </table>
           </div>

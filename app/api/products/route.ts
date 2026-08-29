@@ -99,7 +99,7 @@ export async function GET(req: NextRequest) {
       category
         ? and(
             eq(products.isActive, true),
-            eq(products.category, category as typeof productCategoryEnum.enumValues[number]),
+            eq(products.category, category as (typeof productCategoryEnum.enumValues)[number]),
           )
         : eq(products.isActive, true),
     )

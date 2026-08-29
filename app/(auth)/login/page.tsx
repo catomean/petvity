@@ -37,7 +37,9 @@ function LoginForm() {
     }
   }
 
-  useEffect(() => { emailRef.current?.focus(); }, []);
+  useEffect(() => {
+    emailRef.current?.focus();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -60,10 +62,10 @@ function LoginForm() {
 
   return (
     <>
-      <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">Welcome back</h1>
-      <p className="text-sm text-[var(--muted)] mb-7">
-        Your pets missed you 🐾
-      </p>
+      <h1 className="font-display font-medium text-3xl mb-1 text-[var(--warm-ink)]">
+        Welcome back
+      </h1>
+      <p className="text-sm text-[var(--muted)] mb-7">Your pets missed you 🐾</p>
 
       {error && <p className="alert-error mb-5">{error}</p>}
 

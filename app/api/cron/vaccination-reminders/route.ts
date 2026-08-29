@@ -56,13 +56,16 @@ export async function POST(req: NextRequest) {
       86400000;
     if (!(VACCINATION_REMINDER_DAYS as readonly number[]).includes(daysUntilDue)) continue;
 
-    const { subject, html } = vaccinationReminder({
-      ownerName: row.ownerName ?? "there",
-      petName: row.petName,
-      vaccinationName: row.vaccinationName,
-      dueDate: formatDateShort(row.nextDueDate, row.ownerLocale ?? undefined),
-      petUrl: `${APP_URL}/portal/pets/${row.petId}/vaccinations`,
-    }, row.ownerLocale);
+    const { subject, html } = vaccinationReminder(
+      {
+        ownerName: row.ownerName ?? "there",
+        petName: row.petName,
+        vaccinationName: row.vaccinationName,
+        dueDate: formatDateShort(row.nextDueDate, row.ownerLocale ?? undefined),
+        petUrl: `${APP_URL}/portal/pets/${row.petId}/vaccinations`,
+      },
+      row.ownerLocale,
+    );
 
     try {
       await sendEmail({ to: row.ownerEmail, subject, html });

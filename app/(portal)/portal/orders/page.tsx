@@ -2,7 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp, CreditCard } from "lucide-react";
+import {
+  ShoppingBag,
+  Clock,
+  CheckCircle,
+  Truck,
+  XCircle,
+  ChevronDown,
+  ChevronUp,
+  CreditCard,
+} from "lucide-react";
 import { ProductArt } from "@/components/shop/ProductArt";
 import { ORDER_STATUS_CONFIG } from "@/lib/config/orders";
 import type { OrderStatusId } from "@/lib/config/orders";
@@ -38,17 +47,20 @@ interface Order {
 
 // Icons are UI-layer; labels/colors sourced from lib/config/orders SSOT
 const STATUS_ICONS: Record<OrderStatusId, React.ElementType> = {
-  pending:   Clock,
+  pending: Clock,
   confirmed: CheckCircle,
-  shipped:   Truck,
+  shipped: Truck,
   delivered: ShoppingBag,
   cancelled: XCircle,
 };
 
-
 /* ─── Order Card ─────────────────────────────────────────────────────────── */
 
-function OrderCard({ order, paymentsEnabled, onCancel }: {
+function OrderCard({
+  order,
+  paymentsEnabled,
+  onCancel,
+}: {
   order: Order;
   paymentsEnabled: boolean;
   onCancel: (id: string) => void;
@@ -96,7 +108,8 @@ function OrderCard({ order, paymentsEnabled, onCancel }: {
               {t("ordersOrderLabel")} · {formatIsoDate(order.createdAt)}
             </p>
             <p className="text-xs text-[var(--muted)]">
-              {t("ordersItemCount", { count: order.items.length })} · {formatPrice(order.totalCents)}
+              {t("ordersItemCount", { count: order.items.length })} ·{" "}
+              {formatPrice(order.totalCents)}
             </p>
           </div>
         </div>
@@ -117,7 +130,11 @@ function OrderCard({ order, paymentsEnabled, onCancel }: {
             <Icon className="w-3 h-3" />
             {t(`orderStatus_${order.status}` as Parameters<typeof t>[0])}
           </span>
-          {expanded ? <ChevronUp className="w-4 h-4 text-[var(--muted)]" /> : <ChevronDown className="w-4 h-4 text-[var(--muted)]" />}
+          {expanded ? (
+            <ChevronUp className="w-4 h-4 text-[var(--muted)]" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-[var(--muted)]" />
+          )}
         </div>
       </div>
 
@@ -154,7 +171,9 @@ function OrderCard({ order, paymentsEnabled, onCancel }: {
           {payError && <p className="alert-error text-xs">{payError}</p>}
 
           <div className="flex items-center justify-between pt-2 border-t border-[var(--border)]">
-            <span className="text-sm font-semibold text-[var(--ink)]">{t("ordersTotal", { price: formatPrice(order.totalCents) })}</span>
+            <span className="text-sm font-semibold text-[var(--ink)]">
+              {t("ordersTotal", { price: formatPrice(order.totalCents) })}
+            </span>
             <div className="flex items-center gap-3">
               {awaitingPayment && (
                 <button
@@ -202,17 +221,25 @@ export default function OrdersPage() {
     setLoading(true);
     setFetchError("");
     fetch("/api/orders")
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
       .then(({ data, meta }) => {
         setOrders(data ?? []);
         setPaymentsEnabled(Boolean(meta?.paymentsEnabled));
         setLoading(false);
       })
-      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadOrders(); }, []);
+  useEffect(() => {
+    loadOrders();
+  }, []);
 
   async function cancelOrder(orderId: string) {
     setCancelError("");
@@ -222,9 +249,7 @@ export default function OrdersPage() {
       body: JSON.stringify({ status: "cancelled" }),
     });
     if (res.ok) {
-      setOrders((prev) =>
-        prev.map((o) => o.id === orderId ? { ...o, status: "cancelled" } : o),
-      );
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: "cancelled" } : o)));
     } else {
       setCancelError(t("deleteFailed"));
     }
@@ -232,7 +257,12 @@ export default function OrdersPage() {
 
   return (
     <div>
-      <HubTabs tabs={[{ href: "/portal/shop", label: t("shop") }, { href: "/portal/orders", label: t("orders") }]} />
+      <HubTabs
+        tabs={[
+          { href: "/portal/shop", label: t("shop") },
+          { href: "/portal/orders", label: t("orders") },
+        ]}
+      />
       <PageHeader
         title={t("orders")}
         purpose={t("ordersSubtitle")}
@@ -254,7 +284,9 @@ export default function OrdersPage() {
 
       {loading ? (
         <div className="space-y-3">
-          {[1, 2].map((i) => <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />)}
+          {[1, 2].map((i) => (
+            <div key={i} className="card h-20 animate-pulse bg-[var(--off)]" />
+          ))}
         </div>
       ) : fetchError ? (
         <ErrorState message={fetchError} onRetry={loadOrders} retryLabel={t("retry")} />
@@ -268,7 +300,12 @@ export default function OrdersPage() {
       ) : (
         <div className="space-y-3">
           {orders.map((order) => (
-            <OrderCard key={order.id} order={order} paymentsEnabled={paymentsEnabled} onCancel={cancelOrder} />
+            <OrderCard
+              key={order.id}
+              order={order}
+              paymentsEnabled={paymentsEnabled}
+              onCancel={cancelOrder}
+            />
           ))}
         </div>
       )}

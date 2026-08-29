@@ -34,7 +34,9 @@ export default async function PetsPage() {
   const db = getInstance();
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
-  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000).toISOString().slice(0, 10);
+  const sinceStr = new Date(now.getTime() - SIGNAL_METRIC_WINDOW_DAYS * 86400000)
+    .toISOString()
+    .slice(0, 10);
 
   const userPets = await db.query.pets.findMany({
     where: eq(pets.ownerId, session.user.id),
@@ -44,18 +46,21 @@ export default async function PetsPage() {
   const petIds = userPets.map((p) => p.id);
 
   // Batch-fetch: last check-in date (all-time) + recent metrics + vaccinations (no N+1)
-  const [lastLogRows, allMetrics, allVacc] = petIds.length > 0
-    ? await Promise.all([
-        db.select({ petId: healthMetrics.petId, lastDate: max(healthMetrics.date) })
-          .from(healthMetrics)
-          .where(inArray(healthMetrics.petId, petIds))
-          .groupBy(healthMetrics.petId),
-        db.select()
-          .from(healthMetrics)
-          .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr))),
-        db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
-      ])
-    : [[], [], []];
+  const [lastLogRows, allMetrics, allVacc] =
+    petIds.length > 0
+      ? await Promise.all([
+          db
+            .select({ petId: healthMetrics.petId, lastDate: max(healthMetrics.date) })
+            .from(healthMetrics)
+            .where(inArray(healthMetrics.petId, petIds))
+            .groupBy(healthMetrics.petId),
+          db
+            .select()
+            .from(healthMetrics)
+            .where(and(inArray(healthMetrics.petId, petIds), gte(healthMetrics.date, sinceStr))),
+          db.select().from(vaccinations).where(inArray(vaccinations.petId, petIds)),
+        ])
+      : [[], [], []];
 
   const lastLogMap = new Map(lastLogRows.map((r) => [r.petId, r.lastDate]));
 
@@ -78,7 +83,13 @@ export default async function PetsPage() {
     const recentMetrics = metricsByPet.get(pet.id) ?? [];
     const petVacc = vaccByPet.get(pet.id) ?? [];
     const overdueCount = countOverdueVaccinations(petVacc, todayStr);
-    const signal = computePetSignal({ species: pet.species as SpeciesId, recentMetrics, overdueVaccinations: overdueCount, petCreatedAt: pet.createdAt, now });
+    const signal = computePetSignal({
+      species: pet.species as SpeciesId,
+      recentMetrics,
+      overdueVaccinations: overdueCount,
+      petCreatedAt: pet.createdAt,
+      now,
+    });
     return { ...pet, signal };
   });
 
@@ -136,7 +147,7 @@ export default async function PetsPage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    speciesDef?.emoji ?? "🐾"
+                    (speciesDef?.emoji ?? "🐾")
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -146,7 +157,9 @@ export default async function PetsPage() {
                   <p className="text-sm text-[var(--muted)] truncate">
                     {tPub(`species_${pet.species}` as Parameters<typeof tPub>[0])}
                     {pet.breed ? ` · ${pet.breed}` : ""}
-                    {pet.sex !== "unknown" ? ` · ${tPub(`sex_${pet.sex}` as Parameters<typeof tPub>[0])}` : ""}
+                    {pet.sex !== "unknown"
+                      ? ` · ${tPub(`sex_${pet.sex}` as Parameters<typeof tPub>[0])}`
+                      : ""}
                   </p>
                   {lastDate && (
                     <p className="text-xs text-[var(--faint)] mt-0.5">
@@ -155,7 +168,9 @@ export default async function PetsPage() {
                   )}
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${SIGNAL_BG_CLASSES[sig]}`}>
+                  <span
+                    className={`text-xs font-medium px-2.5 py-1 rounded-full ${SIGNAL_BG_CLASSES[sig]}`}
+                  >
                     {tSignal(sig)}
                   </span>
                   {pet.isPublic && (

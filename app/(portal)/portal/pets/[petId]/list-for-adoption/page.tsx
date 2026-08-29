@@ -63,7 +63,11 @@ function TriState({
                   : "bg-white text-[var(--muted)] border-[var(--border)] hover:border-[var(--teal)]"
               }`}
             >
-              {opt === "yes" ? t("listAdoptYes") : opt === "no" ? t("listAdoptNo") : t("listAdoptUnknown")}
+              {opt === "yes"
+                ? t("listAdoptYes")
+                : opt === "no"
+                  ? t("listAdoptNo")
+                  : t("listAdoptUnknown")}
             </button>
           );
         })}
@@ -88,13 +92,24 @@ export default function ListForAdoptionPage() {
     setLoading(true);
     setFetchError("");
     fetch(`/api/pets/${petId}`)
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(({ data }) => { setPet(data ?? null); setLoading(false); })
-      .catch(() => { setFetchError(t("loadFailed")); setLoading(false); });
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
+      .then(({ data }) => {
+        setPet(data ?? null);
+        setLoading(false);
+      })
+      .catch(() => {
+        setFetchError(t("loadFailed"));
+        setLoading(false);
+      });
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { loadPet(); }, [petId]);
+  useEffect(() => {
+    loadPet();
+  }, [petId]);
 
   function field<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -105,8 +120,7 @@ export default function ListForAdoptionPage() {
     setError("");
     setSaving(true);
 
-    const feeCents =
-      form.feeDollars === "" ? null : Math.round(parseFloat(form.feeDollars) * 100);
+    const feeCents = form.feeDollars === "" ? null : Math.round(parseFloat(form.feeDollars) * 100);
 
     const res = await fetch("/api/adoptions", {
       method: "POST",
@@ -126,7 +140,10 @@ export default function ListForAdoptionPage() {
     const data = await res.json();
     setSaving(false);
 
-    if (!data.success) { setError(data.error ?? t("listAdoptFailed")); return; }
+    if (!data.success) {
+      setError(data.error ?? t("listAdoptFailed"));
+      return;
+    }
     router.push(`/portal/adoptions`);
   }
 
@@ -143,7 +160,9 @@ export default function ListForAdoptionPage() {
     return (
       <div className="card py-12 text-center">
         <p className="text-[var(--danger-text)] font-medium mb-3">{fetchError}</p>
-        <button onClick={loadPet} className="btn-outline text-sm">{t("retry")}</button>
+        <button onClick={loadPet} className="btn-outline text-sm">
+          {t("retry")}
+        </button>
       </div>
     );
   }
@@ -152,7 +171,9 @@ export default function ListForAdoptionPage() {
     return (
       <div className="card py-16 text-center">
         <p className="font-medium text-[var(--ink)]">{t("listAdoptPetNotFound")}</p>
-        <Link href="/portal/pets" className="btn-primary mt-4">{t("myPets")}</Link>
+        <Link href="/portal/pets" className="btn-primary mt-4">
+          {t("myPets")}
+        </Link>
       </div>
     );
   }
@@ -201,7 +222,8 @@ export default function ListForAdoptionPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="form-label">
-                {t("listAdoptLocation")} <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
+                {t("listAdoptLocation")}{" "}
+                <span className="text-[var(--muted)] font-normal ms-1">{t("listOptional")}</span>
               </label>
               <input
                 className="form-input"
@@ -213,7 +235,9 @@ export default function ListForAdoptionPage() {
             <div>
               <label className="form-label">
                 {t("listAdoptFeeLabel")}
-                <span className="text-[var(--muted)] font-normal ms-1">{t("listAdoptFeeHint")}</span>
+                <span className="text-[var(--muted)] font-normal ms-1">
+                  {t("listAdoptFeeHint")}
+                </span>
               </label>
               <input
                 className="form-input"
@@ -245,7 +269,9 @@ export default function ListForAdoptionPage() {
               onChange={(v) => field("goodWithCats", v)}
             />
             <div>
-              <p className="text-sm font-medium text-[var(--ink2)] mb-2">{t("listAdoptExpRequired")}</p>
+              <p className="text-sm font-medium text-[var(--ink2)] mb-2">
+                {t("listAdoptExpRequired")}
+              </p>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -260,7 +286,11 @@ export default function ListForAdoptionPage() {
 
           {/* Submit */}
           <div className="flex gap-3 pt-2">
-            <button type="submit" disabled={saving} className="btn-primary flex items-center gap-2 disabled:opacity-60">
+            <button
+              type="submit"
+              disabled={saving}
+              className="btn-primary flex items-center gap-2 disabled:opacity-60"
+            >
               <Heart className="w-4 h-4" />
               {saving ? t("listAdoptCreating") : t("listAdoptCreate")}
             </button>

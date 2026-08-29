@@ -2,8 +2,17 @@
 
 import { useState, useEffect } from "react";
 import {
-  Heart, MapPin, DollarSign, Users, Clock, CheckCircle,
-  PauseCircle, XCircle, ChevronDown, ChevronUp, PawPrint,
+  Heart,
+  MapPin,
+  DollarSign,
+  Users,
+  Clock,
+  CheckCircle,
+  PauseCircle,
+  XCircle,
+  ChevronDown,
+  ChevronUp,
+  PawPrint,
 } from "lucide-react";
 import { SPECIES_CONFIG } from "@/lib/config/species";
 import type { SpeciesId } from "@/lib/config/species";
@@ -35,15 +44,18 @@ interface Listing {
 // Icons are UI-layer; labels/colors sourced from lib/config/adoptions SSOT
 const STATUS_ICONS: Record<ListingStatus, React.ElementType> = {
   available: CheckCircle,
-  on_hold:   PauseCircle,
-  adopted:   Heart,
+  on_hold: PauseCircle,
+  adopted: Heart,
   withdrawn: XCircle,
 };
 
-const STATUS_CONFIG: Record<ListingStatus, { label: string; icon: React.ElementType; color: string; bg: string; className: string }> = {
+const STATUS_CONFIG: Record<
+  ListingStatus,
+  { label: string; icon: React.ElementType; color: string; bg: string; className: string }
+> = {
   available: { ...LISTING_STATUS_CONFIG.available, icon: STATUS_ICONS.available },
-  on_hold:   { ...LISTING_STATUS_CONFIG.on_hold,   icon: STATUS_ICONS.on_hold },
-  adopted:   { ...LISTING_STATUS_CONFIG.adopted,   icon: STATUS_ICONS.adopted },
+  on_hold: { ...LISTING_STATUS_CONFIG.on_hold, icon: STATUS_ICONS.on_hold },
+  adopted: { ...LISTING_STATUS_CONFIG.adopted, icon: STATUS_ICONS.adopted },
   withdrawn: { ...LISTING_STATUS_CONFIG.withdrawn, icon: STATUS_ICONS.withdrawn },
 };
 
@@ -91,7 +103,11 @@ function ListingRow({
         <div className="w-10 h-10 rounded-lg bg-[var(--teal-light)] flex items-center justify-center flex-shrink-0 overflow-hidden text-xl">
           {listing.pet.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={listing.pet.avatarUrl} alt={listing.pet.name} className="w-full h-full object-cover" />
+            <img
+              src={listing.pet.avatarUrl}
+              alt={listing.pet.name}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <span>{SPECIES_CONFIG[listing.pet.species as SpeciesId]?.emoji ?? "🐾"}</span>
           )}
@@ -105,7 +121,9 @@ function ListingRow({
 
         {/* Owner */}
         <div className="hidden md:block w-44 min-w-0">
-          <p className="text-xs font-medium text-[var(--ink2)] truncate">{listing.owner.name ?? "—"}</p>
+          <p className="text-xs font-medium text-[var(--ink2)] truncate">
+            {listing.owner.name ?? "—"}
+          </p>
           <p className="text-xs text-[var(--muted)] truncate">{listing.owner.email}</p>
         </div>
 
@@ -120,9 +138,7 @@ function ListingRow({
         {/* Fee */}
         <div className="hidden lg:flex items-center gap-1 w-24">
           <DollarSign className="w-3.5 h-3.5 text-[var(--muted)] flex-shrink-0" />
-          <span className="text-xs text-[var(--muted)]">
-            {formatAdoptionFee(listing.feeCents)}
-          </span>
+          <span className="text-xs text-[var(--muted)]">{formatAdoptionFee(listing.feeCents)}</span>
         </div>
 
         {/* Applications badge */}
@@ -137,22 +153,38 @@ function ListingRow({
         </div>
 
         {/* Status badge */}
-        <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${cfg.className}`}>
+        <span
+          className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${cfg.className}`}
+        >
           <StatusIcon className="w-3 h-3" />
           {cfg.label}
         </span>
 
-        {expanded ? <ChevronUp className="w-4 h-4 text-[var(--muted)] flex-shrink-0" /> : <ChevronDown className="w-4 h-4 text-[var(--muted)] flex-shrink-0" />}
+        {expanded ? (
+          <ChevronUp className="w-4 h-4 text-[var(--muted)] flex-shrink-0" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-[var(--muted)] flex-shrink-0" />
+        )}
       </div>
 
       {expanded && (
         <div className="border-t border-[var(--border)] px-4 py-4 bg-[var(--off)]">
           <div className="flex flex-wrap gap-3 items-start justify-between">
             <div className="text-sm text-[var(--ink2)] space-y-1">
-              <p><span className="font-medium">Listing ID:</span> <span className="font-mono text-xs">{listing.id}</span></p>
-              <p><span className="font-medium">Created:</span> {formatIsoDate(listing.createdAt)}</p>
-              <p><span className="font-medium">Updated:</span> {formatIsoDate(listing.updatedAt)}</p>
-              <p><span className="font-medium">Species:</span> {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}</p>
+              <p>
+                <span className="font-medium">Listing ID:</span>{" "}
+                <span className="font-mono text-xs">{listing.id}</span>
+              </p>
+              <p>
+                <span className="font-medium">Created:</span> {formatIsoDate(listing.createdAt)}
+              </p>
+              <p>
+                <span className="font-medium">Updated:</span> {formatIsoDate(listing.updatedAt)}
+              </p>
+              <p>
+                <span className="font-medium">Species:</span>{" "}
+                {SPECIES_CONFIG[listing.pet.species as SpeciesId]?.label ?? listing.pet.species}
+              </p>
             </div>
 
             {/* Admin actions */}
@@ -166,15 +198,17 @@ function ListingRow({
                   Mark available
                 </button>
               )}
-              {listing.status !== "on_hold" && listing.status !== "adopted" && listing.status !== "withdrawn" && (
-                <button
-                  disabled={updating}
-                  onClick={() => changeStatus("on_hold")}
-                  className="btn-outline text-xs py-1.5 px-3 text-[var(--warn-text)] border-[var(--warn)] hover:bg-[var(--warn-bg)]"
-                >
-                  Put on hold
-                </button>
-              )}
+              {listing.status !== "on_hold" &&
+                listing.status !== "adopted" &&
+                listing.status !== "withdrawn" && (
+                  <button
+                    disabled={updating}
+                    onClick={() => changeStatus("on_hold")}
+                    className="btn-outline text-xs py-1.5 px-3 text-[var(--warn-text)] border-[var(--warn)] hover:bg-[var(--warn-bg)]"
+                  >
+                    Put on hold
+                  </button>
+                )}
               {listing.status !== "adopted" && (
                 <button
                   disabled={updating}
@@ -218,17 +252,17 @@ export default function AdminAdoptionsPage() {
   }, []);
 
   function handleStatusChange(id: string, status: ListingStatus) {
-    setListings((prev) => prev.map((l) => l.id === id ? { ...l, status } : l));
+    setListings((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)));
   }
 
   const filtered = filter === "all" ? listings : listings.filter((l) => l.status === filter);
 
   // Summary counts
   const counts = {
-    total:     listings.length,
+    total: listings.length,
     available: listings.filter((l) => l.status === "available").length,
-    pending:   listings.reduce((s, l) => s + l.pendingCount, 0),
-    adopted:   listings.filter((l) => l.status === "adopted").length,
+    pending: listings.reduce((s, l) => s + l.pendingCount, 0),
+    adopted: listings.filter((l) => l.status === "adopted").length,
   };
 
   return (
@@ -241,13 +275,39 @@ export default function AdminAdoptionsPage() {
       {/* Summary strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "Total listings",    value: counts.total,     icon: PawPrint,      color: "text-[var(--teal)]",  bg: "bg-[var(--teal-light)]" },
-          { label: "Available",         value: counts.available, icon: CheckCircle,   color: "text-[var(--green-text)]", bg: "bg-[var(--green-bg)]" },
-          { label: "Pending reviews",   value: counts.pending,   icon: Clock,         color: "text-[var(--warn-text)]",  bg: "bg-[var(--warn-bg)]" },
-          { label: "Adopted",           value: counts.adopted,   icon: Heart,         color: "text-[var(--teal)]",  bg: "bg-[var(--teal-light)]" },
+          {
+            label: "Total listings",
+            value: counts.total,
+            icon: PawPrint,
+            color: "text-[var(--teal)]",
+            bg: "bg-[var(--teal-light)]",
+          },
+          {
+            label: "Available",
+            value: counts.available,
+            icon: CheckCircle,
+            color: "text-[var(--green-text)]",
+            bg: "bg-[var(--green-bg)]",
+          },
+          {
+            label: "Pending reviews",
+            value: counts.pending,
+            icon: Clock,
+            color: "text-[var(--warn-text)]",
+            bg: "bg-[var(--warn-bg)]",
+          },
+          {
+            label: "Adopted",
+            value: counts.adopted,
+            icon: Heart,
+            color: "text-[var(--teal)]",
+            bg: "bg-[var(--teal-light)]",
+          },
         ].map(({ label, value, icon: Icon, color, bg }) => (
           <div key={label} className="card p-4 flex items-center gap-3">
-            <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${bg}`}>
+            <div
+              className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${bg}`}
+            >
               <Icon className={`w-4.5 h-4.5 ${color}`} />
             </div>
             <div>
@@ -261,7 +321,8 @@ export default function AdminAdoptionsPage() {
       {/* Filter pills */}
       <div className="flex flex-wrap gap-2 mb-4">
         {STATUS_FILTER_OPTIONS.map(({ value, label }) => {
-          const count = value === "all" ? listings.length : listings.filter((l) => l.status === value).length;
+          const count =
+            value === "all" ? listings.length : listings.filter((l) => l.status === value).length;
           return (
             <button
               key={value}
@@ -293,11 +354,7 @@ export default function AdminAdoptionsPage() {
       ) : (
         <div className="space-y-2">
           {filtered.map((listing) => (
-            <ListingRow
-              key={listing.id}
-              listing={listing}
-              onStatusChange={handleStatusChange}
-            />
+            <ListingRow key={listing.id} listing={listing} onStatusChange={handleStatusChange} />
           ))}
         </div>
       )}

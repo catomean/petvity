@@ -18,7 +18,9 @@ function persistLocale(next: string) {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ locale: next }),
-  }).catch(() => { /* no-op */ });
+  }).catch(() => {
+    /* no-op */
+  });
 }
 
 interface Props {
@@ -87,7 +89,9 @@ export default function LocaleSwitcher({ current, compact = false, tone = "light
         {!compact && (
           <>
             <span className="flex-1 text-start truncate">{cur.label}</span>
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+            <ChevronDown
+              className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+            />
           </>
         )}
       </button>
@@ -105,10 +109,14 @@ export default function LocaleSwitcher({ current, compact = false, tone = "light
                 role="option"
                 aria-selected={l.code === current}
                 className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-start hover:bg-[var(--light)] transition-colors ${
-                  l.code === current ? "bg-[var(--teal-light)] text-[var(--teal)]" : "text-[var(--ink2)]"
+                  l.code === current
+                    ? "bg-[var(--teal-light)] text-[var(--teal)]"
+                    : "text-[var(--ink2)]"
                 }`}
               >
-                <span className="text-base flex-shrink-0" aria-hidden="true">{l.flag}</span>
+                <span className="text-base flex-shrink-0" aria-hidden="true">
+                  {l.flag}
+                </span>
                 <span className="flex-1 truncate">{l.label}</span>
                 {l.code === current && <Check className="w-3.5 h-3.5 flex-shrink-0" />}
               </button>

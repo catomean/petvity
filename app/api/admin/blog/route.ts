@@ -12,10 +12,7 @@ export async function GET() {
   if (error) return error;
 
   const db = getInstance();
-  const rows = await db
-    .select()
-    .from(blogPosts)
-    .orderBy(desc(blogPosts.createdAt));
+  const rows = await db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt));
 
   return NextResponse.json({ success: true, data: rows });
 }

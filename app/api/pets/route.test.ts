@@ -126,7 +126,7 @@ describe("POST /api/pets", () => {
     const petWithoutHandle = { ...MOCK_PET, handle: null };
     const petWithHandle = { ...MOCK_PET };
     db._insertReturning.mockResolvedValueOnce([petWithoutHandle]); // insert
-    db._updateReturning.mockResolvedValueOnce([petWithHandle]);    // set handle
+    db._updateReturning.mockResolvedValueOnce([petWithHandle]); // set handle
 
     const res = await POST(makePostRequest(VALID_BODY));
     expect(res.status).toBe(201);

@@ -41,9 +41,11 @@ function hasKey(namespace: string, key: string): boolean {
 function translatorBindings(src: string): Map<string, string> {
   const bindings = new Map<string, string>();
   // const t = useTranslations("portal")   |  await getTranslations("portal")
-  const simple = /(?:const|let)\s+(\w+)\s*=\s*(?:await\s+)?(?:useTranslations|getTranslations)\(\s*"([^"]+)"\s*\)/g;
+  const simple =
+    /(?:const|let)\s+(\w+)\s*=\s*(?:await\s+)?(?:useTranslations|getTranslations)\(\s*"([^"]+)"\s*\)/g;
   // await getTranslations({ locale, namespace: "public" })
-  const objArg = /(?:const|let)\s+(\w+)\s*=\s*await\s+getTranslations\(\s*\{[^}]*namespace:\s*"([^"]+)"[^}]*\}\s*\)/g;
+  const objArg =
+    /(?:const|let)\s+(\w+)\s*=\s*await\s+getTranslations\(\s*\{[^}]*namespace:\s*"([^"]+)"[^}]*\}\s*\)/g;
   for (const re of [simple, objArg]) {
     for (const m of src.matchAll(re)) bindings.set(m[1], m[2]);
   }
@@ -61,7 +63,10 @@ describe("i18n literal keys resolve in messages/en.json", () => {
 
       for (const [varName, namespace] of bindings) {
         // t("key"…  |  t.rich("key"…  |  t.raw("key"…  — literal string keys only
-        const call = new RegExp(`(?<![\\w.])${varName}(?:\\.(?:rich|raw|markup))?\\(\\s*"([^"$\`]+)"`, "g");
+        const call = new RegExp(
+          `(?<![\\w.])${varName}(?:\\.(?:rich|raw|markup))?\\(\\s*"([^"$\`]+)"`,
+          "g",
+        );
         for (const m of src.matchAll(call)) {
           const key = m[1];
           if (!hasKey(namespace, key)) {
@@ -102,9 +107,7 @@ describe("all locales mirror en.json", () => {
 
   for (const locale of locales) {
     it(`${locale} has exactly the keys en has`, () => {
-      const other = JSON.parse(
-        readFileSync(join(ROOT, "messages", `${locale}.json`), "utf8"),
-      );
+      const other = JSON.parse(readFileSync(join(ROOT, "messages", `${locale}.json`), "utf8"));
       const otherKeys = flatten(other).sort();
       const missingHere = enKeys.filter((k) => !otherKeys.includes(k));
       const extraHere = otherKeys.filter((k) => !enKeys.includes(k));

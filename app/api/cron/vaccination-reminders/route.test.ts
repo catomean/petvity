@@ -57,10 +57,13 @@ describe("POST /api/cron/vaccination-reminders", () => {
   it("returns 200 and sends reminders for due-soon vaccinations", async () => {
     const soonDate = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
     const dueSoonRow = {
-      vaccinationId: "vacc-1", vaccinationName: "Rabies",
+      vaccinationId: "vacc-1",
+      vaccinationName: "Rabies",
       nextDueDate: soonDate,
-      petId: "pet-1", petName: "Buddy",
-      ownerName: "Owner", ownerEmail: "owner@example.com",
+      petId: "pet-1",
+      petName: "Buddy",
+      ownerName: "Owner",
+      ownerEmail: "owner@example.com",
     };
     db._queueSelectResult([dueSoonRow]);
 
@@ -74,10 +77,13 @@ describe("POST /api/cron/vaccination-reminders", () => {
   it("skips rows with null ownerEmail", async () => {
     const soonDate = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
     const rowNoEmail = {
-      vaccinationId: "vacc-2", vaccinationName: "DHPP",
+      vaccinationId: "vacc-2",
+      vaccinationName: "DHPP",
       nextDueDate: soonDate,
-      petId: "pet-2", petName: "Max",
-      ownerName: "Owner", ownerEmail: null, // no email
+      petId: "pet-2",
+      petName: "Max",
+      ownerName: "Owner",
+      ownerEmail: null, // no email
     };
     db._queueSelectResult([rowNoEmail]);
 

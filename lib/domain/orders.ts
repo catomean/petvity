@@ -32,10 +32,7 @@ export const orderShippingSchema = z.object({
   shippingCity: z.string().min(1).max(100),
   // Checked against the ISO list, not just the length: "XX" would otherwise be
   // stored and then printed on a shipping label nobody can deliver to.
-  shippingCountry: z
-    .string()
-    .length(2)
-    .refine(isCountryCode, { message: "Unknown country" }),
+  shippingCountry: z.string().length(2).refine(isCountryCode, { message: "Unknown country" }),
   shippingPhone: z.string().max(50).nullish(),
 });
 
@@ -58,9 +55,7 @@ export const guestOrderCreateSchema = orderCreateSchema.extend({
  * (emails, seller notifications, Stripe) has to take the address from here
  * rather than looking one up.
  */
-export type OrderBuyer =
-  | { kind: "account"; userId: string }
-  | { kind: "guest"; email: string };
+export type OrderBuyer = { kind: "account"; userId: string } | { kind: "guest"; email: string };
 
 export type PlaceOrderInput = z.infer<typeof orderCreateSchema> & {
   buyer: OrderBuyer;
@@ -95,9 +90,7 @@ export function guestOrderUrl(publicToken: string, locale: string = DEFAULT_LOCA
  * the prototype chain, and the result of this goes straight into a URL.
  */
 export function toLocale(value: unknown): string {
-  return typeof value === "string" && Object.hasOwn(LOCALE_CONFIG, value)
-    ? value
-    : DEFAULT_LOCALE;
+  return typeof value === "string" && Object.hasOwn(LOCALE_CONFIG, value) ? value : DEFAULT_LOCALE;
 }
 
 /* ─── Status transitions ──────────────────────────────────────────────────── */
@@ -188,18 +181,12 @@ export async function setOrderStatus(
 }
 
 /** Transitions worth an email. A move between two internal states is noise. */
-export const STATUS_EMAIL_STATUSES = [
-  "confirmed",
-  "shipped",
-  "delivered",
-  "cancelled",
-] as const;
+export const STATUS_EMAIL_STATUSES = ["confirmed", "shipped", "delivered", "cancelled"] as const;
 
 /* ─── Resuming payment ────────────────────────────────────────────────────── */
 
 export type StartCheckoutResult =
-  | { ok: true; checkoutUrl: string | null }
-  | { ok: false; status: number; error: string };
+  { ok: true; checkoutUrl: string | null } | { ok: false; status: number; error: string };
 
 /**
  * (Re)open a Stripe Checkout session for an order that is already recorded.
@@ -271,7 +258,12 @@ export async function placeOrder(input: PlaceOrderInput): Promise<PlaceOrderResu
   const productRows = await db
     .select()
     .from(products)
-    .where(inArray(products.id, items.map((i) => i.productId)));
+    .where(
+      inArray(
+        products.id,
+        items.map((i) => i.productId),
+      ),
+    );
 
   const productMap = new Map(productRows.map((p) => [p.id, p]));
   for (const item of items) {

@@ -43,7 +43,7 @@ function makePostRequest(body: unknown) {
 
 const VALID_BODY = {
   date: "2026-04-23",
-  weightGrams: 28500,          // 28.5 kg stored as integer grams
+  weightGrams: 28500, // 28.5 kg stored as integer grams
   temperatureCentidegrees: 3855, // 38.55°C stored as integer centidegrees
   heartRateBpm: 80,
   energy: 4,
@@ -152,7 +152,10 @@ describe("POST /api/health/metrics/[petId]", () => {
 
   it("returns 400 when temperatureCentidegrees is a float (storage convention enforced)", async () => {
     // Storage rule: temperature must be integer centidegrees, not decimal °C
-    const res = await POST(makePostRequest({ ...VALID_BODY, temperatureCentidegrees: 38.55 }), ROUTE_CONTEXT);
+    const res = await POST(
+      makePostRequest({ ...VALID_BODY, temperatureCentidegrees: 38.55 }),
+      ROUTE_CONTEXT,
+    );
     expect(res.status).toBe(400);
   });
 
@@ -175,11 +178,16 @@ describe("POST /api/health/metrics/[petId]", () => {
   });
 
   it("returns 201 on successful log with integer storage values", async () => {
-    const mockRow = { petId: PET_ID, date: "2026-04-23", weightGrams: 28500, temperatureCentidegrees: 3855 };
-    db._queryFindFirst.mockResolvedValueOnce(MOCK_PET);    // pet ownership check
-    db._insertReturning.mockResolvedValueOnce([mockRow]);  // upsert
-    db._queryFindMany.mockResolvedValueOnce([mockRow]);    // recentMetrics
-    db._queryFindMany.mockResolvedValueOnce([]);           // vaccinations
+    const mockRow = {
+      petId: PET_ID,
+      date: "2026-04-23",
+      weightGrams: 28500,
+      temperatureCentidegrees: 3855,
+    };
+    db._queryFindFirst.mockResolvedValueOnce(MOCK_PET); // pet ownership check
+    db._insertReturning.mockResolvedValueOnce([mockRow]); // upsert
+    db._queryFindMany.mockResolvedValueOnce([mockRow]); // recentMetrics
+    db._queryFindMany.mockResolvedValueOnce([]); // vaccinations
 
     const res = await POST(makePostRequest(VALID_BODY), ROUTE_CONTEXT);
     expect(res.status).toBe(201);

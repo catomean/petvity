@@ -14,8 +14,8 @@ export default function NotFound() {
         This page has gone for a walk
       </h2>
       <p className="text-[var(--muted)] max-w-sm mb-8">
-        The page you&apos;re looking for doesn&apos;t exist or may have been moved.
-        Let&apos;s get you back on track.
+        The page you&apos;re looking for doesn&apos;t exist or may have been moved. Let&apos;s get
+        you back on track.
       </p>
 
       <div className="flex flex-col sm:flex-row items-center gap-3">
