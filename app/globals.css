@@ -925,6 +925,10 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* 10px vertical padding around 14px text landed near 41px — just under the
+     44px touch floor. min-height says the floor explicitly rather than
+     leaving it to arithmetic that happens to work today. */
+  min-height: 44px;
   padding: 10px 12px;
   border-radius: 12px;
   font-size: 14px;
