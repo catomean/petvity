@@ -142,6 +142,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
             <Link
               key={href}
               href={href}
+              aria-current={isActive(pathname, href, match) ? "page" : undefined}
               className={`nav-link ${isActive(pathname, href, match) ? "nav-link-active" : "nav-link-inactive"}`}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
@@ -155,6 +156,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
           <LocaleSwitcher current={locale} />
           <Link
             href={PORTAL_ROUTES.settings}
+            aria-current={pathname === PORTAL_ROUTES.settings ? "page" : undefined}
             className={`nav-link ${pathname === PORTAL_ROUTES.settings ? "nav-link-active" : "nav-link-inactive"}`}
           >
             <Settings className="w-4 h-4 flex-shrink-0" />
@@ -211,6 +213,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
             <Link
               key={href}
               href={href}
+              aria-current={isActive(pathname, href, match) ? "page" : undefined}
               className={`mobile-tab-item ${isActive(pathname, href, match) ? "mobile-tab-item-active" : "mobile-tab-item-inactive"}`}
             >
               <Icon
