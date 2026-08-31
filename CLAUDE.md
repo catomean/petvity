@@ -347,6 +347,7 @@ Algorithm:
 | Medication status labels, badge classes | `lib/config/medications.ts` | Component |
 | Locales, RTL flag | `lib/config/locales.ts` | next-intl config |
 | App name, email, URL | `lib/config/app.ts` | Component |
+| Portal paths (static + `petPath`/`petHealthLogPath`) | `lib/config/routes.ts` | Component, nav config (inline `"/portal/..."`) |
 | Auth guards | `lib/auth/guards.ts` | Page component |
 | Signal computation logic | `lib/domain/pet-signal.ts` | API route, cron |
 | Email templates | `lib/email/templates.ts` | API route (inline) |
@@ -509,3 +510,4 @@ All `/api/cron/*` routes require `Authorization: Bearer CRON_SECRET`.
 - Order placement logic written in an API route → `placeOrder()` in `lib/domain/orders.ts`
 - A message key added to `messages/en.json` only → all 9 locales must carry it (enforced by `lib/i18n/message-keys.test.ts`)
 - A "Sign up to buy" CTA on a public product → the storefront sells without an account now
+- A `"/portal/..."` literal in a component → `lib/config/routes.ts` (enforced by `lib/config/routes.test.ts`)

@@ -17,9 +17,10 @@ import {
   Store,
 } from "lucide-react";
 import { APP } from "@/lib/config/app";
+import { PORTAL_ROUTES } from "@/lib/config/routes";
 
 function isActive(pathname: string, href: string, match?: string[]): boolean {
-  if (href === "/portal/dashboard") return pathname === href;
+  if (href === PORTAL_ROUTES.dashboard) return pathname === href;
   const prefixes = match ?? [href];
   return prefixes.some((p) => pathname === p || pathname.startsWith(p + "/"));
 }
@@ -47,39 +48,39 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
   // services) live in Settings, not in daily navigation.
   type NavItem = { href: string; icon: React.ElementType; label: string; match?: string[] };
   const NAV_ITEMS: NavItem[] = [
-    { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
-    { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
-    { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
+    { href: PORTAL_ROUTES.dashboard, icon: Home, label: t("dashboard") },
+    { href: PORTAL_ROUTES.pets, icon: PawPrint, label: t("myPets") },
+    { href: PORTAL_ROUTES.checkin, icon: CalendarDays, label: t("checkin") },
     {
-      href: "/portal/find",
+      href: PORTAL_ROUTES.find,
       icon: Search,
       label: t("navSectionCare"),
-      match: ["/portal/find", "/portal/bookings"],
+      match: [PORTAL_ROUTES.find, PORTAL_ROUTES.bookings],
     },
     {
-      href: "/portal/shop",
+      href: PORTAL_ROUTES.shop,
       icon: ShoppingCart,
       label: t("shop"),
-      match: ["/portal/shop", "/portal/orders"],
+      match: [PORTAL_ROUTES.shop, PORTAL_ROUTES.orders],
     },
     {
-      href: "/portal/adopt",
+      href: PORTAL_ROUTES.adopt,
       icon: Heart,
       label: t("adopt"),
-      match: ["/portal/adopt", "/portal/adoptions"],
+      match: [PORTAL_ROUTES.adopt, PORTAL_ROUTES.adoptions],
     },
     ...(hasSeller
       ? [
           {
-            href: "/portal/my-products",
+            href: PORTAL_ROUTES.myProducts,
             icon: Store,
             label: t("navMyStore"),
-            match: ["/portal/my-products", "/portal/seller-profile"],
+            match: [PORTAL_ROUTES.myProducts, PORTAL_ROUTES.sellerProfile],
           },
         ]
       : []),
     ...(isProfessional
-      ? [{ href: "/portal/professional-profile", icon: Stethoscope, label: t("myProfile") }]
+      ? [{ href: PORTAL_ROUTES.professionalProfile, icon: Stethoscope, label: t("myProfile") }]
       : []),
   ];
 
@@ -88,33 +89,33 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
   // (the natural follow-up destination after using Find a Pro).
   // Professionals swap "Find" for their own profile since they are the pro.
   const MOBILE_NAV_ITEMS_DEFAULT: NavItem[] = [
-    { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
-    { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
-    { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
+    { href: PORTAL_ROUTES.dashboard, icon: Home, label: t("dashboard") },
+    { href: PORTAL_ROUTES.pets, icon: PawPrint, label: t("myPets") },
+    { href: PORTAL_ROUTES.checkin, icon: CalendarDays, label: t("checkin") },
     {
-      href: "/portal/find",
+      href: PORTAL_ROUTES.find,
       icon: Search,
       label: t("navSectionCare"),
-      match: ["/portal/find", "/portal/bookings"],
+      match: [PORTAL_ROUTES.find, PORTAL_ROUTES.bookings],
     },
     {
-      href: "/portal/shop",
+      href: PORTAL_ROUTES.shop,
       icon: ShoppingCart,
       label: t("shop"),
-      match: ["/portal/shop", "/portal/orders"],
+      match: [PORTAL_ROUTES.shop, PORTAL_ROUTES.orders],
     },
   ];
 
   const MOBILE_NAV_ITEMS_PRO: NavItem[] = [
-    { href: "/portal/dashboard", icon: Home, label: t("dashboard") },
-    { href: "/portal/pets", icon: PawPrint, label: t("myPets") },
-    { href: "/portal/checkin", icon: CalendarDays, label: t("checkin") },
-    { href: "/portal/professional-profile", icon: Stethoscope, label: t("myProfile") },
+    { href: PORTAL_ROUTES.dashboard, icon: Home, label: t("dashboard") },
+    { href: PORTAL_ROUTES.pets, icon: PawPrint, label: t("myPets") },
+    { href: PORTAL_ROUTES.checkin, icon: CalendarDays, label: t("checkin") },
+    { href: PORTAL_ROUTES.professionalProfile, icon: Stethoscope, label: t("myProfile") },
     {
-      href: "/portal/find",
+      href: PORTAL_ROUTES.find,
       icon: Search,
       label: t("navSectionCare"),
-      match: ["/portal/find", "/portal/bookings"],
+      match: [PORTAL_ROUTES.find, PORTAL_ROUTES.bookings],
     },
   ];
 
@@ -125,7 +126,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
         {/* Logo */}
         <div className="h-16 flex items-center px-5 border-b border-[var(--border)] flex-shrink-0">
           <Link
-            href="/portal/dashboard"
+            href={PORTAL_ROUTES.dashboard}
             className="font-bold text-[var(--ink)] text-lg no-underline flex items-center gap-2.5"
           >
             <div className="w-8 h-8 rounded-lg bg-[var(--teal)] flex items-center justify-center flex-shrink-0">
@@ -153,8 +154,8 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
         <div className="px-3 pb-3 border-t border-[var(--border)] pt-3 space-y-0.5">
           <LocaleSwitcher current={locale} />
           <Link
-            href="/portal/settings"
-            className={`nav-link ${pathname === "/portal/settings" ? "nav-link-active" : "nav-link-inactive"}`}
+            href={PORTAL_ROUTES.settings}
+            className={`nav-link ${pathname === PORTAL_ROUTES.settings ? "nav-link-active" : "nav-link-inactive"}`}
           >
             <Settings className="w-4 h-4 flex-shrink-0" />
             {t("settings")}
@@ -187,7 +188,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
       {/* ── Mobile top bar ───────────────────────────────────────────────────── */}
       <header className="lg:hidden fixed top-0 inset-x-0 h-14 bg-white border-b border-[var(--border)] flex items-center justify-between px-4 z-20">
         <Link
-          href="/portal/dashboard"
+          href={PORTAL_ROUTES.dashboard}
           className="font-bold text-[var(--ink)] text-lg no-underline flex items-center gap-2.5"
         >
           <div className="w-7 h-7 rounded-lg bg-[var(--teal)] flex items-center justify-center flex-shrink-0">
@@ -196,7 +197,7 @@ export default function SidebarNav({ userName, userEmail, userRole, hasSeller, l
           {APP.name}
         </Link>
         <Link
-          href="/portal/settings"
+          href={PORTAL_ROUTES.settings}
           className="w-9 h-9 rounded-full bg-[var(--teal-light)] flex items-center justify-center text-[var(--teal)] font-bold text-sm"
         >
           {initials}

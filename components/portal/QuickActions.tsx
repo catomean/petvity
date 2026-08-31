@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Search, ShoppingBag, Heart, Store, Briefcase, CalendarCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { PORTAL_ROUTES } from "@/lib/config/routes";
 
 /**
  * The dashboard used to answer one question — "how are my pets?" — and left
@@ -20,21 +21,21 @@ export default async function QuickActions({
   const t = await getTranslations({ locale, namespace: "portal" });
 
   const actions: { href: string; icon: React.ElementType; title: string; desc: string }[] = [
-    { href: "/portal/find", icon: Search, title: t("qaFindTitle"), desc: t("qaFindDesc") },
-    { href: "/portal/shop", icon: ShoppingBag, title: t("qaShopTitle"), desc: t("qaShopDesc") },
-    { href: "/portal/adopt", icon: Heart, title: t("qaAdoptTitle"), desc: t("qaAdoptDesc") },
+    { href: PORTAL_ROUTES.find, icon: Search, title: t("qaFindTitle"), desc: t("qaFindDesc") },
+    { href: PORTAL_ROUTES.shop, icon: ShoppingBag, title: t("qaShopTitle"), desc: t("qaShopDesc") },
+    { href: PORTAL_ROUTES.adopt, icon: Heart, title: t("qaAdoptTitle"), desc: t("qaAdoptDesc") },
   ];
 
   if (isProfessional) {
     actions.push({
-      href: "/portal/bookings",
+      href: PORTAL_ROUTES.bookings,
       icon: CalendarCheck,
       title: t("qaBookingsTitle"),
       desc: t("qaBookingsDesc"),
     });
   } else {
     actions.push({
-      href: "/portal/become-a-pro",
+      href: PORTAL_ROUTES.becomeAPro,
       icon: Briefcase,
       title: t("qaOfferTitle"),
       desc: t("qaOfferDesc"),
@@ -44,13 +45,13 @@ export default async function QuickActions({
   actions.push(
     isSeller
       ? {
-          href: "/portal/my-products",
+          href: PORTAL_ROUTES.myProducts,
           icon: Store,
           title: t("qaMyStoreTitle"),
           desc: t("qaMyStoreDesc"),
         }
       : {
-          href: "/portal/seller-profile",
+          href: PORTAL_ROUTES.sellerProfile,
           icon: Store,
           title: t("qaSellTitle"),
           desc: t("qaSellDesc"),
