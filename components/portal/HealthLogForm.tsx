@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { EMOTIONAL_METRICS, HEALTH_METRIC_CONFIG } from "@/lib/config/health-metrics";
+import { petPath } from "@/lib/config/routes";
 type PhysicalHint = { min: number; max: number; unit: string } | null;
 
 type InitialValues = {
@@ -83,7 +84,7 @@ export function HealthLogForm({
     if (!data.success) {
       setError(data.error ?? t("saveFailed"));
     } else {
-      router.push(`/portal/pets/${petId}`);
+      router.push(petPath(petId));
     }
   }
 

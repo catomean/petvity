@@ -15,6 +15,7 @@ import {
 import { TWIN_STATE_CONFIG, TWIN_TREND_CONFIG } from "@/lib/config/digital-twin";
 import type { TwinState, TwinTrend } from "@/lib/domain/digital-twin";
 import { useTranslations } from "next-intl";
+import { petHealthLogPath } from "@/lib/config/routes";
 
 const METRIC_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   mood: Smile,
@@ -111,7 +112,7 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
             <p className="text-xs text-[var(--muted)] mb-4 max-w-xs mx-auto">
               {t("twinNotActiveDesc", { name: petName })}
             </p>
-            <Link href={`/portal/pets/${petId}/health/log`} className="btn-primary text-sm">
+            <Link href={petHealthLogPath(petId)} className="btn-primary text-sm">
               <CalendarDays className="w-4 h-4" />
               {t("healthLogFirst")}
             </Link>
@@ -188,7 +189,7 @@ export function DigitalTwinCard({ twin, petId, petName }: Props) {
             {twin.daysAgo !== null && twin.daysAgo > 0 && (
               <div className="pt-1 border-t border-[var(--border)]">
                 <Link
-                  href={`/portal/pets/${petId}/health/log`}
+                  href={petHealthLogPath(petId)}
                   className="text-xs text-[var(--teal)] hover:underline inline-flex items-center gap-1"
                 >
                   <CalendarDays className="w-3 h-3" />
