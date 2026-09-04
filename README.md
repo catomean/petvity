@@ -31,8 +31,12 @@ pnpm db:studio    # Drizzle Studio (visual DB explorer)
 Petvity is self-hosted on the Hetzner box `bitbaum` (service `petvity-app`, behind Caddy
 auto-TLS) at https://petvity.orangecat.ch, backed by self-hosted PostgreSQL 17.
 
+Merging to `main` deploys automatically: `.github/workflows/deploy.yml` calls
+fleetcrown's reusable `selfhost-deploy.yml` workflow, which waits for the commit's
+own CI to go green before anything reaches the box.
+
 ```bash
-# from the fleetcrown repo's scripts/hetzner/ — builds standalone, rsyncs to the box,
-# restarts the systemd service, and health-checks
+# manual fallback, from the fleetcrown repo's scripts/hetzner/ — builds standalone,
+# rsyncs to the box, restarts the systemd service, and health-checks
 scripts/hetzner/deploy.sh petvity
 ```

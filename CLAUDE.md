@@ -11,7 +11,7 @@ Petvity gives pet owners a single place to monitor their pet's daily wellness, c
 
 **Deployed URLs:**
 - Production: https://petvity.orangecat.ch
-- GitHub: https://github.com/g-but/petvity
+- GitHub: https://github.com/bitbaum/petvity
 - Host: self-hosted Hetzner box `bitbaum` (service `petvity-app`, port 4013, behind Caddy auto-TLS)
 - Database: self-hosted PostgreSQL 17 on the box (database `petvity`)
 
@@ -33,14 +33,16 @@ pnpm db:generate  # versioned migration after schema.ts edits — COMMIT the dri
 pnpm db:push      # local dev DBs ONLY — never push schema to prod by hand
 pnpm db:studio    # Drizzle Studio (visual DB explorer)
 pnpm test         # vitest unit tests
-pnpm verify       # lint + typecheck + test — the pre-done gate (mirrors CI)
+pnpm verify       # format check + lint + typecheck + CSS-var check + test — the pre-done gate (mirrors CI)
 
-# deploy: builds standalone, rsyncs to the box, restarts the service, health-checks
+# deploy: merging to main deploys automatically — .github/workflows/deploy.yml calls
+# fleetcrown's reusable selfhost-deploy workflow (waits for this commit's CI to go green).
+# Manual fallback: builds standalone, rsyncs to the box, restarts the service, health-checks
 scripts/hetzner/deploy.sh petvity   # run from the fleetcrown repo's scripts/hetzner/
 ```
 
-**Before declaring any change done, run `pnpm verify`** (lint + typecheck +
-test). It mirrors CI's hermetic gates, so green locally means green on `main`.
+**Before declaring any change done, run `pnpm verify`** (format check + lint +
+typecheck + CSS-var check + test). It mirrors CI's hermetic gates, so green locally means green on `main`.
 CI (`.github/workflows/ci.yml`) runs the same gates on every push and PR, plus
 `pnpm build` — the build is now hermetic (the sitemap is `force-dynamic`, no
 build-time DB) and gated, so a broken build can't reach `main`.
@@ -207,7 +209,7 @@ lib/
   domain/
     auth.ts            → loginSchema, registerSchema, resolveRole()
     pet-signal.ts      → computePetSignal() — pure, injected, unit-tested
-    pet-signal.test.ts → 9 vitest tests
+    pet-signal.test.ts → vitest unit tests
     health.ts          → isMetricInRange(), computeWellnessScore()
     pets.ts            → createPetHandle(), validateSpeciesBreed()
     email-queue.ts     → enqueueWelcomeSequence()
