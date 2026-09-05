@@ -1,12 +1,14 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
-const send = vi.hoisted(() => vi.fn());
+// Transport is @bitbaum/mail-kit (a fetch to the Resend HTTP API), so the
+// seam mocked here is global fetch — the real mail-kit + adapter code runs.
+const fetchMock = vi.fn();
 
-vi.mock("resend", () => ({
-  Resend: class {
-    emails = { send };
-  },
-}));
+const providerAccepts = () =>
+  new Response(JSON.stringify({ id: "sent" }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 
 import { sendEmail } from "./index";
 
@@ -14,11 +16,13 @@ const saved = process.env.RESEND_API_KEY;
 
 beforeEach(() => {
   process.env.RESEND_API_KEY = "re_test_key";
-  send.mockReset();
-  send.mockResolvedValue({ error: null });
+  fetchMock.mockReset();
+  fetchMock.mockImplementation(async () => providerAccepts());
+  vi.stubGlobal("fetch", fetchMock);
 });
 
 afterEach(() => {
+  vi.unstubAllGlobals();
   if (saved === undefined) delete process.env.RESEND_API_KEY;
   else process.env.RESEND_API_KEY = saved;
 });
@@ -28,7 +32,7 @@ describe("sendEmail", () => {
     await expect(
       sendEmail({ to: "owner@proton.me", subject: "Hi", html: "<p>hi</p>" }),
     ).resolves.toEqual({ sent: true });
-    expect(send).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   // Each of these is a fixture the e2e walkthrough or smoke timer creates. They
@@ -45,7 +49,7 @@ describe("sendEmail", () => {
     await expect(
       sendEmail({ to, subject: "Welcome to Petvity!", html: "<p>hi</p>" }),
     ).resolves.toEqual({ sent: false });
-    expect(send).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("suppresses without throwing, so callers behave as they do with no API key", async () => {
@@ -56,8 +60,24 @@ describe("sendEmail", () => {
       .resolves.not.toThrow;
   });
 
+  it("reports unconfigured mail as not sent, without touching the wire", async () => {
+    // mail-kit's guard: a placeholder key looks configured and delivers to
+    // nobody, so it counts as unconfigured.
+    process.env.RESEND_API_KEY = "re_placeholder_123"; // gitleaks:allow — literally a placeholder
+    await expect(sendEmail({ to: "owner@proton.me", subject: "s", html: "h" })).resolves.toEqual({
+      sent: false,
+    });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("still throws on a genuine Resend error", async () => {
-    send.mockResolvedValue({ error: { message: "rate limited" } });
+    fetchMock.mockImplementation(
+      async () =>
+        new Response(JSON.stringify({ message: "rate limited" }), {
+          status: 429,
+          headers: { "Content-Type": "application/json" },
+        }),
+    );
     await expect(sendEmail({ to: "owner@proton.me", subject: "s", html: "h" })).rejects.toThrow(
       /rate limited/,
     );
