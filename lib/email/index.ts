@@ -1,17 +1,6 @@
-import { Resend } from "resend";
+import { sendMail, isMailConfigured, fromAddress, conventionalFrom } from "@bitbaum/mail-kit";
 import { APP } from "@/lib/config/app";
 import { isUndeliverableRecipient } from "@/lib/config/email";
-
-let _resend: Resend | undefined;
-
-function getResend(): Resend | null {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return null;
-  if (!_resend) _resend = new Resend(key);
-  return _resend;
-}
-
-const FROM = process.env.RESEND_FROM ?? `${APP.name} <noreply@petvity.com>`;
 
 export type SendEmailOptions = {
   to: string;
@@ -20,11 +9,11 @@ export type SendEmailOptions = {
 };
 
 /**
- * Send a transactional email via Resend.
- * Returns { sent: true } on success, { sent: false } when RESEND_API_KEY is
- * not configured (dev/staging) or the recipient cannot receive mail — never
- * throws for either.
- * Throws for Resend API errors so callers can decide to retry or log.
+ * Send a transactional email via @bitbaum/mail-kit (the fleet's one email
+ * layer). Returns { sent: true } on success, { sent: false } when mail is not
+ * configured (dev/staging, placeholder key, sandbox sender in production) or
+ * the recipient cannot receive mail — never throws for either.
+ * Throws for provider API errors so callers can decide to retry or log.
  */
 export async function sendEmail({
   to,
@@ -40,14 +29,19 @@ export async function sendEmail({
     return { sent: false };
   }
 
-  const resend = getResend();
-  if (!resend) {
+  if (!isMailConfigured()) {
     if (process.env.NODE_ENV !== "production") {
-      process.stderr.write(`[email] RESEND_API_KEY not set — skipping "${subject}"\n`);
+      process.stderr.write(`[email] mail not configured — skipping "${subject}"\n`);
     }
     return { sent: false };
   }
-  const { error } = await resend.emails.send({ from: FROM, to, subject, html });
-  if (error) throw new Error(`Resend error: ${error.message}`);
+
+  const result = await sendMail({
+    to,
+    subject,
+    html,
+    from: fromAddress() ?? conventionalFrom(APP.name),
+  });
+  if (!result.sent) throw new Error(`Resend error: ${result.error}`);
   return { sent: true };
 }
